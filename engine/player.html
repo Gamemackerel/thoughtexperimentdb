@@ -41,9 +41,11 @@ const stage = createStage(document.getElementById('gl'), { width: W, height: H }
 const ui = createUI(document.getElementById('ui'), stage);
 const scene = build({ stage, ui, tl: timeline });
 
+// burned-in captions: on unless ?captions=off; vertical uses shorter chunks at a larger size
+const burnCaptions = q.get('captions') !== 'off';
 function renderAt(t) {
   scene.update(t);
-  ui.caption(captionAt(timeline, t));
+  ui.caption(burnCaptions ? captionAt(timeline, t, vertical ? 52 : 96) : '');
   stage.render();
 }
 window.renderAt = renderAt;

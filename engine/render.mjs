@@ -184,7 +184,11 @@ const url = `http://localhost:${server.address().port}/engine/player.html?exp=${
 // --format landscape | vertical | both (default both)
 const fmtOpt = String(opt('format', 'both'));
 const formats = fmtOpt === 'both' ? ['landscape', 'vertical'] : [fmtOpt];
-const FORMATS = { landscape: { w: 1920, h: 1080, suffix: '' }, vertical: { w: 1080, h: 1920, suffix: '-vertical' } };
+// Landscape ships clean (captions go to YouTube as the .vtt track); vertical burns large captions in for sound-off viewing.
+// --captions on|off overrides both.
+const FORMATS = { landscape: { w: 1920, h: 1080, suffix: '', captions: false }, vertical: { w: 1080, h: 1920, suffix: '-vertical', captions: true } };
+const capOpt = opt('captions', null);
+const burn = (F) => (capOpt === null ? F.captions : capOpt !== 'off');
 
 if (opt('preview', false)) {
   console.log(`preview: ${url}&preview  (space = play/pause, Ctrl-C to stop)`);
@@ -208,7 +212,7 @@ async function capture(format) {
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
   page.on('pageerror', (e) => console.log('[page error]', e.message));
   await page.setViewport({ width: F.w, height: F.h, deviceScaleFactor: scale });
-  await page.goto(url + (format === 'vertical' ? '&format=vertical' : ''));
+  await page.goto(url + (format === 'vertical' ? '&format=vertical' : '') + (burn(F) ? '' : '&captions=off'));
   await page.waitForFunction('window.ready === true', { timeout: 60000 });
   const clip = { x: 0, y: 0, width: F.w, height: F.h };
 

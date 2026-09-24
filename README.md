@@ -30,9 +30,9 @@ experiments/<id>/          one folder per film: everything needed to rebuild it,
   script.json              narration (with [[cue]] / pause markup), voice, soundtrack, sources, thumbnails, publish metadata
   scene.js                 the 3D film as a pure function of time, built on engine/core.js
   output/
-    <id>.mp4               16:9 film             (not committed; rebuild with render.mjs)
-    <id>-vertical.mp4      9:16 film             (not committed; rebuild with render.mjs)
-    <id>.vtt               captions
+    <id>.mp4               16:9 film, no burned-in captions  (not committed; rebuild with render.mjs)
+    <id>-vertical.mp4      9:16 film, large burned-in captions (not committed)
+    <id>.vtt               captions track: upload it with the 16:9 video on YouTube
     thumbnails/            three 1280×720 thumbnail options
     description.txt        paste-ready description: summary, chapters, video essay, sources, reading, discussion
 build/                     generated cache (narration clips, timeline, stills). Not committed.

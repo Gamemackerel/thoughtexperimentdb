@@ -99,8 +99,8 @@ html, body { margin: 0; background: #1d1c21; overflow: hidden; }
 .vertical .chip { padding: 8px 14px; }
 .vertical .chip small { font-size: 12px; }
 .vertical .card .foot { font-size: 26px; }
-.vertical .caption { bottom: 360px; width: 940px; }
-.vertical .caption span { font-size: 42px; }
+.vertical .caption { bottom: 380px; width: 960px; }
+.vertical .caption span { font-size: 62px; font-weight: 700; line-height: 1.45; padding: 8px 22px; border-radius: 12px; }
 .vertical .note { right: auto; left: 50%; top: auto; bottom: 470px; width: 820px; margin-left: -410px; box-sizing: border-box; }
 .vertical .label { font-size: 27px; padding: 9px 18px; }
 .vertical .rewind .rw { left: 60px; top: 190px; }

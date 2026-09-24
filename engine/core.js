@@ -550,7 +550,7 @@ export function createUI(root, stage) {
 }
 
 // Captions: split narration into readable chunks, timed by character share within each segment.
-export function captionAt(timeline, t) {
+export function captionAt(timeline, t, max = 96) {
   for (const s of timeline.data.segments) {
     if (t < s.start || t > s.end + 0.35) continue;
     // voiced parts (between [[markers]]) carry exact times; otherwise the whole segment is one span
@@ -558,7 +558,7 @@ export function captionAt(timeline, t) {
     for (let i = 0; i < spans.length; i++) {
       const sp = spans[i], next = spans[i + 1];
       if (next && t >= next.start) continue;
-      const chunks = splitCaption(sp.text);
+      const chunks = splitCaption(sp.text, max);
       const total = chunks.reduce((a, c) => a + c.length, 0);
       let acc = sp.start;
       for (const c of chunks) {
@@ -579,10 +579,12 @@ function splitCaption(text, max = 96, min = 28) {
   const out = [];
   const split = (s) => {
     if (s.length <= max) return [s];
-    const mid = s.length / 2;
+    // break at the punctuation (else the space) nearest the middle, never at either end, so both halves shrink
+    const mid = s.length / 2, inner = (i) => i > 0 && i < s.length - 2;
     let best = -1;
-    for (let i = 0; i < s.length; i++) if (/[,;—:]/.test(s[i]) && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
-    if (best < 0) best = s.lastIndexOf(' ', mid);
+    for (let i = 0; i < s.length; i++) if (/[,;—:]/.test(s[i]) && inner(i) && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
+    if (best < 0) for (let i = 0; i < s.length; i++) if (s[i] === ' ' && inner(i) && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
+    if (best < 0) return [s];
     return [...split(s.slice(0, best + 1).trim()), ...split(s.slice(best + 1).trim())];
   };
   for (const s of sentences) out.push(...split(s));

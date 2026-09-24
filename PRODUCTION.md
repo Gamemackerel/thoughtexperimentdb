@@ -122,8 +122,11 @@ Target total length: **2½–3 minutes**.
   - Use `palette` in `core.js` and add new roles there, not inline.
 - **People** are peg figures (`makePerson`). Victims wear hard hats when they are workers. Harm is shown with
   physics (knocked over, flung away), never injury.
-- **Typography**: Iowan Old Style for titles and quotes, Avenir Next for UI and captions. Captions are always on (dark
-  pill, bottom centre).
+- **Typography**: Iowan Old Style for titles and quotes, Avenir Next for UI and captions.
+- **Captions**: the **landscape** video ships **clean**. Its captions are the `.vtt` file, uploaded to YouTube as the subtitle
+  track, so viewers can toggle and translate them. The **vertical** video has **large, bold captions burned in** (short
+  one- to two-line chunks) for sound-off viewing on Shorts, Reels and TikTok. Override with `--captions on|off`.
+  Never upload the `.vtt` alongside a video that has captions burned in.
 
 ### 3.2 Overlays (all in `ui`)
 
@@ -286,6 +289,11 @@ Run a transcription, phoneme and pace check over every clip (faster-whisper `sma
 `tools/kokoro-venv/bin/python tools/audit.py . <id>`):
 - Transcription mismatches are often just spelling ("Foote", "Thompson"), so confirm with the **phonemes**
   before changing anything. Fix real problems with `pronounce`.
+- Known Kokoro (bm_fable) artifacts and their fixes, all in `pronounce` so captions are unaffected:
+  - A sentence-initial unstressed **"If"** gets a phantom /s/ ("Sif"). Use `"If you": "Iff you"`, which stresses it.
+  - A sentence-final **/θ/** ("path.") is drawn out into a hiss ("paths"). Use the British vowel and drop the final
+    period in speech: `"in its path.": "in its parth"`.
+  - Check for both by transcribing with word timestamps and looking for 4–10 kHz energy right before or after the word.
 - Target **130–155 wpm** for narration, slower for the hook and the central question (~100–130).
 - Kokoro's `speed` has less effect on long sentences. That is why the engine voices each marker-separated stretch
   on its own. If a segment still measures fast, split it with `[[0.3]]` pauses or give it its own `"speed"`.
