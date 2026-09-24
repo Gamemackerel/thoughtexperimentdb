@@ -370,6 +370,52 @@ export function makeLever() {
   return g;
 }
 
+// ---------------------------------------------------------------- furniture & buildings
+export function makeTable({ w = 4, d = 2, h = 1.9, color = 0xdcd6cb } = {}) {
+  const g = new THREE.Group();
+  const top = mesh(new RoundedBoxGeometry(w, 0.22, d, 2, 0.06), clay(color));
+  top.position.y = h;
+  g.add(top);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const leg = mesh(new THREE.CylinderGeometry(0.08, 0.08, h, 10), clay(palette.rail, { metalness: 0.3, roughness: 0.5 }));
+    leg.position.set(sx * (w / 2 - 0.25), h / 2, sz * (d / 2 - 0.2));
+    g.add(leg);
+  }
+  g.userData.top = h + 0.11;
+  return g;
+}
+
+export function makeBench() {
+  const g = new THREE.Group();
+  const wood = clay(palette.wood);
+  const seat = mesh(new RoundedBoxGeometry(2.4, 0.16, 0.7, 2, 0.05), wood);
+  seat.position.y = 0.75;
+  const back = mesh(new RoundedBoxGeometry(2.4, 0.5, 0.12, 2, 0.05), wood);
+  back.position.set(0, 1.25, -0.32);
+  g.add(seat, back);
+  for (const sx of [-1, 1]) {
+    const leg = mesh(new THREE.BoxGeometry(0.12, 0.75, 0.6), clay(palette.rail));
+    leg.position.set(sx * 1.0, 0.37, 0);
+    g.add(leg);
+  }
+  return g;
+}
+
+export function makeHouse({ color = 0xf2e6d4, roof = 0xc9705a } = {}) {
+  const g = new THREE.Group();
+  const body = mesh(new RoundedBoxGeometry(3.2, 2.4, 2.6, 2, 0.08), clay(color));
+  body.position.y = 1.2;
+  const r = new THREE.Shape([new THREE.Vector2(-1.9, 0), new THREE.Vector2(1.9, 0), new THREE.Vector2(0, 1.5)]);
+  const roofM = mesh(new THREE.ExtrudeGeometry(r, { depth: 3, bevelEnabled: false }), clay(roof));
+  roofM.position.set(0, 2.4, -1.5);
+  const door = mesh(new RoundedBoxGeometry(0.7, 1.2, 0.08, 2, 0.05), clay(palette.wood));
+  door.position.set(0, 0.6, 1.31);
+  const win = mesh(new RoundedBoxGeometry(0.7, 0.6, 0.06, 2, 0.05), clay(palette.glass, { roughness: 0.3 }));
+  win.position.set(0.95, 1.5, 1.31);
+  g.add(body, roofM, door, win);
+  return g;
+}
+
 // ---------------------------------------------------------------- brand easter egg
 // The series frog: appears in exactly one scene of every film (see PRODUCTION.md). Faces +z; ~1.2 units long.
 export function makeFrog({ scale = 1 } = {}) {
@@ -497,6 +543,7 @@ export function createUI(root, stage) {
   const card = el('card');
   const quote = el('quote');
   const rewind = el('rewind');
+  const glitch = el('glitch');
   const note = el('note');
   const thumb = el('thumbcard');
   const caption = el('caption');
@@ -527,6 +574,20 @@ export function createUI(root, stage) {
       cv.style.transform = `translateX(${(Math.sin(t * 97) * Math.sin(t * 23) * 9 * o).toFixed(1)}px)`;
     },
     thumb: (html, side = 'left') => { thumb.className = 'thumbcard ' + side; show(thumb, 1, `<div class="kicker">Thought experiment</div><div class="h">${html}</div>`); },
+    // digital glitch: RGB-split bands, hue shift and horizontal jitter (deterministic in t)
+    glitch: (o, t = 0) => {
+      const cv = stage.renderer.domElement;
+      if (o <= 0.001) { show(glitch, 0); if (!cv.style.filter.includes('saturate')) { cv.style.filter = ''; cv.style.transform = ''; } return; }
+      const r = seeded(Math.floor(t * 24) + 1);
+      const bands = Array.from({ length: 5 }, () => {
+        const top = r() * stage.height, h = 6 + r() * 60, dx = (r() - 0.5) * 80 * o;
+        const col = r() < 0.5 ? 'rgba(63,143,134,0.35)' : 'rgba(224,103,79,0.3)';
+        return `<div style="top:${top.toFixed(0)}px;height:${h.toFixed(0)}px;transform:translateX(${dx.toFixed(0)}px);background:${col}"></div>`;
+      }).join('');
+      show(glitch, o, bands);
+      cv.style.filter = `hue-rotate(${((r() - 0.5) * 60 * o).toFixed(0)}deg) contrast(${1 + 0.25 * o})`;
+      cv.style.transform = `translateX(${((r() - 0.5) * 24 * o).toFixed(1)}px) skewX(${((r() - 0.5) * 3 * o).toFixed(2)}deg)`;
+    },
     caption: (text) => { show(caption, text ? 1 : 0, text ? `<span>${text}</span>` : ''); },
     // Pin a label to a 3D point (Vector3 or Object3D + offset).
     label: (id, o, html, target, offset = [0, 0, 0], cls = '') => {

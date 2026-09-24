@@ -307,6 +307,11 @@ Run a transcription, phoneme and pace check over every clip (faster-whisper `sma
 - Variables used in `update()` must be defined before use; a page error shows as `[page error]` and aborts the render.
 - Kokoro pads clips with silence; the engine trims it. Changing TTS settings invalidates the per-part cache automatically.
 - Transparent ghosts must not write depth; keep `ghostify` as is.
+- `ui.label` offsets are in **world units**. For objects inside a scaled group (e.g. a miniature world), scale the offset
+  too, or the label floats far above the object or off the top of close-up shots.
+- Proper names are often mispronounced (Kokoro read Descartes as "dis-KARTS", Putnam as "PUT-nahm" and Nagel as "NAY-jel").
+  Check every name's phonemes in the audit, and fix them with `pronounce` respellings ("Day-cart", "Putnum", "Naygle").
+- Verify the catalogue's SEP link before relying on it: entries get renamed (e.g. `brain-vat` → `skepticism-content-externalism`).
 - In the trolley film, don't recompute the trolley's hook speed from a fixed start time. Key the emergence to a cue so that slower
   narration doesn't slow the action.
 

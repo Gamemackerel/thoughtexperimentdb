@@ -7,6 +7,7 @@ description.
 | # | Experiment | Status |
 |---|---|---|
 | 1 | [The Trolley Problem](experiments/trolley-problem/) | ✅ rendered |
+| 2 | [Brain in a Vat](experiments/brain-in-a-vat/) | ✅ rendered |
 
 What's next is decided by [`thought_experiments.xlsx`](thought_experiments.xlsx): the catalogue of candidates, sorted by
 the average of their Accessibility, Visualization and Popularity ratings, with a link to an in-depth video essay for
