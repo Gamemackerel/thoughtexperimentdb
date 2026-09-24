@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thought Experiment Player</title>
+<link rel="stylesheet" href="/engine/style.css">
+<script type="importmap">
+{ "imports": {
+    "three": "/node_modules/three/build/three.module.js",
+    "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="frame">
+  <canvas id="gl"></canvas>
+  <div id="ui"></div>
+</div>
+<div id="controls" hidden>
+  <button id="play">▶︎ Play</button>
+  <input id="scrub" type="range" min="0" max="1000" value="0">
+  <span id="clock">0.0s</span>
+</div>
+<script type="module">
+import { createStage, createUI, Timeline, captionAt } from '/engine/core.js';
+
+const q = new URLSearchParams(location.search);
+const exp = q.get('exp');
+const preview = q.has('preview');
+const base = `/experiments/${exp}`;
+const timeline = new Timeline(await (await fetch(`/build/${exp}/timeline.json`)).json());
+const { default: build } = await import(`${base}/scene.js`);
+
+// ?format=vertical renders 1080×1920 (Shorts/Reels/TikTok); default is 1920×1080
+const vertical = q.get('format') === 'vertical';
+const W = vertical ? 1080 : 1920, H = vertical ? 1920 : 1080;
+document.body.classList.toggle('vertical', vertical);
+document.documentElement.style.setProperty('--w', W + 'px');
+document.documentElement.style.setProperty('--h', H + 'px');
+const stage = createStage(document.getElementById('gl'), { width: W, height: H });
+const ui = createUI(document.getElementById('ui'), stage);
+const scene = build({ stage, ui, tl: timeline });
+
+function renderAt(t) {
+  scene.update(t);
+  ui.caption(captionAt(timeline, t));
+  stage.render();
+}
+window.renderAt = renderAt;
+// thumbnail mode: hide captions and running overlays, add a headline
+window.showThumb = (html, side = 'left') => { document.body.classList.add('thumb'); ui.thumb(html, side); stage.render(); };
+window.duration = timeline.duration;
+renderAt(0);
+window.ready = true;
+
+if (preview) {
+  // Scale the 1920×1080 frame to fit the window and play in real time with narration.
+  const frame = document.getElementById('frame');
+  const fit = () => { const s = Math.min(innerWidth / W, (innerHeight - 48) / H); frame.style.transform = `scale(${s})`; };
+  addEventListener('resize', fit); fit();
+  const controls = document.getElementById('controls'); controls.hidden = false;
+  const audio = new Audio(`/build/${exp}/narration.m4a`);
+  const scrub = document.getElementById('scrub'), clock = document.getElementById('clock');
+  document.getElementById('play').onclick = () => audio.paused ? audio.play() : audio.pause();
+  scrub.oninput = () => { audio.currentTime = (scrub.value / 1000) * timeline.duration; };
+  addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); audio.paused ? audio.play() : audio.pause(); } });
+  const loop = () => {
+    const t = audio.currentTime;
+    renderAt(t);
+    scrub.value = (t / timeline.duration) * 1000;
+    clock.textContent = t.toFixed(1) + 's';
+    requestAnimationFrame(loop);
+  };
+  loop();
+}
+</script>
+</body>
+</html>

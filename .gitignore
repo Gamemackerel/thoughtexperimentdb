@@ -1,0 +1,16 @@
+# dependencies & local environments
+node_modules/
+tools/kokoro-venv/
+__pycache__/
+
+# Kokoro model files (downloaded by tools/setup.sh)
+tools/kokoro/*.onnx
+tools/kokoro/*.bin
+
+# generated build cache (narration clips, timeline, stills) — rebuilt by engine/render.mjs
+build/
+
+# rendered videos are rebuilt from script.json + scene.js (thumbnails, captions and descriptions are committed)
+experiments/*/output/*.mp4
+
+.DS_Store

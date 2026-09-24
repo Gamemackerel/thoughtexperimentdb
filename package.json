@@ -1,0 +1,13 @@
+{
+  "name": "thoughtexperimentdb",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node engine/render.mjs",
+    "preview": "node engine/render.mjs --preview"
+  },
+  "dependencies": {
+    "puppeteer": "^24.43.1",
+    "three": "^0.186.1"
+  }
+}
