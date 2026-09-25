@@ -169,8 +169,8 @@ export default function trolley(ctx) {
   groundPlane.rotation.x = -Math.PI / 2; root.add(groundPlane); level.ground.push(groundPlane);
 
   // ---- after a run: what you did, the third track (first time), and the ending (third time)
-  async function afterRun() {
-    const choice = S.committed === 'branch' ? 'pulled' : 'stayed';
+  async function afterRun(committed) {
+    const choice = committed === 'branch' ? 'pulled' : 'stayed';
     S.choices.push(choice); S.runs++;
     save.complete('trolley-problem');
     await ctx.wait(0.6);
@@ -269,9 +269,10 @@ export default function trolley(ctx) {
         const k = easeInOut(S.pt / 2.0);
         S.s = lerp(S.rewindFrom, RESET_X - START, k);
         if (k >= 1) {
+          const committed = S.committed;                                   // remember the choice before resetting
           routeCurve = ROUTES.main; S.route = 'main'; S.committed = null;   // everything, lever included, goes back
           Object.values(victims).flat().forEach(restore);
-          player.enabled = true; go('reflect'); afterRun();
+          player.enabled = true; go('reflect'); afterRun(committed);
         }
       } else {
         S.speed = 0;

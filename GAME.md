@@ -78,7 +78,12 @@ Every vignette also has:
 - **Move:** WASD / arrow keys, a gamepad left stick, or tap/click on the ground to walk there.
 - **Interact:** `E` / `Space` / gamepad A, or tap the on-screen prompt when it appears near an object.
 - **Notebook:** `N`. **Leave to the House:** `Esc` (asks first).
-- The camera is always authored: it follows you along rails or between framed shots. There is no free mouse-look.
+- **Camera: third person by default.** The camera is authored (`makeFramer` keeps you and everything at stake in frame).
+  There is no free mouse-look.
+- **First person, only where the experiment is about perspective.** In Plato's Cave you see through your own eyes until
+  you step out into daylight: A/D or drag to turn, W/S or tap to walk, a wider lens (the level returns `fov`), and
+  turning is limited while chained (`player.yawLimit`). Outside the cave, and when you go back in, the same rule holds:
+  first person inside, third person outside.
 
 ## 5. Voice and text
 

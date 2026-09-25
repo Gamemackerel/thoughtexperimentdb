@@ -5,7 +5,7 @@ const p = await b.newPage(); await p.setViewport({ width: 1280, height: 720 });
 const errs = []; p.on('pageerror', (e) => errs.push('PAGEERROR ' + e.message));
 await p.goto('http://localhost:5173/game/?level=platos-cave'); await new Promise((r) => setTimeout(r, 1500)); await p.click('#begin');
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
-const shot = (n) => { console.log('step', n); return p.screenshot({ path: `build/cave-${n}.png` }); };
+const shot = (n) => { console.log('step', n); return p.screenshot({ path: `build/playtest-cave-${n}.png` }); };
 const walkTo = (x, z) => p.evaluate((x, z) => { const P = window.__ted.player; P.target = P.pos.clone().set(x, 0, z); }, x, z);
 const press = async () => { for (let i = 0; i < 40; i++) { if (await p.evaluate(() => document.getElementById('prompt').classList.contains('on'))) break; await sleep(0.25); } await p.keyboard.press('KeyE'); };
 const S = () => p.evaluate(() => window.__ted.level?.__S?.phase + '/' + window.__ted.level?.__S?.where);

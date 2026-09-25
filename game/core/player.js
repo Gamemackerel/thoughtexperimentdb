@@ -12,6 +12,8 @@ export class Player {
     this.speed = 4.2;
     this.enabled = true;
     this.locked = false;         // scripted: ignores input, still walks to `target`
+    this.firstPerson = false;    // A/D (or drag) turn, W/S walk along where you're looking
+    this.yaw = 0; this.pitch = 0; this.yawLimit = null;   // yawLimit: [min, max] (e.g. while chained)
     this.walkT = 0;
     this.keys = new Set();
     addEventListener('keydown', (e) => this.keys.add(e.code));
@@ -22,7 +24,13 @@ export class Player {
   // seated pose (bench, chained in the cave): no walking until you stand
   sit(on = true) { this.sitting = on; if (on) { this.vel.set(0, 0, 0); this.target = null; } }
 
-  place(x, z, rotY = 0) { this.pos.set(x, 0, z); this.obj.rotation.y = rotY; this.vel.set(0, 0, 0); this.target = null; }
+  place(x, z, rotY = 0) { this.pos.set(x, 0, z); this.obj.rotation.y = rotY; this.yaw = rotY; this.vel.set(0, 0, 0); this.target = null; }
+
+  look(dYaw, dPitch) { this.yaw += dYaw; this.pitch = Math.max(-0.7, Math.min(0.6, this.pitch + dPitch)); this.clampYaw(); }
+  clampYaw() { if (this.yawLimit) this.yaw = Math.max(this.yawLimit[0], Math.min(this.yawLimit[1], this.yaw)); }
+  // eye position and view direction for a first-person camera
+  eye() { return this.pos.clone().add(new THREE.Vector3(0, this.sitting ? 1.28 : 1.72, 0)); }
+  viewDir() { const c = Math.cos(this.pitch); return new THREE.Vector3(Math.sin(this.yaw) * c, Math.sin(this.pitch), Math.cos(this.yaw) * c); }
 
   // raw input as a 2D vector (x right, y forward)
   input() {
@@ -39,7 +47,17 @@ export class Player {
   // level: { walkable(x,z), blockers(): [{x,z,r}] }; camera: THREE.Camera (movement is camera-relative)
   update(dt, t, level, camera) {
     const want = new THREE.Vector3();
-    if (this.enabled && !this.sitting) {
+    if (this.firstPerson && this.enabled && !this.locked) {
+      // turning works even while seated (within yawLimit)
+      const inp = this.input();
+      this.yaw -= inp.x * dt * 2.1; this.clampYaw();
+      if (!this.sitting && Math.abs(inp.y) > 0.05) { this.target = null; want.set(Math.sin(this.yaw), 0, Math.cos(this.yaw)).multiplyScalar(inp.y); }
+      else if (!this.sitting && this.target) {
+        want.subVectors(this.target, this.pos).setY(0);
+        if (want.length() < 0.25) { this.target = null; want.set(0, 0, 0); }
+        else { want.normalize(); let d = Math.atan2(want.x, want.z) - this.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); this.yaw += d * (1 - Math.exp(-dt * 6)); }
+      }
+    } else if (this.enabled && !this.sitting) {
       const inp = this.locked ? new THREE.Vector2() : this.input();
       if (inp.lengthSq() > 0.01) {
         this.target = null;
@@ -56,9 +74,10 @@ export class Player {
     const step = this.vel.clone().multiplyScalar(dt);
     if (step.lengthSq() > 1e-8) this.move(step, level);
 
-    // face the direction of travel; walk bob
+    // face the direction of travel (first person: face where you look); walk bob
     const spd = this.vel.length() / this.speed;
-    if (spd > 0.05) {
+    if (this.firstPerson) this.obj.rotation.y = this.yaw;
+    else if (spd > 0.05) {
       const yaw = Math.atan2(this.vel.x, this.vel.z);
       let d = yaw - this.obj.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d));
       this.obj.rotation.y += d * (1 - Math.exp(-dt * 12));

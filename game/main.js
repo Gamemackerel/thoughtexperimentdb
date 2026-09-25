@@ -15,6 +15,7 @@ const LEVELS = {
 // ---------------------------------------------------------------- stage (full window, crisp on hi-dpi)
 const canvas = document.getElementById('gl');
 const stage = createStage(canvas, { width: innerWidth, height: innerHeight });
+let baseFov = 35;
 function resize() {
   const w = innerWidth, h = innerHeight;
   stage.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -22,7 +23,8 @@ function resize() {
   stage.camera.aspect = w / h;
   // portrait screens keep most of the landscape horizontal view (same rule as the films)
   const landH = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(35 / 2)) * (16 / 9));
-  stage.camera.fov = h > w ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan((landH * 0.86) / 2) / (w / h))) : 35;
+  baseFov = h > w ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan((landH * 0.86) / 2) / (w / h))) : 35;
+  stage.camera.fov = baseFov;
   stage.camera.updateProjectionMatrix();
   stage.width = w; stage.height = h;
 }
@@ -78,6 +80,7 @@ async function goto(name) {
   stage.hemi.intensity = 1.6; stage.sun.intensity = 2.4; stage.hemi.color.set(0xfff6e8); stage.sun.color.set(0xfff1dc);
   stage.renderer.toneMappingExposure = 1.05;
   player.sit(false); player.locked = false; player.obj.visible = true;
+  player.firstPerson = false; player.pitch = 0; player.yawLimit = null;
   const mod = await LEVELS[name]();
   level = mod.default(ctx);
   level.name = name;
@@ -95,8 +98,17 @@ async function goto(name) {
 
 // ---------------------------------------------------------------- input: tap/click to walk, notebook, leave
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
-canvas.addEventListener('pointerdown', (e) => {
-  if (!level || !player.enabled) return;
+let drag = null;
+canvas.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, moved: 0 }; canvas.setPointerCapture?.(e.pointerId); });
+canvas.addEventListener('pointermove', (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
+  if (player.firstPerson && player.enabled) player.look(-dx * 0.005, -dy * 0.004);   // drag to look around
+});
+canvas.addEventListener('pointerup', (e) => {
+  const tap = drag && drag.moved < 8; drag = null;
+  if (!tap || !level || !player.enabled) return;
   ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
   ray.setFromCamera(ndc, stage.camera);
   const hit = ray.intersectObjects(level.ground ?? [], false)[0];
@@ -127,6 +139,9 @@ function frame(now) {
     const k = c.cut ? 1 : 1 - Math.exp(-dt * (c.stiffness ?? 3));
     cam.pos.lerp(c.pos, k); cam.look.lerp(c.look, k);
     stage.setCamera(cam.pos, cam.look);
+    // a level may ask for a different lens (first person wants a wider one)
+    const fov = c.fov ? (innerHeight > innerWidth ? c.fov * 1.35 : c.fov) : baseFov;
+    if (Math.abs(stage.camera.fov - fov) > 0.05) { stage.camera.fov += (fov - stage.camera.fov) * (c.cut ? 1 : 1 - Math.exp(-dt * 4)); stage.camera.updateProjectionMatrix(); }
   }
   stage.render();
   requestAnimationFrame(frame);

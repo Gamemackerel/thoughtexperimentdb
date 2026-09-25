@@ -11,10 +11,10 @@ const lvl = () => p.evaluate(() => window.__ted.level?.name);
 for (const [x, z, name] of [[-3.4, 2.4, 'book'], [-6.6, 3.4, 'cave door'], [4.5, 3.8, 'sky door']]) {
   await sleep(2.5); await walkTo(x, z); await sleep(3); await press(); await sleep(3.5);
   console.log(name, '→', await lvl());
-  await p.screenshot({ path: `build/house-${name.replace(' ', '')}.png` });
+  await p.screenshot({ path: `build/playtest-house-${name.replace(' ', '')}.png` });
   await p.evaluate(() => window.__ted.ctx.goto('house')); await sleep(2);
   console.log('  back in', await lvl(), 'at', await p.evaluate(() => window.__ted.player.pos.toArray().map((v) => v.toFixed(1)).join(',')));
 }
-await p.screenshot({ path: 'build/house-final.png' });
+await p.screenshot({ path: 'build/playtest-house-final.png' });
 console.log(errs.join('\n') || 'no errors');
 await b.close();

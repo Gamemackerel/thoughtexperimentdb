@@ -114,6 +114,8 @@ export default function platosCave(ctx) {
     stage.scene.background = new THREE.Color(dark ? DARK : palette.sky);
     stage.scene.fog = dark ? new THREE.Fog(DARK, 22, 60) : new THREE.Fog(palette.sky, 60, 180);
     cave.visible = dark; out.visible = !dark;
+    // inside the cave you see through your own eyes; outside, the camera steps back
+    player.firstPerson = dark; player.obj.visible = !dark; player.pitch = dark ? 0.1 : 0;
   }
   setLight('cave');
 
@@ -125,7 +127,7 @@ export default function platosCave(ctx) {
   }
 
   interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', enabled: () => S.phase === 'free' && S.where === 'cave' && !S.returned,
-    onUse: () => { player.place(SEAT.x, SEAT.z, Math.PI); player.sit(true); ending('watch_end', 'You kept watching', 'The shadows were all you knew. It is hard to leave what you know.'); } });
+    onUse: () => { player.place(SEAT.x, SEAT.z, Math.PI); player.sit(true); player.pitch = 0.3; ending('watch_end', 'You kept watching', 'The shadows were all you knew. It is hard to leave what you know.'); } });
   interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit under the tree', enabled: () => S.phase === 'free' && S.where === 'out',
     onUse: () => { player.place(TREE.x + 1.2, TREE.z + 1.2, Math.PI * 0.8); player.sit(true); ending('stay_end', 'You stayed in the light', 'The others are still down there, watching the wall.'); } });
   interact.add({ pos: ARCH.clone().add(V(3, 0, 0)), radius: 2.8, height: 2.5, prompt: 'Go back down', enabled: () => S.phase === 'free' && S.where === 'out' && S.saidChoose,
@@ -143,12 +145,12 @@ export default function platosCave(ctx) {
   // chained: the scene plays; then the chains come loose
   (async () => {
     await ctx.wait(1); await voice.say('arrive'); await ctx.wait(4); await voice.say('shadows'); await ctx.wait(6);
-    await voice.say('loose'); S.phase = 'free'; S.pt = 0; player.sit(false);
+    await voice.say('loose'); S.phase = 'free'; S.pt = 0; player.sit(false); player.yawLimit = null;
   })();
 
   return Object.assign(level, {
     spawn: { x: SEAT.x, z: SEAT.z, rotY: Math.PI },
-    start() { player.sit(true); },
+    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 0.45, Math.PI + 0.45]; },   // chained: you can only turn your head a little
     walkable: (x, z) => (S.where === 'cave'
       ? (Math.abs(x) < 15.5 && z > WALL_Z + 0.8 && z < 10.5) || Math.hypot(x - MOUTH.x, z - MOUTH.z) < 3.5
       : Math.hypot(x - OUT.x, z - OUT.z) < 22 && Math.hypot(x - POND.x, z - POND.z) > 3.2),
@@ -210,11 +212,9 @@ export default function platosCave(ctx) {
         const look = pl.pos.clone().lerp(TREE, 0.3).add(V(0, 3, -6));
         return { pos: pl.pos.clone().add(V(-2, 7, 15)), look, stiffness: 2.2 };
       }
-      if (S.phase === 'chained') return { pos: V(0.6, 3.1, -0.4), look: V(0, 3, WALL_Z), stiffness: 1.5 };   // just behind the prisoners' heads
-      const pts = [pl.pos.clone(), V(0, 4, WALL_Z), SEAT.clone()];
-      if (pl.pos.z > -1) pts.push(FIRE.clone().add(V(0, 1.5, 0)));
-      if (pl.pos.distanceTo(MOUTH) < 12 && !S.returned) pts.push(MOUTH.clone().add(V(1, 3, 0)));
-      return { ...frame(pts, { min: 12, max: 40 }), stiffness: 2.4 };
+      // inside the cave: first person, through your own eyes
+      const eye = pl.eye();
+      return { pos: eye, look: eye.clone().add(pl.viewDir()), stiffness: 25, fov: 64 };
     },
 
     dispose() { voice.stop(); ctx.ui.fade(0); },
