@@ -4,12 +4,12 @@ import { THREE } from '/engine/core.js';
 
 const wpos = (o) => (o.isObject3D ? o.getWorldPosition(new THREE.Vector3()) : o);
 
-// talk(ctx, { who, lines: [..] | () => string, prompt, radius, offset, enabled })
+// talk(ctx, { who, lines: [..] | () => string, prompt, radius, offset, enabled, at })   (at: where to stand, if not next to them)
 // Lines cycle; a function can answer according to the state of the scene.
-export function talk(ctx, { who, lines, prompt = 'Talk', radius = 1.9, offset = [0, 3.1, 0], enabled = () => true }) {
+export function talk(ctx, { who, lines, prompt = 'Talk', radius = 1.9, offset = [0, 3.1, 0], enabled = () => true, at = null }) {
   let i = 0;
   return ctx.interact.add({
-    pos: () => wpos(who), radius, prompt, height: 2,
+    pos: at ? () => at : () => wpos(who), radius, prompt, height: 2,
     enabled: () => enabled() && who.visible !== false,
     onUse: () => { const text = typeof lines === 'function' ? lines(i) : lines[i % lines.length]; i++; ctx.speak(who, text, { offset }); },
   });

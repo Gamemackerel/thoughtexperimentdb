@@ -11,7 +11,7 @@ import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
-const CAKE = V(-6.6, 0, 0.2), METER = V(0.5, 0, -4.8), MONSTER = V(6.4, 0, 0);
+const CAKE = V(-6.8, 0, 3.4), METER = V(0.5, 0, -4.8), MONSTER = V(6.4, 0, 0);
 const SLICES = 8, JOY = { villager: 1, monster: 100 };
 
 function makeMonster() {
@@ -45,10 +45,11 @@ export default function utilityMonster(ctx) {
 
   // the diners: six villagers along the sides, the monster at the head
   const seats = [];
+  // all six along the far side, facing you (like a painting of a last supper); you serve across the table
   for (let i = 0; i < 6; i++) {
-    const side = i < 3 ? -1 : 1, x = -3 + (i % 3) * 3;
-    const p = makePerson({ color: [0x5b7fa6, 0xe2a93b, 0x7a5a8c, 0xc9705a, 0x6f9a4f, 0x8b909a][i] }); p.position.set(x, 0, side * 1.7); p.rotation.y = side < 0 ? 0 : Math.PI; p.userData.body.position.y = -0.3; root.add(p);
-    const plate = mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 20), clay(0xffffff)); plate.position.set(x, 1.17, side * 0.65); root.add(plate);
+    const x = -4 + i * 1.6;
+    const p = makePerson({ color: [0x5b7fa6, 0xe2a93b, 0x7a5a8c, 0xc9705a, 0x6f9a4f, 0x8b909a][i] }); p.position.set(x, 0, -1.7); p.userData.body.position.y = -0.3; root.add(p);
+    const plate = mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 20), clay(0xffffff)); plate.position.set(x, 1.17, -0.6); root.add(plate);
     seats.push({ who: p, kind: 'villager', plate, served: 0, name: i });
   }
   const monster = makeMonster(); monster.position.copy(MONSTER); monster.rotation.y = -Math.PI / 2; root.add(monster);
@@ -76,7 +77,7 @@ export default function utilityMonster(ctx) {
 
   // ---- the frog climbs onto the table and sits on an empty plate, as if waiting to be served; then gives up
   const frog = makeFrog({ scale: 0.6 }); root.add(frog);          // a smaller frog indoors
-  const cameo = frogCameo(frog, [[-2, 6], [-1.2, 4.4], [-0.4, 3], { at: [0.3, 1.7], height: 1 }, { at: [0.2, 0.7], y: 1.2, height: 1 }, { at: [0, 0.65], y: 1.2 }, { face: [0, 5] },
+  const cameo = frogCameo(frog, [[-2, 6], [-1.2, 4.4], [-0.4, 3], { at: [0.3, 1.7], height: 1 }, { at: [0.5, 0.4], y: 1.2, height: 1 }, { at: [0.8, -0.55], y: 1.2 }, { face: [0.8, 5] },
     { wait: 2.8, act: (f, u) => (f.userData.body.rotation.x = u > 0.7 ? -0.2 : 0) }, { at: [1.2, 1.9], y: 0, height: 1.2 }, [2.2, 3.4], [3.2, 5], [4.2, 6.6]]);
 
   // ---- state
@@ -88,8 +89,8 @@ export default function utilityMonster(ctx) {
   interact.add({ pos: CAKE.clone().add(V(1.2, 0, 0)), radius: 1.6, height: 2, prompt: 'Take a slice', enabled: () => S.phase === 'serve' && !S.carrying && S.left > 0,
     onUse: () => { S.carrying = true; carried.visible = true; slices[SLICES - S.left].visible = false; S.left--; } });
   for (const seat of seats) {
-    const at = seat.kind === 'monster' ? V(5.4, 0, 2.6) : V(seat.who.position.x, 0, seat.who.position.z + Math.sign(seat.who.position.z) * 0.9);
-    interact.add({ pos: at, radius: seat.kind === 'monster' ? 1.8 : 1.2, height: seat.kind === 'monster' ? 3.6 : 2.2, prompt: seat.kind === 'monster' ? 'Give it to the monster' : 'Give them the slice', enabled: () => S.phase === 'serve' && S.carrying,
+    const at = seat.kind === 'monster' ? V(5.4, 0, 2.6) : V(seat.who.position.x, 0, 1.9);
+    interact.add({ pos: at, radius: seat.kind === 'monster' ? 1.8 : 0.8, height: seat.kind === 'monster' ? 3.6 : 2.2, prompt: seat.kind === 'monster' ? 'Give it to the monster' : 'Give them the slice', enabled: () => S.phase === 'serve' && S.carrying,
       onUse: () => serve(seat) });
   }
   async function serve(seat) {
@@ -113,7 +114,7 @@ export default function utilityMonster(ctx) {
     }
   }
   const villagerLines = [['I have been looking forward to this all week.', 'Is that raspberry?'], ['Do not mind me.', 'It does look hungry, bless it.'], ['Last year it ate the whole thing.', 'I suppose it does enjoy it more.'], ['Smells wonderful.', 'Just a small slice would do.'], ['My grandmother baked it.', 'Save a bit for the children?'], ['I am not hungry. Well. A little.', 'Fair is fair, surely?']];
-  seats.slice(0, 6).forEach((seat, k) => talk(ctx, { who: seat.who, radius: 1.3, offset: [0, 2.8, 0], enabled: () => S.phase === 'serve' && !S.carrying, lines: (i) => (seat.served ? 'That was delicious.' : villagerLines[k][i % 2]) }));
+  seats.slice(0, 6).forEach((seat, k) => talk(ctx, { who: seat.who, radius: 0.8, at: V(seat.who.position.x, 0, 1.9), offset: [0, 2.8, 0], enabled: () => S.phase === 'serve' && !S.carrying, lines: (i) => (seat.served ? 'That was delicious.' : villagerLines[k][i % 2]) }));
   talk(ctx, { who: monster, radius: 2, offset: [0, 4.2, 0], enabled: () => S.phase === 'serve' && !S.carrying, lines: ['CAKE?', 'YOU ARE MY FAVOURITE PERSON.', 'I COULD EAT ALL OF IT. I WOULD BE SO VERY HAPPY.', 'NOBODY ENJOYS CAKE LIKE I DO.'] });
   look(ctx, { pos: METER.clone().add(V(0, 0, 1.4)), radius: 1.6, height: 5.4, prompt: 'Look at the meter', lines: ['meter_2'], enabled: () => S.phase === 'serve' });
 
@@ -124,9 +125,9 @@ export default function utilityMonster(ctx) {
 
   return Object.assign(level, {
     __frog: cameo,
-    spawn: { x: -6.6, z: 3.2, rotY: Math.PI },
+    spawn: { x: -5, z: 4.2, rotY: Math.PI },
     walkable: (x, z) => Math.hypot(x, z * 1.3) < 15,
-    blockers: () => [...[-4, -2, 0, 2, 4].map((x) => ({ x, z: 0, r: 1.25 })), ...seats.slice(0, 6).map((s) => ({ x: s.who.position.x, z: s.who.position.z, r: 0.35 })), { x: MONSTER.x, z: MONSTER.z, r: 1.6 }, { x: CAKE.x, z: CAKE.z, r: 0.7 }, { x: METER.x, z: METER.z, r: 0.6 }],
+    blockers: () => [...[-4, -2, 0, 2, 4].map((x) => ({ x, z: 0, r: 1.25 })), ...seats.slice(0, 6).map((s) => ({ x: s.who.position.x, z: s.who.position.z, r: 0.4 })), { x: MONSTER.x, z: MONSTER.z, r: 1.6 }, { x: CAKE.x, z: CAKE.z, r: 0.7 }, { x: METER.x, z: METER.z, r: 0.6 }],
     update(dt, t) {
       // the meter fills (on a log scale, so the monster's slices tower over everyone else's)
       S.shown = lerp(S.shown, S.total, 1 - Math.exp(-dt * 3));

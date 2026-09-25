@@ -56,7 +56,7 @@ await run('newcombs-paradox', async (t) => {
 });
 await run('utility-monster', async (t) => {
   await t.until(async () => (await t.S('phase')) === 'serve', 40); await t.shot('serve');
-  for (let i = 0; i < 8; i++) { await t.use('Take a slice'); await sleep(0.5); await t.walkTo(-1, 3.4); await sleep(2.5); await t.use(alt ? (i < 6 ? 'Give them' : 'monster') : 'monster', 8); await t.walkTo(-3, 3.4); await sleep(2.5); await sleep(1); if (i === 1) await t.shot('fed'); }
+  for (let i = 0; i < 8; i++) { await t.use('Take a slice'); await sleep(0.5); await t.use(alt ? (i < 6 ? 'Give them' : 'monster') : 'monster', 12, alt && i < 6 ? i : 0); await sleep(1); if (i === 1) await t.shot('fed'); }
 });
 await run('chinese-room', async (t) => {
   await t.until(async () => (await t.S('phase')) === 'play', 40); await sleep(3); await t.shot('card');
