@@ -50,3 +50,32 @@
   Suggestion: close `ctx.page` before `ctx.gameOver`, or let the player close the page first and hold the card until then.
 - **[polish] [feedback]** Re-reading without waiting gives the identical page and the same caption again ("Two words, in the right order."); "Read a page" implies a fresh one.
   Suggestion: new random page each read with a line like "More nonsense." until the next wait.
+
+### simulation-argument
+- **[major] [choice/clarity]** The choice phase starts in silence with no prompt in view and no question voiced *as* a choice. After the pull-back, `phase: choose` at t=121.8; the player is standing at the monitor end of the desk, the lever ("Switch them off", radius 1.8) and the door ("Leave them running", 7 m away) show nothing until you blunder into them. The last line ("Somewhere, someone may be looking at you the same way.") is a reflection, not a prompt. I stood 15 s with an empty screen. A player who doesn't know they are being asked something just walks out the door (which *is* an ending) without knowing it was a decision.
+  Evidence: t=121.8–137 no text on screen; shots/045-t127.jpg.
+  Suggestion: at `choose`, light the lever (glow/pulse like the trolley lever) and open the door a crack with light spilling in, then voice one short beat ("You could switch them off.") and hold a long silence. Consider making the door visibly *closed* before `choose` so its opening is the signal that the scene now lets you go.
+- **[minor] [affordance/tap-to-walk]** Tapping the little world on the desk (the obvious thing to tap) walked me *behind* the desk to (1.1, -4.6), where the "Look closer" prompt (radius 2.2 around (0.6, -1.8)) disappeared. On touch there is no way to "tap the object"; you tap the ground near it and hope.
+  Evidence: `click 610 330` at t=11.8 → arrived at (1.1, -4.6), prompt shown at 12.7 then gone; shots/035-t24.jpg.
+  Suggestion: when a tap ray hits an interactable's mesh, walk to its interaction point (the front side) and show its prompt; this is a global rule worth adding in `interact.js`.
+- **[minor] [affordance]** The exit door is dead until the choice phase (`Leave them running` disabled in `explore`), and nothing tells you. Walking to the only door in the room early gives no prompt, so the only way out is Esc. Every other vignette in the hall has an always-available way out (grandfather's "Go home", monkeys' "Walk out" after the question).
+  Evidence: run 2, `use leave them running` → "disabled right now" at t=166.
+  Suggestion: make the door usable from the start with a neutral early exit ("Leave the study"), which gives a third ending ("You never looked").
+- **[minor] [structure/replay]** Same as grandfather: *Play again* replays every line verbatim (arrive, look, nested, more, ask, pullout ≈ 60 s before the choice comes back) with no acknowledgement of the previous choice, no skip, and the forced sequence Look closer → Run more worlds must be redone.
+  Evidence: run 2 ~50 s from arrival to `choose` again, identical captions.
+  Suggestion: on replay, start at the choice (the camera already pulled back), with one line that remembers ("Last time you switched them off.").
+- **[polish] [asides]** Window and photo asides are disabled until you've looked closer (both listed `[disabled]` at arrival), so the first 10 s in the room have nothing to poke except the main object.
+  Suggestion: enable asides from arrival; they are the natural thing to do while the arrival line plays.
+
+### fermi-paradox
+- **[major] [controls/accidental ending]** "Keep listening", the ending action, appears on the *same spot and same key* as "Listen", the action you just did, the moment the question is asked. A player who presses E again (to listen more, or to skip a caption) ends the vignette on their first interaction: Listen → 15 s of lines → E → time-lapse → game over at ~80 s, having never seen the send lever used.
+  Evidence: run 1, `use listen` t=28.9, "So where is everybody?" + prompt "Keep listening" 42.9, one E at 69.2 → `phase: lapse` → card at 81.7.
+  Suggestion: make keeping-listening the *passive* branch (GAME.md pillar 2: doing nothing is a real option): sit in the chair and let the nights pass on their own after ~30–40 s of silence, or require the player to sit in the chair (a distinct object). Don't put a terminal action on the same prompt anchor as a non-terminal one.
+- **[major] [structure]** One binary choice, one run, ~70–80 s end to end, no replay loop, no twist, no rewind; the card's journal question ("Would you send the message…?") is asked identically of players who never discovered the send lever. It's the thinnest vignette in the hall.
+  Evidence: run 1 (listen) card at 81.7 s; run 2 (send) card at ~73 s after arrival.
+  Suggestion: after the first time-lapse, rewind to the same night and let the second visit carry a twist that is true to the literature. For example, after sending, a faint reply arrives but it's your own message echoed back from far away (the "we're early / alone" reading); or after listening, you notice a light that isn't a star moving. On run 2 the narrator acknowledges the first choice. Ask the journal question only once the player has seen both options exist.
+- **[minor] [affordance]** The send lever (red knob, the most "pullable" object in view at arrival, shots/052-t15.jpg) is disabled until you've listened, and walking to it gives nothing.
+  Evidence: run 2, `use send a message` right after arrival → "disabled right now".
+  Suggestion: same rule as the monkey lever: either enable it (sending before listening is a legitimate, interesting choice: shouting before you've heard anything) or show a dimmed prompt.
+- **[polish] [mapping]** The hall portal is "Look through the telescope", but the vignette is a radio dish with static; there is no telescope to look through. The verb promises seeing, the scene is about hearing.
+  Suggestion: make the hall portal a small radio dish or a radio set ("Tune in"), or put a telescope in the scene that shows the empty sky as the moon aside.

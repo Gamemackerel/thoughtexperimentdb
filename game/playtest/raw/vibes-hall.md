@@ -36,3 +36,35 @@
 - **[polish] [visual]** The sky wallpaper tiles one cloud stamp plus small dots at a regular pitch. Up close it reads as nursery polka-dot wallpaper, not Magritte's painted sky, and the dots (small single circles) are the cheapest-looking element in the room.
   Evidence: every hall shot; the dots are clearest around the stairs in 005-mid1.jpg.
   Suggestion: drop the dots. Vary cloud scale and rotation (2–3 stamps), and add a vertical gradient from deeper blue at the top to paler near the skirting, as in *The Blank Signature*/*Le Beau Monde* skies.
+
+### grandfather-paradox
+- **[major] [visual/drama]** The meeting, the image the whole vignette builds to, is visually dead. Grandfather slides up and stops beside the bench, grandmother stays seated, and nothing moves: no hat lift, no standing, no turn toward each other, no change in light. The caption "They meet, just as they always did." carries all of it.
+  Evidence: 033-t121.jpg, 036-t127.jpg (both identical over 6 s).
+  Suggestion: give the meeting a two-second gesture: he lifts the bowler, she stands, they turn to face each other, and a small warm glow or the sepia filter easing for one beat. Frame it closer. It's the only close-up the vignette needs.
+- **[major] [visual]** "Sepia-toned past" is a whole-canvas CSS filter (`sepia(0.35) saturate(0.85)` on the renderer), so the result is just a slightly faded version of the normal palette. Terracotta roofs, olive trees and a **teal** station roof all survive, and the player's teal is muted along with everything else. The strongest idea available (you're the only thing in full colour, because you don't belong here) is lost, and the teal roof competes with "you".
+  Evidence: 016-t47.jpg, 019-gate.jpg (the station roof is the same teal family as the player and the time machine).
+  Suggestion: tint the past through materials (a sepia palette variant for the scene's clay) instead of the canvas filter, and leave the player and the time machine at full saturation. Recolour the station roof to a period brick or slate.
+- **[minor] [visual]** Things the narration says happen aren't shown. "A gust of wind. The gate swings open again." has no wind: no leaves, no dust, no sway in the trees. In the shot at the caption the gate still reads as closed. "He laughs." has no bounce or bubble.
+  Evidence: 025-t100.jpg (gate caption; nothing moves), 047-t225.jpg (laugh caption).
+  Suggestion: a short swirl of leaf or dust particles across the gate and a tree sway for the wind; a little shoulder bob and a "Ha!" `talk()` bubble for the laugh. Show, then say.
+- **[minor] [visual]** The railway is two thin dark lines drawn on the sand, with no sleepers, ballast or buffer stop, and no train ever arrives. The station is a slab with a bench and a hut. Next to the hall's lovingly made locomotive it looks unfinished, and it's the goal of the whole walk.
+  Evidence: 018-t57.jpg, 033-t121.jpg.
+  Suggestion: add clay sleepers and a buffer, a lamp post and a station sign on the platform. Maybe have a small train sigh in and out after the meeting, so the "they always did" beat has a sound-image.
+- **[minor] [camera]** The default framing pulls so wide (it fits the whole route) that at the choice the grandparents are ~20 px figures and the player hugs the bottom-left edge, sometimes half off frame next to the time machine.
+  Evidence: 018-t57.jpg (player at the left edge), 039-t160.jpg (grandfather ~25 px tall).
+  Suggestion: frame player + grandfather + the next obstacle, and cut wide only on the arrival and the meeting.
+- **[minor] [UI]** The "E Close the gate" prompt sits over grandfather's face and hat right as he walks through the gate, which is the moment you want to see him. The caption pill also breaks a two-line sentence into two separately rounded boxes ("…Your" / "grandmother."), which looks like a rendering glitch.
+  Evidence: 047-t225.jpg (prompt on grandfather), 016-t47.jpg / 018-t57.jpg (split caption pills).
+  Suggestion: put prompts below the object's feet when an NPC is the focus. Render the caption as one block (a single background box with `max-width`, not inline `box-decoration-break` pills), or keep narration lines short enough for one line at 1280.
+- **[minor] [bug/narrative]** Leaving early via "Go home" at t≈2 s: the reflection "You came all this way, and changed nothing." played, then the queued arrival line "That's your grandfather. Young, and in a hurry." played *after* it, over the frozen town. Pressing "Go home" also has no visible departure: you stand next to the machine and the world freezes.
+  Evidence: t=262 → t=266, shots 051-t262.jpg, 053-t266.jpg.
+  Suggestion: clear the voice queue on phase `over`. Walk the player into the machine, close the door, and give it a brief shimmer before the card.
+- **[polish] [visual]** The fountain water vanishes. At t=262 the basin has its pale blue water; at t=266 it's empty sand-coloured stone. The bob (`0.58 ± 0.01`) sinks it below the rim.
+  Evidence: 051-t262.jpg vs 053-t266.jpg.
+  Suggestion: raise the water base to ~0.6 so the bob stays above the basin top.
+- **[major] [structure]** "Back to the house" on the game-over card drops you in the **first room** at (0, 5.5), not in the hall beside the grandfather clock. Having climbed the ladder to reach the hall, you're sent back downstairs each time. The label also says "house" for a hall portal.
+  Evidence: t=275.9 level=house after `#over [data-act=home]` from grandfather-paradox.
+  Suggestion: return hall vignettes to the hall at the portal's spawn (`ctx.from`), and label the button "Back to the hall" there.
+- **[minor] [pacing/mood]** A whole run lasts about 25 s (arrive t=43.6 → "They meet" t=68.8 on my first run), and grandfather hurries the entire time. I stood a few seconds to take in the town and the vignette ended before I'd reached anything. That's the opposite of "slow and authored" and leaves no room for the town's mood.
+  Evidence: first run: phase `over` at 68.8 s after loading at 43.6 s, and I never got a prompt.
+  Suggestion: have him pause on his doorstep until the player first moves (or ~8 s), and add a stop or two on the route (tip the hat to the stallholder, look at the fountain), so the player has time to be a ghost in the town.

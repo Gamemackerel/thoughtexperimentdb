@@ -87,3 +87,25 @@
   Evidence: run 1 t≈35–40 (no window caption); run 3 t=221.4 (caption appears).
   Suggestion: queue look() lines, or keep the prompt available until the line has actually played.
 - **[polish] [consistency]** Neither ending rewinds; switching off is final and the card follows immediately. Other vignettes play the consequence then restore; here a rewind (worlds flicker back on) would also answer "and then?" nicely.
+
+### fermi-paradox
+- **[major] [philosophy]** The choice the vignette offers (send a message vs keep listening) isn't the Fermi question; it's the SETI/METI debate. Fermi's (and Hart's) puzzle is about *visitors*: given the age of the galaxy, someone should have colonised or at least come here. The scene is a radio-listening station, and the only playable question is whether to transmit. The notebook explains Fermi/Hart and never mentions METI at all, so a player who reads it can't connect the choice they made to the text.
+  Evidence: lines `old` ("Someone should have come by now") vs choices "Keep listening" / "Send a message"; notebook text (no mention of transmitting, Arecibo 1974, or the METI controversy); journal question is purely about sending.
+  Suggestion: add one notebook paragraph on active messaging (the 1974 Arecibo message, the METI debate, the "dark forest"/"stay quiet" idea the send line alludes to), and/or give the player a visitor-shaped act too (e.g. the telescope finds a probe-sized nothing where one "should" be; the Moon's footprints are already a great hook).
+- **[major] [philosophy]** "Years pass. Nothing comes back. Maybe no one is there." draws an inference from evidence that can't bear it. At light speed, a reply from even the nearest star takes 8+ years round trip, and from most of the "billions" thousands of years; silence after years is exactly what you'd expect whether or not anyone is there. The game-over card gets it right ("The message is still travelling, and will be for thousands of years. Nothing has answered yet."), so voice and card disagree.
+  Evidence: send_2 at t=189.0; card "You called out" at ~t=206.
+  Suggestion: "Years pass. Your message has barely left the neighbourhood." and keep the maybe-they're-quiet line for the card.
+- **[minor] [philosophy]** The closing disjunction "Either they're rare, or they're quiet, or we're early" is presented as exhaustive. It omits the answers the notebook itself lists (civilisations destroy themselves: the Great Filter, which is not the same as "rare" because it lies in *our* future too) and the zoo/"they're here and we can't tell" family. For a pedant, "either… or… or…" claims more than the literature supports.
+  Evidence: listen_end at t=70.3; card "Maybe they are rare. Maybe they are quiet. Maybe we are early."
+  Suggestion: "Maybe they're rare. Maybe they don't last. Maybe they're quiet. Maybe we're early." (the card's "maybe" framing is better than the voice's "either").
+- **[minor] [accuracy]** The notebook says Hart argued "there are no other civilisations". Hart's claim was narrower: that we are the first (or only) civilisation *in our Galaxy*, from "Fact A" (no extraterrestrials on Earth now). The journal repeats it ("arguing the silence means there's no one out there"), and "silence" is itself anachronistic: Hart's argument is about absence of visitors, not radio silence (that's Brin's "Great Silence", 1983).
+  Evidence: notebook text; game/journal.json fermi-paradox.todo[1].
+  Suggestion: "Michael Hart argued in 1975 that the absence of visitors on Earth means we are probably the only civilisation in the Galaxy."
+- **[minor] [accuracy]** The notebook quotes Fermi as asking "Where is everybody?" as fact. Jones's own report (the cited source) says the witnesses remembered the wording differently ("Where is everybody?" / "But where is everybody?" / "Don't you ever wonder where everybody is?").
+  Suggestion: "asked something like 'Where is everybody?'".
+- **[minor] [design]** "Send a message" is disabled until you've used "Listen", and nothing happens if you don't listen (I idled 30+ s at t=113–143: no lines, no prompts). A player who walks straight to the lever (the most visible prop) gets a dead lever and no feedback.
+  Evidence: run 2, `debug` at t=113: "Send a message … [disabled]".
+  Suggestion: enable sending from the start (sending without listening first is a real and interesting choice), or have the lever say "Not yet" and point to the headphones.
+- **[polish] [voice]** send_2 is four sentences on three caption lines, against GAME.md §5 ("one short sentence per trigger, rarely two").
+  Evidence: shots/056-t194.jpg.
+- **[polish] [accuracy]** The moon aside, "Only one other world has ever had visitors", is true only of crewed visits; Mars, Venus and Titan have had robotic ones. Harmless, but the pedant hears it. "Only one other world has ever had footprints" says the same thing exactly.

@@ -16,3 +16,23 @@
 - **[polish] [UI]** The "Down to the first room" label is drawn right over the player's head at spawn (and "E Climb down" pill stacked just above it), hiding the figure's face.
   Evidence: shots/003.jpg.
   Suggestion: raise the hatch label (labelAt y 1.6 → ~2.6) or offset it towards the curtain so it never sits on the figure.
+- **[minor] [collision]** Blockers for the portal props are offset ~1 m *behind* the visible props, so you walk into them: tap-walking to (6.2, -2.2) puts the figure inside the telescope's tripod (telescope barrel sticking out of its head); walking to (11.5, -3) stands the figure inside the green garden gate's bars. hall.js blockers are at telescope (6.2, -2.8) and gate (11.5, -3.6), but the telescope is drawn at ~(6.2, -1.8) and the gate at ~(11.5, -2.6).
+  Evidence: shots/020.jpg (in the tripod), shots/021.jpg (in the gate). The walk to (11.5, -3) also took 15 s of game time (108 → 123 s) for ~5 m, jittering against the gate blocker.
+  Suggestion: move those blocker circles onto the props (telescope z ≈ -1.9, r ≈ 0.7; gate z ≈ -2.6, a wide box/2 circles across its width), and keep interact radius so the prompt still triggers in front.
+- **[minor] [collision]** The little room filled by the apple uses two circles (r 0.9 at x 2.6 and 3.8) for a square box; at its front-right corner the figure sinks into the box wall. Walking to (3.5, -3.5) stops at (4.9, -4.0) with the body half inside the box's right side.
+  Evidence: shots/019.jpg.
+  Suggestion: use a rectangle blocker for the box (or a third circle at the corners) and make the room's footprint match.
+- **[minor] [collision / stuck]** Holding W+D into the back wall between the grandfather clock and the typewriter table (from (-7, -3)) leaves you at (-6.2, -4.1), exactly on the walkable edge (`z > -4.1` is false there). From that spot tap-to-walk to anything to the right fails instantly ("did not arrive, still 10.1 away") and holding D does nothing; only walking forward (S, or tapping in front) frees you. Reproduced 3 times.
+  Evidence: `walkable -6.2 -4.1` → false; `walk 3 0` and `walk 6.2 -3.9` fail from there, `walk -2 0` works.
+  Suggestion: clamp the player to walkable - epsilon when sliding along the wall, and let the steering accept moves that don't reduce the distance to the boundary (slide along the wall instead of refusing).
+- **[polish] [camera]** At both ends of the hall the camera stops panning, so the figure goes half off-screen behind the red curtains: at (16.7, 3.2) the figure is cut by the right edge and hidden by the curtain; at (-16.8, 3.2) same on the left.
+  Evidence: shots/008.jpg, shots/012.jpg; `onscreen 16.9 1 4` → OFF SCREEN.
+  Suggestion: shrink the walkable x range at the front (|x| < ~15.5 when z > 2), or let the framer pan a little further so the figure always stays in frame and in front of the curtain.
+- **[polish] [UI]** Portal name label + "E" prompt stack directly over the figure's head when standing at a portal (clock, telescope, gate): the prompt pill covers the face in shots/013.jpg ("Open the clock" sits right on the head), and in shots/020/021 the two pills form a tower above the head.
+  Suggestion: anchor the E prompt at the object (or to one side of the player) and fade the portal name label once the prompt is showing.
+- **[polish] [clipping]** The Escher stairs run straight through the grandfather clock: two steps pass through its case just under the clock face.
+  Evidence: shots/003.jpg, shots/013.jpg.
+  Suggestion: move the stair spiral 1 m to the left or put the clock in front of it (clock z ≈ -3.2) so the steps pass behind.
+- **[polish] [UI]** The gentleman's speech bubble ("Good afternoon.") is drawn high above the fireplace, far from his head, and the "E Talk" pill sits between the bubble and him, covering his bowler hat. It reads as if the fireplace is speaking.
+  Evidence: shots/006-t41.jpg.
+  Suggestion: anchor the bubble just above his hat and hide the Talk prompt while a bubble is showing.

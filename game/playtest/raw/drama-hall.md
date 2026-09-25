@@ -1,11 +1,21 @@
 # drama · the hall
 
 ## Summary
-(in progress)
+- The premises are well chosen and the writing is often lovely ("They left footprints, and went home", "none of them meant a word of it", "You could have stopped him, in a sense"). The simulation reveal (the giant face over your domed study) is the strongest dramatic moment in my part.
+- The recurring structural flaw: the **question arrives after, or apart from, the choice**. Grandfather asks "what happens if you stop him?" after you've already tried; in Commons the question plays after you've rung the bell; in Simulation the choice after the reveal is never posed at all. Beat 3 (the held, silent choice) is missing from most of these vignettes.
+- **No rewind, no twist, no replay acknowledgement** in any hall vignette: each is a single pass straight to the game-over card, and "Play again" repeats the identical opening. The five-beat template from GAME.md is really three beats here (arrive, act, card).
+- Two vignettes **dramatise the opposite of their theory**. Monkeys make Shakespeare arrive in three tidy million-year steps (the real theorem is about unimaginable improbability). Commons makes the player the only defector, with neighbours who just copy you (the real tragedy has no villain).
+- Consequences are rushed: meetings, collapses and recoveries flash by in 2–5 s before the card, so the image the player should leave with is never held.
+
+
 
 ## Findings
 ### hall
-- (notes) Ladder → hall transition took <1 s of game time; hall arrival toast "A long hall. More doors, of a sort." Gentleman lines are Magritte's own words (fine in a speech bubble, not narration).
+- **[minor] [narrative]** The hall's floating labels name every experiment in scholarly form ("Infinite Monkey Theorem", "Simulation Argument", "Tragedy of the Commons") as you pass (hall, 6.9–12.0 s). "Tragedy" in the label gives the commons' ending away before you step through the gate, and the textbook titles clash with pillar 4's plain voice, when the portals themselves (clock, typewriter, gate) tease so well.
+  Evidence: hall walk at 6.9–12.0 s; shots/006-stack.jpg ("Tragedy of the Commons" over the gate).
+  Suggestion: label portals with a plain teaser ("A town, long ago", "A room of typewriters", "A shared field") and save the proper name for the notebook and journal.
+- **[polish] [drama]** The apple-faced gentleman's lines ("Everything we see hides another thing… We always want to see what is hidden by what we see.") are the best thematic overture the hall could have: every vignette beyond it is about what's hidden behind what you see. But he stands at the far end past all the portals, so most players meet him last or never.
+  Suggestion: move him near the ladder hatch, so his line frames the hall on arrival.
 
 ### grandfather-paradox
 - **[major] [pacing/arc]** The central question comes *after* the action, so the choice never gets its moment. On arrival the grandfather is already walking and every prompt (gate, signpost, tell him) is live; the stakes line "If they never meet, you are never born. So what happens if you stop him?" only fires when he reaches seg 3. In run 2 I had already closed the gate, turned the sign and been stepped around before the question was asked (gate 82.1 s, sign 92.4 s, question 98.8 s); it arrived as an afterthought. In the passive run it comes 10 s before "They meet" (52.6 s → 62.9 s), with no slow-down or silence, which cuts against GAME.md beat 3 ("time slows… long silence").
@@ -25,9 +35,6 @@
   Suggestion: frame the meeting (the framer should include both of them and you), and give them one small beat, such as him lifting his hat and her standing up. The quiet tenderness is what gives "you could have stopped him" its weight.
 - **[polish] [philosophy/drama]** The card line "You could have stopped him, in a sense. You just didn't." is the best writing in the vignette: it dramatises the "can in one sense, can't in another" answer without jargon. But it only appears on the card and is never voiced, and the voiced ending ("It was never going to un-happen") takes the harder fatalist line.
   Suggestion: voice the "in a sense" line as the final spoken beat, so the reflection ends on the tension and not on a verdict.
-- **[minor] [flow]** "Back to the house" on the game-over card drops you in the *first room* at (0, 5.5), not back in the hall beside the grandfather clock. After a quiet ending, the breath before the next portal is spent walking back to the ladder and climbing it again.
-  Evidence: t=208 s, the card's home button → level=house at (0.0, 5.5).
-  Suggestion: send hall vignettes home to the hall at their portal's spawn (`ctx.from`), as GAME.md describes.
 
 ### infinite-monkey
 - **[major] [philosophy/drama]** The scale, which is the whole drama of this theorem, is inverted. The run is fixed: 3 lever pulls = 3 million years → a full, clean "to be, or not to be, that is the question" on the page (t=91.9 s). One word appears after 1 M years, two after 2 M, then the line: a tidy staircase that makes the outcome feel *likely and near*. The real theorem is vertiginous because it's "certain given forever" *and* "never, in any time that means anything" (a single short line takes vastly longer than the age of the universe). The game's own walk-out card says the truer thing ("forever is much, much longer than it sounds"), so the "success" ending teaches the wrong lesson and the "giving up" ending teaches the right one.
@@ -41,7 +48,6 @@
   Suggestion: give the walk-out ending its own question (e.g. "Would you have kept waiting? What's the difference between 'it will happen' and 'it will happen to someone'?").
 - **[polish] [pacing]** The bananas aside pushed the central question "Given forever, could they type Shakespeare?" back to after I'd looked in the crate (185.5 s joke → 189.9 s question), so the joke framed the question. Replay also re-plays the identical intro with no acknowledgement of the first run.
   Suggestion: let the ask line interrupt/pre-empt asides, and on replay open with a variant ("Back again. They never stopped.").
-- **[keep] [writing]** "But none of them meant a word of it." and the journal question about meaning without intention turn a probability puzzle into a question about meaning. That's the best reframe in my part.
 
 ### simulation-argument
 - **[major] [arc/philosophy]** The choice answers a different question from the one the scene asks. The whole build-up is about *probability and self-location* ("how many are real? And which kind is yours?", 65.4 s), and the reveal pays it off beautifully (giant face over your domed study, shots/049-t77.jpg). The choice that follows (switch off / leave running) is about *ethics toward the simulated* and is never posed: after the reveal the choose phase is silent (I idled 15 s at 85–100 s with no line). The player has to work out from prompts what the lever now means. Neither ending comes back to "which kind is yours?"
@@ -62,3 +68,37 @@
   Suggestion: split it into three lines that fall across the time-lapse as the sky wheels (e.g. year 1 "Maybe they're rare."; year 10 "Maybe they're quiet."; year 40 "Maybe we're early."), and let the lapse run ~25–30 s. The waiting then *is* the experience.
 - **[polish] [pacing]** "Send a message" stays disabled until you've listened, and nothing says so; I walked to the lever at 110 s and got nothing for 20 s. The lever is lit and in frame from the start (shots/061-arrive.jpg), so it reads as available.
   Suggestion: hide or dim the lever until the ask line, or have it respond before listening ("Not yet. First, listen.").
+
+### tragedy-of-the-commons
+- **[major] [philosophy/drama]** The tragedy has a villain, and it's you. The neighbours only ever add sheep when *you* do (`// the neighbours copy you`, tragedy-of-the-commons.js:96). I idled 100+ s without adding: grass stayed at 1.00, nobody added a sheep, no line fired, and there was no ending and no frog (the cameo only starts once `adds >= 1`). The theory's force is that *nobody* has to be the bad one: each herder independently finds one more sheep rational, so ruin comes with no villain. The current build turns it into "monkey see, monkey do", a morality tale about starting it. It also leaves doing nothing, which the pillars call "always a real option", as a dead end.
+  Evidence: state `{"grass":1,"adds":0}` from 110 s to 227 s; line "Your neighbours notice. They add sheep too." (47.0 s).
+  Suggestion: after a short grace period, have a neighbour add a sheep *on their own* ("Your neighbour adds a sheep. It's their right."), then another. Now the player's restraint is costly (you're the only one not getting fatter sheep while the grass thins anyway) and the question "So why would anyone stop?" bites. Give restraint its own ending too: if you never add and never ring, the grass still goes. "You held back. It went anyway."
+- **[major] [arc]** The resolution is available before the problem. "Ring the bell" is live from the first second. Ringing with an untouched pasture (227.8 s) plays "Together, you agree on limits" and a card saying "The grass came back", when it never left (grass 1.00 throughout). And the agreement costs nothing: the neighbours walk into the field, the line plays, the grass snaps back to 1.00 within about 4 s, and nobody objects. The cooperative solution works in real communities *because* people do the work of rules, watching and sanctions, and that friction is the drama.
+  Evidence: run 2 state `recoverFrom: 1`; run 3 `recoverFrom: 0.58` → grass 1 by 302 s; shots/093-t238.jpg, shots/099-t304.jpg.
+  Suggestion: enable the bell only once the grass is visibly thin (or have an early ring get "The neighbours come, look at the thick grass, shrug, and go home."). At the meeting, stage one visible cost: each herder, you included, leads a sheep back to the pen; one neighbour hesitates and is watched until they do. Recover the grass over a held 8–10 s wide shot, and make the card text depend on `recoverFrom`.
+- **[minor] [pacing bug]** The central question lands after its answer. In run 3 I rang the bell at 283.9 s, the queued "Each extra sheep helps its owner… So why would anyone stop?" played at 284.3 s, and then "You ring the bell." at 290.6 s. The question arrived after the player had already answered it.
+  Suggestion: drop the queued `ask` line when the phase leaves `graze`, or better, ask it before the bell becomes usable (see above).
+- **[minor] [staging]** You aren't in "Together, you agree on limits". The four neighbours gather mid-pasture while the teal figure stays at the bell at the edge of frame (shots/093-t238.jpg).
+  Suggestion: walk the player to the circle during `meeting` (scripted walk), so "you" is literally one of the people agreeing.
+- **[minor] [consequence]** On the collapse ending, the card shows at the same moment as "The grass is gone. For everyone." (101.4 s), so the bare field is never held on screen. The wreck the player caused is the image the vignette should leave, and it's skipped.
+  Suggestion: hold 4–6 s on the bare pasture (sheep standing still, a neighbour looking at you) before the card. Then do a gentle rewind: the grass grows back as the sheep un-add, which is also GAME.md's rewind.
+
+### house / navigation (all hall vignettes)
+- **[minor] [flow]** Esc mid-vignette (commons, 315.8 s) and "Back to the house" on every card (grandfather at 208 s, monkeys at 199.5 s) return you to the *first room* at (0, 5.5), never to the hall beside the portal you used. After a quiet ending, the pause before the next portal is spent walking back to the ladder and climbing it again.
+  Suggestion: send hall vignettes home to the hall at their portal's spawn (`ctx.from`), as GAME.md describes.
+
+### journal
+- **[minor] [reflection]** The journal keeps only the *last* ending per vignette. I reached "It had already happened" twice and "You let it be" once, but it shows only "You left the past alone" (my last, throwaway early exit). The meaningful ending is overwritten by the least meaningful one.
+  Evidence: journal at 321 s, Grandfather entry.
+  Suggestion: list every ending reached (or at least keep the first and the most recent), so the journal reads as a record of the player's arc.
+
+## Keep
+- The simulation reveal: slow pull-back from the nested worlds to your study under a dome with a giant peg face above (shots/049-t77.jpg), and switching off darkening *your own* room.
+- The monkey reflection "But none of them meant a word of it", plus its journal question about meaning without intention: it turns a probability puzzle into a question about meaning.
+- Grandfather's ordinary obstacles (wind, habit, a laugh, "He steps around you, and apologises") and the card line "You could have stopped him, in a sense. You just didn't."
+- Fermi's quiet asides: the cold tea, the logbook of "Nothing" every night, and the moon's "They left footprints, and went home."
+- The commons neighbour "Mine are the fat ones. Don't tell the others." Self-interest seeded in one joke.
+- Card texts that differ per ending, and the journal's to-do lists (Lewis's "you can, and you can't" matches the vignette's own card line).
+
+## Harness notes
+- `use "Tell him who you are"` in Grandfather chased the moving grandfather until the scene ended (20 s timeout). Waiting in place with `until` for the prompt worked.

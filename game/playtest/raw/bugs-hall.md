@@ -52,3 +52,21 @@ Played 4 runs: lever ×5 then read; proper read/lever ×3; walk out; Esc mid-wai
   Suggestion: enable it from the start, or after the first line.
 - Verified OK: Play again resets `waits/years/readAt` and the paper piles.
 
+### simulation-argument
+Played 5 runs: full "Leave them running", full "Switch them off", Esc right after switching off, Esc during the reveal, sequence-break attempt (Run more worlds before Look closer: correctly disabled). Both endings reached.
+- **[blocker] [bug/state]** Esc right after "Switch them off" shows the Simulation game-over card *in the first room* and corrupts the journal. Recipe: reach `choose`, E "Switch them off" (t=60.3 s), Esc at t=60.6 s. At t=62.3 s in the house: caption "You switch them off. Above you, the lights flicker."; at t=67.6 s the card "You switched them off" appears over the first room with `journal question: -`, controls locked (shots/037-esc-after-off.jpg). `localStorage['ted.journal']` gains a `"house": {"ending":"You switched them off"}` entry, and the real Simulation entry in the journal has no ending or date. "Play again" on that card reloads the *house*. Cause: the `onUse` async (simulation-argument.js l.116: `await ctx.wait(2.2); await voice.say('off_end'); … ctx.gameOver(...)`) keeps running after `dispose()`, and `gameOver` writes to `level.name` of whatever level is current. Any vignette whose ending is an awaited chain has the same hole (monkey's `found`/`leave_end`, grandfather's `end()`).
+  Suggestion: same per-level abort token as in the monkey finding; `ctx.gameOver`/`save.complete`/`journal.write` should ignore calls from a disposed level. Also remove the stray `house` key from saved journals on load.
+- **[major] [bug/voice leak]** Esc during the reveal (t=52.1 s) → in the first room at t=54.9 s: caption "Somewhere, someone may be looking at you the same way." (the chain in `Run more worlds` l.111–114 continues, and also sets `player.enabled`/`outside.visible` on a dead level).
+  Suggestion: as above.
+- **[minor] [clarity]** When the `choose` phase starts (t=55.8 s) nothing says that the choice is open: no line, no prompt on screen (the player is standing at "Run more worlds", now disabled; "Switch them off" has a small 1.8 radius on the same desk and the door is 10 m away). A player who doesn't know to hunt for prompts will stand there.
+  Suggestion: after "pullout", show the switch's prompt from further away (or glow the switch and the door), or one short line ("You could switch them off. Or leave them be.").
+- **[polish] [save]** Leaving mid-ending still marks the portal done ("Simulation Argument ✓" in the hall after the Esc run above), because `save.complete` runs in the leaked chain.
+  Suggestion: fixed by the abort token.
+
+### fermi-paradox
+Played 4 runs: moon + logbook + listen + send; listen + keep listening; keep listening + Esc during the lapse; idle 60 s. Both endings reached.
+- **[blocker] [bug/state]** Same leaked-ending bug as Simulation: "Keep listening" (t=87 s), Esc 1 s into the lapse → first room, t=91.8 s caption "Nights become years…", t=99.3 s the "You kept listening" card over the first room, `journal question: -`, controls locked, and `ted.journal` gets another `"house"` entry (it overwrote the Simulation one). Reproducible every time. (Fix once, centrally: see simulation-argument.)
+- **[minor] [pacing/clarity]** Standing idle after arrival: in 60 s of game time (t≈37–97 s) nothing happens after "A clear night…": no line, no nudge, and "Send a message" stays disabled until you've found "Listen" (it needs `voice.said.has('ask')`). A player who walks to the obvious lever first gets no prompt at all.
+  Suggestion: after ~15 s idle, let the console crackle/glow (or say "listen" line on proximity); or enable the lever from the start with the question asked on first use.
+- Verified OK: the Listen prompt becomes "Keep listening" after the first listen; asides are one-shot and don't re-fire.
+
