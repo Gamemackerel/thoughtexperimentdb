@@ -57,3 +57,30 @@
 - **[polish] [visual]** "Your reflection… this one looks back." but the pond is a flat blue disc with no reflection (shots/069-t450.jpg). The frog plop there is cute and does read on camera.
   Suggestion: a simple mirrored figure/sky in the pond.
 - **[keep]** The whiteout into the paper-white sky and then the sun over the pond (shots/066-t436.jpg → 067-t437.jpg) and the dark-adapted return (shots/073-t462.jpg, fire, prisoners, shadows on the wall) are strong and readable.
+- **[minor] [bug]** Pressing Esc half a second after arriving in the cave showed the "Leave this vignette?" dialog, I accepted it, and nothing happened: I stayed chained in the cave for another 17 s until a second Esc worked. Then, back in the house, the cave's line "Your chains have come loose." played as a caption in the first room.
+  Evidence: t=558.3 s Esc accepted → still `platos-cave` at 575 s; after second Esc, house loaded at 575.9 s and caption "Your chains have come loose." at 577.6 s.
+  Suggestion: honour an accepted leave during the arrival transition (or don't show the dialog then), and flush the voice queue on level change.
+- **[minor] [clarity]** Both house doors say just "Open the door" (purple door → cave, sky door → ship). Standing between them you can't tell from the prompt which one you'll get; I went into the cave when I meant the ship.
+  Evidence: house, me at (-5.6, 3.4), prompt "Open the door".
+  Suggestion: "Open the purple door" / "Open the sky door", or put the vignette name in the prompt.
+
+### ship-of-theseus
+- **[major] [bug]** The fisherman's speech bubbles never go away. I talked to him 4 times at t≈720–727 s; all four bubbles stayed "on screen" for the rest of the scene (still listed at 874 s), and the last one ("This was my grandad's rod…") floats over open water in the sailing ending shot and on the game-over card.
+  Evidence: shots/105-stuck.jpg, shots/107-t871.jpg (bubble in the empty sea while I sail away). Recipe: go to the fisherman at (24.4, 1.2), press E four times ~2 s apart.
+  Suggestion: time out each bubble and replace the previous one instead of stacking; hide bubbles whose speaker is off-screen or when the phase changes to sail.
+- **[major] [pacing / dead air]** The core loop is six identical carry trips (take plank → walk → replace → ~5 s animation), about 8 s each, ~50 s total, with narration only after swaps 1, 3 and 6. Swaps 2, 4 and 5 are silent busywork, and Play again makes you do all six again before you can pick the other ship. On stream that's the moment chat starts typing "skip".
+  Evidence: first run t=616–666 s; second run t=703–778 s.
+  Suggestion: make later swaps faster (the old planks fly out on their own after the third, or you carry two at a time), give the silent swaps a tiny beat (the fisherman comments, a plank creaks, the ship changes colour visibly), and on Play again start at the two-ships choice or offer "skip to the choice".
+- **[minor] [clarity]** The two boarding prompts are 1.8 m apart on the same dock (new ship at z=-0.9, old at z=+0.9, radius 2.4). Walking up the middle of the dock you only ever get "Board the ship of new planks"; the old-plank ship needs you to know to step to the other edge. Chat votes "old ship!" and the streamer fumbles.
+  Evidence: me at (15.1, -0.2) for 70 s with only the new-ship prompt; stepping to (15.9, 1.4) showed the old-ship prompt.
+  Suggestion: separate the two boarding points (one at each end of the dock, or each by its own ship's gangplank), or show both prompts.
+- **[minor] [collision]** Tap-walking from the shore toward the fisherman at the dock end stops dead at the plank stack (x≈6.9, z≈1.4): "blocked", even when holding a direction key. You have to know to step around it.
+  Evidence: t=703–710 s, walk to (23.5, 1) and `hold d 2` both stuck at (6.9, 1.4).
+  Suggestion: route around the stack (steering) or move the stack off the centre line of the dock.
+- **[minor] [payoff]** Both endings are ~8 s of the boat bobbing, one line, then the card. No twist, no replay acknowledgement ("you chose the same/other ship"), unlike the trolley. The choice is the best chat-vote in the room ("which one is the REAL ship?") and it resolves too quietly.
+  Suggestion: after boarding, have the other ship follow or pass you, with the rebuilder/fisherman reacting; on replay, acknowledge the switch; consider a twist (e.g. both ships claim the name at the harbour).
+- **[polish] [visual]** Ship model reads oddly in the sailing close-up: the hull sits on a dark flat slab like a sledge, and the side planks stick out past the stern in a stepped, broken edge (shots/095-t690.jpg). When the old-plank ship appears, its sail and mast cut across the dock and the fisherman (shots/093-t681.jpg).
+  Suggestion: hide the cradle when sailing, trim the plank ends, and spawn the second ship a little further from the dock.
+- **[polish] [narration pillar]** The first line is "The ship of Theseus. Its wood is getting old." and the question "Which one is the ship of Theseus?". That's a name in the narration, which GAME.md §1 says to avoid.
+  Suggestion: "An old ship. Its wood is getting old." / "Which one is the real ship?"
+- **[keep]** The fisherman's lines ("Forty years I have fished off this dock. / Mind you, they have replaced every board of it since. / This was my grandad's rod. New line, new reel, new handle. / Still his rod, though.") are the funniest, most clip-able writing in the room. The rebuilder's "I kept every one. Seemed a shame to burn them." is great too.
