@@ -1,7 +1,12 @@
 # vibes · the hall
 
 ## Summary
-(in progress)
+- The hall is the right idea (sky-papered walls, stage curtains, the pipe, the mirror that shows your back, the apple-faced gentleman), but the fixed low camera hides its best Magritte pieces (the ceiling table and chandelier) and flattens others (*Time Transfixed*, *Golconda*). It reads as a charming corridor of props more than a dream.
+- Strongest visual moments in my part: the Simulation Argument's zoom into the dome and the pull-back to the giant's desk; the commons' pasture draining from green to bare; the lamplit console on the Fermi hilltop. Weakest: the monkey room (greybox taupe) and the Fermi sky, where the moon and Milky Way exist in code but never reach the frame.
+- A recurring pattern: the narration announces an image that the scene doesn't show. The gust of wind, "he laughs", a million years passing, "above you, the lights flicker", the message leaving the dish, "look at the moon". Each is a cheap fix with a big payoff for mood.
+- Colour roles slip. Teal ("you") appears on the grandfather station roof, the study door and the monitor. The player's own commons house is orange. The past's sepia is a canvas filter that also mutes the player.
+- UI and typography: the caption pill breaks multi-line sentences into separately rounded pills. World labels go grey and semi-transparent and overlap the paintings. The Esc dialog is a native browser `confirm()`. "Back to the house" from a hall vignette drops you in the first room.
+- Endings get cut short: the game-over card fades in 4–5 s after the last line, covering the final image (the bare pasture, the grass recovering, the grandparents meeting). Hold the last image longer.
 
 ## Findings
 
@@ -36,6 +41,12 @@
 - **[polish] [visual]** The sky wallpaper tiles one cloud stamp plus small dots at a regular pitch. Up close it reads as nursery polka-dot wallpaper, not Magritte's painted sky, and the dots (small single circles) are the cheapest-looking element in the room.
   Evidence: every hall shot; the dots are clearest around the stairs in 005-mid1.jpg.
   Suggestion: drop the dots. Vary cloud scale and rotation (2–3 stamps), and add a vertical gradient from deeper blue at the top to paler near the skirting, as in *The Blank Signature*/*Le Beau Monde* skies.
+- **[minor] [visual/progress]** Finished portals don't glow. GAME.md says completed portals "glow softly", but after finishing all five hall vignettes the only change is a "✓" in the grey label pill. The clock, typewriter, monitor, telescope and gate look exactly as before.
+  Evidence: 178-glow.jpg (all done; no emissive change). game/house/hall.js:307 only appends ' ✓'.
+  Suggestion: after completion, give each portal object a soft warm emissive rim or a small lamp: the clock face lit, the typewriter's page glowing, the monitor brighter, a star glint on the telescope, flowers at the gate. The hall then slowly lights up as you play, which is its own quiet reward.
+- **[minor] [visual/phone]** In phone portrait (390×844) the hall becomes a thin strip across the middle, with bare cream paper above and below. The top of the sky walls is visible as a hard edge, the upside-down table and chairs (finally in frame) float above the wall into the void, and the nearest portal label is so large it runs off the left edge ("…finite Monkey Theorem ✓").
+  Evidence: 180-phone.jpg.
+  Suggestion: in portrait, extend the sky wallpaper up to a ceiling plane (or fade it into a sky gradient instead of the paper void), frame tighter vertically, and scale world labels with the viewport width (clamp to ~80 % of screen width).
 
 ### grandfather-paradox
 - **[major] [visual/drama]** The meeting, the image the whole vignette builds to, is visually dead. Grandfather slides up and stops beside the bench, grandmother stays seated, and nothing moves: no hat lift, no standing, no turn toward each other, no change in light. The caption "They meet, just as they always did." carries all of it.
@@ -96,7 +107,6 @@
   Suggestion: an in-game cream card matching the game-over styling ("Leave? · Stay / Go back to the hall"). Clear the voice queue on `goto`. For hall vignettes, return to the hall at the portal's spawn.
 
 ### simulation-argument
-- **[keep-worthy, noted in Keep]** The zoom into the dome, then into the dome inside it, and the pull-back reveal of your study under glass on a giant's desk, a huge peg head looming, is the best sequence in my part: clear, uncanny, and a perfect thumbnail (102-t106.jpg, 082-t19.jpg).
 - **[major] [visual/lighting]** "Switch them off" dims only the study's lit materials. The paper sky around the island stays bright cream, and the window (a `MeshBasic`-style flat panel) and the photo stay fully lit. The result is a brown room with a glowing white rectangle in a bright void, which reads as a render bug, not a blackout. "Above you, the lights flicker" is also never shown from above: the giant's lamp isn't on screen in this shot.
   Evidence: 106-t123.jpg, 107-t125.jpg, 108-t127.jpg (the window stays #d6dde3-bright; the background stays cream).
   Suggestion: fade the scene background and fog to near-black with the lights, use lit materials for the window and photo (or dim them explicitly), and cut to the reveal angle for the flicker: the giant's desk lamp stutters and the giant's head turns toward the dome.
@@ -135,4 +145,33 @@
 - **[polish] [visual]** Two continuity nits. The hall portal is a brass telescope, but the vignette has a radio dish and no telescope. The hut's window is half cream, half black, like a texture that didn't finish loading.
   Evidence: 121-t13.jpg (the hut window).
   Suggestion: put a small brass telescope on the hilltop next to the chair (the player arrives beside it), and make the window a warm lit pane with a mullion.
-- **[keep]** The warm pool of lamplight under the console on the cold blue-grey hill is the prettiest lighting in my part (126-t33.jpg).
+
+### tragedy-of-the-commons
+- **[minor] [visual/colour]** Every neighbour matches their roof (yellow, purple, orange, blue), but the player's own house is **orange-red**, a near twin of the orange neighbour's, not teal. Your sheep are also indistinguishable from everyone else's, so as the flock grows you can't see your own share of the damage.
+  Evidence: 151-t14.jpg (your house at bottom centre, orange-red), 157-t33.jpg (the sheep all identical).
+  Suggestion: give your house a teal roof, and mark your sheep with a teal raddle dot on the back (a real shepherd's practice, and a perfect use of the colour role). The same for each neighbour's colour when they copy you.
+- **[minor] [visual]** Sheep interpenetrate. After a few adds they collapse into one overlapping white clump in the pasture centre (even at the start of a replay), which reads as a rendering glitch rather than a flock.
+  Evidence: 157-t33.jpg (centre clump), 175-t173.jpg (8 sheep in one pile).
+  Suggestion: add simple separation steering between sheep, and bias grazing targets to spread across the whole disc.
+- **[minor] [visual/staging]** Ringing the bell has no visual ring (no swing, no sound rings), and in the meeting the four neighbours gather in the middle of the pasture while **you stay by the bell at the edge**, outside the circle, behind the caption. The agreement, the emotional beat of the good ending, happens without you in the picture.
+  Evidence: 167-t130.jpg, 172-t140.jpg (the player at the bell, half under the caption).
+  Suggestion: swing the bell with 2–3 expanding line rings. Walk the player into the gathering and form a ring of six figures, then pull the camera slightly in. On "the grass came back", show a quick flush of greener grass and a few flowers before the card.
+- **[minor] [pacing]** The narration lags actions because lines queue. On a quick bell ring, "Five neighbours, two sheep each. The grass is thick." (the arrival line) plays at t=129, and "You ring the bell. The neighbours gather." only at t=133.5, 8 s after I rang it. The game-over card then arrives 4–5 s after the last line, covering the recovery and the bare-pasture images.
+  Evidence: ring at t=125.3; captions at 129.3 and 133.5; card at 149.0 with state `phase: recover`.
+  Suggestion: let action lines pre-empt queued description lines. Hold the final image ≥4 s after the last caption before the card fades in.
+- **[polish] [visual]** The frog's fly-catching cameo happens at the very bottom edge of the frame, cut off by the screen edge and the caption.
+  Evidence: 167-t130.jpg (the frog at bottom right, half off frame).
+  Suggestion: place it on a fence post in mid-ground.
+
+## Keep
+- The hall's premise and palette: painted-sky walls, red stage curtains, the purple/cream checker floor, *Ceci n'est pas une pipe*, the mirror twin seen from behind, the gentleman behind the apple ("Everything we see hides another thing").
+- The Simulation Argument's recursive zoom and the giant reveal (082-t19.jpg, 102-t106.jpg): the thumbnail of the game.
+- The commons' colour-coded households and the green → olive → bare-tan grass drain, with toppled toy sheep for the gentle consequence (164-t115.jpg).
+- The warm lamp pool under the Fermi console on the cold blue hill (126-t33.jpg).
+- The monkey page overlay: a tilted cream sheet, monospace text, the marker-yellow highlight on the found line (067-t332.jpg).
+- The game-over card's handwritten journal placeholder: a nice personal touch against the serif title.
+
+## Harness notes
+- `use Tell him who you are` (grandfather) can't reach a moving NPC: it walks to where he was and times out. Workaround: stand on his route and `until` the prompt text appears, then `press e`.
+- `use Look at the photo` (simulation) walked the player behind the desk while the prompt was still disabled, and later `use` calls from there couldn't path out ("not getting closer"). Walking out with `walk` fixed it. Not observed as a player-facing trap.
+- The harness's "on screen now" keeps listing talk() speech bubbles that are no longer visible in screenshots. Only the hall gentleman's bubble was genuinely stuck on screen (see the hall finding).

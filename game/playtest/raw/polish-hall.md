@@ -97,3 +97,26 @@
 - **[polish] [text]** On the "walk out" ending the journal question still says "The monkeys typed 'To be, or not to be'…", though in that run you never saw it happen.
   Evidence: game-over at t=229.5 s.
   Suggestion: a variant question for the walk-out ending.
+
+### simulation-argument
+- **[minor] [collision]** The bookshelves have one small blocker (r 0.7 at (-8.2, -1.5)); tapping them walks the figure *behind* the shelves, where it is completely hidden (onscreen (-8.8, 1, -2.4) → (180, 404), exactly under the shelves), and the walk jitters there for the full 15 s timeout ("still walking at timeout").
+  Evidence: shots/068.jpg (figure squeezing past the shelf end), shots/071.jpg (figure invisible).
+  Suggestion: block the whole strip between the shelves and the back wall (a box from x -10.5..-7, z -4.6..-0.5) or make walkable exclude it.
+- **[minor] [collision / stuck]** The desk's blocker (r 1.6 at (0, -3)) reaches the back wall (walkable z > -4.6), so the gap behind the desk is a dead end: after "Look out of the window" at (4, -4.1), tapping the photo on the other side walks you behind the desk to (1.1, -4.6) and stops ("did not arrive, still 4.9 away"), wedged between desk and wall.
+  Evidence: shots/083.jpg.
+  Suggestion: either leave a real passage behind the desk or block it fully; make tap-to-walk go round the front of the desk.
+- **[minor] [collision]** The exit door (7.3, 1.0) has no blocker: you can walk straight through it and stand behind it (10.3, 2.2), and tapping the door itself on a phone (330, 430) walks you through and out the other side to (9.6, -0.4), past the "Leave them running" radius, so the prompt flashes and disappears.
+  Evidence: shots/069.jpg, 070.jpg, 091.jpg; t=44.0 s prompt appears, gone by 46.6 s.
+  Suggestion: give the door a thin blocker and stop taps on it at a stand point in front of it.
+- **[minor] [portrait]** On 390x844 the "E Leave them running" pill runs off the right edge ("Leave them runn"), and during the reveal the whole study shrinks to ~130 px in the middle of an empty screen for ~4 s after the choice phase has already started (phase `choose` at 38.3 s, room still tiny at 38.4 s).
+  Evidence: shots/089.jpg, shots/092.jpg.
+  Suggestion: clamp prompt pills to the viewport; start `choose` only once the camera has come back in.
+- **[polish] [interaction]** When the choice opens you're standing in front of the desk where "Run more worlds" was, but no prompt shows (the "Switch them off" radius is 1.8 around (1.4, -1.8), you're at 2.5). Nothing on screen for several seconds; one step right shows the prompt.
+  Evidence: t=70.1–72.1 s at (-1.1, -1.4), "(no text)"; shots/081.jpg.
+  Suggestion: widen the switch radius to ~2.4, or move the lever next to where the player stands after "Run more worlds".
+- **[polish] [clipping]** In the zoom into the little world the blue person stands half inside the cottage wall; when the frog arrives it sits on the desk overlapping the monitor and the dome.
+  Evidence: shots/074-t44.jpg, shots/078-t57.jpg.
+  Suggestion: move the blue figure 0.5 m out from the cottage; land the frog on the free end of the desk.
+- **[polish] [visual]** When you switch them off the room darkens, but the window pane stays full white and unlit, which reads as a rendering glitch rather than "the lights flicker".
+  Evidence: shots/085-t103.jpg.
+  Suggestion: dim the window's material with the rest of the room (or make it the flicker source).

@@ -97,3 +97,16 @@
   Suggestion: give the mug its own "Pick up the mug" prompt.
 - **[polish] [consequence]** "Send a message": no visible signal leaves the dish (shot 095), just the sky spinning. The one action that affects the universe has no visual.
   Suggestion: a slow expanding ring of light from the dish, shrinking to a point among the stars.
+
+### tragedy-of-the-commons
+- **[minor] [environment]** At the collapse the four neighbours don't react at all: they stay planted by their front doors, facing nowhere, while the pasture turns to bare dirt and the sheep lie down (shot 115). Their chat changes nicely as the grass thins ("Grass isn't what it was." → "Not my fault. I only did what everyone did."), but the only reaction you can see is the grass colour. The village has no body language.
+  Evidence: shots 103-thin.jpg, 115-t435.jpg.
+  Suggestion: as grass drops below 0.4, neighbours walk to the fence and lean on it; at the collapse they turn to look at you (the one who started it), and one silent bubble "…" appears. Nothing more.
+- **[minor] [staging]** Ringing the bell: the four neighbours gather in the middle of the pasture while you, who rang it, stay by the bell at the edge (shot 108). The agreement happens without you in it.
+  Suggestion: walk the player into the circle (scripted walk) or gather the neighbours around the bell.
+- **[minor] [environment]** Sheep have no owners you can see. Every sheep is identical; "Look at your sheep" finds one for you, but you can't tell your six from the neighbours' as the flock grows, so the "a little more for you" logic is invisible. The small pen by the bell stays empty; new sheep just appear in the flock.
+  Suggestion: give each household's sheep a coloured dab/ear tag in the house's roof colour (teal for yours), and have added sheep walk out of your little pen through a gap in the fence.
+- **[polish] [narrative]** Line order: if you add a sheep straight away, the scene-setting line "Five neighbours, two sheep each. The grass is thick." plays *after* "One more sheep…", when there are already more sheep and the grass has started thinning (t=346 s, run 2). Also there are only four neighbours visible (four "Talk" prompts, four figures); "five" seems to count you.
+  Suggestion: drop the `herders` line once the first sheep has been added; say "Four neighbours and you, two sheep each."
+- **[polish] [collision]** When limits are agreed, the extra sheep walk straight through the fence to stand outside it by the houses (shots 108–110).
+  Suggestion: route them through a gate in the fence (and add that gate: the hall portal is a garden gate, but the pasture itself has none).
