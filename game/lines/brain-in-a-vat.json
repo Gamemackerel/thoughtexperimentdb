@@ -6,21 +6,25 @@
   },
   "pronounce": {},
   "lines": {
-    "arrive": "A sunny afternoon. Everything feels real.",
+    "arrive": "A sunny afternoon. The sun is warm on your face, and everything feels real.",
     "solid": "The grass, the trees, the warmth. All of it feels solid.",
     "edge": "The world ends here. Just past the edge, it flickers.",
     "ask": "If none of this were real, how would you ever know?",
-    "fall": "You step off the edge.",
+    "fall": "You step off the edge. In the real version, there would be no edge to find.",
     "lab_1": "A brain, in a jar of fluid. Wires. A humming machine. And above it, the world you just left.",
     "lab_2": "So this is what's real. Isn't it?",
     "lab_edge": "Here, too, the edge flickers.",
     "layer_2": "Another brain. Another machine. Another world above it.",
     "sit": "You sit down. The sun is warm.",
     "stay_end": "Real or not, it's the only sun you have.",
-    "end": "However far you climb out, you're still looking through the same eyes.",
+    "end": "However far you step out, you're still looking through the same eyes.",
     "tree": "A perfect tree. Every leaf exactly where you'd expect it.",
     "window": "Nobody home. Come to think of it, you've never seen anyone go in.",
     "machine": "Reels turning, lights blinking. Somewhere in here is that tree.",
-    "machine_2": "It's warm, and it hums. It sounds like a summer afternoon."
+    "machine_2": "Up there, you called it a tree. Did you mean a real tree, or this machine's picture of one? The picture is all you've ever touched.",
+    "sit_rest": "You sit. The sun is warm, the grass smells of summer. You could sit here all afternoon, just feeling it.",
+    "lab_edge_2": "Here too. Of course.",
+    "machine_3": "Another machine. It's labelled in words you know. Your words.",
+    "stool_end": "You sit down by the machine. You've decided this one is real."
   }
 }

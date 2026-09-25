@@ -1,8 +1,8 @@
 {
   "arrive": {
-    "file": "arrive-7cfc94ae.mp3",
-    "text": "A sunny afternoon. Everything feels real.",
-    "dur": 3.4
+    "file": "arrive-d4440d1b.mp3",
+    "text": "A sunny afternoon. The sun is warm on your face, and everything feels real.",
+    "dur": 5.22
   },
   "solid": {
     "file": "solid-9fee242f.mp3",
@@ -20,9 +20,9 @@
     "dur": 3.42
   },
   "fall": {
-    "file": "fall-ff0d9126.mp3",
-    "text": "You step off the edge.",
-    "dur": 1.96
+    "file": "fall-6d5798f0.mp3",
+    "text": "You step off the edge. In the real version, there would be no edge to find.",
+    "dur": 4.78
   },
   "lab_1": {
     "file": "lab_1-bb045bbc.mp3",
@@ -55,8 +55,8 @@
     "dur": 3.42
   },
   "end": {
-    "file": "end-62611ced.mp3",
-    "text": "However far you climb out, you're still looking through the same eyes.",
+    "file": "end-8e0f1256.mp3",
+    "text": "However far you step out, you're still looking through the same eyes.",
     "dur": 4.28
   },
   "tree": {
@@ -75,8 +75,28 @@
     "dur": 4.57
   },
   "machine_2": {
-    "file": "machine_2-63dbf4d9.mp3",
-    "text": "It's warm, and it hums. It sounds like a summer afternoon.",
-    "dur": 4.21
+    "file": "machine_2-9a404c9b.mp3",
+    "text": "Up there, you called it a tree. Did you mean a real tree, or this machine's picture of one? The picture is all you've ever touched.",
+    "dur": 7.5
+  },
+  "sit_rest": {
+    "file": "sit_rest-912a9eaf.mp3",
+    "text": "You sit. The sun is warm, the grass smells of summer. You could sit here all afternoon, just feeling it.",
+    "dur": 6.53
+  },
+  "lab_edge_2": {
+    "file": "lab_edge_2-711578aa.mp3",
+    "text": "Here too. Of course.",
+    "dur": 2.27
+  },
+  "machine_3": {
+    "file": "machine_3-d1a738af.mp3",
+    "text": "Another machine. It's labelled in words you know. Your words.",
+    "dur": 4.26
+  },
+  "stool_end": {
+    "file": "stool_end-1ab5d2e9.mp3",
+    "text": "You sit down by the machine. You've decided this one is real.",
+    "dur": 4.47
   }
 }
