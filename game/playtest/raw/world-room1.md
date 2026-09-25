@@ -72,3 +72,20 @@
 - **[polish] [navigation]** In first person with no fire in view, the cave is a black void; after `hold w 3` from the seat I walked past the fire and stood at (-1.8,7.9) facing pure black with no cue where the exit is. The glow of the mouth only reads once you face +x.
   Evidence: shots/073-walk1.jpg
   Suggestion: a faint shaft of daylight on the cave floor leading toward the mouth, or a cave ceiling with rock texture lit from the mouth side, so the dark has a direction.
+
+### ship-of-theseus
+- **[minor] [environmental storytelling]** The fisherman's lines are the best aside in room 1 ("Forty years I have fished off this dock." / "Mind you, they have replaced every board of it since." / "This was my grandad's rod. New line, new reel, new handle."), but the dock he's talking about is one uniform slab of the same tan: nothing shows it has been patched board by board, and his rod looks like any rod.
+  Evidence: shots/097-fisher.jpg, 098-swap2.jpg
+  Suggestion: build the dock from individual boards in mixed tones (a few pale new ones, a few grey old ones), so the joke is visible before he says it; same patchwork on the rod (bright new reel on a dark old handle).
+- **[minor] [set dressing]** The harbour has no town and no sea horizon: a sand disc, one dock, empty pale-blue water. When you sail either ship it heads into a featureless blank for ~7 s and the card appears. Loose piles floating in the water read like debris rather than old mooring posts.
+  Evidence: shots/095-arrive.jpg, shots/114-t1123.jpg
+  Suggestion: a few harbour houses or a boatshed on the sand, gulls, a horizon line or a distant headland the ship sails toward; stand the loose piles upright in the water as an old broken jetty (they'd rhyme with the theme).
+- **[minor] [navigation]** "Board the ship of new planks" (16,-0.9) and "Board the ship of old planks" (16,0.9) both have radius 2.4 and sit 1.8 apart, so from the middle of the dock the new ship always wins; `use Board the ship of old planks` stalled at (15.1,-0.1) for 20 s showing only the new-ship prompt. I had to hug the far edge (15.9,1.4) to get the old one. Similarly in the house, standing in front of the sky door at (3.5,4.5) the prompt is "Climb the ladder" and E took me to the hall.
+  Evidence: t=1096–1116s; house t=840s, shots/089-skydoor.jpg
+  Suggestion: pick the interactable the player is *facing* (or the one whose object is on the side they walked from) rather than the nearest; shrink radii where two portals are close.
+- **[polish] [asides]** The plank keeper's speech bubble ("I kept every one. Seemed a shame to burn them.") persisted >20 s after I walked away, drifted to hover over the fisherman, and was still ghosted on the game-over card.
+  Evidence: shots/104-t1000.jpg, shots/106-t1006.jpg
+  Suggestion: expire bubbles after ~4 s or when the player leaves the speaker's radius; keep them anchored to their speaker.
+- **[idea] [world]** The old planks become a second ship, but the keeper who assembled it appears out of nowhere at the choice. A small workshop area (sawhorse, a pile of grey planks growing each time you swap) would show "someone has kept every old plank" happening while you work, instead of announcing it afterwards.
+  Evidence: caption at t=969.7s "Someone has kept every old plank."
+  Suggestion: have the purple keeper visible from the start at the far end of the sand, carrying each old plank off after you drop it.
