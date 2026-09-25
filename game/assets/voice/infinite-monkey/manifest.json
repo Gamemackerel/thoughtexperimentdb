@@ -1,0 +1,52 @@
+{
+  "arrive": {
+    "file": "arrive-e6f76e29.mp3",
+    "text": "A room full of typewriters, and a monkey at each one.",
+    "dur": 3.89
+  },
+  "typing": {
+    "file": "typing-90e60356.mp3",
+    "text": "They hit the keys at random. They will never stop.",
+    "dur": 3.42
+  },
+  "ask": {
+    "file": "ask-79aef7c1.mp3",
+    "text": "Given forever, could they type Shakespeare?",
+    "dur": 3.19
+  },
+  "page_0": {
+    "file": "page_0-705f7313.mp3",
+    "text": "Nonsense. Nothing but nonsense.",
+    "dur": 2.93
+  },
+  "wait": {
+    "file": "wait-747c16bb.mp3",
+    "text": "A million years go by.",
+    "dur": 2.27
+  },
+  "page_1": {
+    "file": "page_1-ae944b13.mp3",
+    "text": "A word. Just one, by pure chance.",
+    "dur": 3
+  },
+  "page_2": {
+    "file": "page_2-f51528f0.mp3",
+    "text": "Two words, in the right order.",
+    "dur": 2.61
+  },
+  "found": {
+    "file": "found-74f970f6.mp3",
+    "text": "There it is. To be, or not to be.",
+    "dur": 2.98
+  },
+  "found_2": {
+    "file": "found_2-a34dd854.mp3",
+    "text": "Given forever, it had to happen. But none of them meant a word of it.",
+    "dur": 4.39
+  },
+  "leave_end": {
+    "file": "leave_end-88cc3da5.mp3",
+    "text": "Most of it is noise. Forever is longer than it sounds.",
+    "dur": 4.08
+  }
+}

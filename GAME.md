@@ -73,6 +73,24 @@ Every vignette also has:
 | The purple door | **Plato's Cave** | Chained, watching shadows; the chains fall; turn to the fire, climb into the light | Keep watching · stay in the light · go back and tell them |
 | The sky door | **Ship of Theseus** | Carry new planks and replace all six of the ship's old ones; the old planks become a second ship | Board the new ship · board the old wood |
 
+### The hall (built)
+
+Up the rope ladder, through the door on the first room's ceiling: a long corridor dressed after Magritte and Escher
+(a dining table and chandelier hanging from the ceiling, day above night in one window, floating bowler hats and green
+apples, a staircase climbing into the ceiling). A hatch in the floor leads back down.
+
+| Portal | Vignette | What you can do | Endings |
+|---|---|---|---|
+| A grandfather clock | **Grandfather Paradox** | Step out of a time machine into the sepia-toned past. Your young grandfather walks to meet your grandmother; close the gate, turn the signpost, stand in his way or tell him who you are | Something always got in the way · you let it be (or left early) |
+| A typewriter | **Infinite Monkey Theorem** | Read the monkeys' pages; pull the lever to wait a million years; read again | Find "To be, or not to be" · walk out |
+| A glowing monitor | **Simulation Argument** | Look into the world on your desk (and the one inside it); run more worlds; the camera pulls back to reveal your study under a dome on a giant's desk | Switch them off · leave them running |
+| A telescope | **Fermi Paradox** | Listen to the static under the stars | Send a message · keep listening |
+| A garden gate | **Tragedy of the Commons** | Add sheep to the shared pasture; the neighbours copy you; the grass thins | The grass is gone · ring the bell and agree on limits |
+
+New rooms: add a level in `game/house/`, register it in `LEVELS` (`game/main.js`), link it from an existing room with a
+portal whose id is the room's level id, and give it a spawn for `ctx.from` (so players come back beside the portal they
+used). Hall portals and spawns are in `game/house/hall.js`.
+
 ## 4. Controls
 
 - **Move:** WASD / arrow keys, a gamepad left stick, or tap/click on the ground to walk there.

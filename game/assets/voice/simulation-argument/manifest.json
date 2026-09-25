@@ -1,0 +1,42 @@
+{
+  "arrive": {
+    "file": "arrive-e5db0d08.mp3",
+    "text": "Your study. On the desk, something you built: a little world, running.",
+    "dur": 4.62
+  },
+  "look": {
+    "file": "look-8f4e5980.mp3",
+    "text": "Tiny people, living tiny lives. To them, it's all real.",
+    "dur": 4.6
+  },
+  "nested": {
+    "file": "nested-ab29b18d.mp3",
+    "text": "And in their world, someone is building one too.",
+    "dur": 3.42
+  },
+  "more": {
+    "file": "more-9c5d6928.mp3",
+    "text": "One world can run many. And each of those can run more.",
+    "dur": 4.05
+  },
+  "ask": {
+    "file": "ask-131b2124.mp3",
+    "text": "If worlds like this are easy to make, how many are real? And which kind is yours?",
+    "dur": 5.2
+  },
+  "pullout": {
+    "file": "pullout-a3d90d10.mp3",
+    "text": "Somewhere, someone may be looking at you the same way.",
+    "dur": 3.53
+  },
+  "off_end": {
+    "file": "off_end-332df612.mp3",
+    "text": "You switch them off. Above you, the lights flicker.",
+    "dur": 3.47
+  },
+  "run_end": {
+    "file": "run_end-25fc21d8.mp3",
+    "text": "You let them run. Maybe someone is doing the same for you.",
+    "dur": 3.84
+  }
+}

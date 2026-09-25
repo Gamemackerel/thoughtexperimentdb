@@ -10,6 +10,12 @@ const LEVELS = {
   'brain-in-a-vat': () => import('./vignettes/brain-in-a-vat.js'),
   'platos-cave': () => import('./vignettes/platos-cave.js'),
   'ship-of-theseus': () => import('./vignettes/ship-of-theseus.js'),
+  hall: () => import('./house/hall.js'),
+  'grandfather-paradox': () => import('./vignettes/grandfather-paradox.js'),
+  'infinite-monkey': () => import('./vignettes/infinite-monkey.js'),
+  'simulation-argument': () => import('./vignettes/simulation-argument.js'),
+  'fermi-paradox': () => import('./vignettes/fermi-paradox.js'),
+  'tragedy-of-the-commons': () => import('./vignettes/tragedy-of-the-commons.js'),
 };
 
 // ---------------------------------------------------------------- stage (full window, crisp on hi-dpi)
@@ -49,6 +55,9 @@ const ctx = {
   goto: (name) => goto(name),
   toast(text, secs = 3) { toastEl.innerHTML = text; toastEl.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('on'), secs * 1000); },
   async flash(on) { flash.classList.toggle('on', on); await wait(0.6); },
+  // a typewritten page held up to the camera (closes with E / Space / tap)
+  page(html) { pageEl.innerHTML = html + '<div class="hint">E · put it down</div>'; pageEl.hidden = false; },
+  get pageOpen() { return !pageEl.hidden; },
   // ends a vignette: a quiet card with "play again" / "back to the house"
   gameOver({ kicker = 'Game over', title, text = '' }) {
     player.enabled = false;
@@ -59,6 +68,9 @@ const ctx = {
   },
 };
 const over = document.getElementById('over');
+const pageEl = document.getElementById('page');
+pageEl.addEventListener('pointerdown', () => (pageEl.hidden = true));
+addEventListener('keydown', (e) => { if (!pageEl.hidden && (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Escape')) { e.stopImmediatePropagation(); pageEl.hidden = true; } }, true);
 over.addEventListener('click', (e) => {
   const act = e.target.dataset?.act; if (!act) return;
   over.hidden = true;
@@ -73,7 +85,7 @@ async function goto(name) {
   await ctx.flash(true);
   over.hidden = true;
   if (level) { stage.scene.remove(level.root); level.dispose?.(); }
-  interact.clear(); voice.stop(); nb.hidden = true;
+  interact.clear(); voice.stop(); nb.hidden = true; pageEl.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
   // every level starts from the default light; levels may dim or tint it

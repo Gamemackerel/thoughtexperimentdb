@@ -1,0 +1,18 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A clear night. More stars than anyone could count.",
+    "listen": "Only static. The hiss of the stars.",
+    "stars": "Billions of stars, and around most of them, planets.",
+    "old": "Some are far older than the Sun. Someone should have come by now.",
+    "ask": "So where is everybody?",
+    "send_1": "Your message leaves at the speed of light.",
+    "send_2": "Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.",
+    "listen_end": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early."
+  }
+}

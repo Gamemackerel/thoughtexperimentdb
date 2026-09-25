@@ -1,0 +1,23 @@
+{
+  "title": "The Infinite Monkey Theorem",
+  "summary": "A monkey hitting typewriter keys at random, for an infinite amount of time, will almost surely type any given text, including the complete works of Shakespeare. Émile Borel used monkeys at typewriters in 1913 to illustrate events so improbable they will never be seen in practice; Arthur Eddington later imagined an army of monkeys writing all the books in the British Museum. The theorem is true in the mathematics of infinity, and a lesson about how unimaginably long \"forever\" would have to be.",
+  "citations": [
+    "Émile Borel, \"Mécanique statistique et irréversibilité,\" Journal de Physique (1913)",
+    "Arthur Eddington, The Nature of the Physical World (1928), ch. 4"
+  ],
+  "essay": {
+    "creator": "Today I Found Out",
+    "title": "That Time Someone Actually Tested the Infinite Monkey Theorem And Who Came Up With It",
+    "url": "https://www.youtube.com/watch?v=cEbX8EM3IEU"
+  },
+  "also": [
+    {
+      "creator": "Smartest Year Ever",
+      "title": "The Odds of a Monkey Writing Shakespeare Are Worse Than You Think",
+      "url": "https://www.youtube.com/watch?v=OSmio3CE5RA"
+    }
+  ],
+  "reading": [
+    "\"Infinite monkey theorem,\" Wikipedia: https://en.wikipedia.org/wiki/Infinite_monkey_theorem"
+  ]
+}

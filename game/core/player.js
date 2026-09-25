@@ -47,7 +47,8 @@ export class Player {
   // level: { walkable(x,z), blockers(): [{x,z,r}] }; camera: THREE.Camera (movement is camera-relative)
   update(dt, t, level, camera) {
     const want = new THREE.Vector3();
-    if (this.firstPerson && this.enabled && !this.locked) {
+    if (document.getElementById('page')?.hidden === false) { /* reading a page */ }
+    else if (this.firstPerson && this.enabled && !this.locked) {
       // turning works even while seated (within yawLimit)
       const inp = this.input();
       this.yaw -= inp.x * dt * 2.1; this.clampYaw();

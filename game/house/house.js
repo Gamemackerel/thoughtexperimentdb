@@ -120,6 +120,12 @@ export default function house(ctx) {
   const upDoor = makeDoor({ panel: 0x3f8f86 }); upDoor.position.set(-4.6, 7.9, -7.88); upDoor.rotation.z = Math.PI;
   const ceilDoor = makeDoor({ panel: 0xe0674f }); ceilDoor.position.set(2.5, 9.6, 1); ceilDoor.rotation.x = Math.PI / 2;
   root.add(wallDoor, skyDoor, upDoor, ceilDoor);
+  // a rope ladder hangs from the ceiling door: the way up to the hall
+  const ladder = new THREE.Group();
+  for (const x of [-0.45, 0.45]) { const rail = mesh(new THREE.CylinderGeometry(0.05, 0.05, 9.4, 8), clay(0xc9a878)); rail.position.set(x, 4.7, 0); ladder.add(rail); }
+  for (let y = 0.5; y < 9.4; y += 0.6) { const rung = mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.95, 8), clay(palette.wood)); rung.rotation.z = Math.PI / 2; rung.position.y = y; ladder.add(rung); }
+  ladder.position.set(2.5, 0, 1.9); ladder.rotation.x = -0.08;
+  root.add(ladder);
 
   // ---- Penrose stairs (an endless loop), with a small figure climbing forever
   const stairs = new THREE.Group();
@@ -186,6 +192,7 @@ export default function house(ctx) {
     { id: 'trolley-problem', name: 'The Trolley Problem', pos: V(PAINTING.x, 0, -6.4), labelAt: PAINTING.clone().add(V(0, 1.75, 0.2)), prompt: 'Step into the painting', open: true },
     { id: 'brain-in-a-vat', name: 'Brain in a Vat', pos: BOOK.clone(), labelAt: BOOK.clone().add(V(0, 2.2, 0)), prompt: 'Open the book', open: true },
     { id: 'platos-cave', name: "Plato's Cave", pos: V(-7, 0, 3.4), labelAt: V(-7.7, 3.7, 3.4), prompt: 'Open the door', open: true },
+    { id: 'hall', name: 'Up to the hall', pos: V(2.5, 0, 2.6), labelAt: V(2.5, 5.2, 1.9), prompt: 'Climb the ladder', open: true },
     { id: 'ship-of-theseus', name: 'Ship of Theseus', pos: V(5.2, 0, 3.1), labelAt: V(5.2, 3.7, 2.2), prompt: 'Open the door', open: true },
   ];
   // soft glows behind the book and the doors (brighter once you've been through)
@@ -209,6 +216,7 @@ export default function house(ctx) {
   }
 
   const blockers = [
+    { x: 2.5, z: 1.7, r: 0.35 },
     { x: BOOK.x, z: BOOK.z, r: 0.75 }, { x: 4.6, z: -4.8, r: 1.2 }, { x: -5.2, z: -5.2, r: 2.6 },
     { x: 5.2, z: 2.2, r: 0.85 }, { x: 6.2, z: 5.6, r: 0.45 },
   ];
@@ -219,7 +227,7 @@ export default function house(ctx) {
     ground: [ground],
     // come back out next to the portal you went through
     spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
-      'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
+      'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, hall: { x: 2.5, z: 3.4, rotY: 0 }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
     walkable: (x, z) => Math.abs(x) < ROOM && Math.abs(z) < ROOM && Math.hypot(x - FLOOR_WINDOW.x, z - FLOOR_WINDOW.z) > FLOOR_WINDOW.r + 0.2,
     blockers: () => blockers,
     start() { if (!save.done.size) ctx.toast('Look around. Some things here lead elsewhere.', 5); },

@@ -1,0 +1,42 @@
+{
+  "arrive": {
+    "file": "arrive-480f3b2a.mp3",
+    "text": "A clear night. More stars than anyone could count.",
+    "dur": 3.55
+  },
+  "listen": {
+    "file": "listen-487f03dc.mp3",
+    "text": "Only static. The hiss of the stars.",
+    "dur": 3.11
+  },
+  "stars": {
+    "file": "stars-ed97c574.mp3",
+    "text": "Billions of stars, and around most of them, planets.",
+    "dur": 3.81
+  },
+  "old": {
+    "file": "old-5a833ac8.mp3",
+    "text": "Some are far older than the Sun. Someone should have come by now.",
+    "dur": 4.39
+  },
+  "ask": {
+    "file": "ask-094a67d9.mp3",
+    "text": "So where is everybody?",
+    "dur": 2.12
+  },
+  "send_1": {
+    "file": "send_1-64f2a1fa.mp3",
+    "text": "Your message leaves at the speed of light.",
+    "dur": 2.98
+  },
+  "send_2": {
+    "file": "send_2-5717a554.mp3",
+    "text": "Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.",
+    "dur": 6.69
+  },
+  "listen_end": {
+    "file": "listen_end-0faf887c.mp3",
+    "text": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early.",
+    "dur": 5.98
+  }
+}

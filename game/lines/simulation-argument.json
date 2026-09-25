@@ -1,0 +1,18 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "Your study. On the desk, something you built: a little world, running.",
+    "look": "Tiny people, living tiny lives. To them, it's all real.",
+    "nested": "And in their world, someone is building one too.",
+    "more": "One world can run many. And each of those can run more.",
+    "ask": "If worlds like this are easy to make, how many are real? And which kind is yours?",
+    "pullout": "Somewhere, someone may be looking at you the same way.",
+    "off_end": "You switch them off. Above you, the lights flicker.",
+    "run_end": "You let them run. Maybe someone is doing the same for you."
+  }
+}

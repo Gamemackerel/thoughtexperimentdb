@@ -1,0 +1,47 @@
+{
+  "arrive": {
+    "file": "arrive-9c8c7f5e.mp3",
+    "text": "A shared pasture. Anyone may graze their sheep here.",
+    "dur": 4.08
+  },
+  "herders": {
+    "file": "herders-52cea759.mp3",
+    "text": "Five neighbours, two sheep each. The grass is thick.",
+    "dur": 3.79
+  },
+  "add_1": {
+    "file": "add_1-bf32c053.mp3",
+    "text": "One more sheep. A little more for you. The grass belongs to everyone.",
+    "dur": 4.62
+  },
+  "follow": {
+    "file": "follow-949976f6.mp3",
+    "text": "Your neighbours notice. They add sheep too.",
+    "dur": 3.27
+  },
+  "thin": {
+    "file": "thin-fcdddf06.mp3",
+    "text": "The grass is getting thin.",
+    "dur": 2.25
+  },
+  "ask": {
+    "file": "ask-65a573cc.mp3",
+    "text": "Each extra sheep helps its owner, but the cost is shared by all. So why would anyone stop?",
+    "dur": 5.88
+  },
+  "bell": {
+    "file": "bell-d2f144fc.mp3",
+    "text": "You ring the bell. The neighbours gather.",
+    "dur": 2.85
+  },
+  "agree": {
+    "file": "agree-3663c952.mp3",
+    "text": "Together, you agree on limits. Nobody owns the grass, but everyone looks after it.",
+    "dur": 5.36
+  },
+  "collapse": {
+    "file": "collapse-d902c6d5.mp3",
+    "text": "The grass is gone. For everyone.",
+    "dur": 2.69
+  }
+}

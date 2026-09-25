@@ -1,0 +1,67 @@
+{
+  "arrive": {
+    "file": "arrive-f5c8f821.mp3",
+    "text": "The past. The town where your grandparents met.",
+    "dur": 3.58
+  },
+  "see_gf": {
+    "file": "see_gf-d518074e.mp3",
+    "text": "That's your grandfather. Young, and in a hurry.",
+    "dur": 3.4
+  },
+  "see_gm": {
+    "file": "see_gm-4ad90580.mp3",
+    "text": "At the station, a woman is waiting. Your grandmother.",
+    "dur": 4
+  },
+  "ask": {
+    "file": "ask-eb0ddaa9.mp3",
+    "text": "If they never meet, you are never born. So what happens if you stop him?",
+    "dur": 4.68
+  },
+  "gate_fail": {
+    "file": "gate_fail-6dae2028.mp3",
+    "text": "A gust of wind. The gate swings open again.",
+    "dur": 3.68
+  },
+  "sign_fail": {
+    "file": "sign_fail-13774579.mp3",
+    "text": "He doesn't even look at the sign. He knows the way.",
+    "dur": 3.42
+  },
+  "block_fail": {
+    "file": "block_fail-a6c73207.mp3",
+    "text": "He steps around you, and apologises.",
+    "dur": 3.29
+  },
+  "tell_fail": {
+    "file": "tell_fail-3f23fc91.mp3",
+    "text": "He laughs. What a strange thing to say. And he walks on.",
+    "dur": 3.94
+  },
+  "met": {
+    "file": "met-c8bac14c.mp3",
+    "text": "They meet, just as they always did.",
+    "dur": 2.93
+  },
+  "tried_1": {
+    "file": "tried_1-135da63c.mp3",
+    "text": "Every time you tried, something ordinary got in the way. Not magic. Wind, habit, a laugh.",
+    "dur": 6.11
+  },
+  "tried_2": {
+    "file": "tried_2-d05323aa.mp3",
+    "text": "It had already happened. It was never going to un-happen.",
+    "dur": 3.81
+  },
+  "watched_1": {
+    "file": "watched_1-71c64e11.mp3",
+    "text": "You came all this way, and changed nothing.",
+    "dur": 3.24
+  },
+  "watched_2": {
+    "file": "watched_2-12aaa123.mp3",
+    "text": "Maybe that's the only story that works.",
+    "dur": 3.21
+  }
+}

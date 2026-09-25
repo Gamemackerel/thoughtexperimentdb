@@ -1,0 +1,24 @@
+{
+  "title": "The Tragedy of the Commons",
+  "summary": "William Forster Lloyd noticed in 1833 that common pastures were more worn than private ones: each herder gains the whole benefit of adding an animal, but shares the cost of the damage with everyone. Garrett Hardin's 1968 essay made the idea famous and concluded that commons must be privatised or regulated from above. Elinor Ostrom's fieldwork showed a third way: communities around the world manage shared resources for centuries by agreeing on their own rules, monitoring and sanctions.",
+  "citations": [
+    "William Forster Lloyd, Two Lectures on the Checks to Population (Oxford, 1833)",
+    "Garrett Hardin, \"The Tragedy of the Commons,\" Science 162, no. 3859 (1968): 1243–1248",
+    "Elinor Ostrom, Governing the Commons: The Evolution of Institutions for Collective Action (Cambridge University Press, 1990)"
+  ],
+  "essay": {
+    "creator": "Vanya Bisht",
+    "title": "Elinor Ostrom and the Theory of Governing the Commons Explained",
+    "url": "https://www.youtube.com/watch?v=OEcMLEwaltc"
+  },
+  "also": [
+    {
+      "creator": "Garrett Hardin (interview)",
+      "title": "Garrett Hardin on the Tragedy of the Commons",
+      "url": "https://www.youtube.com/watch?v=g8yOamWq3a0"
+    }
+  ],
+  "reading": [
+    "\"Tragedy of the commons,\" Wikipedia: https://en.wikipedia.org/wiki/Tragedy_of_the_commons"
+  ]
+}
