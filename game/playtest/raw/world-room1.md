@@ -1,7 +1,11 @@
 # world · room 1 (house, trolley-problem, brain-in-a-vat, platos-cave, ship-of-theseus)
 
 ## Summary
-(in progress)
+- The vignettes have real life in their asides: the trolley workers' slowed-down chatter, the cave neighbour's "Shh. The horse is next.", the fisherman's replaced dock and grandad's rod, the vat cottage "nobody ever goes in". Those lines do more world-building than any prop.
+- But the *places* are mostly the same bare paper-beige disc with a few low-poly trees (trolley, vat layer 0, cave outside), and several narrated qualities are not on screen: the vat's "sunny afternoon… the sun is warm" has no sun; the cave's pond "reflection" reflects nothing; the cave's outside lacks the real horse/bird/jar whose shadows you watched.
+- The first room (the hub) is the weakest place: its Escher/Dalí set pieces read as props (the Penrose stairs look like cardboard boxes, the floating armchair like a red box), there's nothing to examine, the staircase has no collision, and the ladder/hatch hide the Trolley painting.
+- Navigation traps undercut the "wander and poke" play style: tap-walk jams on the worker line in the trolley scene, overlapping prompts send you up the ladder instead of through the sky door, and in the cave a second E press ends the vignette.
+- Connective tissue is thin: portals don't change after you've been through them (only a ✓ and a glow), and the frog lives only in vignettes; the hub could carry traces of where you've been.
 
 ## Findings
 ### house
@@ -37,7 +41,6 @@
 - **[polish] [asides]** "Look at the driver" narrates that he has fainted, but the camera stays wide; you never actually see the slumped driver. The Talk prompt also sits on top of the worker's speech bubble.
   Evidence: shots/017-driver.jpg, shots/027-sideworker.jpg
   Suggestion: brief close-up (or a visible slumped head in the cab window) when looking at the driver; offset the Talk prompt below the bubble.
-- **[keep-worthy note]** The workers' slowed-down speech ("Loooveeelyyy daaayyy fooor iiit…", "Theeeyyy aaalwaaayyys puuut meee ooon myyy ooown…" from the lone one) is the best world-building in the room: it makes the people real *and* the slow-motion felt. Keep it.
 
 ### brain-in-a-vat
 - **[major] [set dressing]** The "sunny afternoon" exists only in the narration. Lines say "A sunny afternoon", "The grass, the trees, the warmth", "You sit down. The sun is warm", but the ground is the same flat paper-beige as every other island, there's no grass, no sun, no warm light, no sky, no birds or breeze. The payoff line "Real or not, it's the only sun you have" lands on a scene with no sun in it.
@@ -86,6 +89,17 @@
 - **[polish] [asides]** The plank keeper's speech bubble ("I kept every one. Seemed a shame to burn them.") persisted >20 s after I walked away, drifted to hover over the fisherman, and was still ghosted on the game-over card.
   Evidence: shots/104-t1000.jpg, shots/106-t1006.jpg
   Suggestion: expire bubbles after ~4 s or when the player leaves the speaker's radius; keep them anchored to their speaker.
-- **[idea] [world]** The old planks become a second ship, but the keeper who assembled it appears out of nowhere at the choice. A small workshop area (sawhorse, a pile of grey planks growing each time you swap) would show "someone has kept every old plank" happening while you work, instead of announcing it afterwards.
+- **[idea] [world]** The old planks do pile up on the dock as you swap, but the keeper who rebuilds them only pops into existence at the choice. Showing her at work would let "someone has kept every old plank" be discovered rather than announced.
   Evidence: caption at t=969.7s "Someone has kept every old plank."
   Suggestion: have the purple keeper visible from the start at the far end of the sand, carrying each old plank off after you drop it.
+
+## Keep
+- The slowed-down speech bubbles of the trolley workers during the slow-motion choice (and the lone worker's "They always put me on my own…").
+- The fisherman's three lines on the Theseus dock; the plank keeper's "Good wood, this. Just old."
+- Brain in a Vat: the machine asides ("Somewhere in here is that tree", "It sounds like a summer afternoon"), the cottage line, and the stacked-worlds image of the lab under your old world (shots/050-t609.jpg).
+- The cave's shadow wall and the reveal of puppeteers carrying cutouts behind the parapet (shots/072-fire.jpg); the whiteout at the mouth.
+- The floor window with clouds and the endlessly climbing little figure in the first room: good ideas, they just need to be readable and touchable.
+
+## Harness notes
+- `until level` right after entering a vignette waits the full timeout if the level has already loaded (it wants a *new* level change); I lost 20 s of standing still in the trolley scene that way.
+- `use <prompt>` picks the first matching prompt even if disabled (e.g. `use Talk` in Theseus chose the disabled keeper at (12.5,-1.1) and waited 20 s), and in the house `use Open the door` chose whichever door was nearest; I used `walk` + `press e` to disambiguate.
