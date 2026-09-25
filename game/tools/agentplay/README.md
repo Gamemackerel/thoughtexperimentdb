@@ -17,10 +17,12 @@ labels, level changes, `phase` changes of the level's state) and all the text on
 
 | Command | What it does |
 |---|---|
-| `open [level] [WxH]` | Start (or restart) the game. `level`: `house` (default: the first room), `title` (stay on the title screen), or a level id: `hall`, `trolley-problem`, `brain-in-a-vat`, `platos-cave`, `ship-of-theseus`, `grandfather-paradox`, `infinite-monkey`, `simulation-argument`, `fermi-paradox`, `tragedy-of-the-commons`. `WxH` sets the screen size (default `1280x720`; e.g. `390x844` is a phone in portrait with touch). Takes a screenshot. |
+| `open [level] [WxH]` | Start (or restart) the game. `level`: `house` (default: the first room), `title` (stay on the title screen; then `clicksel #begin` to enter the house), or a level id: `hall`, `trolley-problem`, `brain-in-a-vat`, `platos-cave`, `ship-of-theseus`, `grandfather-paradox`, `infinite-monkey`, `simulation-argument`, `fermi-paradox`, `tragedy-of-the-commons`. `WxH` sets the screen size (default `1280x720`; e.g. `390x844` is a phone in portrait with touch). Takes a screenshot. |
 | `look [label]` | Screenshot now (no time passes). |
 | `status` | Text only, no screenshot. |
 | `wait <sec> [shots]` | Let `sec` seconds of game time pass. With `shots`, take that many evenly spaced screenshots along the way (e.g. `wait 12 4` to watch a scene). |
+| `until <what> [max]` | Let time pass until something happens (max 60 s by default): `phase` (the level's phase changes), a phase name (e.g. `until slow`), `caption` (the next narration line), `prompt` (an interaction prompt appears), `over` (the game-over card), `level` (a new level loads), or any JS condition. Better than a long `wait` when you don't want to skip past a moment. |
+| `use <prompt text>` | Walk up to the interactable whose prompt contains that text (e.g. `use pull the lever`) and press E once its prompt shows. Quicker than aiming clicks; still try clicking and walking yourself sometimes, since that's how players do it. |
 | `walk <x> <z> [max]` | Walk to world position (x, z), the way tap-to-walk does (steering around obstacles). Stops on arrival, when blocked, or after `max` seconds (default 15). Says whether you arrived. |
 | `hold <keys> <sec>` | Hold keys for `sec` seconds of game time, e.g. `hold w 1.5`, `hold w+d 0.8`, `hold left 0.5`. Movement is camera-relative (first person: A/D turn, W/S walk). Good for testing collisions and feel. |
 | `press <key>` | Press a key once: `e` (interact), `space`, `enter`, `n` (notebook), `esc` (leave vignette; the confirm dialog is accepted automatically), or any key name. |

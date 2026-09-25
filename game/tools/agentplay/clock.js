@@ -44,7 +44,8 @@
       const el = document.querySelector(sel); if (seen(el) && txt(el)) out.push([k, txt(el).slice(0, k === 'notebook' || k === 'journal' ? 4000 : 600)]);
     }
     const over = document.getElementById('over');
-    if (over && !over.hidden) out.push(['gameover', `${over.querySelector('.kicker').textContent} | ${over.querySelector('h1').textContent} | ${over.querySelector('p').textContent} | journal question: ${over.querySelector('.ask').hidden ? '-' : over.querySelector('.ask .q').textContent}`]);
+    if (over && !over.hidden) out.push(['gameover', `${over.querySelector('.kicker').textContent} | ${over.querySelector('h1').textContent} | ${over.querySelector('p').textContent} | journal question: ${over.querySelector('.ask').hidden ? '-' : over.querySelector('.ask .q').textContent} | your answer: "${document.getElementById('answer').value}"`]);
+    for (const ta of document.querySelectorAll('#journal textarea')) if (seen(ta)) out.push(['journal answer box', ta.value || '(empty)']);
     for (const el of document.querySelectorAll('#ui .label, #ui .title-card, #ui .lower-third, #ui .card, #ui .quote, #ui .note, #ui .caption, #ui .rewind')) {
       if (seen(el) && txt(el)) out.push([el.classList.contains('speech') ? 'speech' : el.className.split(' ')[0], txt(el).slice(0, 300)]);
     }

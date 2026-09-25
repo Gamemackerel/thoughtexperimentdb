@@ -54,7 +54,7 @@ async function status({ full = false } = {}) {
   const s = await page.evaluate((full) => {
     const T = window.__ted, P = T?.player, L = T?.level;
     const r = { t: window.__vt.now().toFixed(1), level: L?.name ?? '(title screen)', visible: window.__vt.visible(), log: window.__vt.takeLog() };
-    if (P) { r.pos = `(${P.pos.x.toFixed(1)}, ${P.pos.z.toFixed(1)})`; r.moving = P.vel.length() > 0.2; r.canMove = P.enabled && !P.locked && !P.sitting; r.firstPerson = P.firstPerson; }
+    if (P) { r.pos = `(${P.pos.x.toFixed(1)}, ${P.pos.z.toFixed(1)})`; r.moving = P.vel.length() > 0.6 ? 'moving' : P.target ? 'trying to walk to a target but not getting closer' : ''; r.canMove = P.enabled && !P.locked && !P.sitting; r.firstPerson = P.firstPerson; }
     if (L?.__S) { r.state = {}; for (const [k, v] of Object.entries(L.__S)) if (v === null || ['string', 'number', 'boolean'].includes(typeof v)) r.state[k] = typeof v === 'number' ? +v.toFixed(2) : v; }
     if (full && T) {
       r.interactables = T.interact.items.map((it, i) => {
@@ -68,7 +68,7 @@ async function status({ full = false } = {}) {
     }
     return r;
   }, full);
-  const lines = [`t=${s.t}s  level=${s.level}${s.pos ? `  you at ${s.pos}${s.moving ? ' (moving)' : ''}${s.canMove === false ? '  [controls locked/seated]' : ''}${s.firstPerson ? '  [first person]' : ''}` : ''}`];
+  const lines = [`t=${s.t}s  level=${s.level}${s.pos ? `  you at ${s.pos}${s.moving ? ` (${s.moving})` : ''}${s.canMove === false ? '  [controls locked/seated]' : ''}${s.firstPerson ? '  [first person]' : ''}` : ''}`];
   if (s.state) lines.push('level state: ' + JSON.stringify(s.state));
   if (s.log.length) lines.push('what happened:', ...s.log.map((l) => '  ' + l));
   lines.push('on screen now:', ...(s.visible.length ? s.visible.map(([k, v]) => `  [${k}] ${v}`) : ['  (no text)']));
@@ -124,6 +124,41 @@ const commands = {
     for (const k of ks) await page.keyboard.up(k);
     await adv(0.2);
     return status();
+  },
+  // let time pass until something happens: `phase` (the level's phase changes), a phase name, `caption` (a new narration
+  // line), `prompt` (an interaction prompt appears), `over` (the game-over card), `level` (a level loads), or any JS condition
+  async until(what = 'phase', max = '60') {
+    const cond = {
+      phase: `window.__ted?.level?.__S?.phase !== ${JSON.stringify(await page.evaluate(() => window.__ted?.level?.__S?.phase ?? null))}`,
+      caption: `(() => { const c = document.querySelector('#caption.on'); const t = c ? c.innerText : ''; const r = t && t !== window.__lastCap; window.__lastCap = t; return r; })()`,
+      prompt: `document.getElementById('prompt').classList.contains('on')`,
+      over: `!document.getElementById('over').hidden`,
+      level: `window.__ted?.level?.name !== ${JSON.stringify(await page.evaluate(() => window.__ted?.level?.name ?? null))}`,
+    }[what] ?? (/^[\w-]+$/.test(what) ? `window.__ted?.level?.__S?.phase === ${JSON.stringify(what)}` : what);
+    if (what === 'caption') await page.evaluate(() => { const c = document.querySelector('#caption.on'); window.__lastCap = c ? c.innerText : ''; });
+    const hit = await adv(+max, cond);
+    return (hit ? `condition met` : `condition NOT met within ${max}s`) + '\n' + (await status());
+  },
+  // walk up to the interactable whose prompt contains `text` (case-insensitive) and use it once its prompt shows
+  async use(...words) {
+    const text = words.join(' ').toLowerCase();
+    const found = await page.evaluate((text) => {
+      const { interact, player } = window.__ted;
+      const pr = (it) => { try { return String(typeof it.prompt === 'function' ? it.prompt() : it.prompt); } catch { return ''; } };
+      const cands = interact.items.map((it, i) => ({ it, i, p: pr(it) })).filter((c) => c.p.toLowerCase().includes(text));
+      if (!cands.length) return { err: 'no interactable matches; prompts are: ' + interact.items.map(pr).join(' | ') };
+      const q = (c) => (typeof c.it.pos === 'function' ? c.it.pos() : c.it.pos);
+      cands.sort((a, b) => q(a).distanceTo(player.pos) - q(b).distanceTo(player.pos));
+      const c = cands[0], at = q(c), d = player.pos.clone().sub(at).setY(0);
+      if (d.length() > c.it.radius * 0.6) { d.setLength(c.it.radius * 0.6); player.target = at.clone().add(d).setY(0); }
+      window.__useIdx = c.i;
+      return { prompt: c.p, enabled: c.it.enabled() };
+    }, text);
+    if (found.err) return found.err;
+    const ok = await adv(20, 'window.__ted.interact.current === window.__ted.interact.items[window.__useIdx]');
+    if (!ok) return `could not get the "${found.prompt}" prompt within 20s${found.enabled ? '' : ' (it is disabled right now)'}\n` + (await status());
+    await page.keyboard.press('KeyE'); await adv(0.3);
+    return `used "${found.prompt}"\n` + (await status());
   },
   async press(k = 'e') { await page.keyboard.press(key(k)); await adv(0.2); return status(); },
   // click/tap at screen pixel (x, y) of the screenshot: walks there if it's ground, or presses what's under it
