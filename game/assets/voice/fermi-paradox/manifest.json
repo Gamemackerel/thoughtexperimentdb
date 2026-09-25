@@ -38,5 +38,20 @@
     "file": "listen_end-0faf887c.mp3",
     "text": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early.",
     "dur": 5.98
+  },
+  "logbook": {
+    "file": "logbook-e6fede7b.mp3",
+    "text": "The log goes back years. Every night, the same entry. Nothing.",
+    "dur": 4.6
+  },
+  "tea": {
+    "file": "tea-11d524d6.mp3",
+    "text": "Your tea has gone cold. It always does, out here.",
+    "dur": 3.71
+  },
+  "moon": {
+    "file": "moon-9f416291.mp3",
+    "text": "Only one other world has ever had visitors. They left footprints, and went home.",
+    "dur": 5.25
   }
 }

@@ -58,5 +58,25 @@
     "file": "end-62611ced.mp3",
     "text": "However far you climb out, you're still looking through the same eyes.",
     "dur": 4.28
+  },
+  "tree": {
+    "file": "tree-3cdfa628.mp3",
+    "text": "A perfect tree. Every leaf exactly where you'd expect it.",
+    "dur": 4.13
+  },
+  "window": {
+    "file": "window-9b7e0fa5.mp3",
+    "text": "Nobody home. Come to think of it, you've never seen anyone go in.",
+    "dur": 4.62
+  },
+  "machine": {
+    "file": "machine-eafbeb7b.mp3",
+    "text": "Reels turning, lights blinking. Somewhere in here is that tree.",
+    "dur": 4.57
+  },
+  "machine_2": {
+    "file": "machine_2-63dbf4d9.mp3",
+    "text": "It's warm, and it hums. It sounds like a summer afternoon.",
+    "dur": 4.21
   }
 }

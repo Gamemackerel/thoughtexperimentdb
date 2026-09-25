@@ -76,8 +76,17 @@ Every vignette also has:
 - **Replay:** after the reflection, the choice comes round again. The narrator acknowledges whether you chose the same
   or differently.
 - **A journal entry:** a question and a to-do list in `game/journal.json` (verify every link).
-- **The frog:** it appears exactly once per vignette, preferably during the choice, visible but never central. It hops in and out
-  of view and is never mentioned.
+- **The frog:** it appears exactly once per vignette, preferably during the choice, visible but never central. It hops in,
+  does **one small thing that is different in every vignette** (and quietly fits it), hops out, and is never mentioned.
+  Built with `frogCameo()` in `game/core/frog.js` (hops, waits, faces, jump cuts; `frogExtras` adds a tongue and a throat
+  sac). So far: steps onto the rails, feels them hum and thinks better of it (trolley) · hops past the bench, flickers,
+  and does the same two hops again (brain in a vat) · looks at itself in the pond and plops in (cave) · climbs out of the
+  sea onto a bollard and croaks at the ship (Theseus) · hops across the square, then rewinds backwards (grandfather) ·
+  presses one key on a typewriter while the monkey stares (monkeys) · looks into the dome while a frog inside looks back
+  (simulation) · watches a shooting star (Fermi) · catches a fly, the only one not grazing the common (commons).
+- **Asides:** one to three small things to do that aren't the thought experiment: people to talk to (silent speech
+  bubbles, `talk()` in `game/core/extras.js`) and things to look at (one short narrator line each, `look()`). They never
+  change the story; they make the place feel lived in, and they can be funny.
 
 ### The first room (built)
 
@@ -88,11 +97,17 @@ Every vignette also has:
 | The purple door | **Plato's Cave** | Chained, watching shadows; the chains fall; turn to the fire, climb into the light | Keep watching · stay in the light · go back and tell them |
 | The sky door | **Ship of Theseus** | Carry new planks and replace all six of the ship's old ones; the old planks become a second ship | Board the new ship · board the old wood |
 
+The first room's Penrose staircase is a real spiral, re-shaped every frame so that from wherever the camera is, its top
+step sits exactly in front of its bottom step: it always reads as a closed loop, and the little figure climbs forever.
+
 ### The hall (built)
 
-Up the rope ladder, through the door on the first room's ceiling: a long corridor dressed after Magritte and Escher
-(a dining table and chandelier hanging from the ceiling, day above night in one window, floating bowler hats and green
-apples, a staircase climbing into the ceiling). A hatch in the floor leads back down.
+Up the rope ladder, through the door on the first room's ceiling: a long corridor built after Magritte. Its walls are
+painted sky, and red stage curtains frame it. There's a dining table and chandelier hanging from the ceiling, day above
+night in one window with an easel in front painted with exactly the view it hides, bowler-hatted men hanging like rain
+outside a high window, a steam engine coming out of the fireplace, a small room filled by one green apple, a mirror that
+shows the back of your head, a pipe that is not a pipe, a door with a hole in it, and a gentleman whose face is hidden by
+a hovering apple (you can talk to him). Escher's stairs climb into the ceiling. A hatch in the floor leads back down.
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
@@ -151,6 +166,7 @@ game/
   assets/voice/<id>/    generated audio (committed; small)
   tools/voice.mjs       renders lines with Kokoro → assets/voice
   tools/serve.mjs       local dev server → http://localhost:5173/game/ (also appends POST /feedback to feedback.txt)
+  tools/playtest-asides.mjs  watches every frog cameo and tries every aside (screenshots to build/asides-*)
   tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
 ```
 

@@ -4,9 +4,11 @@
 // them running.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
-  makeIsland, makeTree, makeHouse, makePerson, animatePerson, makeTable, makeLever, makeFrog, animateFrog,
+  makeIsland, makeTree, makeHouse, makePerson, animatePerson, makeTable, makeLever, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -81,10 +83,22 @@ export default function simulationArgument(ctx) {
   for (const s of [-1, 1]) { const e = mesh(new THREE.SphereGeometry(2.4, 16, 12), clay(palette.ink)); e.position.set(7 * s, 3, 20.6); giant.add(e); }
   giant.position.set(0, 26, -78); outside.add(giant);
 
-  const frog = makeFrog(); room.add(frog);
-  const FROG_PATH = [[-4, 0, 4], [-2.5, 0, 3], [-1, 0, 2.4], [0.6, 0, 2.3], [2.2, 0, 2.8], [3.8, 0, 3.8], [5.4, 0, 5]];
+  // a photo on the wall
+  const photo = new THREE.Group();
+  const pframe = mesh(new THREE.BoxGeometry(1, 1.2, 0.08), clay(0x6b4a33)); photo.add(pframe);
+  const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 0.96), new THREE.MeshBasicMaterial({ color: 0xd9cdb6 })); pic.position.z = 0.045; photo.add(pic);
+  const kid = makePerson({ color: palette.agent }); kid.scale.setScalar(0.28); kid.position.set(0, -0.42, 0.06); photo.add(kid);
+  photo.position.set(-3.6, 3.1, -5.26); room.add(photo);
 
-  const S = { phase: 'explore', looked: false, more: false, zoomT: -1, revealT: -1, extrasT: -1, off: 0, frogT: -1, frogDone: false };
+  // the frog hops up onto the desk and looks into the dome; inside, a (relatively enormous) frog comes to look back
+  const frog = makeFrog(); room.add(frog);
+  const mini = makeFrog({ scale: 2.4 }); world.add(mini);
+  const miniCameo = frogCameo(mini, [[-1, -4], [-3.4, -1.4], [-5.8, 0.8], [-8, 2.6], { face: [-20, 11] }, { wait: 1.8 }, { face: [-1, -4] }, [-5.8, 0.8], [-3.4, -1.4], [-2.6, -3.4]]);
+  const cameo = frogCameo(frog, [[6.2, 4.6], [4.8, 3], [3.2, 1.6], [1.6, 0.4], [0.2, -1], { at: [-0.4, -2.5], y: 1.31, height: 1.1 }, { face: [0.6, -3] },
+    { set: () => miniCameo.start() }, { wait: 4.8, act: (f, u) => (f.userData.body.rotation.x = 0.18 * Math.sin(Math.PI * clamp(u * 1.3))) },
+    { face: [-3, -1] }, { at: [-2.2, -1.2], y: 0, height: 1 }, [-3.8, 0.2], [-5.4, 1.6], [-7, 3], [-8.6, 4.4], [-10.2, 5.8]]);
+
+  const S = { phase: 'explore', looked: false, more: false, zoomT: -1, revealT: -1, extrasT: -1, off: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/simulation-argument.json', 'The Simulation Argument');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -105,9 +119,14 @@ export default function simulationArgument(ctx) {
     onUse: async () => { S.phase = 'over'; await voice.say('run_end'); await ctx.wait(1); save.complete('simulation-argument');
       ctx.gameOver({ title: 'You let them run', text: 'The little people carry on, never knowing. Neither, perhaps, do you.' }); } });
 
+  // asides: the window, the photo
+  look(ctx, { pos: V(4, 0, -4.1), radius: 1.8, height: 3.6, prompt: 'Look out of the window', lines: ['window'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
+  look(ctx, { pos: V(-3.6, 0, -4.1), radius: 1.8, height: 3.6, prompt: 'Look at the photo', lines: ['photo'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
+
   (async () => { await ctx.wait(1); await voice.say('arrive'); })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: 3, z: 4, rotY: Math.PI * 1.1 },
     walkable: (x, z) => Math.hypot(x, z) < 10.5 && z > -4.6,
     blockers: () => [{ x: DESK.x, z: DESK.z, r: 1.6 }, { x: SHELF_X, z: -1.5, r: 0.7 }],
@@ -124,10 +143,8 @@ export default function simulationArgument(ctx) {
         const flick = S.offT > 1.6 ? (Math.sin(S.offT * 23) > 0.2 ? 0.25 : 1) * Math.max(0.35, 1 - (S.offT - 1.6) * 0.3) : 1;
         stage.hemi.intensity = 1.6 * flick; stage.sun.intensity = 2.4 * flick;
       }
-      if (!S.frogDone && S.looked && S.frogT < 0 && S.phase === 'explore') S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.looked && S.phase === 'explore') cameo.start();
+      cameo.update(dt); miniCameo.update(dt);
     },
     camera(pl, time, dt = 1 / 60) {
       if (S.phase === 'zoom') {

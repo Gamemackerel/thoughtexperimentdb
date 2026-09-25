@@ -3,9 +3,11 @@
 // send a message into the dark, or keep listening. Either way: years of silence.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
-  makeIsland, makeHouse, makeTable, makeLever, makeFrog, animateFrog,
+  makeIsland, makeHouse, makeTable, makeLever, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { look } from '../core/extras.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const DISH = V(5, 0, -4);
@@ -61,10 +63,32 @@ export default function fermiParadox(ctx) {
   sky.add(new THREE.Points(sg, new THREE.PointsMaterial({ size: 2, sizeAttenuation: false, vertexColors: true, fog: false })));
   const moon = new THREE.Mesh(new THREE.SphereGeometry(9, 24, 16), new THREE.MeshBasicMaterial({ color: 0xf2eedd, fog: false })); moon.position.set(-150, 120, -200); sky.add(moon);
 
-  const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[-1, 0, 7], [0.8, 0, 6.2], [2.6, 0, 5.8], [4.4, 0, 6], [6.2, 0, 6.8], [8, 0, 8]];
+  // a crate by the hut with the logbook and a mug on it; a folding chair facing the moon
+  const CRATE = V(-9.6, 0, 0.4);
+  const crate = mesh(new THREE.BoxGeometry(1, 0.8, 0.8), clay(palette.wood)); crate.position.copy(CRATE).setY(0.4); root.add(crate);
+  const log = mesh(new THREE.BoxGeometry(0.5, 0.08, 0.36), clay(0x8c4a4a)); log.position.copy(CRATE).add(V(-0.15, 0.84, 0)); log.rotation.y = 0.3; root.add(log);
+  const mug = mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.2, 12), clay(0xf2e6d4)); mug.position.copy(CRATE).add(V(0.3, 0.9, 0.1)); root.add(mug);
+  const CHAIR = V(2.6, 0, 4.2);
+  const chair = new THREE.Group(); const cmat = clay(0x3f8f86);
+  const seat = mesh(new THREE.BoxGeometry(0.8, 0.08, 0.7), cmat); seat.position.y = 0.5; chair.add(seat);
+  const cback = mesh(new THREE.BoxGeometry(0.8, 0.9, 0.08), cmat); cback.position.set(0, 0.95, 0.38); cback.rotation.x = -0.35; chair.add(cback);
+  for (const [x, z] of [[-0.35, -0.3], [0.35, -0.3], [-0.35, 0.3], [0.35, 0.3]]) { const l = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 6), clay(0xdcd6cb)); l.position.set(x, 0.25, z); chair.add(l); }
+  chair.position.copy(CHAIR); chair.rotation.y = Math.PI + 0.55; root.add(chair);
 
-  const S = { phase: 'explore', listened: false, lapse: -1, frogT: -1, frogDone: false, spin: 0 };
+  // the frog sits and looks up at the sky; a shooting star goes over; it watches it go, then hops off
+  const frog = makeFrog(); root.add(frog);
+  const meteor = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.9, 26, 8), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, fog: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+  meteor.rotation.z = 1.25; root.add(meteor);
+  const cameo = frogCameo(frog, [[-3, 10.5], [-1.6, 9], [-0.2, 7.8], [1.2, 7.2], { face: [-40, -60] },
+    { wait: 3.8, act: (f, u) => {
+      f.userData.body.rotation.x = -0.45 * Math.sin(Math.PI * clamp(u * 1.4));        // looks up
+      const m = clamp((u - 0.35) / 0.25);
+      meteor.material.opacity = m > 0 && m < 1 ? 0.9 * Math.sin(Math.PI * m) : 0;
+      meteor.position.set(lerp(-90, 30, m), lerp(48, 30, m), -160);
+      f.rotation.y = Math.atan2(-40 - 1.2, -60 - 7.2) + (m > 0 ? 0.5 * m : 0);          // and follows it
+    } }, [2.8, 7.8], [4.4, 8.6], [6, 9.6], [7.6, 10.8]]);
+
+  const S = { phase: 'explore', listened: false, lapse: -1, spin: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/fermi-paradox.json', 'The Fermi Paradox');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -85,12 +109,17 @@ export default function fermiParadox(ctx) {
       ctx.gameOver({ title: 'You called out', text: 'The message is still travelling, and will be for thousands of years. Nothing has answered yet.' });
     } });
 
+  // asides: the logbook and the cold tea, and the moon from the chair
+  look(ctx, { pos: CRATE.clone().add(V(0.4, 0, 1)), radius: 1.8, height: 1.8, prompt: 'Read the logbook', lines: ['logbook', 'tea'], enabled: () => S.phase === 'explore' });
+  look(ctx, { pos: CHAIR, radius: 1.8, height: 1.8, prompt: 'Look at the moon', lines: ['moon'], enabled: () => S.phase === 'explore' });
+
   (async () => { await ctx.wait(1); await voice.say('arrive'); })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: 0, z: 7, rotY: Math.PI },
     walkable: (x, z) => Math.hypot(x, z) < 20,
-    blockers: () => [{ x: DISH.x, z: DISH.z, r: 1.6 }, { x: -7, z: -4, r: 2.2 }, { x: CONSOLE.x, z: CONSOLE.z, r: 1 }, { x: SWITCH.x, z: SWITCH.z, r: 0.5 }],
+    blockers: () => [{ x: CRATE.x, z: CRATE.z, r: 0.6 }, { x: CHAIR.x, z: CHAIR.z, r: 0.5 }, { x: DISH.x, z: DISH.z, r: 1.6 }, { x: -7, z: -4, r: 2.2 }, { x: CONSOLE.x, z: CONSOLE.z, r: 1 }, { x: SWITCH.x, z: SWITCH.z, r: 0.5 }],
     update(dt, t) {
       // static on the console screen
       g2.fillStyle = '#0f2a2b'; g2.fillRect(0, 0, 256, 128); g2.strokeStyle = '#6fe0b8'; g2.lineWidth = 2; g2.beginPath();
@@ -104,10 +133,8 @@ export default function fermiParadox(ctx) {
       // the message: a beam from the dish into the sky
       if (S.sendT !== undefined) { S.sendT += dt; beamMat.opacity = 0.55 * clamp(S.sendT / 0.6) * (1 - clamp((S.sendT - 3) / 3)); bowl.rotation.x = lerp(bowl.rotation.x, -0.45, 0.02); }
       lever.userData.pivot.rotation.z = lerp(lever.userData.pivot.rotation.z, S.phase === 'send' ? -0.45 : 0.45, 1 - Math.exp(-dt * 8));
-      if (!S.frogDone && S.listened && S.frogT < 0) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.listened) cameo.start();
+      cameo.update(dt);
     },
     camera(pl) {
       // low and looking slightly up, so the sky fills the top of the frame

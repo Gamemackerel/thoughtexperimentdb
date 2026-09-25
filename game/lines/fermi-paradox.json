@@ -13,6 +13,9 @@
     "ask": "So where is everybody?",
     "send_1": "Your message leaves at the speed of light.",
     "send_2": "Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.",
-    "listen_end": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early."
+    "listen_end": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early.",
+    "logbook": "The log goes back years. Every night, the same entry. Nothing.",
+    "tea": "Your tea has gone cold. It always does, out here.",
+    "moon": "Only one other world has ever had visitors. They left footprints, and went home."
   }
 }

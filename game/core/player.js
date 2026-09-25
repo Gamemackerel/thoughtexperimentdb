@@ -93,7 +93,8 @@ export class Player {
 
   ok(x, z, level) {
     if (!level.walkable(x, z)) return false;
-    for (const b of level.blockers?.() ?? []) if (Math.hypot(x - b.x, z - b.z) < b.r + 0.35) return false;
+    // blocked by an obstacle, unless you're already inside it (something moved onto you) and this step leads out
+    for (const b of level.blockers?.() ?? []) { const d = Math.hypot(x - b.x, z - b.z); if (d < b.r + 0.35 && d <= Math.hypot(this.pos.x - b.x, this.pos.z - b.z)) return false; }
     return true;
   }
 

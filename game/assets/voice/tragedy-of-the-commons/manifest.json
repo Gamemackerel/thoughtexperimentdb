@@ -43,5 +43,10 @@
     "file": "collapse-d902c6d5.mp3",
     "text": "The grass is gone. For everyone.",
     "dur": 2.69
+  },
+  "sheep": {
+    "file": "sheep-0a6b2563.mp3",
+    "text": "This one's yours. She has no idea about any of this.",
+    "dur": 3.89
   }
 }

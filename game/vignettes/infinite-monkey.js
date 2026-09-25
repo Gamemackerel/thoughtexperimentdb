@@ -2,9 +2,11 @@
 // A hall of monkeys at typewriters. Read what they've typed; pull the lever to wait a million years; read again.
 // Nonsense, then a word, then two, then "To be, or not to be". Or walk out before forever arrives.
 import {
-  THREE, palette, clamp, lerp, seeded, clay, mesh, makeIsland, makeTable, makeFrog, animateFrog, makeLever,
+  THREE, palette, clamp, lerp, seeded, clay, mesh, makeIsland, makeTable, makeFrog, makeLever,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -74,10 +76,23 @@ export default function infiniteMonkey(ctx) {
   const doorLight = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 2.9), new THREE.MeshBasicMaterial({ color: 0xfffaf0 })); doorLight.position.y = 1.5; arch.add(doorLight);
   arch.position.copy(EXIT); arch.rotation.y = Math.PI / 2; root.add(arch);
 
-  const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[-10, 0, -1], [-8, 0, -0.9], [-6, 0, -1.1], [-4, 0, -0.9], [-2, 0, -1.1], [0, 0, -0.9], [2, 0, -1.1], [4, 0, -0.9]];
+  // a crate of bananas by the door
+  const CRATE = V(-10.5, 0, 2.6);
+  const crate = mesh(new THREE.BoxGeometry(1.3, 0.8, 0.9), clay(palette.wood)); crate.position.copy(CRATE).setY(0.4); root.add(crate);
+  const r = seeded(9);
+  for (let i = 0; i < 9; i++) {
+    const b = mesh(new THREE.TorusGeometry(0.22, 0.07, 8, 16, 2.2), clay(0xf2c14e));
+    b.position.copy(CRATE).add(V(-0.45 + (i % 3) * 0.45, 0.85 + Math.floor(i / 3) * 0.06, -0.25 + Math.floor(i / 3) * 0.25)); b.rotation.set(Math.PI / 2 + r() * 0.3, r() * 3, r()); root.add(b);
+  }
 
-  const S = { phase: 'explore', waits: 0, readAt: -1, waitT: -1, years: 0, frogT: -1, frogDone: false };
+  // the frog hops up onto a desk, presses one key, and the monkey stops to stare at it; then it hops away
+  const frog = makeFrog(); root.add(frog);
+  const STARER = 10;                                   // the monkey at the front-row desk the frog visits
+  const cameo = frogCameo(frog, [[11, 4.6], [9, 3.6], [7, 2.9], [5.2, 2.5], [4.2, 2.2], { at: [3.15, 1.2], y: 1.12, height: 0.9 }, { face: [2.5, 1] },
+    { wait: 0.4 }, { wait: 0.5, act: (f, u) => { f.userData.body.rotation.x = 0.4 * Math.sin(Math.PI * u); if (u > 0.5) S.stare = 2.2; } },
+    { wait: 1.6 }, { face: [5, -0.6] }, { at: [4.6, -0.6], y: 0, height: 1 }, [6.4, -1.8], [8.4, -2.3], [10.4, -2.5], [12.6, -2.2]]);
+
+  const S = { phase: 'explore', waits: 0, readAt: -1, waitT: -1, years: 0, stare: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/infinite-monkey.json', 'The Infinite Monkey Theorem');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -96,19 +111,30 @@ export default function infiniteMonkey(ctx) {
     onUse: async () => { S.phase = 'over'; player.target = EXIT.clone().add(V(-3, 0, 0)); await voice.say('leave_end'); await ctx.wait(0.8); save.complete('infinite-monkey');
       ctx.gameOver({ title: 'You walked away', text: 'You never saw it happen. Almost everything they type is noise, and forever is much, much longer than it sounds.' }); } });
 
+  // asides: the monkeys (busy), and the bananas
+  const OOK = ['Ook.', '(It doesn\'t look up.)', 'Ook ook.', '(It hands you a page. Every letter on it is q.)', '(It pats your hand, and keeps typing.)'];
+  monkeys.forEach((m, k) => talk(ctx, { who: m, radius: 2.1, offset: [0, 2.7, 0], prompt: 'Say hello', enabled: () => S.phase === 'explore', lines: (i) => OOK[(k + i) % OOK.length] }));
+  look(ctx, { pos: CRATE, radius: 2, height: 1.6, prompt: 'Look in the crate', lines: ['bananas'], enabled: () => S.phase === 'explore' });
+
   (async () => { await ctx.wait(1); await voice.say('arrive'); await ctx.wait(1.5); await voice.say('typing'); await ctx.wait(2); await voice.say('ask'); })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: 0, z: 9, rotY: Math.PI },
     walkable: (x, z) => Math.hypot(x, z) < 18 && z > -9.2,
     blockers: () => [
       ...monkeys.map((m) => ({ x: m.position.x, z: m.position.z - 0.5, r: 1.2 })),
-      { x: LECTERN.x, z: LECTERN.z, r: 0.5 }, { x: LEVER.x, z: LEVER.z, r: 0.5 },
+      { x: LECTERN.x, z: LECTERN.z, r: 0.5 }, { x: LEVER.x, z: LEVER.z, r: 0.5 }, { x: CRATE.x, z: CRATE.z, r: 0.8 },
     ],
     update(dt, t) {
       // typing: arms hammer away (faster while time is skipping)
       const speed = S.phase === 'waiting' ? 40 : 14;
       monkeys.forEach((m, i) => { m.userData.arms.forEach((a) => (a.rotation.x = -1.1 + Math.abs(Math.sin(t * speed + i + a.userData.side)) * 0.35)); m.userData.body.rotation.z = Math.sin(t * 3 + i) * 0.03; });
+      // the monkey the frog visited stops typing and stares at it for a moment
+      S.stare = Math.max(0, S.stare - dt);
+      const st = monkeys[STARER];
+      st.userData.body.rotation.y = lerp(st.userData.body.rotation.y, S.stare > 0 ? -0.9 : 0, 1 - Math.exp(-dt * 6));
+      if (S.stare > 0) st.userData.arms.forEach((a) => (a.rotation.x = -0.6));
       // waiting a million years: the light races day-night, the paper drifts pile up
       if (S.phase === 'waiting') {
         S.waitT += dt;
@@ -120,11 +146,9 @@ export default function infiniteMonkey(ctx) {
       const grow = S.waits + (S.phase === 'waiting' ? clamp(S.waitT / 3.2) : 0);
       piles.forEach((p, i) => { p.scale.y = 0.05 + grow * (0.6 + (i % 3) * 0.15); p.position.y = p.scale.y / 2; });
       ctx.ui.label('years', clamp((7 - player.pos.distanceTo(LEVER)) / 3), `${Math.round(S.years).toLocaleString('en-GB')} years`, LEVER.clone().add(V(0, 2.2, 0)));
-      // frog: once, along the aisle, after the first page
-      if (!S.frogDone && S.readAt >= 0 && S.frogT < 0) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      // frog: once, after the first page is put down
+      if (S.readAt >= 0 && !ctx.pageOpen) cameo.start();
+      cameo.update(dt);
     },
     camera(pl) { return { ...frame([pl.pos.clone(), V(0, 2, -7), V(-8, 1, -3), V(8, 1, -3), LECTERN.clone(), LEVER.clone()], { min: 14, max: 40 }), stiffness: 2.2 }; },
     dispose() { voice.stop(); ctx.ui.fade(0); },

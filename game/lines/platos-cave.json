@@ -1,18 +1,23 @@
 {
-  "voice": { "name": "bm_fable", "speed": 0.9, "lang": "en-gb" },
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
   "pronounce": {},
   "lines": {
-    "arrive":    "A cave. All your life, you've faced this wall.",
-    "shadows":   "Shapes pass by. The others name them, and guess what comes next.",
-    "loose":     "Your chains have come loose.",
-    "turn":      "Behind you, a fire. People carrying cutouts. The shadows were only this.",
-    "climb":     "A path leads up, towards a light.",
-    "bright":    "It's too bright to look at.",
-    "outside":   "Outside. The real things, and the sun that lights them all.",
-    "choose":    "You could stay up here. Or go back down, and tell them.",
+    "arrive": "A cave. All your life, you've faced this wall.",
+    "shadows": "Shapes pass by. The others name them, and guess what comes next.",
+    "loose": "Your chains have come loose.",
+    "turn": "Behind you, a fire. People carrying cutouts. The shadows were only this.",
+    "climb": "A path leads up, towards a light.",
+    "bright": "It's too bright to look at.",
+    "outside": "Outside. The real things, and the sun that lights them all.",
+    "choose": "You could stay up here. Or go back down, and tell them.",
     "back_dark": "Down here, you can barely see anymore.",
-    "tell":      "They laugh. The climb has ruined your eyes, they say. Nobody else will go.",
-    "stay_end":  "You stay in the light.",
-    "watch_end": "You turn back to the wall. The shapes are familiar. It's easier."
+    "tell": "They laugh. The climb has ruined your eyes, they say. Nobody else will go.",
+    "stay_end": "You stay in the light.",
+    "watch_end": "You turn back to the wall. The shapes are familiar. It's easier.",
+    "reflection": "Your reflection. Another kind of shadow, but this one looks back."
   }
 }

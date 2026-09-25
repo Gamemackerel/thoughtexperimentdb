@@ -58,5 +58,10 @@
     "file": "watch_end-aaa39405.mp3",
     "text": "You turn back to the wall. The shapes are familiar. It's easier.",
     "dur": 4.26
+  },
+  "reflection": {
+    "file": "reflection-8dc80932.mp3",
+    "text": "Your reflection. Another kind of shadow, but this one looks back.",
+    "dur": 4.18
   }
 }

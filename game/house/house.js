@@ -128,20 +128,42 @@ export default function house(ctx) {
   ladder.position.set(2.5, 0, 1.9); ladder.rotation.x = -0.08;
   root.add(ladder);
 
-  // ---- Penrose stairs (an endless loop), with a small figure climbing forever
-  const stairs = new THREE.Group();
-  const stepMat = clay(0xdcd0bb), steps = [];
-  for (let i = 0; i < 16; i++) {
-    const side = Math.floor(i / 4), k = i % 4, h = 0.4 + i * 0.18;
-    const along = -1.5 + k * 1, s = 1.9;
-    const [x, z] = [[along, -s], [s, along], [-along, s], [-s, -along]][side];
-    const st = mesh(new THREE.BoxGeometry(1, h, 1), stepMat); st.position.set(x, h / 2, z);
-    stairs.add(st); steps.push({ x, z, h });
+  // ---- Penrose stairs: a real spiral that climbs one full turn, re-shaped every frame (in layoutStairs) so that from
+  // wherever the camera is, its top step sits exactly in front of its bottom step. It always reads as a closed loop
+  // that climbs forever, and a small figure climbs it forever.
+  const STAIRS = V(-5.5, 0, -6), NSTEP = 12, DH = 0.22, BASE = 1.1, FOOT = 0.95, SLAB = 0.9;
+  const stairs = new THREE.Group(); stairs.position.copy(STAIRS); root.add(stairs);
+  const tread = clay(0xf2eadb), riserA = clay(0xc9b99c), riserB = clay(0xa99a80);   // light treads, shaded risers
+  const stepMat = [riserA, riserB, tread, riserB, riserA, riserB];
+  const foot = [], stepBoxes = [];
+  for (let i = 0; i < NSTEP; i++) {
+    const side = Math.floor(i / 3), k = i % 3, along = (-1 + k) * FOOT, sd = 1.5 * FOOT;
+    foot.push([[along, -sd], [sd, along], [-along, sd], [-sd, -along]][side]);
+    const st = mesh(new THREE.BoxGeometry(1, 1, 1), stepMat); stairs.add(st); stepBoxes.push(st);
   }
-  stairs.position.set(-5.2, 0, -5.2);
+  const stepPos = Array.from({ length: NSTEP + 1 }, () => ({ x: 0, z: 0, top: 0, k: 1 }));
+  const stairBlock = [];
+  const camLocal = V();
+  function layoutStairs() {
+    camLocal.copy(stage.camera.position).sub(STAIRS);
+    const q0 = V(foot[0][0], BASE, foot[0][1]), H = NSTEP * DH;
+    // where the step after the last one must be: on the camera's line of sight to the first, one full turn higher
+    const s = clamp((camLocal.y - (BASE + H)) / (camLocal.y - BASE), 0.3, 1);
+    const q16 = camLocal.clone().add(q0.clone().sub(camLocal).multiplyScalar(s));
+    const wx = q16.x - q0.x, wz = q16.z - q0.z;
+    stairBlock.length = 0;
+    for (let i = 0; i <= NSTEP; i++) {
+      const u = i / NSTEP, f = foot[i % NSTEP], k = Math.pow(s, u), P = stepPos[i];
+      P.x = f[0] * (i === NSTEP ? 1 : 1) + wx * u; P.z = f[1] + wz * u; P.top = BASE + i * DH; P.k = k;
+      if (i === NSTEP) { P.x = q16.x; P.z = q16.z; }
+      if (i < NSTEP) {
+        const b = stepBoxes[i], th = SLAB * k; b.scale.set(FOOT * k, th, FOOT * k); b.position.set(P.x, P.top - th / 2, P.z);   // floating slabs: no columns to give the trick away
+        if (i % 2 === 0) stairBlock.push({ x: STAIRS.x + P.x, z: STAIRS.z + P.z, r: 0.75 * k });
+      }
+    }
+  }
   const climber = makePerson({ color: 0x9aa0ab, scale: 0.42 });
   stairs.add(climber);
-  root.add(stairs);
 
   // ---- Dalí: a spindly-legged table with a melting clock; a bare tree with another
   const tall = new THREE.Group();
@@ -242,7 +264,7 @@ export default function house(ctx) {
   const blockers = [
     { x: DESK.x - 0.6, z: DESK.z, r: 0.55 }, { x: DESK.x + 0.6, z: DESK.z, r: 0.55 },
     { x: 2.5, z: 1.7, r: 0.35 },
-    { x: BOOK.x, z: BOOK.z, r: 0.75 }, { x: 4.6, z: -4.8, r: 1.2 }, { x: -5.2, z: -5.2, r: 2.6 },
+    { x: BOOK.x, z: BOOK.z, r: 0.75 }, { x: 4.6, z: -4.8, r: 1.2 },
     { x: 5.2, z: 2.2, r: 0.85 }, { x: 6.2, z: 5.6, r: 0.45 },
   ];
 
@@ -254,7 +276,7 @@ export default function house(ctx) {
     spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
       'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, hall: { x: 2.5, z: 3.4, rotY: 0 }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
     walkable: (x, z) => Math.abs(x) < ROOM && Math.abs(z) < ROOM && Math.hypot(x - FLOOR_WINDOW.x, z - FLOOR_WINDOW.z) > FLOOR_WINDOW.r + 0.2,
-    blockers: () => blockers,
+    blockers: () => [...blockers, ...stairBlock],
     start() { if (!save.done.size) ctx.toast('Look around. Some things here lead elsewhere.', 5); },
     camera(player) {
       if (entering && entering.portal.id === 'trolley-problem') {
@@ -268,10 +290,12 @@ export default function house(ctx) {
     update(dt, time) {
       t = time;
       // the climber walks the endless stairs
-      const u = (time * 0.35) % 16, i = Math.floor(u), f = u - i, a = steps[i], b = steps[(i + 1) % 16];
+      layoutStairs();
+      const u = (time * 0.35) % NSTEP, i = Math.floor(u), f = u - i, a = stepPos[i], b = stepPos[i + 1];
       const hop = Math.sin(Math.PI * f) * 0.15;
-      climber.position.set(lerp(a.x, b.x, f), (i === 15 ? lerp(a.h, b.h + (a.h - b.h), f) : lerp(a.h, b.h, f)) + hop, lerp(a.z, b.z, f));
-      climber.rotation.y = Math.atan2(b.x - a.x, b.z - a.z);
+      climber.position.set(lerp(a.x, b.x, f), lerp(a.top, b.top, f) + hop * a.k, lerp(a.z, b.z, f));
+      climber.scale.setScalar(0.42 * lerp(a.k, b.k, f));
+      climber.rotation.y = Math.atan2(foot[(i + 1) % NSTEP][0] - foot[i][0], foot[(i + 1) % NSTEP][1] - foot[i][1]);
       animatePerson(climber, time * 2, { energy: 0.6 });
       chair.position.y = 7.2 + Math.sin(time * 0.6) * 0.25; chair.rotation.y = time * 0.08;
       clouds.forEach((c, k) => { c.position.set(((time * 0.4 + k * 7) % 22) - 11, 7.4 + k * 0.7, -6.4 + k * 0.4); });   // high, along the back wall

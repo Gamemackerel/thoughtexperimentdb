@@ -13,6 +13,8 @@
     "ask": "If worlds like this are easy to make, how many are real? And which kind is yours?",
     "pullout": "Somewhere, someone may be looking at you the same way.",
     "off_end": "You switch them off. Above you, the lights flicker.",
-    "run_end": "You let them run. Maybe someone is doing the same for you."
+    "run_end": "You let them run. Maybe someone is doing the same for you.",
+    "window": "Outside, the sky. You've never actually checked how far it goes.",
+    "photo": "A photo of you as a child. You don't remember it being taken."
   }
 }

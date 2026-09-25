@@ -24,6 +24,7 @@
     "leave": "Go again, or step back through the frame.",
     "self_pull": "You step onto the track.",
     "self_end": "The five are safe. So is the one. You chose yourself.",
-    "end": "Whatever you choose, someone is standing on the track. You only decide who."
+    "end": "Whatever you choose, someone is standing on the track. You only decide who.",
+    "driver": "The driver has fainted. He'll wake up later with no idea any of this happened."
   }
 }

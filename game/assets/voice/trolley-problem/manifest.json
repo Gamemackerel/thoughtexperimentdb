@@ -83,5 +83,10 @@
     "file": "end-aa011dfc.mp3",
     "text": "Whatever you choose, someone is standing on the track. You only decide who.",
     "dur": 4.86
+  },
+  "driver": {
+    "file": "driver-a3a3e807.mp3",
+    "text": "The driver has fainted. He'll wake up later with no idea any of this happened.",
+    "dur": 5.28
   }
 }

@@ -38,5 +38,15 @@
     "file": "run_end-25fc21d8.mp3",
     "text": "You let them run. Maybe someone is doing the same for you.",
     "dur": 3.84
+  },
+  "window": {
+    "file": "window-f38d1729.mp3",
+    "text": "Outside, the sky. You've never actually checked how far it goes.",
+    "dur": 4.44
+  },
+  "photo": {
+    "file": "photo-687f9e68.mp3",
+    "text": "A photo of you as a child. You don't remember it being taken.",
+    "dur": 4.52
   }
 }

@@ -63,5 +63,10 @@
     "file": "watched_2-12aaa123.mp3",
     "text": "Maybe that's the only story that works.",
     "dur": 3.21
+  },
+  "paper": {
+    "file": "paper-2fbf9bd9.mp3",
+    "text": "The date on the paper is long before you were born. The headline is about the weather.",
+    "dur": 5.22
   }
 }

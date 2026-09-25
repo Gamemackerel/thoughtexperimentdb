@@ -3,9 +3,11 @@
 // rebuilt into a second ship. Board one of them: that's your answer, and the ending.
 import {
   THREE, palette, clamp, lerp, easeInOut, easeOut, seeded, clay, mesh,
-  makeIsland, makeTree, makeRock, makePerson, animatePerson, makeFrog, animateFrog,
+  makeIsland, makeTree, makeRock, makePerson, animatePerson, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo, frogExtras, frogCroak } from '../core/frog.js';
+import { talk } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -77,8 +79,18 @@ export default function shipOfTheseus(ctx) {
   const carried = mesh(new THREE.BoxGeometry(3, 0.14, 0.46), clay(NEW)); carried.position.set(0, 2.35, 0); carried.rotation.y = Math.PI / 2; carried.visible = false; player.obj.add(carried);
   const shipwright = makePerson({ color: palette.judge }); shipwright.position.set(12.5, 0, -1.1); shipwright.visible = false; root.add(shipwright);
 
-  const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[4.5, 0, -1], [6.4, 0, -0.6], [8.3, 0, -0.2], [10.2, 0, 0.3], [12.1, 0, 0.6], [14, 0, 1], [15.8, 0, 1.3]];
+  // a mooring bollard, and an old man fishing off the end of the dock
+  const BOLLARD = V(20.5, 0, 1.2);
+  const bollard = mesh(new THREE.CylinderGeometry(0.2, 0.24, 0.56, 12), clay(0x5d5a58)); bollard.position.copy(BOLLARD).setY(0.28); root.add(bollard);
+  const fisher = makePerson({ color: 0x7a8a6a, hat: true }); fisher.position.set(24.4, 0, 1.2); fisher.rotation.y = 0; fisher.userData.body.position.y = -0.42; root.add(fisher);
+  const rod = mesh(new THREE.CylinderGeometry(0.02, 0.035, 3.2, 6), clay(palette.trunk)); rod.position.set(24.45, 1.6, 2.4); rod.rotation.x = 1.0; root.add(rod);
+  const lineMesh = mesh(new THREE.CylinderGeometry(0.006, 0.006, 3.2, 4), clay(0xf6f0e2)); lineMesh.position.set(24.45, 1.1, 3.75); root.add(lineMesh);
+
+  // the frog climbs out of the sea, sits on the bollard, croaks twice at the ship, and dives back in
+  const frog = frogExtras(makeFrog()); root.add(frog);
+  const cameo = frogCameo(frog, [{ at: [19.2, 3], y: -0.9 }, { at: [19.6, 1.3], y: 0, height: 1.3 }, { at: [BOLLARD.x, BOLLARD.z], y: 0.56, height: 0.9 }, { face: [16, -4.7] },
+    { wait: 0.6 }, { wait: 0.8, act: (f, u) => frogCroak(f, u) }, { wait: 0.3 }, { wait: 0.8, act: (f, u) => frogCroak(f, u) }, { wait: 0.8 },
+    { face: [22, 4] }, { at: [21.8, 3.3], y: -1.1, height: 1.2 }]);
 
   // ---- flying planks (old out to the scrap pile, new in from your hands; later, old into the second ship)
   const flights = [];
@@ -86,7 +98,7 @@ export default function shipOfTheseus(ctx) {
   const slotWorld = (ship, i) => { const m = ship.userData.slots[i]; m.geometry.computeBoundingBox(); return ship.localToWorld(m.geometry.boundingBox.getCenter(V())); };
 
   // ---- state
-  const S = { phase: 'work', swaps: 0, carrying: false, busy: false, frogT: -1, frogDone: false, sailing: null, sailT: 0 };
+  const S = { phase: 'work', swaps: 0, carrying: false, busy: false, sailing: null, sailT: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/ship-of-theseus.json', 'The Ship of Theseus');
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -131,6 +143,11 @@ export default function shipOfTheseus(ctx) {
   interact.add(board(ship2, 'old'));
   interact.trigger({ pos: STACK, radius: 5, onEnter: () => voice.say('planks') });
 
+  // asides: the fisherman, and the shipwright once he turns up
+  talk(ctx, { who: fisher, offset: [0, 2.7, 0], radius: 2.2, enabled: () => !S.sailing, lines: [
+    'Forty years I have fished off this dock.', 'Mind you, they have replaced every board of it since.', "This was my grandad's rod. New line, new reel, new handle.", 'Still his rod, though.', 'No bites. There never are.'] });
+  talk(ctx, { who: shipwright, enabled: () => shipwright.visible && !S.sailing, lines: ['I kept every one. Seemed a shame to burn them.', 'Good wood, this. Just old.', 'Which one would you sail?'] });
+
   async function twist() {
     S.phase = 'rebuild';
     await ctx.wait(0.4); await voice.say('all'); await ctx.wait(0.8);
@@ -148,10 +165,11 @@ export default function shipOfTheseus(ctx) {
   }
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: -4, z: 2, rotY: Math.PI / 2 },
     start() { setTimeout(() => voice.say('arrive'), 900); },
     walkable: (x, z) => Math.hypot(x - SHORE.x, z - SHORE.z) < 12.5 || (x > 2 && x < 25.4 && Math.abs(z) < 1.45),
-    blockers: () => [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }],
+    blockers: () => [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }, { x: BOLLARD.x, z: BOLLARD.z, r: 0.3 }, { x: 24.4, z: 1.2, r: 0.45 }],
 
     update(dt, t) {
       // planks in flight (with a little arc and spin)
@@ -176,11 +194,10 @@ export default function shipOfTheseus(ctx) {
       }
       if (shipwright.visible) { shipwright.rotation.y = Math.atan2(player.pos.x - 12.5, player.pos.z + 1.1); animatePerson(shipwright, t, { energy: 0.5 }); }
 
-      // frog: once, along the dock, after the first plank goes in
-      if (!S.frogDone && S.swaps >= 1 && S.frogT < 0) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      // frog: once, from the sea onto the bollard, after the first plank goes in
+      if (S.swaps >= 1 && !S.busy) cameo.start();
+      cameo.update(dt);
+      lineMesh.position.y = 1.1 + Math.sin(t * 1.3) * 0.04;
     },
 
     camera(pl) {

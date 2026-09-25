@@ -3,9 +3,11 @@
 // neighbours copy you; the grass thins. Keep going and it's gone for everyone. Or ring the bell, meet, agree on limits.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
-  makeIsland, makeHouse, makePerson, animatePerson, makeFrog, animateFrog,
+  makeIsland, makeHouse, makePerson, animatePerson, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo, frogExtras, frogTongue } from '../core/frog.js';
+import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -71,10 +73,16 @@ export default function commons(ctx) {
   };
   for (let o = 0; o < 5; o++) { addSheep(o); addSheep(o); }
 
-  const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[-8, 0, 14.5], [-6, 0, 15.2], [-4, 0, 15.6], [-2, 0, 15.8], [0, 0, 15.6], [2, 0, 15.2], [4, 0, 16]];
+  // the frog hops along outside the fence, stops, and catches a fly (the only one here not grazing the common)
+  const frog = frogExtras(makeFrog()); root.add(frog);
+  const FLY = V(-5.6, 0.55, 12.6);
+  const fly = mesh(new THREE.SphereGeometry(0.07, 8, 6), clay(palette.ink)); fly.visible = false; root.add(fly);
+  const cameo = frogCameo(frog, [[-10.5, 17], [-8.8, 16], [-7.2, 15], [-5.9, 14.1], { set: () => (fly.visible = true) }, { face: [FLY.x, FLY.z] }, { wait: 1.4 },
+    { wait: 0.3, act: (f, u) => { frogTongue(f, u, 1.35); if (u > 0.5) fly.visible = false; } }, { set: (f) => frogTongue(f, 0) },
+    { wait: 1, act: (f, u) => (f.userData.body.scale.y = 1 + 0.08 * Math.sin(u * Math.PI * 3)) }, { face: [-3.5, 15.6] },
+    [-4.2, 15.2], [-2.4, 16.1], [-0.6, 16.9], [1.2, 17.8], [3, 18.8]]);
 
-  const S = { phase: 'graze', grass: 1, mine: 2, adds: 0, meetT: -1, frogT: -1, frogDone: false };
+  const S = { phase: 'graze', grass: 1, mine: 2, adds: 0, meetT: -1 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/tragedy-of-the-commons.json', 'The Tragedy of the Commons');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -97,9 +105,21 @@ export default function commons(ctx) {
       ctx.gameOver({ title: 'You agreed on limits', text: 'Nobody owned the pasture, and nobody had to. You talked, set rules, and kept to them. The grass came back.' });
     } });
 
+  // asides: the neighbours (they get less chatty as the grass goes), and one of your sheep
+  const CHAT = [
+    ['Fine grass this year.', "Mine are the fat ones. Don't tell the others.", 'Morning!'],
+    ["Grass isn't what it was.", 'Well, you added one. Why shouldn\'t I?', "If I don't, someone else will."],
+    ['Somebody ought to do something.', 'Not my fault. I only did what everyone did.', "They're getting so thin, poor things."],
+  ];
+  herders.forEach((h, k) => h && talk(ctx, { who: h.p, radius: 2.2, enabled: () => S.phase === 'graze',
+    lines: (i) => { const set = CHAT[S.grass > 0.8 ? 0 : S.grass > 0.4 ? 1 : 2]; return set[(k + i) % set.length]; } }));
+  const mySheep = () => sheep.find((sh) => sh.owner === 0 && !sh.leaving)?.s;
+  look(ctx, { pos: () => (mySheep()?.position ?? V(0, 0, 99)), radius: 1.8, height: 1.4, prompt: 'Look at your sheep', lines: ['sheep'], enabled: () => S.phase === 'graze' && !!mySheep() });
+
   (async () => { await ctx.wait(1); await voice.say('arrive'); await ctx.wait(0.6); await voice.say('herders'); })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: 0, z: 15.5, rotY: Math.PI },
     walkable: (x, z) => Math.hypot(x, z) < 20.5,
     blockers: () => [...herders.filter(Boolean).map((h) => ({ x: h.p.position.x, z: h.p.position.z, r: 0.5 })), { x: BELL.x, z: BELL.z, r: 0.4 }],
@@ -147,10 +167,9 @@ export default function commons(ctx) {
         animatePerson(h.p, t, { phase: i, energy: d.length() > 0.2 ? 1 : 0.4 });
       });
       if (S.meetT >= 0) { S.meetT += dt; bellBody.rotation.z = Math.sin(S.meetT * 12) * 0.5 * Math.exp(-S.meetT * 0.8); }
-      if (!S.frogDone && S.adds >= 1 && S.frogT < 0) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.adds >= 1) cameo.start();
+      cameo.update(dt);
+      if (fly.visible) fly.position.copy(FLY).add(V(Math.sin(t * 9) * 0.25, Math.sin(t * 13) * 0.12, Math.cos(t * 7) * 0.2));
     },
     camera(pl) { return { ...frame([pl.pos.clone(), V(-R, 0, 0), V(R, 0, 0), V(0, 0, -R), V(0, 1, R), PEN.clone(), BELL.clone()], { min: 16, max: 50 }), stiffness: 2 }; },
     dispose() { voice.stop(); },

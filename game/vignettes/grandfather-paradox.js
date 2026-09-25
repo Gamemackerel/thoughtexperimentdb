@@ -5,9 +5,11 @@
 // you tried.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
-  makeIsland, makeTree, makePerson, animatePerson, makeHouse, makeBench, makeFrog, animateFrog,
+  makeIsland, makeTree, makePerson, animatePerson, makeHouse, makeBench, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -70,11 +72,24 @@ export default function grandfatherParadox(ctx) {
   const dial = new THREE.Mesh(new THREE.CircleGeometry(0.3, 24), new THREE.MeshBasicMaterial({ color: 0xf6efe0 })); dial.position.set(0, 1.9, 0.81); tm.add(dial);
   tm.position.copy(MACHINE); tm.rotation.y = 0.4; root.add(tm);
 
+  // a paper stand by the square, and the man who sells the papers
+  const STAND = V(-8.2, 0, 3.6);
+  const stand = new THREE.Group();
+  const counter = mesh(new THREE.BoxGeometry(1.8, 1, 0.8), clay(0x8c4a4a)); counter.position.y = 0.5; stand.add(counter);
+  const awning = mesh(new THREE.BoxGeometry(2.1, 0.08, 1.2), clay(0xf2e6d4)); awning.position.set(0, 2.3, 0.1); awning.rotation.x = 0.15; stand.add(awning);
+  for (const x of [-0.95, 0.95]) { const p = mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.3, 6), clay(palette.ink)); p.position.set(x, 1.15, -0.3); stand.add(p); }
+  for (let i = 0; i < 3; i++) { const pile = mesh(new THREE.BoxGeometry(0.46, 0.12 + i * 0.05, 0.34), clay(0xf6f0e2)); pile.position.set(-0.55 + i * 0.55, 1.06 + i * 0.025, 0.1); stand.add(pile); }
+  stand.position.copy(STAND); stand.rotation.y = 0.5; root.add(stand);
+  const vendor = makePerson({ color: 0x9a7453, hat: true }); vendor.position.copy(STAND).add(V(-0.45, 0, -0.9)); vendor.rotation.y = 0.5; root.add(vendor);
+
+  // the frog hops across the square, stops, then rewinds (hopping backwards along the same path) and goes the other way
   const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[-3.5, 0, 3.4], [-2, 0, 2.6], [-0.4, 0, 2.3], [1.2, 0, 2.6], [2.8, 0, 3.4], [4.2, 0, 4.6]];
+  const cameo = frogCameo(frog, [[-4.5, 5.2], [-3, 3.6], [-1.4, 2.8], [0.2, 2.9], { wait: 0.9 },
+    { at: [-1.4, 2.8], back: true, speed: 1.4 }, { at: [-3, 3.6], back: true, speed: 1.4 }, { at: [-4.5, 5.2], back: true, speed: 1.4 }, { wait: 0.7 },
+    { face: [-2, 7] }, [-3.4, 6.6], [-2.2, 8.2], [-1, 9.8], [0.2, 11.4]]);
 
   // ================================================================ state
-  const S = { phase: 'walk', seg: 0, u: 0, attempts: new Set(), gateClosed: false, signTurned: false, pause: 0, frogT: -1, frogDone: false, met: false };
+  const S = { phase: 'walk', seg: 0, u: 0, attempts: new Set(), gateClosed: false, signTurned: false, pause: 0, met: false };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/grandfather-paradox.json', 'The Grandfather Paradox');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -88,6 +103,11 @@ export default function grandfatherParadox(ctx) {
     onUse: () => { S.pause = 2.5; tried('tell', 'tell_fail'); } });
   interact.add({ pos: MACHINE.clone().add(V(1.2, 0, 1.2)), radius: 2.4, height: 3, prompt: 'Go home', enabled: () => S.phase === 'walk',
     onUse: () => end(false, true) });
+
+  // asides: the paper seller, the paper, and your grandmother (who is waiting for someone)
+  talk(ctx, { who: vendor, radius: 2.4, enabled: () => S.phase === 'walk', lines: ['Paper! Read all about it!', 'Nothing ever happens round here. Lovely, isn\'t it?', "You're not from round here. It's something about your shoes."] });
+  look(ctx, { pos: STAND.clone().add(V(0.4, 0, 0.9)), radius: 1.8, height: 1.8, prompt: 'Read the paper', lines: ['paper'], enabled: () => S.phase === 'walk' });
+  talk(ctx, { who: grandma, radius: 2.2, enabled: () => S.phase === 'walk' && !S.met, lines: ["I'm waiting for someone. I think.", 'Have we met? You have a familiar face.', 'The train is late. It always is.'] });
 
   async function end(met, leftEarly = false) {
     if (S.phase === 'over') return;
@@ -106,10 +126,11 @@ export default function grandfatherParadox(ctx) {
   (async () => { await ctx.wait(1); await voice.say('arrive'); await ctx.wait(1); await voice.say('see_gf'); })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: MACHINE.x + 1.5, z: MACHINE.z + 1.5, rotY: Math.PI * 0.8 },
     walkable: (x, z) => Math.hypot(x, z) < 26,
     blockers: () => [{ x: -1, z: -1, r: 1.9 }, { x: SIGN.x, z: SIGN.z, r: 0.3 }, { x: MACHINE.x, z: MACHINE.z, r: 1.2 },
-      { x: grandma.position.x, z: grandma.position.z, r: 0.5 },
+      { x: grandma.position.x, z: grandma.position.z, r: 0.5 }, { x: STAND.x, z: STAND.z, r: 1 }, { x: vendor.position.x, z: vendor.position.z, r: 0.45 },
       ...[-1, 1].flatMap((sd) => [0, 1, 2, 3, 4, 5].map((i) => ({ x: GATE.x + sd * (1.1 + i * 0.9), z: GATE.z, r: 0.35 })))],
     dispose() { voice.stop(); stage.renderer.domElement.style.filter = ''; },
 
@@ -150,10 +171,9 @@ export default function grandfatherParadox(ctx) {
       top.material.emissiveIntensity = 1 + 0.5 * Math.sin(t * 4);
       water.position.y = 0.58 + Math.sin(t * 2) * 0.01;
       // frog: once, across the square while he walks
-      if (!S.frogDone && S.seg >= 3 && S.frogT < 0) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.seg >= 3) cameo.start();
+      cameo.update(dt);
+      animatePerson(vendor, t, { energy: 0.25 });
     },
 
     camera(pl) {

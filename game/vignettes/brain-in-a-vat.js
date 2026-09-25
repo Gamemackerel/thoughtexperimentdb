@@ -3,10 +3,12 @@
 // vat; the lab's edges flicker too. Sit on the bench to stay (ending), or keep stepping out: after the third, it ends.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
-  makeIsland, makeTree, makePerson, animatePerson, makeBench, makeHouse, makeTable, makeFrog, animateFrog,
+  makeIsland, makeTree, makePerson, animatePerson, makeBench, makeHouse, makeTable, makeFrog,
 } from '/engine/core.js';
 import { makeBrain, makeVat, makeComputer } from '/experiments/brain-in-a-vat/scene.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -75,10 +77,13 @@ export default function brainInAVat(ctx) {
   const layers = [world, lab1, lab2];
   layers.forEach((l, i) => { l.position.copy(LAYERS[i]); root.add(l); });
 
+  // the frog hops past the bench, flickers, and does the same two hops again (déjà vu), then carries on
   const frog = makeFrog(); world.add(frog);
-  const FROG_PATH = [[9, 0, 9], [7, 0, 7.5], [5, 0, 6.6], [3, 0, 6.4], [1, 0, 7], [-1, 0, 8.2], [-3, 0, 9.8]];
+  const flicker = (f, u, t) => { f.visible = Math.sin(t * 55) > -0.2 || u > 0.9; };
+  const cameo = frogCameo(frog, [[9, 9], [7, 7.5], [5, 6.6], [3, 6.4], { wait: 0.8 }, { wait: 0.35, act: flicker },
+    { warp: [7, 7.5] }, [5, 6.6], [3, 6.4], { wait: 0.3, act: flicker }, { wait: 0.9 }, [1, 7], [-1, 8.2], [-3, 9.8], [-5, 11.6]]);
 
-  const S = { layer: 0, phase: 'explore', pt: 0, fallT: 0, edgeSeen: false, frogT: -1, frogDone: false, revealT: 0 };
+  const S = { layer: 0, phase: 'explore', pt: 0, fallT: 0, edgeSeen: false, revealT: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/experiments/brain-in-a-vat/script.json', 'Brain in a Vat');
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(2000, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -107,6 +112,10 @@ export default function brainInAVat(ctx) {
     enabled: () => S.phase === 'explore' && distFromCenter() > radius() - 2.6,
     onUse: () => { S.phase = 'fall'; S.pt = 0; player.enabled = false; S.fallFrom = player.pos.clone(); S.fallDir = V(player.pos.x - center().x, 0, player.pos.z - center().z).normalize(); voice.stop(); voice.say('fall', { once: false }); },
   });
+  // asides: the shade tree, the house, and (in the labs) the machine
+  look(ctx, { pos: V(4.6, 0, 0.2), radius: 2.2, height: 3, prompt: 'Look at the tree', lines: ['tree'], enabled: () => S.phase === 'explore' && S.layer === 0 });
+  look(ctx, { pos: V(-4.4, 0, -3.6), radius: 2.2, height: 2.6, prompt: 'Look in the window', lines: ['window'], enabled: () => S.phase === 'explore' && S.layer === 0 });
+  look(ctx, { pos: () => center().clone().add(V(-4.6, 0, -0.6)), radius: 2.4, height: 3, prompt: 'Look at the machine', lines: ['machine', 'machine_2'], enabled: () => S.phase === 'explore' && S.layer > 0 });
   interact.trigger({ test: () => S.layer === 0 && (player.pos.distanceTo(V(-6, 0, -5)) < 6 || player.pos.distanceTo(V(4.6, 0, 0.2)) < 5), onEnter: () => voice.say('solid') });
 
   // arrive in the next layer out: the camera starts on the little world above the vat, then pulls back
@@ -122,6 +131,7 @@ export default function brainInAVat(ctx) {
   }
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: 3, z: 5, rotY: Math.PI * 0.85 },
     walkable: (x, z) => Math.hypot(x - center().x, z - center().z) < radius(),
     blockers: () => {
@@ -172,10 +182,8 @@ export default function brainInAVat(ctx) {
       }
 
       // frog: once, in the sunny world, when you're near the bench
-      if (!S.frogDone && S.layer === 0 && S.frogT < 0 && player.pos.distanceTo(V(2, 0, 1.6)) < 9) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1 || S.layer !== 0) S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.layer === 0 && player.pos.distanceTo(V(2, 0, 1.6)) < 9) cameo.start();
+      cameo.update(dt);
       animatePerson(sitter, t, { energy: 0.3 });
     },
 

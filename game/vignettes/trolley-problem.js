@@ -5,9 +5,11 @@
 import {
   THREE, palette, clamp, lerp, easeOut, easeInOut, seeded, clay, mesh, setOpacity,
   makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makePathGlow, makeLever, makeTunnel,
-  makeEmitter, makeFrog, animateFrog,
+  makeEmitter, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { talk, look } from '../core/extras.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const line = (a, b) => new THREE.LineCurve3(a, b);
@@ -85,8 +87,12 @@ export default function trolley(ctx) {
   portalGlow.position.y = 1.6; frame.add(portalGlow);
   frame.position.set(-19, 0, 10); frame.rotation.y = 0.5; root.add(frame);
 
+  // the frog hops onto the main line, feels the rails hum, thinks better of it, and hops clear
   const frog = makeFrog(); root.add(frog);
-  const FROG_PATH = [[-15, 0, -4.5], [-13, 0, -3.2], [-11, 0, -2], [-9, 0, -0.6], [-7, 0, 0.8], [-5, 0, -0.6], [-3, 0, -2.2], [-1, 0, -3.8], [1, 0, -5.4]];
+  const cameo = frogCameo(frog, [[-15, 6], [-13.4, 4.4], [-11.8, 2.8], [-10.6, 1.4], { at: [-10, 0], y: 0.12 }, { face: [-40, 0] },
+    { wait: 2.6, act: (f, u, t) => { f.userData.body.position.x = u > 0.35 ? Math.sin(t * 70) * 0.025 : 0; } },
+    { set: (f) => (f.userData.body.position.x = 0) }, { face: [-8, -2] },
+    { at: [-8.6, -1.9], height: 1.5 }, [-7.1, -3.6], [-5.6, -5.2], [-4.2, -6.4], { face: [-40, 0] }, { wait: 1.2 }, [-3.4, -9], [-2.6, -11.6]]);
 
   // ---- sparks and dust ride the trolley's own travel clock (so they freeze and rewind with it)
   let routeCurve = ROUTES.main;
@@ -133,7 +139,7 @@ export default function trolley(ctx) {
   // ================================================================ state
   // phases: arrive → slow (choose) → go (runs through) → aftermath (hold) → rewind → reflect/twist → slow … → over
   const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, runs: 0, choices: [],
-    seen: new Set(), twist: false, frogT: -1, frogDone: false, rewindFrom: 0, frameOn: 0, twistOn: 0 };
+    seen: new Set(), twist: false, rewindFrom: 0, frameOn: 0, twistOn: 0 };
   const go = (phase) => { S.phase = phase; S.pt = 0; };
   const selfChosen = () => S.route === 'self';
 
@@ -161,6 +167,14 @@ export default function trolley(ctx) {
   interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five'); } });
   interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one'); } });
   interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever') });
+
+  // ---- asides: the workers chat (in slowed time, very slowly), and the driver is out cold
+  const slowly = (t) => t.replace(/([aeiouy])/gi, '$1$1$1').replace(/\.$/, '…');
+  const standing = (p) => () => !victims.main.concat(victims.branch).find((v) => v.obj === p)?.base && ['slow', 'reflect', 'twist'].includes(S.phase);
+  const FIVE_LINES = [['Lovely day for it.', 'Tea at four.'], ['Nearly done with this stretch.'], ['Did you hear a bell just now?'], ['Mind the rails, love.'], ['Hello! You lost?']];
+  five.forEach((p, k) => talk(ctx, { who: p, enabled: standing(p), lines: (i) => { const l = FIVE_LINES[k][i % FIVE_LINES[k].length]; return S.phase === 'slow' ? slowly(l) : l; } }));
+  talk(ctx, { who: one, enabled: standing(one), lines: (i) => { const l = ['They always put me on my own.', 'Quiet out here. I like it.'][i % 2]; return S.phase === 'slow' ? slowly(l) : l; } });
+  look(ctx, { pos: () => trolley.position, radius: 3.2, prompt: 'Look at the driver', lines: ['driver'], enabled: () => S.phase === 'slow' });
 
   // notebook (the scholarship lives here, never in the voice)
   const level = { root, ground: [], notebook: '', __S: null };
@@ -223,6 +237,7 @@ export default function trolley(ctx) {
   level.__S = S;   // exposed for automated playtests
   // ================================================================ update / camera
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: -17, z: 7, rotY: Math.PI / 2 },
     walkable: (x, z) => Math.hypot(x, z) < 45 && !(x < PORTAL + 3 && Math.abs(z) < 11),
     blockers: () => {
@@ -325,10 +340,8 @@ export default function trolley(ctx) {
       portalGlow.material.opacity = 0.6 + 0.25 * Math.sin(t * 2.2);
 
       // ---- the frog: once, in the first slowed moment, near the lever
-      if (!S.frogDone && S.phase === 'slow' && S.frogT < 0 && player.pos.distanceTo(leverSpot) < 12) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1 || S.phase !== 'slow') S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.phase === 'slow' && player.pos.distanceTo(leverSpot) < 12) cameo.start();
+      cameo.update(dt);
 
       ctx.ui.rewind(S.phase === 'rewind' ? Math.min(1, S.pt / 0.2, (2.0 - S.pt) / 0.2) : 0, t);
     },

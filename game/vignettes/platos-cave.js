@@ -4,9 +4,11 @@
 // to tell the others (ending).
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, setOpacity,
-  makeIsland, makeTree, makePerson, animatePerson, makeFrog, animateFrog,
+  makeIsland, makeTree, makePerson, animatePerson, makeFrog,
 } from '/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
+import { frogCameo } from '../core/frog.js';
+import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -97,11 +99,18 @@ export default function platosCave(ctx) {
   sun.position.copy(SUN).sub(OUT); out.add(sun);
   const halo = new THREE.Mesh(new THREE.CircleGeometry(11, 48), new THREE.MeshBasicMaterial({ color: 0xffc94d, transparent: true, opacity: 0.4, depthWrite: false, fog: false }));
   halo.position.copy(sun.position).add(V(0, 0, -0.5)); out.add(halo);
+  // the frog hops to the pond, looks at itself for a moment, and plops in; a ripple, then just its eyes
   const frog = makeFrog(); out.add(frog);
-  const FROG_PATH = [[-7, 0, -5], [-5, 0, -4.4], [-3, 0, -4.2], [-1, 0, -4.4], [1, 0, -5], [3, 0, -6]].map(([x, y, z]) => [x, y, z]);
+  const ripple = new THREE.Mesh(new THREE.RingGeometry(0.8, 0.95, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false }));
+  ripple.rotation.x = -Math.PI / 2; ripple.position.set(-2.4, 0.05, -7.6); out.add(ripple);
+  const rippleAt = (u) => { ripple.scale.setScalar(0.3 + u * 2.4); ripple.material.opacity = 0.7 * (1 - u); };
+  const cameo = frogCameo(frog, [[-10, -2], [-8.4, -3.2], [-6.8, -4.4], [-5.4, -5.4], { face: [-2, -8] },
+    { wait: 1.6, act: (f, u) => (f.userData.body.rotation.x = 0.25 * Math.sin(Math.PI * u)) },
+    { at: [-2.4, -7.6], y: -0.9, height: 1.7 }, { wait: 1.2, act: (f, u) => rippleAt(u) },
+    { warp: [-1.4, -8.6], y: -0.42 }, { wait: 3, act: (f, u, t) => { f.position.y = -0.42 + Math.sin(t * 3) * 0.03; rippleAt(Math.min(1, u * 1.6)); } }]);
 
   // ================================================================ state + interactions
-  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, frogT: -1, frogDone: false, told: false };
+  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, told: false };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/platos-cave.json', "Plato's Cave");
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(800, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -126,6 +135,19 @@ export default function platosCave(ctx) {
     ctx.gameOver({ title, text });
   }
 
+  // asides: the other prisoners will chat (they're happy where they are); outside, the pond
+  const CHAT = [
+    ['My father sat here. And his father.', 'A tree! Did you see? Beautiful.'],
+    ['Shh. The horse is next.', "I've counted. The bird always comes after the jar."],
+    ['Best seat in the house, this.', "What's behind us? Nothing. Just rock."],
+    ['I named that one. The jar. That was me.', 'Some days the shapes are faster.'],
+  ];
+  const BACK = ['Your eyes look strange.', "Out? There's no out.", "Sit down, you're in front of the tree.", 'Colours? What are colours?'];
+  const inView = (p) => { const d = p.position.clone().sub(player.pos).setY(0).normalize(), v = player.viewDir().setY(0).normalize(); return !player.firstPerson || d.dot(v) > 0.45; };
+  prisoners.forEach((p, k) => talk(ctx, { who: p, radius: 3.2, offset: [0, 2.7, 0], enabled: () => S.where === 'cave' && S.phase !== 'over' && S.phase !== 'transit' && inView(p),
+    lines: (i) => (S.returned ? BACK[(k + i) % BACK.length] : CHAT[k][i % CHAT[k].length]) }));
+  look(ctx, { pos: POND.clone().add(V(-2.4, 0, 2.6)), radius: 2.6, height: 1.5, prompt: 'Look in the pond', lines: ['reflection'], enabled: () => S.where === 'out' && S.phase === 'free' });
+
   interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', enabled: () => S.phase === 'free' && S.where === 'cave' && !S.returned,
     onUse: () => { player.place(SEAT.x, SEAT.z, Math.PI); player.sit(true); player.pitch = 0.3; ending('watch_end', 'You kept watching', 'The shadows were all you knew. It is hard to leave what you know.'); } });
   interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit under the tree', enabled: () => S.phase === 'free' && S.where === 'out',
@@ -149,8 +171,9 @@ export default function platosCave(ctx) {
   })();
 
   return Object.assign(level, {
+    __frog: cameo,
     spawn: { x: SEAT.x, z: SEAT.z, rotY: Math.PI },
-    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 0.45, Math.PI + 0.45]; },   // chained: you can only turn your head a little
+    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 1.2, Math.PI + 1.2]; },   // chained: you can turn your head to your neighbours, never behind you
     walkable: (x, z) => (S.where === 'cave'
       ? (Math.abs(x) < 15.5 && z > WALL_Z + 0.8 && z < 10.5) || Math.hypot(x - MOUTH.x, z - MOUTH.z) < 3.5
       : Math.hypot(x - OUT.x, z - OUT.z) < 22 && Math.hypot(x - POND.x, z - POND.z) > 3.2),
@@ -199,10 +222,8 @@ export default function platosCave(ctx) {
       if (blind > 0) ctx.ui.fade(blind * 0.92, '#fffdf8'); else ctx.ui.fade(S.eyes * 0.85, '#0c0a08');
 
       // frog: once, by the pond outside
-      if (!S.frogDone && S.where === 'out' && S.frogT < 0 && player.pos.distanceTo(POND) < 11) S.frogT = 0;
-      if (S.frogT >= 0 && !S.frogDone) { S.frogT += dt; if (S.frogT > FROG_PATH.length * 1.3 + 1 || S.where !== 'out') S.frogDone = true; }
-      frog.visible = S.frogT >= 0 && !S.frogDone;
-      if (frog.visible) animateFrog(frog, S.frogT, FROG_PATH, { loop: false });
+      if (S.where === 'out' && player.pos.distanceTo(POND) < 11) cameo.start();
+      cameo.update(dt); if (cameo.done) ripple.material.opacity = 0;
       halo.material.opacity = 0.34 + 0.08 * Math.sin(t * 1.3);
     },
 

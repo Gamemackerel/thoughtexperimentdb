@@ -57,6 +57,10 @@ const ctx = {
   goto: (name) => goto(name),
   toast(text, secs = 3) { toastEl.innerHTML = text; toastEl.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('on'), secs * 1000); },
   async flash(on) { flash.classList.toggle('on', on); await wait(0.6); },
+  // a speech bubble over someone (or something) for a few seconds; one at a time per speaker
+  speak(target, text, { secs = Math.max(2.6, text.length / 14), offset = [0, 2.3, 0] } = {}) {
+    bubbles.set(target.uuid ?? target, { target, text, t: 0, secs, offset, key: bubbleKey++ });
+  },
   // a typewritten page held up to the camera (closes with E / Space / tap)
   page(html) { pageEl.innerHTML = html + '<div class="hint">E · put it down</div>'; pageEl.hidden = false; },
   get pageOpen() { return !pageEl.hidden; },
@@ -82,6 +86,7 @@ const ctx = {
   },
   get journalOpen() { return !journalEl.hidden; },
 };
+const bubbles = new Map(); let bubbleKey = 0;
 const over = document.getElementById('over');
 const pageEl = document.getElementById('page');
 pageEl.addEventListener('pointerdown', () => (pageEl.hidden = true));
@@ -124,7 +129,7 @@ async function goto(name) {
   await ctx.flash(true);
   over.hidden = true;
   if (level) { stage.scene.remove(level.root); level.dispose?.(); }
-  interact.clear(); voice.stop(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
+  interact.clear(); voice.stop(); bubbles.clear(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
   // every level starts from the default light; levels may dim or tint it
@@ -187,6 +192,12 @@ function frame(now) {
     level.update(dt, time);
     player.update(dt, time, level, stage.camera);
     interact.update(player);
+    for (const [k, b] of bubbles) {
+      b.t += dt;
+      const o = Math.min(1, b.t / 0.2, (b.secs - b.t) / 0.4);
+      ui.label('speech-' + b.key, Math.max(0, o), b.text, b.target, b.offset, 'speech');
+      if (b.t > b.secs) bubbles.delete(k);
+    }
     const c = level.camera(player, time, dt);
     const k = c.cut ? 1 : 1 - Math.exp(-dt * (c.stiffness ?? 3));
     cam.pos.lerp(c.pos, k); cam.look.lerp(c.look, k);

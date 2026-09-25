@@ -48,5 +48,10 @@
     "file": "leave_end-88cc3da5.mp3",
     "text": "Most of it is noise. Forever is longer than it sounds.",
     "dur": 4.08
+  },
+  "bananas": {
+    "file": "bananas-16587049.mp3",
+    "text": "A crate of bananas. Forever takes a lot of bananas.",
+    "dur": 4.28
   }
 }
