@@ -20,3 +20,4 @@
 - Draft monkey found: Hamlet page shows while caption "Two words, in the right order." then a second "A million years go by." (139.3) before "There it is" (142). Page overlay stays under game-over card, text bleeds through (shot 029).
 - Draft sim: "Look out of the window" walked me behind the desk to (1.1,-4.6) (walkable=false); from there walk to photo (-3,-3.5) "blocked", use Run more worlds couldn't get prompt in 20s. Had to walk out via (-1.4,-0.4). Shot 035.
 - Draft sim: choose phase: 30+ s of silence, no prompt visible from where the reveal drops you, no line naming the options (shot 041). Switch off / leave are disabled until 'choose' — before that the door does nothing.
+- Draft sim run2: skipped "Run more worlds" and stood still 40s after the zoom: nothing happens, no prompt, no line — vignette stalls until you find the second switch. Doing nothing isn't an option. No replay acknowledgement on second run.
