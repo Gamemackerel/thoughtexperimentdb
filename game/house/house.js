@@ -1,11 +1,12 @@
 // The House: a surreal hub (Escher + Dalí in clay). Paintings, books and doors lead into the vignettes.
-import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTree, seeded } from '/engine/core.js';
+import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTree, makeTable, seeded } from '/engine/core.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const ROOM = 7.3;                               // walkable half-size
 const PAINTING = V(1.5, 3.7, -7.72);
 const BOOK = V(-4.2, 0, 1.2);
 const FLOOR_WINDOW = { x: -1.4, z: 4.4, r: 1.35 };
+const DESK = V(-2, 0, -6.9);                    // the journal
 
 const tex = (url) => { const t = new THREE.TextureLoader().load(url); t.colorSpace = THREE.SRGBColorSpace; return t; };
 
@@ -187,6 +188,29 @@ export default function house(ctx) {
     root.add(c); return c;
   });
 
+  // ---- a writing desk with your journal lying open on it (answers + what to read next)
+  let bookGlow;
+  {
+    const desk = makeTable({ w: 1.9, d: 0.95, h: 1.15, color: palette.wood }); desk.position.copy(DESK); root.add(desk);
+    const pageTex = canvasTexture(256, 160, (g, w, h) => {
+      g.fillStyle = '#fbf6ea'; g.fillRect(0, 0, w, h);
+      g.strokeStyle = '#1f3d6b'; g.lineWidth = 3; g.globalAlpha = 0.55;
+      for (let y = 26; y < h - 10; y += 18) for (const [a, b] of [[14, 118], [138, 242]]) { g.beginPath(); g.moveTo(a, y); g.lineTo(a + (b - a) * (0.55 + 0.45 * Math.abs(Math.sin(y * 7 + a))), y); g.stroke(); }
+      g.globalAlpha = 1; g.fillStyle = '#d9cdb6'; g.fillRect(126, 0, 4, h);
+    });
+    const journalBook = new THREE.Group();
+    const cover = mesh(new THREE.BoxGeometry(1.08, 0.04, 0.72), clay(0x3f5f8a)); journalBook.add(cover);
+    const pages = mesh(new THREE.BoxGeometry(1.02, 0.05, 0.66), [clay(0xf6f0e2), clay(0xf6f0e2), new THREE.MeshStandardMaterial({ map: pageTex, roughness: 0.9 }), clay(0xf6f0e2), clay(0xf6f0e2), clay(0xf6f0e2)]);
+    pages.position.y = 0.045; journalBook.add(pages);
+    journalBook.position.copy(DESK).add(V(-0.2, 1.3, 0.05)); journalBook.rotation.y = 0.12; root.add(journalBook);
+    const pot = mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.16, 12), clay(palette.ink)); pot.position.copy(DESK).add(V(0.6, 1.34, -0.2));
+    const quill = mesh(new THREE.ConeGeometry(0.05, 0.75, 6), clay(0xf6f0e2)); quill.position.copy(DESK).add(V(0.66, 1.62, -0.2)); quill.rotation.set(0.2, 0, -0.45);
+    root.add(pot, quill);
+    bookGlow = new THREE.Mesh(new THREE.CircleGeometry(0.9, 32), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+    bookGlow.rotation.x = -Math.PI / 2; bookGlow.position.copy(journalBook.position).add(V(0, 0.08, 0)); root.add(bookGlow);
+  }
+  interact.add({ pos: DESK.clone().add(V(0, 0, 1.1)), radius: 1.6, prompt: 'Read your journal', enabled: () => !ctx.journalOpen, onUse: () => ctx.openJournal() });
+
   // ---- portals
   const portals = [
     { id: 'trolley-problem', name: 'The Trolley Problem', pos: V(PAINTING.x, 0, -6.4), labelAt: PAINTING.clone().add(V(0, 1.75, 0.2)), prompt: 'Step into the painting', open: true },
@@ -216,6 +240,7 @@ export default function house(ctx) {
   }
 
   const blockers = [
+    { x: DESK.x - 0.6, z: DESK.z, r: 0.55 }, { x: DESK.x + 0.6, z: DESK.z, r: 0.55 },
     { x: 2.5, z: 1.7, r: 0.35 },
     { x: BOOK.x, z: BOOK.z, r: 0.75 }, { x: 4.6, z: -4.8, r: 1.2 }, { x: -5.2, z: -5.2, r: 2.6 },
     { x: 5.2, z: 2.2, r: 0.85 }, { x: 6.2, z: 5.6, r: 0.45 },
@@ -253,12 +278,15 @@ export default function house(ctx) {
       skyTex.offset.x = time * 0.01;
       halo.material.opacity = save.done.has('trolley-problem') ? 0.22 + 0.08 * Math.sin(time * 2) : 0.1 + 0.08 * Math.sin(time * 2);
       glows.forEach(([m, id]) => (m.material.opacity = save.done.has(id) ? 0.3 + 0.1 * Math.sin(time * 2) : 0.08 + 0.06 * Math.sin(time * 2 + 1)));
+      bookGlow.material.opacity = save.done.size ? 0.22 + 0.08 * Math.sin(time * 2.4) : 0;
+      { const d = Math.hypot(ctx.player.pos.x - DESK.x, ctx.player.pos.z - DESK.z - 1.1);
+        ctx.ui.label('journal', ctx.journalOpen ? 0 : clamp((5 - d) / 2), `<span class="dot" style="background:${css(0x5b7fa6)}"></span>Your journal`, DESK.clone().add(V(0, 2.3, 0))); }
       // names appear as you approach
       for (const p of portals) {
         const d = Math.hypot(ctx.player.pos.x - p.pos.x, ctx.player.pos.z - p.pos.z);
         const o = clamp((6 - d) / 2.5);
         const done = save.done.has(p.id) ? ' ✓' : '';
-        ctx.ui.label('portal-' + p.id, entering ? 0 : o, `<span class="dot" style="background:${css(p.open ? palette.agent : palette.rail)}"></span>${p.name}${done}`, p.labelAt);
+        ctx.ui.label('portal-' + p.id, entering || ctx.journalOpen ? 0 : o, `<span class="dot" style="background:${css(p.open ? palette.agent : palette.rail)}"></span>${p.name}${done}`, p.labelAt);
       }
       if (entering) {
         entering.t += dt;

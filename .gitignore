@@ -14,3 +14,6 @@ build/
 experiments/*/output/*.mp4
 
 .DS_Store
+
+# playtest notes written by the dev server (game/tools/serve.mjs)
+feedback.txt

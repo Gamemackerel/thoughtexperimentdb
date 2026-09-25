@@ -55,12 +55,27 @@ Each vignette is a short (3–8 minute) playable scene in five beats, mirroring 
 - or when the player takes the most drastic option the experiment offers (the trolley: sending it onto yourself).
 After the first run, a twist opens a new, playable option (the trolley: a third track with its own lever).
 
+The game-over card also asks two things, both optional:
+- **The journal question:** one guided question about what the player just did, in the form "what do you think, and
+  why?" (e.g. Ship of Theseus: *Which one was the real ship: the repaired one, or the one rebuilt from the old planks?
+  What made you decide?*). The answer goes into the player's **journal**.
+- **A note for the builder:** anything confusing, broken or missing. It's sent to the dev server and appended to
+  `feedback.txt` at the repo root (gitignored), with the level, ending, player position, the level's `__S` state and the
+  screen size, so it can be picked up on the next iteration. Read it before starting work on a vignette.
+
+**The journal** lies open on a writing desk in the first room (it glows once you've finished something). It keeps, per
+vignette: the question, your answer (editable there), the ending you reached and the date. Once you've finished a
+vignette, it also shows a to-do list written like a note to self: the original source, a video essay or two, and an
+encyclopedia entry (SEP where one exists), with links. Questions and to-dos live in `game/journal.json`; answers are
+saved in the browser (`localStorage`).
+
 Every vignette also has:
 - **A notebook:** an optional page (`N`), never forced, for the curious: where the thought experiment comes from,
   sources, recommended reading and the video essay, drawn from the film's `script.json → publish`. This is the only
   place philosophers and citations appear.
 - **Replay:** after the reflection, the choice comes round again. The narrator acknowledges whether you chose the same
   or differently.
+- **A journal entry:** a question and a to-do list in `game/journal.json` (verify every link).
 - **The frog:** it appears exactly once per vignette, preferably during the choice, visible but never central. It hops in and out
   of view and is never mentioned.
 
@@ -130,10 +145,12 @@ game/
   house/house.js        the hub
   vignettes/<id>.js     one module per thought experiment: build(ctx) → { update(dt), dispose() }
   lines/<id>.json       voice lines per vignette (id → text), with pronounce rules
+  journal.json          the journal: one guided question and a to-do list of sources per vignette
+  core/journal.js       journal store (localStorage) and page
   notebook/<id>.json    notebook data for vignettes without a film (same fields as a film's `publish`)
   assets/voice/<id>/    generated audio (committed; small)
   tools/voice.mjs       renders lines with Kokoro → assets/voice
-  tools/serve.mjs       local dev server → http://localhost:5173/game/
+  tools/serve.mjs       local dev server → http://localhost:5173/game/ (also appends POST /feedback to feedback.txt)
   tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
 ```
 
@@ -150,7 +167,7 @@ game/
 3. **Greybox:** block out the island, the walkable area and the camera rails with plain shapes. Walk it end to end.
 4. **Lines:** write `lines/<id>.json`, render the voice, and run the narration audit (`tools/audit.py`) for names and pace.
 5. **Build:** dress the scene with the kit, add the choice moment, the consequence (played out in full, then a rewind that resets everything), the reflection branches, the endings,
-   the frog and the notebook page.
+   the frog, the notebook page and the journal entry (question + to-dos).
 6. **Portal:** add the painting, book or door in the House.
 7. **Playtest checklist:**
    - Every branch plays, including doing nothing and leaving mid-scene.

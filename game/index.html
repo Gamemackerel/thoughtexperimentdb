@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Thought Experiments</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap">
 <link rel="stylesheet" href="/engine/style.css">
 <link rel="stylesheet" href="/game/core/ui.css">
 <script type="importmap">
@@ -22,6 +23,7 @@
   <div id="toast"></div>
   <div id="notebook" hidden></div>
   <div id="page" hidden></div>
+  <div id="journal" hidden></div>
   <div id="title">
     <div class="kicker">A house of</div>
     <h1>Thought Experiments</h1>
@@ -30,6 +32,10 @@
     <button id="begin">Enter the house</button>
   </div>
   <div id="over" hidden><div class="kicker"></div><h1></h1><p></p>
+    <label class="ask"><span class="q"></span>
+      <textarea id="answer" rows="3" placeholder="What do you think, and why? (This goes in your journal.)"></textarea></label>
+    <label class="feedback"><span>Anything confusing, broken or missing? Tell the builder.</span>
+      <textarea id="feedback" rows="2" placeholder="e.g. I couldn't find my way back into the cave"></textarea></label>
     <div class="buttons"><button data-act="again">Play again</button><button data-act="home" class="ghost">Back to the house</button></div></div>
   <div id="flash"></div>
 </div>

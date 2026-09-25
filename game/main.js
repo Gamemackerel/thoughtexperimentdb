@@ -3,6 +3,7 @@ import { THREE, createStage, createUI } from '/engine/core.js';
 import { Player } from './core/player.js';
 import { Interact } from './core/interact.js';
 import { Voice } from './core/voice.js';
+import { Journal } from './core/journal.js';
 
 const LEVELS = {
   house: () => import('./house/house.js'),
@@ -41,6 +42,7 @@ let ui = createUI(uiRoot, stage);
 const player = new Player();
 const interact = new Interact(stage);
 const voice = new Voice();
+const journal = new Journal();
 
 // ---------------------------------------------------------------- helpers exposed to levels
 const wait = (s) => new Promise((r) => setTimeout(r, s * 1000));
@@ -59,20 +61,57 @@ const ctx = {
   page(html) { pageEl.innerHTML = html + '<div class="hint">E · put it down</div>'; pageEl.hidden = false; },
   get pageOpen() { return !pageEl.hidden; },
   // ends a vignette: a quiet card with "play again" / "back to the house"
+  // ends a vignette: the card also asks the journal question and takes a note for the builder
   gameOver({ kicker = 'Game over', title, text = '' }) {
     player.enabled = false;
     over.querySelector('.kicker').textContent = kicker;
     over.querySelector('h1').textContent = title;
     over.querySelector('p').textContent = text;
+    const id = level.name, q = journal.question(id);
+    over.querySelector('.ask').hidden = !q;
+    over.querySelector('.ask .q').textContent = q;
+    answerEl.value = journal.answer(id); feedbackEl.value = '';
+    journal.write(id, { ending: title });
     over.hidden = false;
   },
+  // the journal on the desk in the first room
+  openJournal() {
+    journalEl.innerHTML = journal.render(save.done);
+    journalEl.hidden = false; player.enabled = false;
+    for (const ta of journalEl.querySelectorAll('textarea')) { fit(ta); ta.addEventListener('input', () => { fit(ta); journal.write(ta.dataset.id, { answer: ta.value }); }); }
+  },
+  get journalOpen() { return !journalEl.hidden; },
 };
 const over = document.getElementById('over');
 const pageEl = document.getElementById('page');
 pageEl.addEventListener('pointerdown', () => (pageEl.hidden = true));
 addEventListener('keydown', (e) => { if (!pageEl.hidden && (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Escape')) { e.stopImmediatePropagation(); pageEl.hidden = true; } }, true);
+const answerEl = document.getElementById('answer'), feedbackEl = document.getElementById('feedback');
+const journalEl = document.getElementById('journal');
+const fit = (ta) => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; };
+function closeJournal() { journalEl.hidden = true; player.enabled = true; }
+journalEl.addEventListener('click', (e) => { if (e.target.classList.contains('close')) closeJournal(); });
+// typing in a text box must not walk, interact or open the notebook
+for (const el of [over, journalEl]) for (const t of ['keydown', 'keyup']) el.addEventListener(t, (e) => {
+  if (e.target.tagName !== 'TEXTAREA') return;
+  if (e.code === 'Escape') { e.target.blur(); if (el === journalEl) closeJournal(); }
+  e.stopPropagation();
+});
+answerEl.addEventListener('input', () => journal.write(level.name, { answer: answerEl.value }));
+// playtest feedback goes to feedback.txt at the repo root (via the dev server), with enough context to reproduce
+function sendFeedback() {
+  const text = feedbackEl.value.trim(); if (!text) return;
+  const state = {};
+  for (const [k, v] of Object.entries(level.__S ?? {})) if (v === null || ['string', 'number', 'boolean'].includes(typeof v)) state[k] = v;
+  fetch('/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+    level: level.name, ending: over.querySelector('h1').textContent, text, answer: answerEl.value.trim(), state,
+    time: Math.round(time), player: { x: +player.pos.x.toFixed(2), z: +player.pos.z.toFixed(2) },
+    screen: `${innerWidth}x${innerHeight}`, ua: navigator.userAgent,
+  }) }).catch(() => {});
+}
 over.addEventListener('click', (e) => {
   const act = e.target.dataset?.act; if (!act) return;
+  sendFeedback();
   over.hidden = true;
   goto(act === 'again' ? level.name : 'house');
 });
@@ -85,7 +124,7 @@ async function goto(name) {
   await ctx.flash(true);
   over.hidden = true;
   if (level) { stage.scene.remove(level.root); level.dispose?.(); }
-  interact.clear(); voice.stop(); nb.hidden = true; pageEl.hidden = true;
+  interact.clear(); voice.stop(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
   // every level starts from the default light; levels may dim or tint it
@@ -133,6 +172,7 @@ addEventListener('keydown', (e) => {
   }
   if (e.code === 'Escape') {
     if (!nb.hidden) { nb.hidden = true; return; }
+    if (!journalEl.hidden) { closeJournal(); return; }
     if (level && level.name !== 'house' && confirm('Leave this vignette and return to the house?')) goto('house');
   }
 });
