@@ -29,11 +29,6 @@
     "text": "It's too bright to look at.",
     "dur": 2.22
   },
-  "outside": {
-    "file": "outside-5d42581c.mp3",
-    "text": "Outside. The real things, and the sun that lights them all.",
-    "dur": 4.02
-  },
   "choose": {
     "file": "choose-a4c69e84.mp3",
     "text": "You could stay up here. Or go back down, and tell them.",
@@ -50,9 +45,9 @@
     "dur": 4.83
   },
   "stay_end": {
-    "file": "stay_end-ea76c0f0.mp3",
-    "text": "You stay in the light.",
-    "dur": 1.72
+    "file": "stay_end-8f21760c.mp3",
+    "text": "You stay in the light. The others are still down there, and you're the only one who knows the way.",
+    "dur": 5.51
   },
   "watch_end": {
     "file": "watch_end-aaa39405.mp3",
@@ -63,5 +58,30 @@
     "file": "reflection-8dc80932.mp3",
     "text": "Your reflection. Another kind of shadow, but this one looks back.",
     "dur": 4.18
+  },
+  "behind": {
+    "file": "behind-dfb23839.mp3",
+    "text": "The firelight flickers. Among the shapes on the wall, a new one. It moves when you move.",
+    "dur": 5.56
+  },
+  "hurts": {
+    "file": "hurts-0af2a158.mp3",
+    "text": "It hurts to look. The wall was easier.",
+    "dur": 3.06
+  },
+  "outside_1": {
+    "file": "outside_1-9f1ea9e5.mp3",
+    "text": "Outside. It's too bright. You can't make anything out yet.",
+    "dur": 4.05
+  },
+  "outside_2": {
+    "file": "outside_2-5586b8ab.mp3",
+    "text": "The real things. And the sun that lights them all.",
+    "dur": 3.42
+  },
+  "horse": {
+    "file": "horse-b6d2a2ee.mp3",
+    "text": "It's much bigger than its shadow.",
+    "dur": 2.56
   }
 }

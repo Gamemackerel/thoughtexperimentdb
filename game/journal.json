@@ -69,7 +69,10 @@
         "text": "Stanford Encyclopedia on the ethics and politics of the Republic",
         "url": "https://plato.stanford.edu/entries/plato-ethics-politics/"
       }
-    ]
+    ],
+    "questions": {
+      "You kept watching": "Is there something you'd rather not look at too closely? What makes it easier not to?"
+    }
   },
   "ship-of-theseus": {
     "title": "Ship of Theseus",

@@ -10,6 +10,7 @@ import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const OUT = V(300, 0, 0);                     // the world outside (its own island)
@@ -75,6 +76,12 @@ export default function platosCave(ctx) {
     return { p, holder, shadow, phase: i * 4.6 };
   });
 
+  // your own shadow, which appears on the wall among the shapes if you keep watching after the chains fall
+  const shadowMe = new THREE.Mesh(new THREE.CircleGeometry(0.9, 24), new THREE.MeshBasicMaterial({ color: 0x1b1612, transparent: true, opacity: 0 }));
+  shadowMe.scale.set(1, 1.2, 1); shadowMe.position.set(0.2, 2.4, WALL_Z + 0.03); cave.add(shadowMe);
+  const shadowBody = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 2), shadowMe.material); shadowBody.position.set(0, -1.9, 0); shadowMe.add(shadowBody);
+  const bounce = new THREE.PointLight(0xff9a4d, 18, 14, 1.6); bounce.position.set(0, 3.5, WALL_Z + 3); cave.add(bounce);   // firelight on the wall
+
   // the prisoners (you in the middle), with shackles and chains
   const prisoners = [-6, -3, 3, 6].map((x) => { const p = makePerson({ color: palette.many }); p.position.set(x, 0, SEAT.z); p.rotation.y = Math.PI; p.userData.body.position.y = -0.42; cave.add(p); return p; });
   const chainMat = clay(0x3a3a40, { metalness: 0.4 });
@@ -89,9 +96,24 @@ export default function platosCave(ctx) {
 
   // ================================================================ outside
   const out = new THREE.Group(); out.position.copy(OUT); root.add(out);
-  out.add(makeIsland({ radius: 26, seed: 14 }));
+  out.add(makeIsland({ radius: 26, seed: 14, color: 0x9cc97a, rim: 0x7aa05c }));   // the most vivid place in the house
   const tree = makeTree(2.2, seeded(4)); tree.position.copy(TREE).sub(OUT); out.add(tree);
-  const pond = new THREE.Mesh(new THREE.CircleGeometry(3, 40), clay(0x8fb3c9, { roughness: 0.25 })); pond.rotation.x = -Math.PI / 2; pond.position.copy(POND).sub(OUT).setY(0.02); out.add(pond);
+  // the pond really reflects (you, the tree, the sky): the first thing you can see clearly outside
+  const pond = new Reflector(new THREE.CircleGeometry(3, 48), { clipBias: 0.003, textureWidth: 512, textureHeight: 512, color: 0x9fbccd });
+  pond.rotation.x = -Math.PI / 2; pond.position.copy(POND).sub(OUT).setY(0.03); out.add(pond);
+  const rim = mesh(new THREE.TorusGeometry(3.05, 0.12, 8, 48), clay(0xb8a98c)); rim.rotation.x = Math.PI / 2; rim.position.copy(pond.position); out.add(rim);
+  // the real things the shadows were made from: a horse, birds, a jar (and the tree)
+  const horse = new THREE.Group(), hide = clay(0x8c5a3c);
+  const hb = mesh(new THREE.CapsuleGeometry(0.55, 1.5, 8, 14), hide); hb.rotation.z = Math.PI / 2; hb.position.y = 1.55; horse.add(hb);
+  const hn = mesh(new THREE.CylinderGeometry(0.25, 0.38, 1.2, 12), hide); hn.position.set(1.1, 2.15, 0); hn.rotation.z = -0.7; horse.add(hn);
+  const hh = mesh(new THREE.CapsuleGeometry(0.22, 0.6, 6, 12), hide); hh.position.set(1.65, 2.55, 0); hh.rotation.z = -1.3; horse.add(hh);
+  const mane = mesh(new THREE.BoxGeometry(0.9, 0.2, 0.12), clay(0x3a2a20)); mane.position.set(1.1, 2.55, 0); mane.rotation.z = -0.7; horse.add(mane);
+  for (const [x, z] of [[-0.7, -0.3], [-0.7, 0.3], [0.7, -0.3], [0.7, 0.3]]) { const l = mesh(new THREE.CylinderGeometry(0.11, 0.09, 1.2, 8), hide); l.position.set(x, 0.6, z); horse.add(l); }
+  const htail = mesh(new THREE.CylinderGeometry(0.05, 0.12, 0.9, 8), clay(0x3a2a20)); htail.position.set(-1.2, 1.4, 0); htail.rotation.z = 0.5; horse.add(htail);
+  horse.position.set(8, 0, 4); horse.rotation.y = 2.4; out.add(horse);
+  const jar = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.28, 0.05], [0.42, 0.35], [0.3, 0.7], [0.2, 0.8], [0.24, 0.9]].map(([x, y]) => new THREE.Vector2(x, y)), 24), clay(0xc9705a, { side: THREE.DoubleSide }));
+  jar.position.copy(POND).sub(OUT).add(V(3.6, 0, 1.4)); out.add(jar);
+  const birds = [0, 1, 2].map((i) => { const b = new THREE.Group(); for (const s of [-1, 1]) { const w = mesh(new THREE.BoxGeometry(0.9, 0.05, 0.25), clay(0x2b2a33)); w.position.x = s * 0.42; w.rotation.z = s * 0.4; b.add(w); } out.add(b); return b; });
   const mound = mesh(new THREE.SphereGeometry(1, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), clay(0x8a7a66)); mound.scale.set(6, 4.2, 5); mound.position.copy(ARCH).sub(OUT).add(V(-3, 0, 0)); out.add(mound);
   const archHole = new THREE.Mesh(new THREE.CircleGeometry(1.7, 32, 0, Math.PI), new THREE.MeshBasicMaterial({ color: 0x1b1612 }));
   archHole.position.copy(ARCH).sub(OUT).add(V(2.4, 0, 0)); archHole.rotation.y = Math.PI / 2; out.add(archHole);
@@ -110,7 +132,7 @@ export default function platosCave(ctx) {
     { warp: [-1.4, -8.6], y: -0.42 }, { wait: 3, act: (f, u, t) => { f.position.y = -0.42 + Math.sin(t * 3) * 0.03; rippleAt(Math.min(1, u * 1.6)); } }]);
 
   // ================================================================ state + interactions
-  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, told: false };
+  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, told: false, turned: false, facingWall: 0, dazzle: 0, sawPond: false };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/platos-cave.json', "Plato's Cave");
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(800, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -119,9 +141,10 @@ export default function platosCave(ctx) {
   function setLight(where) {
     S.where = where;
     const dark = where === 'cave';
-    stage.hemi.intensity = dark ? 0.16 : 1.6; stage.sun.intensity = dark ? 0.12 : 2.4;
-    stage.scene.background = new THREE.Color(dark ? DARK : palette.sky);
-    stage.scene.fog = dark ? new THREE.Fog(DARK, 22, 60) : new THREE.Fog(palette.sky, 60, 180);
+    stage.hemi.intensity = dark ? 0.32 : 1.8; stage.sun.intensity = dark ? 0.12 : 2.9;
+    stage.hemi.color.set(dark ? 0xffb070 : 0xfff6e8);
+    stage.scene.background = new THREE.Color(dark ? DARK : 0xcfe3f1);
+    stage.scene.fog = dark ? new THREE.Fog(DARK, 22, 60) : new THREE.Fog(0xcfe3f1, 60, 180);
     cave.visible = dark; out.visible = !dark;
     // inside the cave you see through your own eyes; outside, the camera steps back
     player.firstPerson = dark; player.obj.visible = !dark; player.pitch = dark ? 0.1 : 0;
@@ -147,12 +170,13 @@ export default function platosCave(ctx) {
   prisoners.forEach((p, k) => talk(ctx, { who: p, radius: 3.2, offset: [0, 2.7, 0], enabled: () => S.where === 'cave' && S.phase !== 'over' && S.phase !== 'transit' && inView(p),
     lines: (i) => (S.returned ? BACK[(k + i) % BACK.length] : CHAT[k][i % CHAT[k].length]) }));
   look(ctx, { pos: POND.clone().add(V(-2.4, 0, 2.6)), radius: 2.6, height: 1.5, prompt: 'Look in the pond', lines: ['reflection'], enabled: () => S.where === 'out' && S.phase === 'free' });
+  look(ctx, { pos: () => horse.getWorldPosition(V()).add(V(-1.4, 0, 1.6)), radius: 2.4, height: 3, prompt: 'Look at the horse', lines: ['horse'], enabled: () => S.where === 'out' && S.phase === 'free' });
 
-  interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', enabled: () => S.phase === 'free' && S.where === 'cave' && !S.returned,
+  interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', terminal: true, enabled: () => S.phase === 'free' && S.where === 'cave' && !S.returned && (S.turned || player.pos.distanceTo(SEAT) > 1.5),
     onUse: () => { player.place(SEAT.x, SEAT.z, Math.PI); player.sit(true); player.pitch = 0.3; ending('watch_end', 'You kept watching', 'The shadows were all you knew. It is hard to leave what you know.'); } });
-  interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit under the tree', enabled: () => S.phase === 'free' && S.where === 'out',
-    onUse: () => { player.place(TREE.x + 1.2, TREE.z + 1.2, Math.PI * 0.8); player.sit(true); ending('stay_end', 'You stayed in the light', 'The others are still down there, watching the wall.'); } });
-  interact.add({ pos: ARCH.clone().add(V(3, 0, 0)), radius: 2.8, height: 2.5, prompt: 'Go back down', enabled: () => S.phase === 'free' && S.where === 'out' && S.saidChoose,
+  interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit under the tree', terminal: true, enabled: () => S.phase === 'free' && S.where === 'out' && S.saidChoose,
+    onUse: () => { player.place(TREE.x + 0.6, TREE.z + 2.4, Math.PI); player.sit(true); S.stayed = true; ending('stay_end', 'You stayed in the light', 'The others are still down there, watching the wall. You are the only one who knows the way.'); } });
+  interact.add({ pos: ARCH.clone().add(V(3, 0, 0)), radius: 2.8, height: 2.5, prompt: 'Go back down', enabled: () => S.phase === 'free' && S.where === 'out',
     onUse: async () => {
       S.phase = 'transit'; player.enabled = false;
       await ctx.flash(true);
@@ -161,25 +185,29 @@ export default function platosCave(ctx) {
       await ctx.flash(false); player.enabled = true; S.phase = 'free';
       await ctx.wait(0.5); voice.say('back_dark');
     } });
-  interact.add({ pos: V(0, 0, SEAT.z + 1.6), radius: 3.6, height: 2.4, prompt: 'Tell them', enabled: () => S.phase === 'free' && S.returned && !S.told,
+  interact.add({ pos: V(0, 0, SEAT.z + 1.6), radius: 3.6, height: 2.4, prompt: 'Tell them', terminal: true, enabled: () => S.phase === 'free' && S.returned && !S.told,
     onUse: async () => { S.told = true; S.tellT = 0; ending('tell', 'You went back', 'You saw the sun, and came back to say so. They would rather keep the shadows.'); } });
 
-  // chained: the scene plays; then the chains come loose
+  // chained: the scene plays; then someone comes, frees you and pulls you to your feet (you don't choose to go)
+  const freer = makePerson({ color: 0x9a8a7a }); freer.position.set(-2, 0, 3.6); freer.visible = false; cave.add(freer);
   (async () => {
-    await ctx.wait(1); await voice.say('arrive'); await ctx.wait(4); await voice.say('shadows'); await ctx.wait(6);
+    await ctx.wait(1); await voice.say('arrive'); await ctx.wait(4); await voice.say('shadows'); await ctx.wait(5);
+    freer.visible = true; S.freerTo = SEAT.clone().add(V(-0.9, 0, 0.8)); await ctx.wait(3.2);
+    ctx.speak(freer, 'Get up. Come and see.', { offset: [0, 2.4, 0] });
     await voice.say('loose'); S.phase = 'free'; S.pt = 0; player.sit(false); player.yawLimit = null;
+    await ctx.wait(1.5); S.freerTo = FIRE.clone().add(V(-2.4, 0, -1.5));
   })();
 
   return Object.assign(level, {
     __frog: cameo,
     spawn: { x: SEAT.x, z: SEAT.z, rotY: Math.PI },
-    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 1.2, Math.PI + 1.2]; },   // chained: you can turn your head to your neighbours, never behind you
+    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 1, Math.PI + 1]; },   // chained: you can turn your head to your neighbours, never behind you
     walkable: (x, z) => (S.where === 'cave'
-      ? (Math.abs(x) < 15.5 && z > WALL_Z + 0.8 && z < 10.5) || Math.hypot(x - MOUTH.x, z - MOUTH.z) < 3.5
+      ? (Math.abs(x) < 15.5 && z > WALL_Z + 2.4 && z < 10.5) || Math.hypot(x - MOUTH.x, z - MOUTH.z) < 3.5
       : Math.hypot(x - OUT.x, z - OUT.z) < 22 && Math.hypot(x - POND.x, z - POND.z) > 3.2),
     blockers: () => S.where === 'cave'
-      ? [...prisoners.map((p) => ({ x: p.position.x, z: p.position.z, r: 0.6 })), { x: FIRE.x, z: FIRE.z, r: 1.4 }, ...[-6, -2, 2, 6].map((x) => ({ x, z: 2.6, r: 1.6 }))]
-      : [{ x: TREE.x, z: TREE.z, r: 0.8 }, { x: ARCH.x - 3, z: ARCH.z, r: 4.5 }],
+      ? [...prisoners.map((p) => ({ x: p.position.x, z: p.position.z, r: 0.6 })), { x: FIRE.x, z: FIRE.z, r: 1.4 }, { x: 0, z: 2.6, w: 18.4, d: 0.8 }, ...carriers.map((c) => ({ x: c.p.position.x, z: 3.4, r: 0.45 }))]
+      : [{ x: TREE.x, z: TREE.z, r: 0.8 }, { x: ARCH.x - 3, z: ARCH.z, r: 5.3 }, { x: horse.position.x + OUT.x, z: horse.position.z + OUT.z, r: 1.3 }, { x: jar.position.x + OUT.x, z: jar.position.z + OUT.z, r: 0.5 }],
 
     update(dt, t) {
       S.pt += dt;
@@ -201,25 +229,41 @@ export default function platosCave(ctx) {
       });
       setOpacity(myChain, S.phase === 'chained' ? 1 : Math.max(0, 1 - S.pt));
 
-      // discovery lines
+      // the one who freed you walks you towards the fire
+      if (S.freerTo) { const d = S.freerTo.clone().sub(freer.position).setY(0); if (d.length() > 0.2) { freer.position.addScaledVector(d.normalize(), dt * 1.4); freer.rotation.y = Math.atan2(d.x, d.z); animatePerson(freer, t * 2); } else { freer.rotation.y = lerp(freer.rotation.y, Math.atan2(player.pos.x - freer.position.x, player.pos.z - freer.position.z), 0.05); animatePerson(freer, t, { energy: 0.3 }); } }
+      // discovery lines: by what you turn to face, not where you stand
       if (S.phase === 'free' && S.where === 'cave' && !S.returned) {
-        if (player.pos.z > 0 && !voice.said.has('turn')) voice.say('turn');
-        if (player.pos.distanceTo(FIRE) < 7 && voice.said.has('turn')) voice.say('climb');
+        const v = player.viewDir();
+        if (!S.turned && v.z > 0.35) { S.turned = true; voice.say('turn', { urgent: true }); S.assist = 1.6; }
+        // still facing the wall: the firelight flickers on it, and your own shadow appears among the shapes
+        S.facingWall = !S.turned && v.z < -0.3 ? S.facingWall + dt : 0;
+        if (S.facingWall > 7 && !voice.said.has('behind')) voice.say('behind');
+        // turn assist: when you first turn, ease round to the fire and look down at it
+        if (S.assist > 0) { S.assist -= dt; const want = Math.atan2(FIRE.x - player.pos.x, FIRE.z - player.pos.z); let d = want - player.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); player.yaw += d * dt * 2.2; player.pitch = lerp(player.pitch, -0.12, dt * 2); }
+        if (player.pos.distanceTo(FIRE) < 7 && S.turned) { voice.say('hurts'); voice.say('climb'); }
         if (player.pos.distanceTo(MOUTH) < 7) voice.say('bright');
-        if (player.pos.distanceTo(MOUTH) < 2 && S.phase === 'free') {
+        // it hurts: the way to the fire and up to the light is slow going
+        player.speed = S.turned ? 2.2 + clamp(player.pos.distanceTo(MOUTH) / 12) * 0.8 : 4.2;
+        if ((player.pos.distanceTo(MOUTH) < 2 || player.pos.x > MOUTH.x - 0.3) && S.phase === 'free') {
           S.phase = 'transit'; player.enabled = false;
           (async () => {
-            await ctx.flash(true); setLight('out');
+            await ctx.flash(true); setLight('out'); player.speed = 4.2;
             player.place(ARCH.x + 3.5, ARCH.z, Math.PI / 2);
-            ctx.ui.fade(0); await ctx.flash(false); player.enabled = true; S.phase = 'free';
-            await voice.say('outside'); await ctx.wait(1.5); await voice.say('choose'); S.saidChoose = true;
+            S.dazzle = 1; ctx.ui.fade(0.95, '#fff6e2'); await ctx.flash(false); player.enabled = true; S.phase = 'free';
+            await voice.say('outside_1');
+            // the sun only once you've looked at things (the pond first), or after a while
+            for (let i = 0; i < 100 && !voice.said.has('reflection') && !voice.said.has('horse'); i++) await ctx.wait(0.25);
+            await ctx.wait(1); await voice.say('outside_2'); await ctx.wait(1.5); await voice.say('choose'); S.saidChoose = true;
           })();
         }
       }
+      shadowMe.material.opacity = lerp(shadowMe.material.opacity, S.facingWall > 5 ? 0.75 : 0, dt * 1.5);
       // light: blinding near the mouth, dark-adapted eyes after going back
       const blind = S.where === 'cave' && !S.returned ? clamp((9 - player.pos.distanceTo(MOUTH)) / 7) : 0;
       S.eyes = Math.max(0, S.eyes - dt / 9);
-      if (blind > 0) ctx.ui.fade(blind * 0.92, '#fffdf8'); else ctx.ui.fade(S.eyes * 0.85, '#0c0a08');
+      S.dazzle = Math.max(0, S.dazzle - dt / 6);                     // outside: washed out at first, then full colour
+      if (blind > 0) ctx.ui.fade(blind * 0.92, '#fff3d6'); else if (S.dazzle > 0) ctx.ui.fade(S.dazzle * 0.9, '#fff6e2'); else ctx.ui.fade(S.eyes * 0.85, '#0c0a08');
+      birds.forEach((b, i) => { const a = t * 0.12 + i * 2.1; b.position.set(Math.cos(a) * 18, 9 + i * 1.3 + Math.sin(t + i) * 0.4, -10 + Math.sin(a) * 10); b.rotation.y = -a; b.children.forEach((w, k) => (w.rotation.z = (k ? 1 : -1) * (0.15 + 0.35 * Math.sin(t * 7 + i)))); });
 
       // frog: once, by the pond outside
       if (S.where === 'out' && player.pos.distanceTo(POND) < 11) cameo.start();

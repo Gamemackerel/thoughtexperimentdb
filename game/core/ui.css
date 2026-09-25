@@ -119,3 +119,4 @@ body.carded #caption { opacity: 0; }
 #journal .ending { font: 600 22px/30px "Caveat", var(--serif); color: var(--doing); }
 #journal .ending small { font-size: 17px; color: var(--muted); font-weight: 400; }
 #journal .answer small { display: block; font: 400 17px/24px "Caveat", var(--serif); color: var(--muted); }
+body.fp #caption { bottom: auto; top: 7vh; }

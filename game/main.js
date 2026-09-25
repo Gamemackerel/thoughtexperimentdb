@@ -106,7 +106,7 @@ const ctx = {
     over.querySelector('.kicker').textContent = kicker;
     over.querySelector('h1').textContent = title;
     over.querySelector('p').textContent = text;
-    const q = journal.question(id), prev = journal.lastAnswer(id);
+    const q = journal.question(id, title), prev = journal.lastAnswer(id);
     over.querySelector('.ask').hidden = !q;
     over.querySelector('.ask .q').textContent = q;
     const prevEl = over.querySelector('.prev');
@@ -190,7 +190,7 @@ async function goto(name) {
   stage.hemi.intensity = 1.6; stage.sun.intensity = 2.4; stage.hemi.color.set(0xfff6e8); stage.sun.color.set(0xfff1dc);
   stage.renderer.toneMappingExposure = 1.05;
   player.sit(false); player.locked = false; player.obj.visible = true;
-  player.firstPerson = false; player.pitch = 0; player.yawLimit = null;
+  player.firstPerson = false; player.pitch = 0; player.yawLimit = null; player.speed = 4.2;
   const mod = await LEVELS[name]();
   level = mod.default(ctx);
   level.name = name;
@@ -261,7 +261,8 @@ function frame(now) {
     }
     // world labels (portal names, counters) hide under the page, notebook, journal and card
     document.body.classList.toggle('overlaid', !pageEl.hidden || !nb.hidden || !over.hidden || !journalEl.hidden || !leaveEl.hidden);
-    document.body.classList.toggle('carded', !over.hidden);                // no captions over the game-over card
+    document.body.classList.toggle('carded', !over.hidden);
+    document.body.classList.toggle('fp', player.firstPerson);            // first person: captions go to the top                // no captions over the game-over card
     const c = level.camera(player, time, dt);
     const k = c.cut ? 1 : 1 - Math.exp(-dt * (c.stiffness ?? 3));
     cam.pos.lerp(c.pos, k); cam.look.lerp(c.look, k);

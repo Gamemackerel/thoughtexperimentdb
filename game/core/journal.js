@@ -25,7 +25,8 @@ export class Journal {
   save() { try { localStorage.setItem(KEY, JSON.stringify(this.notes)); } catch {} }
   entry(id) { return (this.notes[id] ??= { endings: [], answers: [], last: null }); }
 
-  question(id) { return this.data[id]?.question ?? ''; }
+  // the question can depend on how it ended (journal.json: "questions": { "<ending title>": "…" })
+  question(id, ending) { return this.data[id]?.questions?.[ending] ?? this.data[id]?.question ?? ''; }
   /** titles of the endings reached here, oldest first, with the most recent last */
   endings(id) { const n = this.notes[id]; if (!n) return []; const t = n.endings.map((e) => e.title).filter((x) => x !== n.last); return n.last ? [...t, n.last] : t; }
   reach(id, title) {
