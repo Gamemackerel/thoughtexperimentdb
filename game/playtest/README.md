@@ -17,9 +17,9 @@ FEEDBACK.md          the consolidated improvement list, by thought experiment, f
    (`build/agentplay/<session>/`: its own profile, so its own saves, and its own screenshots).
 3. **Virtual time.** Each browser's clocks are replaced (`agentplay/clock.js`): the game is frozen between commands and
    only advances when the playtester waits, walks or holds a key. Frames in between are simulated without drawing,
-   and only the frame you look at is rendered. So an AI that thinks for 30 seconds doesn't miss the trolley, a
-   4-core machine can host two dozen sessions at once (they're idle while their agents think), and timing is the same
-   as in the real game.
+   and only the frame you look at is rendered. So an AI that thinks for 30 seconds doesn't miss the trolley,
+   sessions use no CPU while their agents think, and timing is the same as in the real game. Each session holds a
+   browser (~0.7 GB), so on a 16 GB machine the 24 playtesters run in two waves of 12 (room 1, then the hall).
 4. **Text as well as pixels.** Every command reports what a player would have heard and read since the last one
    (narration captions with timestamps, speech bubbles, prompts, labels, the game-over card) and any page errors,
    so the reviewers don't depend on catching the right frame.
