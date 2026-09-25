@@ -44,6 +44,8 @@
 - **[minor] [interaction]** You arrive standing 0.4 m from the time machine, inside the "Go home" radius, so "E Go home" is the first prompt of the vignette and stays up through the opening lines. One reflexive E press ends the vignette before it starts. Same pattern as the hall's hatch.
   Evidence: `debug` at t=133 s: "Go home" dist 0.4 radius 2.4; shots/023-t133.jpg.
   Suggestion: step the figure out of the machine a couple of metres (spawn ~(-12, 7)) or enable "Go home" only after the opening line.
+  Reproduced: `open hall` → clock → a single `press e` at t=5.7 s (2 s after arriving) ends the vignette ("You left the past alone"). In that ending the queued line "That's your grandfather. Young, and in a hurry." still plays at 12.4 s, *between* the two ending lines, so the reflection reads out of order.
+  Suggestion (extra): clear the voice queue when a vignette jumps to its ending.
 - **[minor] [UI]** Two-line captions render as two separate pills ("The past. The town where your grandparents" / "met."), with the second one a stub; at spawn the caption also sits right over the figure (spawn is at the bottom of the frame).
   Evidence: shots/023-t133.jpg, 024.jpg, 036-t227.jpg.
   Suggestion: `box-decoration-break: clone` is fine, but give the caption a single block background (display:inline-block with max-width) and balance the lines (`text-wrap: balance`); nudge the opening camera so the figure isn't under the caption.

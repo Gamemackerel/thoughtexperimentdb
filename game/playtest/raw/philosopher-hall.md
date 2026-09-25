@@ -1,7 +1,12 @@
 # philosopher · THE HALL (hall, grandfather-paradox, infinite-monkey, simulation-argument, fermi-paradox, tragedy-of-the-commons)
 
 ## Summary
-(in progress)
+- The hall's five vignettes are handsome and mostly well-voiced, and the notebooks are largely accurate, but in three of the five **the mechanics argue something the source doesn't**: the monkeys type Hamlet in 3 million years (the theorem's whole lesson is that it would take unimaginably longer); the commons only collapses if *you* start it (Hardin's point is that nobody needs to); the simulation forbids the "don't build more worlds" horn of the trilemma and then shows you as simulated.
+- The narrator repeatedly grades a disputed position as fact: "It was never going to un-happen" (grandfather), "Given forever, it had to happen" (monkeys), "Maybe no one is there" after a few years of light-speed silence (Fermi). Each time the game-over card is more careful than the voice; the voice should come down to the card's level.
+- Fermi's vignette plays the SETI/METI question (send or listen) while its notebook explains Fermi/Hart (no visitors), with no bridge between them.
+- Notebook/journal text has several small scholarly slips: the journal's Lewis paraphrase ("you can, and you can't, at the same time") inverts his point; Hart is said to deny all other civilisations; Hardin is said to want regulation "from above"; the commons is never distinguished from open access.
+- Navigation: every exit from a hall vignette (card or Esc) drops you in the first room, not the hall.
+- What works: Lewis's "you could have stopped him, in a sense" card; the monkeys' "none of them meant a word of it" and the journal question on meaning; the simulation's nested-dome pull-back; the commons neighbours whose chatter decays with the grass.
 
 ## Findings
 ### hall
@@ -131,3 +136,15 @@
 - **[polish] [staging]** At the meeting the four neighbours gather in the middle of the pasture while you stay at the bell, yet the line says "Together, you agree on limits".
   Evidence: shots/069-t184.jpg.
   Suggestion: walk the player to the meeting (scripted walk) before `agree`.
+
+## Keep
+- Grandfather card "You could have stopped him, in a sense. You just didn't." (Lewis in plain words), and the ordinary failures (wind, habit, a laugh).
+- Monkeys: "But none of them meant a word of it" and the journal question on meaning without a meaner; the all-q page monkey; "Forever takes a lot of bananas."
+- Simulation: the nested domes (someone in the little world building one too), the pull-back camera, the journal question about what would change.
+- Fermi: the moon footprints aside and the card "The message is still travelling, and will be for thousands of years."
+- Commons: neighbour lines that degrade with the grass ("If I don't, someone else will.") are Hardin's logic in three lines; the notebook's Lloyd → Hardin → Ostrom arc.
+- Hall: the Magritte set (apple-faced gentleman, mirror twin, "Ceci n'est pas une pipe") and the ✓ on finished portals.
+
+## Harness notes
+- `use "Tell him who you are"` (a moving target) never reached the prompt in 20 s from the grandfather spawn; walking to the gate first and waiting worked.
+- The `on screen now` list keeps earlier speech bubbles, which made the hall gentleman look like he had four bubbles at once; the screenshot showed only one.

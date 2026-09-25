@@ -30,3 +30,9 @@
 - Crate aside: "Forever takes a lot of bananas." good. Arrival line 2 "They hit the keys at random" didn't play on replay (maybe preempted by crate).
 - Walk out ending: "forever is much, much longer than it sounds" - great, contradicts the other ending's 3 million years. Journal question on this card still says "The monkeys typed 'To be, or not to be'..." though I never saw that.
 - Back to the house -> first room again (0,5.5).
+### simulation-argument run 1
+- Arrival 7.8 caption fine. Asides window/photo: nice lines. First "use Look at the photo" in explore seemed not to fire (no caption; time jumped to 46s) - unsure, harness?
+- Look closer: zoom into the dome, then deeper into the inner dome (046,047) - lovely. After zoom (57s) returned to explore with nothing on screen, no prompt at my position (1.9,-3.2, behind the desk) -> didn't know what to do; had to walk around to find "Run more worlds" at the monitor.
+- Run more worlds: shelves fill with domes, "which kind is yours?", reveal pull-back to giant's face over my dome (054) - best moment so far.
+- Then phase "choose" at 87.8 with NO line, no prompt, ~20s of silence; "Leave them running" is at the door 9 units away and nothing hints it's a choice. I stood there confused.
+- Switch them off: room darkens, "Above you, the lights flicker." (058) - lands well. Card at 120.8.

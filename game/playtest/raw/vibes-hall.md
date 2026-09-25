@@ -68,3 +68,29 @@
 - **[minor] [pacing/mood]** A whole run lasts about 25 s (arrive t=43.6 → "They meet" t=68.8 on my first run), and grandfather hurries the entire time. I stood a few seconds to take in the town and the vignette ended before I'd reached anything. That's the opposite of "slow and authored" and leaves no room for the town's mood.
   Evidence: first run: phase `over` at 68.8 s after loading at 43.6 s, and I never got a prompt.
   Suggestion: have him pause on his doorstep until the player first moves (or ~8 s), and add a stop or two on the route (tip the hat to the stallholder, look at the fountain), so the player has time to be a ghost in the town.
+
+### infinite-monkey
+- **[major] [visual]** "A million years go by" has almost no visual. The room dims briefly and the paper stacks next to each desk grow a little; everything else, including the monkeys, stays exactly as it was. For a game whose whole subject is deep time, the lever is the moment to show time: that's where the mood lives.
+  Evidence: 060-t299.jpg (mid-wait, 593,750 years) vs 064-t306.jpg (after): same room, same light, same poses.
+  Suggestion: during the ~3 s wait, run a time-lapse. Sun and shadow sweep across the floor several times (day/night flicker), dust settles, and paper piles balloon and then are carried off. Maybe a sapling grows through the floor and is gone by the third wait. On landing, one beat of stillness before the typing sound returns.
+- **[major] [visual/mood]** The room is the least art-directed space in the hall's set: one flat taupe wall, a taupe floor disc on cream, a doorframe with no door, and nothing else. Fifteen identical monkeys in a grid, all seen from behind. It reads as a greybox exam hall, not a dream, with none of the warmth of the house or the humour of the asides.
+  Evidence: 056-t287.jpg, 073-t410.jpg.
+  Suggestion: give it one strong idea: a library or scriptorium receding into haze (rows continuing beyond the floor edge, fading into the paper sky, to suggest infinity), warm desk lamps over each typewriter, stacks of paper like snowdrifts. Turn the front row to three-quarter view so we see faces. Vary monkey size and colour slightly.
+- **[minor] [visual]** The payoff happens only on the paper overlay (a highlighted line) while the room behind carries on unchanged. There's no world reaction to the most improbable event in the universe.
+  Evidence: 067-t332.jpg.
+  Suggestion: when "to be, or not to be" appears, stop every typewriter for two seconds of silence and have all the monkeys turn their heads toward you, with a single lamp brightening on the lucky desk. Then they resume. That's the clip moment and fits "nobody meant it".
+- **[minor] [visual]** "Walk out" crosses a free-standing doorframe onto the same floor disc, and the "outside" looks identical to the inside, so leaving doesn't feel like leaving.
+  Evidence: 073-t410.jpg.
+  Suggestion: put a real door in the frame, and make the floor beyond it the paper sky (or a hall-coloured strip) so crossing the threshold changes the light.
+- **[minor] [UI]** The years counter is a world-space label pill that goes near-invisible when idle ("0 years" at ~20 % opacity). During play the "E Wait a million years" prompt sits right on top of it, and on the game-over card it bleeds through at the right edge ("…,250 years").
+  Evidence: 056-t287.jpg (faint), 064-t306.jpg (prompt covers counter), 068-t381.jpg (visible through the card).
+  Suggestion: make the counter part of the set, e.g. a mechanical flip counter or tally board on the lever post, always at full opacity. Hide world labels while the card is up.
+- **[polish] [visual]** The typed page is lovely (tilted cream sheet, monospace), but it's too clean for a typewriter: perfectly even ink, no strike variation, no ribbon colour. "A word. Just one, by pure chance." highlights "the" in the middle of "opthep.whka", so it isn't a word on its own.
+  Evidence: 059-page.jpg, 065-t310.jpg.
+  Suggestion: a typewriter face (e.g. Special Elite or Courier Prime) with slight per-glyph opacity and offset jitter, and an occasional red-ribbon letter. Put spaces around the first found word.
+- **[polish] [narrative]** The narration names Shakespeare ("Given forever, could they type Shakespeare?"), against the "no names in the voice" pillar. The card says "a line of Hamlet", which reads fine because it's the card.
+  Evidence: caption at t=300.9 and t=402.1.
+  Suggestion: "Given forever, could they type a play?" or "…could they type something beautiful?"
+- **[minor] [bug/mood]** Esc in the monkey room → "Leave this vignette and return to the house?" is a native browser `confirm()` (game/main.js:181), a grey OS dialog that breaks the paper-and-clay look. It sends you to the first room, not the hall. The monkey room's queued line "They hit the keys at random. They will never stop." then played as a caption in the first room.
+  Evidence: t=414.6 level=house; caption at t=416.1 in house; shot 075-t417.jpg.
+  Suggestion: an in-game cream card matching the game-over styling ("Leave? · Stay / Go back to the hall"). Clear the voice queue on `goto`. For hall vignettes, return to the hall at the portal's spawn.
