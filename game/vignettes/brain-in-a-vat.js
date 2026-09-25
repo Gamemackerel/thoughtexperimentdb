@@ -4,8 +4,8 @@
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
   makeIsland, makeTree, makePerson, animatePerson, makeBench, makeHouse, makeTable, makeFrog,
-} from '/engine/core.js';
-import { makeBrain, makeVat, makeComputer } from '/experiments/brain-in-a-vat/scene.js';
+} from '/game/engine/core.js';
+import { makeBrain, makeVat, makeComputer } from '../core/lab.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { look } from '../core/extras.js';
@@ -85,7 +85,7 @@ export default function brainInAVat(ctx) {
 
   const S = { layer: 0, phase: 'explore', pt: 0, fallT: 0, edgeSeen: false, revealT: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
-  loadNotebook(level, '/experiments/brain-in-a-vat/script.json', 'Brain in a Vat');
+  loadNotebook(level, '/game/notebook/brain-in-a-vat.json', 'Brain in a Vat');
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(2000, 200), new THREE.MeshBasicMaterial({ visible: false }));
   groundPlane.rotation.x = -Math.PI / 2; groundPlane.position.x = 400; root.add(groundPlane); level.ground.push(groundPlane);
 

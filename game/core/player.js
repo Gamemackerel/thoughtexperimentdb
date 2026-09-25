@@ -1,5 +1,5 @@
 // The teal "you": keyboard / gamepad / tap-to-walk movement, simple collisions, walk animation.
-import { THREE, palette, makePerson } from '/engine/core.js';
+import { THREE, palette, makePerson } from '/game/engine/core.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
 

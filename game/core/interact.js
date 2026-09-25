@@ -1,5 +1,5 @@
 // Proximity interactables (with an on-screen prompt) and one-shot area triggers.
-import { THREE } from '/engine/core.js';
+import { THREE } from '/game/engine/core.js';
 
 export class Interact {
   constructor(stage) {

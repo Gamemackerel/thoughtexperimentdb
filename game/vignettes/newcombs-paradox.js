@@ -4,7 +4,7 @@
 // its prediction yesterday. Take one box or both; come back tomorrow and do it again, or leave.
 import {
   THREE, palette, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTable, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';

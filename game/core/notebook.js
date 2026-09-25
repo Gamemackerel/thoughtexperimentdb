@@ -1,5 +1,5 @@
 // Builds a vignette's notebook page (the only place the game names philosophers and sources).
-// Source: a film's script.json (uses `publish`) or a game/notebook/<id>.json with the same fields.
+// Source: game/notebook/<id>.json (title, summary, citations, essay, also, reading).
 const link = (s) => s.replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank">$1</a>');
 
 export async function loadNotebook(level, url, title) {

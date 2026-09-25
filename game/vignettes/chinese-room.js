@@ -5,7 +5,7 @@
 // perfectly. Or stop answering, and she decides there's nobody there.
 import {
   THREE, palette, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTable, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { look } from '../core/extras.js';

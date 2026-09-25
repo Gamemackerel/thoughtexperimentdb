@@ -14,7 +14,7 @@ consequences are real but gentle, then rewind. Each vignette ends with a game-ov
 
 Read `GAME.md` (the design document) before playing, so you can judge the game against its own intentions.
 For your part of the game, you may also skim the vignette code in `game/vignettes/<id>.js`, its lines in
-`game/lines/<id>.json`, notebook `game/notebook/<id>.json` (or the film's `experiments/<id>/script.json`) and
+`game/lines/<id>.json`, notebook `game/notebook/<id>.json` and
 `game/journal.json`, but **play first**: your first impressions as a player are the most valuable thing you have.
 
 ## How to play

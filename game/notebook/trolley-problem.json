@@ -1,0 +1,28 @@
+{
+  "title": "The Trolley Problem",
+  "summary": "A runaway trolley is heading for five people. You can pull a lever to send it onto a side track, where it will kill one person instead. Philippa Foot introduced the case in 1967 (in her version you are the driver); Judith Jarvis Thomson made the one at the lever a bystander, and turned it into one of the most famous puzzles in ethics: why does diverting the trolley seem permissible, when so many other ways of killing one to save five (pushing someone off a footbridge, a surgeon harvesting organs) do not? Answers draw on the difference between doing and allowing harm, and between harming as a side effect and harming as a means. In 2008 Thomson changed her mind, and argued that a bystander may not turn the trolley after all.",
+  "citations": [
+    "Philippa Foot, \"The Problem of Abortion and the Doctrine of the Double Effect,\" Oxford Review 5 (1967): 5–15. Reprinted in Virtues and Vices (Oxford: Blackwell, 1978).",
+    "Judith Jarvis Thomson, \"Killing, Letting Die, and the Trolley Problem,\" The Monist 59, no. 2 (1976): 204–217.",
+    "Judith Jarvis Thomson, \"The Trolley Problem,\" Yale Law Journal 94, no. 6 (1985): 1395–1415.",
+    "Judith Jarvis Thomson, \"Turning the Trolley,\" Philosophy & Public Affairs 36, no. 4 (2008): 359–374.",
+    "Fiona Woollard and Frances Howard-Snyder, \"Doing vs. Allowing Harm,\" Stanford Encyclopedia of Philosophy, §3: https://plato.stanford.edu/entries/doing-allowing/"
+  ],
+  "essay": {
+    "creator": "Gregory B. Sadler",
+    "title": "Judith Thomson, The Trolley Problem | Philippa Foot's Cases and Solution",
+    "url": "https://www.youtube.com/watch?v=PoN7uLlc55g"
+  },
+  "also": [
+    {
+      "creator": "Michael Sandel, Harvard University",
+      "title": "Justice, Episode 1: The Moral Side of Murder",
+      "url": "https://www.youtube.com/watch?v=kBdfcR-8hEY"
+    }
+  ],
+  "reading": [
+    "Alison McIntyre, \"Doctrine of Double Effect,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/double-effect/",
+    "David Edmonds, Would You Kill the Fat Man? The Trolley Problem and What Your Answer Tells Us about Right and Wrong (Princeton University Press, 2013)",
+    "F. M. Kamm, The Trolley Problem Mysteries (Oxford University Press, 2015)"
+  ]
+}

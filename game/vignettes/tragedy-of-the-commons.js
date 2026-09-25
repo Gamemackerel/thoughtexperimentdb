@@ -4,7 +4,7 @@
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
   makeIsland, makeHouse, makePerson, animatePerson, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo, frogExtras, frogTongue } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';

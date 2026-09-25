@@ -3,7 +3,7 @@
 // plays guitar; harlequin diamonds frame the doors; a grey mural of a bull, a horse and a lamp runs along the top; a
 // sheet-metal guitar stands on a plinth; a weeping woman hangs in a frame with both eyes on one side of her face.
 // Six portals: a ring under glass, a cell door, two boxes, a cake, a door with a slot, and three doors.
-import { THREE, palette, css, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeTable } from '/engine/core.js';
+import { THREE, palette, css, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeTable } from '/game/engine/core.js';
 import { talk } from '../core/extras.js';
 import { textTexture } from '../core/props.js';
 

@@ -1,6 +1,6 @@
 // Paintings rendered from little clay scenes (so every painting in the house shares the films' look).
 // paintScene(renderer, build, { cam, look, w, h, bg }) → a texture you can put in a frame.
-import { THREE, palette, clay, mesh, makeTrack, makeTrolley, makePerson, makeTunnel } from '/engine/core.js';
+import { THREE, palette, clay, mesh, makeTrack, makeTrolley, makePerson, makeTunnel } from '/game/engine/core.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 

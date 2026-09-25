@@ -1,7 +1,7 @@
 // The Trolley Room: once you've been through the trolley painting, it opens onto this room instead, a railway waiting
 // room hung with four paintings, one for each version of the problem: the lever, the footbridge, the loop and the
 // surgeon. A model railway runs round a table in the middle; the stationmaster is at the ticket window.
-import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTrack, makeTrolley, makeBench, makeLever } from '/engine/core.js';
+import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTrack, makeTrolley, makeBench, makeLever } from '/game/engine/core.js';
 import { paintScene, footbridgeScene, loopScene, transplantScene } from '../core/paint.js';
 import { talk } from '../core/extras.js';
 

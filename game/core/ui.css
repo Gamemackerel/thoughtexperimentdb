@@ -1,4 +1,4 @@
-/* Game HUD — shares the films' typography (engine/style.css) */
+/* Game HUD (on top of game/engine/style.css: colour tokens, fonts, labels) */
 html, body.game { margin: 0; height: 100%; overflow: hidden; background: var(--paper); touch-action: none; }
 body.game #gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
 body.game #ui { position: fixed; inset: 0; }

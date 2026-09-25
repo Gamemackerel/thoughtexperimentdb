@@ -1,5 +1,5 @@
 // Framing camera: fits a set of points exactly on screen (horizontally and vertically) from a fixed view direction.
-import { THREE, clamp } from '/engine/core.js';
+import { THREE, clamp } from '/game/engine/core.js';
 
 export function makeFramer(stage, view = [-0.16, 0.62, 0.77]) {
   const VIEW = new THREE.Vector3(...view).normalize();

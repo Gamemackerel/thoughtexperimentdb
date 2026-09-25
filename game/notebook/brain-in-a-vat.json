@@ -1,0 +1,27 @@
+{
+  "title": "Brain in a Vat",
+  "summary": "What if your brain had been removed from your body, kept alive in a vat of nutrients, and wired to a computer that feeds it a perfect simulation of the world? Everything would feel exactly as it does now. So how could you ever know it isn't happening? The idea descends from René Descartes' evil demon (1641), who might deceive us about everything. Hilary Putnam gave it its modern form in 1981, then answered it: if we were brains in vats, our words would not refer to real brains and vats at all, so we could not even truly think that we were. The objections to his reply keep the debate alive.",
+  "citations": [
+    "René Descartes, Meditations on First Philosophy (1641), First Meditation. Trans. John Cottingham (Cambridge University Press, 1996).",
+    "Hilary Putnam, \"Brains in a Vat,\" in Reason, Truth and History (Cambridge University Press, 1981), ch. 1.",
+    "Thomas Nagel, The View from Nowhere (Oxford University Press, 1986), p. 73.",
+    "Gary Ebbs, \"Content Externalism and Skepticism,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/skepticism-content-externalism/"
+  ],
+  "essay": {
+    "creator": "Parker's Pensées with Sanford Goldberg",
+    "title": "Content Externalism and Putnam's Anti Brain-in-a-Vat Argument (PPP ep. 127)",
+    "url": "https://www.youtube.com/watch?v=lv_Br6RMRUk"
+  },
+  "also": [
+    {
+      "creator": "Claudio Costa",
+      "title": "Why Putnam Could Be a Brain in a Vat",
+      "url": "https://www.youtube.com/watch?v=XiLlgpTUUg8"
+    }
+  ],
+  "reading": [
+    "\"The Brain in a Vat Argument,\" Internet Encyclopedia of Philosophy: https://iep.utm.edu/brain-in-a-vat-argument/",
+    "David J. Chalmers, Reality+: Virtual Worlds and the Problems of Philosophy (W. W. Norton, 2022)",
+    "Barry Stroud, The Significance of Philosophical Scepticism (Oxford University Press, 1984)"
+  ]
+}

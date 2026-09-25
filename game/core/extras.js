@@ -1,6 +1,6 @@
 // Small things to do that aren't the thought experiment: people to talk to (speech bubbles, no voice) and things to
 // look at (one short narrator line each). They never change the story; they make the place feel lived in.
-import { THREE } from '/engine/core.js';
+import { THREE } from '/game/engine/core.js';
 
 const wpos = (o) => (o.isObject3D ? o.getWorldPosition(new THREE.Vector3()) : o);
 

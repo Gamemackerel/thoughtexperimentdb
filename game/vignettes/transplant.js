@@ -4,7 +4,7 @@
 // Send him home, or take him to theatre (the doors close; nothing is shown). One choice, then it ends.
 import {
   THREE, palette, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';

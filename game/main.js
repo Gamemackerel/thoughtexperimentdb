@@ -1,5 +1,5 @@
 // Thought Experiments — the game shell: levels (the House + vignettes), player, camera, prompts, voice, notebook, saves.
-import { THREE, createStage, createUI } from '/engine/core.js';
+import { THREE, createStage, createUI } from '/game/engine/core.js';
 import { Player } from './core/player.js';
 import { Interact } from './core/interact.js';
 import { Voice } from './core/voice.js';

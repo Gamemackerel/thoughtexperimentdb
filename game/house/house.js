@@ -1,5 +1,5 @@
 // The House: a surreal hub (Escher + Dalí in clay). Paintings, books and doors lead into the vignettes.
-import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTree, makeTable, seeded } from '/engine/core.js';
+import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTree, makeTable, seeded } from '/game/engine/core.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const ROOM = 7.3;                               // walkable half-size

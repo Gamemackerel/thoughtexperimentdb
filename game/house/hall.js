@@ -4,7 +4,7 @@
 // men falling like rain outside, a steam train coming out of the fireplace, a room filled by one green apple, a mirror
 // that shows the back of your head, a pipe that is not a pipe, a door with a hole in it, and a man whose face is hidden
 // by an apple. Escher's stairs climb into the ceiling. Five portals line the back wall.
-import { THREE, palette, css, clamp, lerp, clay, mesh, makePerson, animatePerson, makeTable, makeTrolley } from '/engine/core.js';
+import { THREE, palette, css, clamp, lerp, clay, mesh, makePerson, animatePerson, makeTable, makeTrolley } from '/game/engine/core.js';
 import { talk } from '../core/extras.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);

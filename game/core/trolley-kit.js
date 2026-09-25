@@ -1,6 +1,6 @@
 // Shared pieces for the trolley vignettes (the footbridge and the loop): a steady framing camera, the toy-like
 // knock-away and its rewind, and the stretched speech of people in slowed time.
-import { THREE, easeOut, clamp } from '/engine/core.js';
+import { THREE, easeOut, clamp } from '/game/engine/core.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 

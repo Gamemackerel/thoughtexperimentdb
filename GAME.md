@@ -4,9 +4,9 @@ An art game made of playable vignettes, one per thought experiment. You don't sc
 each dilemma and act. The world responds, and a quiet narrator says a little about what you did. It plays like a cutscene you're inside: the camera is authored and the pacing is slow, but the
 choice is yours.
 
-The films and the game share one engine, one visual language, one voice, one frog and one research
-standard. `PRODUCTION.md` still governs research, writing quality, colour roles and sources. This document covers
-what's different for the game.
+This is the game's design document and production guide: how the house and its vignettes are designed, written,
+voiced, built and checked. The project began as short explainer films; their standards for research, writing, colour
+and voice carried over and are folded in here (§8). The films themselves are archived in `archive/films/`.
 
 ---
 
@@ -34,13 +34,13 @@ The game's menu is a place: a **surreal house** inspired by Escher and Dalí, fl
   from a text, a door for a place.
 - **Set dressing (Escher/Dalí):** a Penrose-style staircase that loops, a door on the ceiling, a window looking into
   the sky below the floor, melting clocks draped over furniture, a table on impossibly long legs, a checkered floor.
-  It should feel dreamlike, but stay in the clay-diorama style of the films.
+  It should feel dreamlike, but stay in the clay-diorama style (§8.3).
 - **Progress:** completed portals glow softly (saved in the browser). Nothing is ever locked behind another vignette.
 - **Order:** new portals are added in the order of `thought_experiments.xlsx` (highest Avg rating first).
 
 ## 3. The vignette template
 
-Each vignette is a short (3–8 minute) playable scene in five beats, mirroring the films' five acts:
+Each vignette is a short (3–8 minute) playable scene in five beats:
 
 | Beat | What happens | Trolley example |
 |---|---|---|
@@ -71,8 +71,8 @@ saved in the browser (`localStorage`).
 
 Every vignette also has:
 - **A notebook:** an optional page (`N`), never forced, for the curious: where the thought experiment comes from,
-  sources, recommended reading and the video essay, drawn from the film's `script.json → publish`. This is the only
-  place philosophers and citations appear.
+  sources, recommended reading and the video essay, from `game/notebook/<id>.json`. The notebook and the
+  journal are the only places philosophers and citations appear.
 - **Replay:** after the reflection, the choice comes round again. The narrator acknowledges whether you chose the same
   or differently.
 - **A journal entry:** a question and a to-do list in `game/journal.json` (verify every link).
@@ -168,7 +168,8 @@ used). Hall portals and spawns are in `game/house/hall.js`.
 
 ## 5. Voice and text
 
-- Same narrator as the films: Kokoro `bm_fable`, speed 0.9, with the `pronounce` fixes from `PRODUCTION.md` §5.3.
+- One narrator throughout: Kokoro `bm_fable` (British English), speed 0.9. Respell anything it mispronounces in the
+  line file's `pronounce` map (captions keep the real spelling); see §8.4.
 - **Minimal:** a vignette has roughly 6–12 lines in total. One short sentence per trigger (rarely two), everyday
   words, and long silences between them. Most lines are triggered by where you are or what you did, not by a timer.
 - **Describe, then reflect:** lines either describe the scenario plainly ("A runaway trolley." "Five people on the
@@ -182,45 +183,59 @@ used). Hall portals and spawns are in `game/house/hall.js`.
 
 ```
 game/
-  index.html            entry: loads the House, handles portals, notebook, captions, saves
-  core/                 game runtime on top of engine/core.js
-    player.js           the teal "you": movement with steering around obstacles, sitting, scripted walks, walk animation
-    camera.js           makeFramer(): fits a set of points exactly on screen from a fixed angle (the default vignette camera)
-    notebook.js         builds the notebook page from a film's script.json or game/notebook/<id>.json
-    interact.js         proximity triggers, interactables + prompts, one-shot/repeatable events
-    voice.js            plays pre-rendered lines with captions, and queues them so they never overlap
-    ui.css              prompts, captions, notebook, portal flashes
-  house/house.js        the first room; house/hall.js, house/trolley-room.js, house/gallery.js: the other rooms
-  core/paint.js         paintings rendered live from little clay scenes
-  core/props.js         shared props (sheep, goat, car, text cards)
-  core/trolley-kit.js   framing camera, knock-away and slowed speech for the trolley variants
-  vignettes/<id>.js     one module per thought experiment: build(ctx) → { update(dt), dispose() }
+  index.html            entry: loads the house, handles portals, notebook, journal, captions, saves
+  main.js               the shell: levels, rooms (hubs), camera, input, game-over card, journal, feedback
+  engine/core.js        the visual language: palette, clay materials, world kit (islands, people, trolleys, tracks,
+                        furniture), the frog, particles, ghosts, stage (renderer, lights, camera), overlay UI
+  engine/style.css      colour tokens, fonts, and the overlays core.js makes (fades, labels, rewind, glitch)
+  core/                 the game runtime on top of the engine
+    player.js           the teal "you": movement with steering around obstacles, sitting, scripted walks, first person
+    camera.js           makeFramer(): fits a set of points exactly on screen from a fixed angle (the default camera)
+    interact.js         proximity triggers, interactables and their prompts
+    voice.js            plays pre-rendered lines with captions, queued so they never overlap
+    notebook.js         builds the notebook page from notebook/<id>.json
+    journal.js          the journal: answers (localStorage) and its page
+    frog.js             frogCameo(): the frog's one small scene per vignette
+    extras.js           talk() and look(): the asides
+    paint.js            paintings rendered live from little clay scenes
+    props.js            shared props (sheep, goat, car, text cards)
+    lab.js              the brain, vat and machine (Brain in a Vat)
+    trolley-kit.js      framing camera, knock-away and slowed speech for the trolley variants
+    ui.css              the HUD: prompts, captions, notebook, journal, game-over card, speech bubbles
+  house/                the rooms: house.js (first room), hall.js, trolley-room.js, gallery.js
+  vignettes/<id>.js     one module per thought experiment (see the level contract below)
   lines/<id>.json       voice lines per vignette (id → text), with pronounce rules
-  journal.json          the journal: one guided question and a to-do list of sources per vignette
-  core/journal.js       journal store (localStorage) and page
-  notebook/<id>.json    notebook data for vignettes without a film (same fields as a film's `publish`)
+  notebook/<id>.json    notebook data: title, summary, citations, essay, also, reading
+  journal.json          one guided question and a to-do list of sources per vignette
   assets/voice/<id>/    generated audio (committed; small)
+  assets/paintings/     the trolley painting
+  playtest/             AI playtest briefs, raw reports and consolidated feedback
   tools/voice.mjs       renders lines with Kokoro → assets/voice
   tools/serve.mjs       local dev server → http://localhost:5173/game/ (also appends POST /feedback to feedback.txt)
-  tools/playtest-asides.mjs  watches every frog cameo and tries every aside (screenshots to build/asides-*)
-  tools/playtest-variants.mjs  the trolley room and its three variants
-  tools/playtest-gallery.mjs   the Picasso gallery and its six vignettes
-  tools/shot.mjs        quick screenshots of any level after walking to given points
   tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
+  tools/playtest-asides.mjs   watches every frog cameo and tries every aside
+  tools/shot.mjs        quick screenshots of any level after walking to given points
+  tools/agentplay/      a virtual-clock, command-line player for AI playtest swarms
+tools/                  (repo root) setup.sh, Kokoro TTS (kokoro/speak.py), narration audit (audit.py)
 ```
 
-- Everything visual comes from `engine/core.js` (palette, clay kit, frog, particles, ghosts). Scenes are still
-  deterministic where it matters, so a vignette can be driven by a timeline in its cutscene moments.
+- **Level contract:** a room or vignette module's default export takes `ctx` and returns `{ root, ground, spawn,
+  walkable(x, z), blockers(), camera(player, t, dt), update(dt, t), start?(), dispose?(), notebook, __S, __frog }`.
+  `ctx` gives the stage, player, interact, voice, save, `goto`, `wait`, `toast`, `speak`, `page`, `gameOver`, `from`
+  and `hub`.
+- Everything visual comes from `game/engine/core.js`. `clay(color)` materials are **cached and shared**: never change
+  a clay material's colour in place; `.clone()` it first.
 - The game runs in the browser (Three.js). It can later be packaged for desktop (e.g. Tauri or Electron) or hosted on
-  GitHub Pages.
+  GitHub Pages (the feedback box needs the dev server).
 
 ## 7. Process for a new vignette
 
-1. **Research:** as in `PRODUCTION.md` §1. If a film exists, reuse its research, `publish` metadata and verified quotes.
+1. **Research:** as in §8.1. Pick the next experiment from `thought_experiments.xlsx` (highest average rating first).
 2. **Beat sheet:** write the five beats. For each, set the player's possible actions, what triggers each line, and what the
    world does. Every branch must be honest to the literature (who argued what).
 3. **Greybox:** block out the island, the walkable area and the camera rails with plain shapes. Walk it end to end.
-4. **Lines:** write `lines/<id>.json`, render the voice, and run the narration audit (`tools/audit.py`) for names and pace.
+4. **Lines:** write `lines/<id>.json`, render the voice (`node game/tools/voice.mjs <id>`), and run the narration audit
+   (`tools/kokoro-venv/bin/python tools/audit.py <id>`) for names and pace (§8.4).
 5. **Build:** dress the scene with the kit, add the choice moment, the consequence (played out in full, then a rewind that resets everything), the reflection branches, the endings,
    the frog, the notebook page and the journal entry (question + to-dos).
 6. **Portal:** add the painting, book or door in the House.
@@ -234,3 +249,49 @@ game/
    - Tap-to-walk works everywhere: the player steers around obstacles, but check that nothing traps them.
    - The frog appears exactly once. Captions are readable.
    - It works with keyboard, gamepad and touch.
+
+## 8. Standards
+
+### 8.1 Research
+- Start from the **original publication(s)** and the relevant **Stanford Encyclopedia of Philosophy** entry (or the
+  Internet Encyclopedia of Philosophy, or Wikipedia where neither exists). Prefer the original author's framing.
+- Record: author(s), title, year of original publication (not a reprint year), the canonical setup, the author's own
+  verdict, the key later variants and who introduced them, and one or two notable responses.
+- The scenario must be faithful to the original; each branch the player can take should correspond to a position
+  someone has actually argued.
+- **Verify every link** before it goes in a notebook or the journal (fetch it; for YouTube, check the oEmbed title and
+  channel). SEP entries get renamed (e.g. `brain-vat` → `skepticism-content-externalism`).
+- Quotes are only ever in the notebook, verbatim and attributed. If unsure of the exact wording, paraphrase.
+
+### 8.2 Writing
+- Plain, warm, precise. Short declarative sentences, one idea each, in the second person for the player's situation.
+- Present answers as answers people have given, never as the truth; never grade the player.
+- No filler or stock phrases ("It's worth noting", "Let's dive in"), and nothing about comments, likes or subscribing.
+- The narration names no philosophers; the notebook and journal do (§5).
+
+### 8.3 Visual language
+- **World:** floating clay dioramas on warm paper (`#f3ebdd`), low-poly trees and rocks, soft shadows, gentle fog. Matte
+  clay throughout; toylike and friendly, never gory. Harm is shown as toys being knocked flying, then undone.
+- **Colour roles** (never repurpose them; use `palette` in `core.js`): coral `#e0674f` the threat or doing harm · blue
+  `#5b7fa6` the many · mustard `#e2a93b` the one · teal `#3f8f86` you, the agent who chooses.
+- **People** are peg figures (`makePerson`); workers wear hard hats.
+- **Type:** Iowan Old Style for titles and the notebook, Avenir Next for the UI and captions, Caveat for the journal.
+- Each room of the house is dressed after an artist (Escher and Dalí, Magritte, Picasso), in clay.
+
+### 8.4 Voice and the narration audit
+- Kokoro `bm_fable`, speed 0.9, `en-gb`. `game/tools/voice.mjs` trims silence and normalises loudness.
+- The audit transcribes each line (faster-whisper), prints its phonemes, pauses and words per minute. Transcription
+  often just misspells ("Foote", British "door" heard as "doll"), so confirm with the phonemes before changing anything.
+- Aim for about 130–155 wpm; slower for the central question. Split long lines rather than raising the speed.
+- Known Kokoro artifacts, fixed in `pronounce` so captions are unaffected: a sentence-initial unstressed "If" gets a
+  phantom /s/ (`"If you": "Iff you"`); a sentence-final /θ/ ("path.") becomes a hiss (`"in its parth"`, no final
+  period). Names are often wrong (Descartes, Putnam, Nagel came out "dis-KARTS", "PUT-nahm", "NAY-jel"); respell them.
+
+### 8.5 Known pitfalls
+- `clay()` materials are shared: clone before changing colour or opacity.
+- Transparent ghosts must not write depth; keep `ghostify` as is.
+- `ui.label` offsets are in world units; inside a scaled group (a miniature world), scale the offset too.
+- Interactables at the same floor position shadow each other (the nearest one wins, ties go to the first): give each
+  its own spot.
+- Tap-to-walk steering is simple: keep walkways clear around tables and counters, and check far sides are reachable.
+

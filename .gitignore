@@ -7,11 +7,11 @@ __pycache__/
 tools/kokoro/*.onnx
 tools/kokoro/*.bin
 
-# generated build cache (narration clips, timeline, stills) — rebuilt by engine/render.mjs
+# generated screenshots and caches
 build/
 
-# rendered videos are rebuilt from script.json + scene.js (thumbnails, captions and descriptions are committed)
-experiments/*/output/*.mp4
+# the archived films' rendered videos were never committed
+archive/films/experiments/*/output/*.mp4
 
 .DS_Store
 

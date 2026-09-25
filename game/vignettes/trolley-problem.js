@@ -6,7 +6,7 @@ import {
   THREE, palette, clamp, lerp, easeOut, easeInOut, seeded, clay, mesh, setOpacity,
   makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makePathGlow, makeLever, makeTunnel,
   makeEmitter, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
@@ -178,7 +178,7 @@ export default function trolley(ctx) {
 
   // notebook (the scholarship lives here, never in the voice)
   const level = { root, ground: [], notebook: '', __S: null };
-  loadNotebook(level, '/experiments/trolley-problem/script.json', 'The Trolley Problem');
+  loadNotebook(level, '/game/notebook/trolley-problem.json', 'The Trolley Problem');
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({ visible: false }));
   groundPlane.rotation.x = -Math.PI / 2; root.add(groundPlane); level.ground.push(groundPlane);
 

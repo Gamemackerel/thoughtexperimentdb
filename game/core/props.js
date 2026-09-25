@@ -1,5 +1,5 @@
 // Small clay props shared by several vignettes (animals, a car, cards with writing on them).
-import { THREE, palette, clay, mesh } from '/engine/core.js';
+import { THREE, palette, clay, mesh } from '/game/engine/core.js';
 
 export function makeSheep() {
   const g = new THREE.Group(), body = new THREE.Group();

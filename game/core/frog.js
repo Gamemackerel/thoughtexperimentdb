@@ -6,7 +6,7 @@
 //   { face: [x, z] }                      turn on the spot to face a point
 //   { set(frog) }                         run once (e.g. a sound, a flag)
 //   { warp: [x, z], y }                   jump cut to a point
-import { THREE, clamp, lerp, easeInOut, clay, mesh } from '/engine/core.js';
+import { THREE, clamp, lerp, easeInOut, clay, mesh } from '/game/engine/core.js';
 
 const HOP = 0.42, REST = 0.45;
 

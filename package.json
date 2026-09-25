@@ -3,9 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "render": "node engine/render.mjs",
-    "preview": "node engine/render.mjs --preview",
-    "play": "node game/tools/serve.mjs"
+    "play": "node game/tools/serve.mjs",
+    "voice": "node game/tools/voice.mjs"
   },
   "dependencies": {
     "puppeteer": "^24.43.1",

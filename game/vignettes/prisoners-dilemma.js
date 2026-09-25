@@ -5,7 +5,7 @@
 // (The partner plays tit for tat: silent at first, then whatever you did last time.)
 import {
   THREE, palette, clamp, lerp, clay, mesh, makePerson, animatePerson, makeTable, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';

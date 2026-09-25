@@ -4,7 +4,7 @@
 // times each way and watch the tally settle at a third for staying and two thirds for switching.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeFrog,
-} from '/engine/core.js';
+} from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk } from '../core/extras.js';
