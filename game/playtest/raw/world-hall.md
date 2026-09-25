@@ -46,3 +46,24 @@
 - **[major] [structure]** "Back to the house" on the Grandfather Paradox card drops you in the *first room* at its default spawn (0, 5.5), not in the hall beside the clock you came through. The hall stops being connective tissue: every hall vignette sends you downstairs and you have to climb the ladder again. GAME.md says players should come back "beside the portal they used".
   Evidence: t=289.2 s `[level loaded: house]` after `clicksel "#over [data-act=home]"` from grandfather-paradox.
   Suggestion: make the card's home button `goto(parentRoom)` (hall for hall portals) with `ctx.from` set to the vignette id, and label it "Back to the hall".
+
+### infinite-monkey
+- **[major] [environment]** A million years pass and the room doesn't age. After three pulls of the lever (3,020,833 years) the only change is taller paper stacks and a slight dimming: same monkeys in the same poses, the banana crate still full ("Forever takes a lot of bananas" — but it never empties), no dust, no cobwebs, no broken typewriters, the lever still new. The lever is the vignette's one big world-changing verb, and the world barely answers it.
+  Evidence: shots 038 (0 years) vs 044-t45 (1,000,000 years); crate prompt disabled after the first look.
+  Suggestion: accumulate visible time per pull: dust/cobweb decals, the crate empties then refills with a new crate stacked on top, a monkey replaced by a greyer one, a clock on the wall with its hands a blur during the fast-forward, ivy creeping up the back wall; let the crate have a second line after a wait ("Somebody has been restocking it.").
+- **[minor] [environment]** The room is a single back wall floating in cream void, with 12 identical monkeys in identical poses at identical desks. It's a diagram, not a place.
+  Evidence: shot 048-monkeys-close.jpg.
+  Suggestion: side walls with high windows (the light swinging round during a wait = days passing), a bin overflowing with pages, one monkey asleep, one eating a banana, one with its paper crumpled; vary scale/posture a little.
+- **[minor] [frog]** The frog's cameo (presses a key; the monkey stops and stares) plays during the million-year fast-forward, so it lasts a blink in a 3-second time-lapse with the year counter racing. I only caught it in a screenshot (shot 041, at "718,750 years"); the monkey's stare was invisible.
+  Suggestion: trigger the frog in the explore phase (e.g. after the first page is read, while the player is near the lectern), not during `waiting`.
+- **[polish] [asides]** "Say hello" on all 12 monkeys draws from one shared line pool ("Ook.", "(It pats your hand, and keeps typing.)") — two monkeys in a row gave me the same stage direction. Twelve personalities are available and wasted.
+  Suggestion: give 3–4 of them a distinct beat (one hands you a page, one hides its page from you, one is on a coffee break), the rest can Ook.
+- **[polish] [narrative]** The journal question on the "You walked away" card says "The monkeys typed 'To be, or not to be' without meaning it" — but on this ending you never saw them type it.
+  Suggestion: a variant question for the walk-out ending ("If they typed it after you left, would it mean anything?").
+- **[polish] [ui]** The "N years" label and the "Wait a million years" prompt sit on top of each other over the lever (shot 044).
+  Suggestion: put the year counter on a wall clock/board above the monkeys, not on the lever.
+- **[minor] [bug]** A vignette's narration leaks into the first room after Esc. I pressed Esc ~2 s into Infinite Monkey; the house loaded at t=193.5 s and at t=194.9 s the narrator said "They hit the keys at random. They will never stop." over the first room.
+  Evidence: `press esc` output, t=194.9 s caption with `level=house`; shot 052-after-esc.jpg.
+  Suggestion: the vignette's scheduled `voice.say` (after its `wait()`) must be cancelled on dispose; guard queued lines with the level instance (e.g. drop any `say` whose level is no longer current).
+- **[major] [structure]** Esc ("return to the house?") from a hall vignette also lands you in the first room at (0, 5.5), not in the hall by the typewriter. Same issue as the card's "Back to the house" (see grandfather-paradox).
+  Suggestion: as above; the Esc dialog text could say "return to the hall".

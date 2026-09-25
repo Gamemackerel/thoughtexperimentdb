@@ -1,13 +1,31 @@
 # gamedesign · the hall
 
 ## Summary
-(in progress)
+- The hall works as a hub and is easy to read: one straight row of five portals, each labelled on approach, with a ✓ once finished. But **both ways out of a hall vignette (the card's *Back to the house* and Esc) drop you in the first room**, so every vignette costs a ladder climb and a walk back. It's the biggest hub friction.
+- Across all five hall vignettes the GAME.md loop (choice → consequence → **rewind → replay that remembers you → twist**) is missing: each is a single ~30–90 s run straight to the game-over card, and *Play again* restarts cold with identical lines. They feel like one-shot dioramas next to the trolley's three-run structure.
+- The decisions are thinnest where the idea is richest: the monkeys' lever is a fixed 3-click progress bar, the commons' bell is a free win at any time, and Fermi's terminal "Keep listening" sits on the same prompt as "Listen", so a second E ends the vignette.
+- Rules aren't consistent between rooms: prominent levers are silently disabled until you've done step 1 (monkeys, Fermi), exits are available always / after the question / only at the choice / never depending on the room, and "doing nothing" is an ending in some rooms and a soft-lock in others (commons).
+- Grandfather Paradox runs on a real-time clock that doesn't wait for you (even the notebook doesn't pause it): a player who reads the paper or the notebook gets the "You let it be" card without ever having had a choice.
 
 ## Findings
 ### hall
 - **[major] [hub/progression]** Finishing a hall vignette and clicking *Back to the house* on the game-over card drops you in the *first room* at its centre spawn (0, 5.5), not in the hall beside the portal you used. To try the next hall vignette you must walk to the ladder, climb, and walk the hall again every time.
   Evidence: grandfather-paradox game-over → `#over [data-act=home]` → `level=house you at (0.0, 5.5)` (t=163s).
-  Suggestion: the card button should return to the room that owns the portal (`hall`, with `ctx.from` = the vignette id so you stand by the clock). Label it by room ("Back to the hall").
+  Also Esc from a hall vignette (simulation, t=170) → first room (0, 5.5).
+  Suggestion: the card button and Esc should return to the room that owns the portal (`hall`, with `ctx.from` = the vignette id so you stand by the clock). Label it by room ("Back to the hall").
+- **[major] [consistency/replay]** None of the five hall vignettes has the rewind-and-replay structure GAME.md §3 promises (endings "after a small number of completed runs", "replay acknowledges the second choice", a twist after the first run). Each ends on its first resolution; *Play again* reloads the level from the arrival line (grandfather ~27 s, simulation ~50 s of repeated narration before the choice returns). Ending variety therefore comes only from menu-level replays, and the narrator never reacts to what you did last time.
+  Evidence: every hall vignette, 2–4 runs each.
+  Suggestion: adopt one shared pattern in a helper (e.g. `ctx.runs` + `voice.say('again_same'|'again_diff')`): after the consequence, rewind in-scene and return to the choice beat; the second pass acknowledges the first; the card appears after run N or on the drastic option.
+- **[minor] [consistency/affordance]** Inconsistent rules across rooms, which undermines what players learn in one room and apply in the next:
+  prominent levers disabled silently until a first step (monkeys: until you read; Fermi: until you listen); exits available from spawn (grandfather "Go home"), after the question (monkeys "Walk out"), only at the choice (simulation door), or not at all except as an ending (Fermi, commons); doing nothing ends the scene (grandfather) or stalls forever (commons, Fermi before listening).
+  Suggestion: a house rule, written in GAME.md: (1) every object that looks usable shows a prompt from arrival, even if it only says "Not yet" or gives a line; (2) every vignette has a visible way home from arrival; (3) doing nothing always resolves within ~60 s of the question.
+- **[minor] [pacing/notebook]** The notebook (`N`) doesn't pause time. In the grandfather vignette, 10 s in the notebook took him from seg 0 to seg 3, past both the gate and the signpost, so the "optional, for the curious" page costs you the choice.
+  Evidence: `open grandfather-paradox`, `press n` at t≈2, `wait 10` → seg 3.
+  Suggestion: freeze the level's `update` while the notebook (and the journal) is open.
+- **[polish] [UI]** Esc uses the browser's native `confirm()` ("Leave this vignette and return to the house?"), which breaks the hand-made look of every other panel and says "house" even when you'll want the hall.
+  Suggestion: an in-game card styled like the game-over card, with "Back to the hall" / "Stay".
+- **[idea] [progression]** The ✓ on a hall label says you finished a vignette but not that other endings exist, and the journal (downstairs) keeps only the *latest* ending (my grandfather entry showed "You left the past alone", overwriting "It had already happened"). There's no pull to replay.
+  Suggestion: show endings found on the portal label ("Grandfather Paradox · 2 of 3"), keep all endings reached in the journal entry, and put a second journal (or a guest book) in the hall so hall players meet it.
 
 ### grandfather-paradox
 - **[major] [pacing/goals]** The whole vignette is one ~40 s walk on a fixed clock with no choice beat. The grandfather starts walking the moment you land (seg 0 u=0.89 five seconds in), the central question "So what happens if you stop him?" is only voiced at seg 3, ~5 s before they meet, and then it's game over. On my first run I read the newspaper (the aside the level puts right by the spawn), walked towards the gate, found "Close the gate" already disabled, and the card told me **"You let it be"**, which is a judgement of a choice I never got to make.
@@ -93,3 +111,15 @@
   Suggestion: voice the question after the first neighbour copies you (grass ~0.95), and slow the final decline so the choice beat has room for a silence.
 - **[polish] [affordance]** There's no way to take a sheep back. The only verbs are add and bell, so restraint can't be expressed as an action.
   Suggestion: "Take a sheep home" at your pen (pairs with the lead-by-example meeting above).
+
+## Keep
+- The hall as a single readable corridor of portals with proximity labels and a ✓ on completion; the talkable apple-face gentleman ("Everything we see hides another thing, you know.") is a perfect hub aside.
+- Grandfather: the failure lines ("A gust of wind. The gate swings open again." / "He laughs. What a strange thing to say.") and the ending that counts the ways you tried: ordinary causes, not magic, is exactly the right feedback.
+- Monkeys: the highlighted fragment on the page ("to be" in amber) is great feedback; keep the page-reading verb.
+- Simulation: the pull-back from your study to a dome on a giant's desk, and the lights going out in your own room when you switch the worlds off. Best consequence beat in the hall.
+- Commons: neighbours visibly copying you right after your first sheep; the grass colour draining is instantly readable.
+- Game-over card layout (title, one-line reflection, journal question, two buttons) is clean and consistent across vignettes.
+
+## Harness notes
+- After *Play again*, the console shows `request failed … assets/voice/<id>/<line>.mp3 (net::ERR_ABORTED)` for a line from the previous run (grandfather `tried_1`, commons `ask`). It looks like aborted audio on restart, not a missing file; no visible effect with audio muted.
+- `use <prompt>` walks you to a prompt even when that prompt is disabled and waits 20 s, which in real-time scenes (grandfather) lets the scene run on; I accounted for that in the timings above.

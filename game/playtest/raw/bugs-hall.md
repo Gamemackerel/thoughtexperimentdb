@@ -70,3 +70,15 @@ Played 4 runs: moon + logbook + listen + send; listen + keep listening; keep lis
   Suggestion: after ~15 s idle, let the console crackle/glow (or say "listen" line on proximity); or enable the lever from the start with the question asked on first use.
 - Verified OK: the Listen prompt becomes "Keep listening" after the first listen; asides are one-shot and don't re-fire.
 
+### tragedy-of-the-commons
+Played 5 runs: bell straight away, 6 spaced adds → collapse, 1 add + talk + bell when thin, idle 60 s, 8× E spam at the pen. Both endings reached.
+- **[major] [sequence break/narrative]** You can "agree on limits" before there is any problem. Recipe: arrive, walk to the bell, ring it at t≈10 s (grass = 1.0, no sheep added, the question never asked). Captions: "You ring the bell…" then the intro's leftover "Five neighbours, two sheep each. The grass is thick." (t=17.5 s) then "Together, you agree on limits." Card: "You agreed on limits … The grass came back." It never went.
+  Suggestion: enable "Ring the bell" only once the grass is thin (`voice.said.has('thin')`), or give the early bell its own honest ending ("Everyone came. Nobody saw the problem yet. They went home.").
+- **[major] [bug/pacing]** The question arrives after it's too late. With 6 adds spaced ~3 s apart, "So why would anyone stop?" was spoken at t=60.7 s with grass 0.63, and the pasture collapsed at t=69 s: 8 s to find and ring the bell. With E spammed 8× at the pen (t≈250 s), "thin" and "ask" were queued behind `add_1` and spoken at t=256.9/259.5 s when `grass` was already 0.01; collapse at t=265.9 s. There was no chance to act on the question. The adds also have no cooldown (8 presses → `mine: 10`, `adds: 8`, 40 neighbour sheep, 104 root children).
+  Suggestion: a cooldown on "Add a sheep" (wait until the neighbours have copied), a cap on adds, and slow the decline (or pause it) until the ask line has finished plus ~15 s; the pillar is "no timers you can lose to".
+- **[minor] [bug/voice]** "Your neighbours notice. They add sheep too." never plays if you add a second sheep within ~6 s of the first: `if (S.adds === 1) voice.say('follow')` is checked after `await voice.say('add_1'); await ctx.wait(2.5)`, by which time `adds` is 2. Seen in the 6-add run (no "follow" caption between t=42.6 and 58.1 s); it did play in the 1-add run (t=110.2 s).
+  Suggestion: capture `const first = ++S.adds === 1` before the awaits.
+- **[minor] [design/dead end]** Doing nothing never ends: with 10 sheep the grass is in exact balance (`0.02 − 0.002·10 = 0`), so after 60 s idle grass = 1.0, no question, no ending; the only way out is Esc.
+  Suggestion: let the neighbours add sheep on their own after ~20 s of inaction (which is also truer to the model: you don't need to start it), so doing nothing leads to the collapse or the bell.
+- Verified OK: neighbour talk lines change with the grass level ("Well, you added one. Why shouldn't I?" at grass 0.47); "Look at your sheep" works.
+

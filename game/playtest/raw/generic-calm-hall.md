@@ -36,3 +36,12 @@
 - Run more worlds: shelves fill with domes, "which kind is yours?", reveal pull-back to giant's face over my dome (054) - best moment so far.
 - Then phase "choose" at 87.8 with NO line, no prompt, ~20s of silence; "Leave them running" is at the door 9 units away and nothing hints it's a choice. I stood there confused.
 - Switch them off: room darkens, "Above you, the lights flicker." (058) - lands well. Card at 120.8.
+### simulation-argument run 2
+- Replay: no acknowledgement of last choice. Door has no prompt before the choose phase (walked to it at 7,1: "Leave them running" disabled, nothing shown) - fine but no sign it'll matter later.
+- Leave them running: "You let them run. Maybe someone is doing the same for you." Card 181.5 - good.
+- Esc from the vignette also lands in the first room, not the hall.
+### fermi-paradox run 1
+- Arrival 8.1 "A clear night..." then 18s nothing; no hint to go to the monitor. Asides: moon line and logbook line are great.
+- Listen (36.5) -> 4 lines -> "So where is everybody?" + prompt "Keep listening" at 50.5. The lever "Send a message" is cut off at the right edge of the frame (074, 072) and never mentioned; I didn't know sending was an option. Pressed Keep listening -> time-lapse -> card 69.3 "You kept listening". Journal question then asks "Would you send the message" - what message?
+- Caption box covers the player at the monitor (072). Didn't see the frog/shooting star.
+- Portal is a telescope, scene has a radio dish - fine but nobody "looks through" anything.
