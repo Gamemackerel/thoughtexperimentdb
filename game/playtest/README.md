@@ -2,6 +2,11 @@
 
 How the game gets playtested by many AI reviewers at once, and where their feedback ends up.
 
+> **Do not run the playtest swarm during development unless you are specifically authorized to.** The full swarm (many
+> parallel playtester agents) is for a dedicated playtesting process outside normal development. During normal
+> development, you're free to smoke-test your changes yourself, or with a single playtester agent, using
+> `game/tools/agentplay/play.mjs`.
+
 ```
 personas.md          the reviewer personalities (12) and how the game is split between them (2 parts → 24 playtesters)
 brief.md             what every playtester reads first: the game, how to play, how to write feedback
