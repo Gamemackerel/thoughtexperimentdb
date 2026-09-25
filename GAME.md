@@ -21,8 +21,8 @@ what's different for the game.
 4. **Plain, not academic.** The narrator is minimal and warm: a few words to describe the situation, and a brief,
    non-judgemental reflection on what the player did and why it's interesting. **No philosophers, dates, papers
    or jargon in the voice.** The scenarios stay faithful to the originals, and the scholarship lives only in the optional notebook.
-5. **Gentle.** Harm is shown the way the films show it: clay figures knocked aside, a freeze before impact, a rewind.
-   No gore, and no lingering on death.
+5. **Consequences are real, but gentle.** Your choice plays out in full: whoever is on the track gets knocked flying,
+   like toys. Then time rewinds and everything is restored. No gore, and no lingering.
 
 ## 2. Structure: the House
 
@@ -47,15 +47,20 @@ Each vignette is a short (3–8 minute) playable scene in five beats, mirroring 
 | **1. Arrive** | You land in the scene. A line or two of voice sets the situation. You can walk and look. | You arrive beside a railway on a sunny island. "A runaway trolley." |
 | **2. Discover** | Walking reveals the stakes. Triggers fire as you approach things (people, objects, edges of the world). | Walking along the track, you see five workers ahead; at the fork, one worker on the side track. |
 | **3. The choice** | Time slows to a crawl. One or two interactions are possible, and so is doing nothing. The central question is voiced, then there's a long silence. | The trolley creeps forward in slow motion. The lever glows. "Should you pull it?" |
-| **4. Consequence** | The world acts out what you chose (or didn't), freezes before harm, and rewinds. | The trolley takes the path you left it on, freezes a hair before impact, and rewinds. |
+| **4. Consequence** | The world acts out what you chose (or didn't) in full, holds a beat, then rewinds, and the controls reset. | The trolley runs down the track you left it on and knocks those people flying. Rewind: everyone is restored, and the lever snaps back to the main line. |
 | **5. Reflection** | One or two plain lines about what you did and the tension in it, with no names or theory. Then a twist that reframes the choice, and a way home. | Pulled: "You saved five. But you made the trolley kill someone who was safe." Walked away: "You didn't touch a thing. Five people were hit anyway." Then a third track appears, pointing at you, and you can try again. |
+
+**Endings.** A vignette ends with a quiet *Game over* card (`ctx.gameOver`) with *Play again* and *Back to the house*:
+- after a small number of completed runs (the trolley: three), whatever you chose; the narrator names what never changed;
+- or when the player takes the most drastic option the experiment offers (the trolley: sending it onto yourself).
+After the first run, a twist opens a new, playable option (the trolley: a third track with its own lever).
 
 Every vignette also has:
 - **A notebook:** an optional page (`N`), never forced, for the curious: where the thought experiment comes from,
   sources, recommended reading and the video essay, drawn from the film's `script.json → publish`. This is the only
   place philosophers and citations appear.
-- **Replay:** after the reflection, you can go back to the choice and do the other thing. The narrator acknowledges
-  a second, different choice.
+- **Replay:** after the reflection, the choice comes round again. The narrator acknowledges whether you chose the same
+  or differently.
 - **The frog:** it appears exactly once per vignette, preferably during the choice, visible but never central. It hops in and out
   of view and is never mentioned.
 
@@ -109,12 +114,14 @@ game/
    world does. Every branch must be honest to the literature (who argued what).
 3. **Greybox:** block out the island, the walkable area and the camera rails with plain shapes. Walk it end to end.
 4. **Lines:** write `lines/<id>.json`, render the voice, and run the narration audit (`tools/audit.py`) for names and pace.
-5. **Build:** dress the scene with the kit, add the choice moment, the consequence (freeze, then rewind), the reflection branches,
+5. **Build:** dress the scene with the kit, add the choice moment, the consequence (played out in full, then a rewind that resets everything), the reflection branches, the endings,
    the frog and the notebook page.
 6. **Portal:** add the painting, book or door in the House.
 7. **Playtest checklist:**
    - Every branch plays, including doing nothing and leaving mid-scene.
    - Replay acknowledges the second choice.
    - No line overlaps another. There's no dead end, and no moment where the player doesn't know they can move.
+   - The camera keeps the player, the hazard and everyone at stake in frame from anywhere the player can walk.
+   - Both endings are reachable. Automated playthroughs (`build/trolleytest2.mjs`, `?fast=<speed>`) drive `window.__ted` to check them.
    - The frog appears exactly once. Captions are readable.
    - It works with keyboard, gamepad and touch.

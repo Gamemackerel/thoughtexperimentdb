@@ -11,6 +11,7 @@ export class Player {
     this.target = null;          // tap-to-walk destination
     this.speed = 4.2;
     this.enabled = true;
+    this.locked = false;         // scripted: ignores input, still walks to `target`
     this.walkT = 0;
     this.keys = new Set();
     addEventListener('keydown', (e) => this.keys.add(e.code));
@@ -36,7 +37,7 @@ export class Player {
   update(dt, t, level, camera) {
     const want = new THREE.Vector3();
     if (this.enabled) {
-      const inp = this.input();
+      const inp = this.locked ? new THREE.Vector2() : this.input();
       if (inp.lengthSq() > 0.01) {
         this.target = null;
         const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();

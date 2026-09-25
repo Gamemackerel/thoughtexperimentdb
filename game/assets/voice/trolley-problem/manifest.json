@@ -55,18 +55,33 @@
     "dur": 4.57
   },
   "twist_1": {
-    "file": "twist_1-c75e72ec.mp3",
-    "text": "A third track. This one leads to you.",
-    "dur": 2.98
+    "file": "twist_1-669381cf.mp3",
+    "text": "A third track. At the end of it, another lever.",
+    "dur": 3.55
   },
   "twist_2": {
-    "file": "twist_2-b56a2eba.mp3",
-    "text": "Would you turn the trolley onto yourself? If not, is it fair to turn it onto someone else?",
-    "dur": 5.49
+    "file": "twist_2-e0b73331.mp3",
+    "text": "Pull that one, and the trolley comes for you instead. Would you? If not, is it fair to send it to someone else?",
+    "dur": 6.64
   },
   "leave": {
-    "file": "leave-98b7e2ec.mp3",
-    "text": "You can try again, or step back through the frame.",
-    "dur": 3.47
+    "file": "leave-f9750b70.mp3",
+    "text": "Go again, or step back through the frame.",
+    "dur": 3.11
+  },
+  "self_pull": {
+    "file": "self_pull-2ee09112.mp3",
+    "text": "You step onto the track.",
+    "dur": 2.04
+  },
+  "self_end": {
+    "file": "self_end-229d9432.mp3",
+    "text": "The five are safe. So is the one. You chose yourself.",
+    "dur": 3.87
+  },
+  "end": {
+    "file": "end-aa011dfc.mp3",
+    "text": "Whatever you choose, someone is standing on the track. You only decide who.",
+    "dur": 4.86
   }
 }

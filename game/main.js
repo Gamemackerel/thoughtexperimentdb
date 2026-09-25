@@ -44,7 +44,21 @@ const ctx = {
   goto: (name) => goto(name),
   toast(text, secs = 3) { toastEl.innerHTML = text; toastEl.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('on'), secs * 1000); },
   async flash(on) { flash.classList.toggle('on', on); await wait(0.6); },
+  // ends a vignette: a quiet card with "play again" / "back to the house"
+  gameOver({ kicker = 'Game over', title, text = '' }) {
+    player.enabled = false;
+    over.querySelector('.kicker').textContent = kicker;
+    over.querySelector('h1').textContent = title;
+    over.querySelector('p').textContent = text;
+    over.hidden = false;
+  },
 };
+const over = document.getElementById('over');
+over.addEventListener('click', (e) => {
+  const act = e.target.dataset?.act; if (!act) return;
+  over.hidden = true;
+  goto(act === 'again' ? level.name : 'house');
+});
 
 // ---------------------------------------------------------------- levels
 let level = null, busy = false;
@@ -52,6 +66,7 @@ const cam = { pos: new THREE.Vector3(0, 10, 20), look: new THREE.Vector3() };
 async function goto(name) {
   if (busy) return; busy = true;
   await ctx.flash(true);
+  over.hidden = true;
   if (level) { stage.scene.remove(level.root); level.dispose?.(); }
   interact.clear(); voice.stop(); nb.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
