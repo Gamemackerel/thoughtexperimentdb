@@ -1,27 +1,31 @@
 # Thought Experiment Database
 
-Short 3D explainer films of famous philosophical thought experiments, all in one visual style, grounded in the
-original texts. Each film ships in 16:9 and 9:16 with captions, three thumbnail options and a ready-to-post
-description.
+**An art game about thought experiments.** You walk through a surreal house (an Escher and Dalí first room, a Magritte
+hall) and step through paintings, books, doors and clocks into short playable vignettes: the Trolley Problem, Brain in a
+Vat, Plato's Cave, the Ship of Theseus, the Grandfather Paradox, the Infinite Monkey Theorem, the Simulation Argument, the
+Fermi Paradox and the Tragedy of the Commons. You act, the world responds, and a quiet narrator says a little about what
+you did. After each one, a question for your journal, which also keeps the original sources and video essays to go
+further.
+
+Play it: `npm install`, then `npm run play` and open http://localhost:5173/game/. How it's made, and how to add a new
+vignette: [GAME.md](GAME.md). Playtest notes left on the game-over card land in `feedback.txt`.
+
+**The films.** The project began as short 3D explainer films in the same visual style, and the engine still renders
+them (16:9 and 9:16, captions, thumbnails, a description):
 
 | # | Experiment | Status |
 |---|---|---|
 | 1 | [The Trolley Problem](experiments/trolley-problem/) | ✅ rendered |
 | 2 | [Brain in a Vat](experiments/brain-in-a-vat/) | ✅ rendered |
 
-What's next is decided by [`thought_experiments.xlsx`](thought_experiments.xlsx): the catalogue of candidates, sorted by
-the average of their Accessibility, Visualization and Popularity ratings, with a link to an in-depth video essay for
-each and a checkbox for each film that's been made.
-
-**Making a new film? Start with [PRODUCTION.md](PRODUCTION.md)**. It covers research, writing, direction, the engine, QA
-and the frog.
-
-**The game (branch `game`):** an art game where each thought experiment is a playable vignette, reached through a surreal
-house. Run `npm run play` and open http://localhost:5173/game/. The design and the process for new vignettes are in [GAME.md](GAME.md).
+[`thought_experiments.xlsx`](thought_experiments.xlsx) is the catalogue of candidates, sorted by the average of their
+Accessibility, Visualization and Popularity ratings, with an in-depth video essay for each. Making a film? Start with
+[PRODUCTION.md](PRODUCTION.md).
 
 ## Repository layout
 
 ```
+game/                      the game: see GAME.md for its layout
 PRODUCTION.md              the production guide: how every film is researched, written, directed, built and checked
 thought_experiments.xlsx   catalogue + production order (sorted by average rating), video-essay links, "Video created"
 engine/                    shared renderer
