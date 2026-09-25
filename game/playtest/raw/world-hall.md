@@ -1,7 +1,12 @@
 # world · the hall (hall, grandfather-paradox, infinite-monkey, simulation-argument, fermi-paradox, tragedy-of-the-commons)
 
 ## Summary
-(in progress)
+- The hall is the best-dressed place in my part: eleven recognisable Magritte images, a sky-papered wall, curtains, a mirror that really shows your back. But the camera only ever shows the back wall at eye level, so the ceiling table and the holed door are built and never seen, and the hall has no voice of its own (no `look()` asides; one gentleman).
+- The hall doesn't work as connective tissue yet: both Esc and "Back to the house" from any hall vignette drop you in the *first room*, so every hall visit starts with the ladder again.
+- One bug touches every place with people: talking to someone faster than once per ~2.6 s leaves speech bubbles stuck on screen forever (root cause found in `ctx.speak`).
+- The vignettes' worlds mostly don't record time or consequence: a million years leave the monkey room unchanged, years of listening leave the Fermi station unchanged, the grandparents' town is frozen, the commons' neighbours don't react. The best counter-example is the Simulation study, whose bare shelves fill with worlds: that's the model to copy.
+- Props promised by the narration are missing from the frame: the moon (Fermi), the sky in the window (Simulation), and in the Grandfather Paradox the clock-driven walk ends the vignette while you're still exploring the asides.
+- Asides are well written and funny ("Forever takes a lot of bananas", "It's something about your shoes", "You don't remember it being taken"); there just aren't enough of them in the places that need them most, and the frog is off screen or lost in a time-lapse in 2 of my 5 vignettes.
 
 ## Findings
 ### hall
@@ -110,3 +115,20 @@
   Suggestion: drop the `herders` line once the first sheep has been added; say "Four neighbours and you, two sheep each."
 - **[polish] [collision]** When limits are agreed, the extra sheep walk straight through the fence to stand outside it by the houses (shots 108–110).
   Suggestion: route them through a gate in the fence (and add that gate: the hall portal is a garden gate, but the pasture itself has none).
+
+### house / journal (touched in passing)
+- **[polish] [journal]** The journal keeps only the last ending: after "It had already happened" (three attempts) and then "You left the past alone", the entry shows only the latter (shot 117). The hall has no journal of its own, so the connection between upstairs and the desk downstairs is invisible.
+  Suggestion: keep the most interesting/first ending or list all endings reached; put a small notebook/lectern in the hall that mirrors the journal, if the hall becomes where hall vignettes return to.
+
+## Keep
+- The hall's set dressing and its Magritte vocabulary: the mirror that shows your back, "Ceci n'est pas une pipe", Golconda outside the window, the train in the fireplace, the apple room, the gentleman's apple that stays in front of his face.
+- The ✓ on completed portal labels in the hall.
+- Simulation Argument's empty shelves that fill with domes, and the pull-back to the giant's face: the best piece of environmental storytelling in my part.
+- The monkey pages (typed nonsense with the first chance "the" highlighted) and the million-year counter.
+- Commons neighbours whose chat changes as the grass thins; the grandparents' asides ("Have we met? You have a familiar face.").
+- Fermi's night station mood: lit hut window, the green static on the monitor, the empty chair.
+- Aside lines in general: short, dry, funny, no names.
+
+## Harness notes
+- `use <prompt>` from a spot against a wall/desk sometimes fails with "could not get the prompt within 20s" because tap-walk steering gets stuck (hall at (-3.8, -4.1) behind the typewriter table; simulation study behind the desk). Walking out manually first fixed it. The simulation one is real game behaviour (reported); the hall one may be too.
+- The harness lists stuck speech bubbles as on-screen text indefinitely; that matched the real DOM (opacity 1), so it's a game bug, not a harness artefact.

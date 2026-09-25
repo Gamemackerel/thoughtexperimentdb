@@ -120,3 +120,17 @@
 - **[polish] [visual]** When you switch them off the room darkens, but the window pane stays full white and unlit, which reads as a rendering glitch rather than "the lights flicker".
   Evidence: shots/085-t103.jpg.
   Suggestion: dim the window's material with the rest of the room (or make it the flicker source).
+
+### fermi-paradox
+- **[major] [camera]** The camera doesn't follow you towards the front of the disc: the walkable area is radius 20, but anything past z ≈ 9 is out of frame. Holding S for 5 s from the start puts you at (1.5, 17.7) and holding A to (-13.9, 14.3): the figure is nowhere on screen (`onscreen -13.9 1 14.3` → (-226, 804) OFF SCREEN) while the scene sits there without you. Even at spawn (0, 7) your feet are at the bottom edge and the caption covers the figure.
+  Evidence: shots/101.jpg, shots/102.jpg (no figure), shots/095.jpg (spawn under caption); `onscreen 0 0 9.5` → OFF SCREEN.
+  Suggestion: include the player in the framer's point set here (as the other vignettes do), or clamp walkable to z < ~8 / radius ~11 around the hut, dish and lever.
+- **[minor] [portrait]** On 390x844 the "Send a message" lever at (8.5, 1.7) is off-screen right (`onscreen 8.5 0.5 1.7` → (427, 511) OFF SCREEN), so a phone player sees only "Keep listening" and never learns the other choice exists. When you do reach it, its pill is cut off ("Send a mes").
+  Evidence: shots/108.jpg, shots/109.jpg.
+  Suggestion: add the lever (and dish) to the framer's points in portrait; clamp prompts inside the viewport.
+- **[minor] [collision]** Tapping the hut (walk to (-7, -4)) or the dish base (5, -4) makes the figure grind against the blocker for the whole 15 s ("still walking at timeout") instead of stopping at the wall.
+  Evidence: t≈67–82 s and 82–97 s.
+  Suggestion: when a tap target is inside a blocker, walk to the nearest free point on its edge and stop.
+- **[polish] [UI]** The last line ("Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.") becomes six stacked pills on a phone, covering the lower third including the figure; in landscape the time-lapse lines also sit on the figure's head at the bottom edge.
+  Evidence: shots/111-t60.jpg (portrait), shots/104-t128.jpg (landscape).
+  Suggestion: split the line into two cues, and move the caption up / give the time-lapse camera more headroom at the bottom.

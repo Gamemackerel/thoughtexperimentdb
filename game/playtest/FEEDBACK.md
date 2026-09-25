@@ -31,18 +31,35 @@ the tree" on arrival outside), and the house (you respawn inside the portal's ra
 - Ignore interaction input for ~0.8 s after a level loads or a phase changes, and swallow E presses held over from the
   previous phase (bugs, wild).
 - Spawn returning players ~1 m outside the portal radius they came through (bugs, polish). See H3.
+- The hall has the same pattern: grandfather's "Go home" is the first prompt at the spawn, Fermi's ending "Keep
+  listening" sits on the same prompt as "Listen", the commons bell ends the vignette before there's a problem, and the
+  hall spawn is inside "Climb down" (GP5, FP2, TC2, HL2).
 
 ### G2 · P0 · Narration queue is out of step with the player
 Lines are queued on timers and proximity and never cancelled, so setup lines arrive after the player has acted, choice
 lines play after the choice ("You could stay up here… or go back down" after "You stay in the light", over the game-over
 card), a location's lines play after you've left it ("It's too bright" once outside), and a vignette's lines play in
 the house after you've left it with Esc. *Seen by 12/12.*
+- **Root cause** (wild-hall, confirmed in `game/core/voice.js`): `Voice.stop()` *resolves* the promises of queued lines,
+  so every `await voice.say(a); await voice.say(b)` chain in a vignette carries on after `stop()` and after the level is
+  disposed (using the old manifest until the new one loads). Resolve them with a "cancelled" value (or reject) and have
+  chains bail out.
+- **Blocker consequence** (bugs-hall, pilot-bugs; 100% reproducible): press Esc within ~1 s of an ending action in
+  Simulation ("Switch them off") or Fermi ("Keep listening"/"Send") and that vignette's narration plays in the first room,
+  then its game-over card opens *over the first room* with journal question "-" and controls locked; `save.complete`
+  marks the portal done and `ted.journal` gains a bogus `"house"` entry; "Play again" reloads the house. Every vignette
+  whose ending is an awaited chain has the same hole (monkeys' `found`/`leave_end`, grandfather's `end()`).
+- Give every level a generation token (`ctx.alive()` / `level.disposed`); make `ctx.wait` and `voice.say` no-op (or reject)
+  once the level is disposed; make `ctx.gameOver`, `save.complete` and `journal.write` ignore calls from a level that is
+  no longer current; drop any stray `house` key from saved journals on load. (Teacher saw `console.warn: missing line
+  loose` in Ship of Theseus from the cave's still-running timeline.)
 - Clear the voice queue whenever an ending starts (`ctx.gameOver` or the vignette's ending function) and on every level
-  change (`goto` already calls `voice.stop()`, but the vignette's own async chains keep calling `say()` afterwards).
-- Give every vignette coroutine an abort token (`level.disposed` / a phase check) tested after each `await ctx.wait()` /
-  `await voice.say()`; stop running when the level is disposed or the phase has moved on. (Teacher saw
-  `console.warn: missing line loose` in Ship of Theseus from the cave's still-running timeline; pilot-bugs saw Fermi's
-  ending card appear in the house.)
+  change.
+- **Reaction lines must land on their action.** The single FIFO queue puts "He laughs…" 10–15 s after you told him, and
+  "He doesn't even look at the sign" after the ending (grandfather); "A word. Just one" over a page showing two
+  (monkeys); "The grass is thick." over bare dirt (commons). Give lines a priority: reaction/consequence lines interrupt
+  or jump ahead of descriptive lines, and descriptive lines carry a `maxAge` so they're dropped if they can't start
+  within ~3 s of being triggered (wild-hall, camera-hall, streamer-hall, teacher-hall, gd-hall).
 - Let `voice.say(id, { when: () => bool })` drop a line whose moment has passed (checked when the line reaches the head of
   the queue): location lines when `where` changed, question lines when the question has been answered.
 - Never show a caption on top of the game-over card (hide captions while `#over` is open).
@@ -51,7 +68,8 @@ the house after you've left it with Esc. *Seen by 12/12.*
 Talking to someone again before their bubble expires freezes the old bubble half-faded in place for the rest of the
 level: over the sea in the sailing ending, outside the cave in daylight, on the game-over card. Cause (`game/main.js`,
 `ctx.speak`): the speaker's entry in `bubbles` is replaced with a new `key`, so `ui.label('speech-'+oldKey)` is never
-updated or hidden again; expired bubbles are also deleted without setting their label to 0. *Seen by 10/12.*
+updated or hidden again; expired bubbles are also deleted without setting their label to 0. *Seen by 10/12 in room 1
+and 8/11 in the hall (the apple-faced gentleman's bubbles stay at full opacity 28 m away).*
 - In `speak()`, if the target already has a bubble, hide its label first (or reuse the key). On delete, call
   `ui.label('speech-'+key, 0, …)`. Clear all bubbles on phase changes that move the camera far away, and on `gameOver`.
 - Also hide a bubble when its speaker is off-screen, and stop a second Talk opening while a bubble is showing (wild).
@@ -138,6 +156,55 @@ appears. *Seen by 4/12 (polish, camera, vibes, streamer).*
 - Load a real pair from Google Fonts or self-host (e.g. EB Garamond / Cormorant + Inter / DM Sans).
 - Reduce the number of text styles (captions, toasts, labels, bubbles, notebook, game-over card) to one narration voice
   and three type treatments; `resize: none` on the card's textareas (vibes).
+
+### G14 · P0 · Leaving a hall vignette drops you in the first room
+Both "Back to the house" on the game-over card and Esc hard-code `goto('house')` (`game/main.js` ~l.121 and ~l.181), so
+every hall vignette returns you to the first room's default spawn (0, 5.5) and costs a ladder climb and a walk back down
+the hall; the hall's per-portal `ctx.from` spawns (`hall.js` ~l.270) are dead code. Esc *in the hall* also asks "Leave
+this vignette and return to the house?". *Seen by 10/10 hall playtesters so far.*
+- Give each level a `home` (room-1 vignettes → `house`, hall vignettes → `hall`) and use it in both handlers with
+  `ctx.from` set to the vignette id; label the button "Back to the hall" there.
+- Don't treat hub rooms (`house`, `hall`) as vignettes in the Esc handler: no confirm, or "Climb down to the first room?".
+
+### G15 · P1 · One run straight to the card: the hall has no second pass at all
+None of the five hall vignettes has consequence → rewind → a replay that remembers you → twist; each is a single
+~20–90 s run to the game-over card, and Play again restarts cold with identical lines (grandfather ~27 s, simulation
+~50 s of repeated narration before the choice returns). *Seen by 10/10 hall playtesters.* This is G7 at its sharpest;
+per-vignette suggestions are in each hall section.
+- Build the loop once as a shared helper (`ctx.runs`, `voice.say('again_same' | 'again_diff')`, an in-scene rewind),
+  then give each vignette at least one rewind pass and a replay line. For grandfather, the loop *is* the theory.
+
+### G16 · P1 · House rules for affordances, exits and "doing nothing"
+The rooms teach contradictory rules (gd-hall): prominent levers are silently disabled until a first step (monkeys: until
+you read; Fermi: until you listen), exits are available from arrival (grandfather), after the question (monkeys), only
+at the choice (simulation door) or never; doing nothing ends one scene and soft-locks another (commons, simulation
+without "Run more worlds"). Write these into GAME.md and apply them everywhere:
+1. Every object that looks usable shows a prompt from arrival, even if it only says "Not yet" or gives a line.
+2. Every vignette has a visible way home from arrival.
+3. Doing nothing always resolves within ~60 s of the question (a passive ending or a nudge).
+4. A terminal action never sits on the same prompt anchor as a non-terminal one (Fermi's Listen → Keep listening).
+- Also: `look()` asides are disabled whenever any narration is playing (`!ctx.voice.busy`, `extras.js` ~l.24), so prompts
+  blink away during lines and a second aside is silently dropped; queue the aside's line instead (bugs-hall, phil-hall,
+  camera-hall, streamer-hall).
+- Tapping an interactable's mesh should walk you to its interaction point and show its prompt (`interact.js`), not to
+  the nearest ground behind it (gd-hall: tapping the little world walked the player behind the desk).
+
+### G17 · P1 · Hold the last image, and show what the narration says
+- The game-over card arrives 0–5 s after the last line and covers the final image (grandparents meeting, bare pasture,
+  grass recovering, the sailing ship). Hold the final image ≥4 s after the last caption before the card (vibes-hall,
+  drama-hall, streamer-hall).
+- Across the game the narration announces images the scene doesn't show: the wind at the gate, "he laughs", a million
+  years passing, "above you, the lights flicker", the message leaving the dish, the moon, the pond reflection, the sun in
+  "the only sun you have". Show, then say (details per vignette) (vibes, camera, world, streamer).
+
+### G18 · P2 · Colour roles and labels
+- Teal is "you", but it turns up on props: the grandfather station roof, the study door and monitor, a teal inhabitant
+  inside the simulation dome that reads as the player levitating; your own commons house is orange. Keep teal for the
+  player (and things that are yours: your house roof, a raddle mark on your sheep) (vibes-hall, camera-hall).
+- Portal labels use the textbook names ("Tragedy of the Commons" gives the ending away before you enter) and clash with
+  the plain voice; consider plain teasers ("A shared field") with the proper name in the notebook and journal (drama-hall).
+- Label and prompt disagree ("Up to the hall" / "Climb the ladder"; the Fermi portal is a telescope but the scene is a
+  radio dish) (phil-hall, gd-hall, streamer-hall, vibes-hall).
 
 ### G13 · P2 · Smaller shell items
 - Esc opens the browser's native `confirm()`; use an in-game styled pill. On the game-over card, Esc should act as
@@ -516,6 +583,388 @@ hulls pass through the dock when they sail. *Seen by vibes, streamer, camera, po
 
 ---
 
+## The hall (`hall`)
+
+See G14 first: every exit from a hall vignette goes to the first room.
+
+### HL1 · P1 · The best Magritte pieces are built but never on screen
+The camera sits low and looks level at the back wall, so the upside-down dining table and chandelier (y≈9.5) only show
+as candle stubs at the top edge, the door with the hole (left end wall, x≈-17.9) is off screen from everywhere, and the
+Empire of Light window is cut off; in phone portrait the table finally appears but floats above the wall into the void.
+*Seen by vibes, world, camera.*
+- Lower the ceiling set to y≈6–7, or give the camera a look-up zone under the table (the ladder arrival is the natural
+  moment: come up through the floor looking at the ceiling, then settle); move the holed door onto the back wall.
+- *Time Transfixed* doesn't read: a black engine in a black hearth on the floor. Lighten the hearth (warm grey or cream
+  marble), lift the engine to project out of the opening, and move the gentleman ~2 m left of it (vibes).
+- *Golconda* reads as a poster: 2–3 depth layers of cut-out men at different depths, loosen the grid (vibes).
+- The grandfather clock (first portal) is jammed into the Escher stairs; move it ~1.5 m left so it stands alone (vibes).
+- In portrait, extend the sky wallpaper to a ceiling plane and clamp labels inside the viewport ("…nite Monkey Theorem ✓"
+  runs off the edge) (vibes, camera).
+
+### HL2 · P1 · Arrival, labels and bubbles
+- Hall spawn (-13.5, 1.4) is inside the "Climb down" radius and behind the red curtain, with the "Down to the first
+  room" label and the prompt stacked on the player's head: the first E sends you straight back down. Spawn ~1.5 m further
+  in (x≈-12) (bugs, camera, vibes, wild, calm).
+- The first room's toast is carried up the ladder (clear toasts in `goto`); climbing shows a frame of empty void first
+  (hold the fade until the hall has rendered) (bugs, camera, world).
+- Talk-spam on the apple-faced gentleman stacks bubbles that stay frozen at full opacity 28 m away (G3) (bugs, world,
+  wild, vibes, calm, streamer, teacher).
+- At the east and west ends the curtains hide the player; clamp the camera or the walkable area (wild, world).
+- Portal labels far away render as grey semi-transparent pills that look disabled, and overlap the paintings; show only
+  the nearest label or keep them opaque and anchored below the props (vibes). Tap-walk gets stuck behind the typewriter
+  table (wild, world).
+- Portals are small tabletop props on identical desks; give each a faint "come in" glow in its own language, and make
+  completed portals glow (GAME.md promises it; `hall.js` ~l.307 only appends ✓) so the hall lights up as you play
+  (vibes, calm).
+
+### HL3 · P2 · Give the hall a voice
+- The hall has no `look()` asides; only the gentleman talks. Add 2–3 one-liners (the pipe: "It isn't a pipe. It's a
+  picture of one."; the mirror: "You lean closer. So does the back of your head.") (world, calm, streamer).
+- Two of the gentleman's lines are near-verbatim Magritte quotes inside a no-quotes voice; keep one, credit it, and give
+  the hall a notebook page (`N`) listing the works it quotes (The Son of Man, The Treachery of Images, Golconda, Time
+  Transfixed, The Human Condition, Not to Be Reproduced, The Listening Room, Personal Values, The False Mirror). Render
+  stage directions ("The apple stays exactly in front of his face.") differently from speech (phil, world).
+- Move the gentleman near the ladder hatch: "Everything we see hides another thing" is the overture to every vignette
+  beyond him, and most players meet him last (drama).
+- A second copy of the journal in the hall ("Ceci n'est pas un journal") so hall players meet it (teacher, gd, world).
+- The sky wallpaper's polka dots look like nursery paper; drop them, vary cloud stamps, add a vertical gradient (vibes).
+- The mirror has no glass: add a faint transparent sheen so it reads as a mirror that's wrong (vibes).
+
+---
+
+## Grandfather Paradox (`grandfather-paradox`)
+
+### GP1 · P0 · The scene ends before a careful player can act
+The grandfather starts walking the moment you arrive; the question "So what happens if you stop him?" is voiced at
+segment 3, the same moment "Close the gate" is disabled (`enabled: S.seg < 3`), ~10 s before he meets her. A player who
+listens to the setup, reads the paper or the notebook, or talks to the vendor gets "You let it be" ~25–37 s after
+arriving without ever having had an enabled option in reach. *Seen by 10/11.*
+- Hold him at his door (checking his watch) until the player first moves off the machine or the `see_gm`/`ask` lines
+  have played; voice the question *before* the first opportunity; then slow him right down (the trolley's crawl) while
+  the player is within reach of an interactable.
+- Keep the gate usable until he's actually through it (`seg ≤ 2 && u < 0.3`); give him a natural stop or two (buying a
+  paper, tipping his hat to the vendor) so there are 60–90 s of real choice.
+- Don't award "You let it be" to a player who never had an enabled option in range; loop the walk instead (GP2).
+- Pause him while the notebook is open (G5).
+
+### GP2 · P1 · No loop: the one vignette where the rewind *is* the theory
+One pass to the card; Play again starts cold with the same line. *Seen by 8/11.*
+- After "They meet", rewind inside the fiction (clock hands spin back, you're at the machine: "Again.") and let the player
+  try up to 3 walks in one visit; on each loop the ordinary obstacles get more pointed (the wind comes *before* you reach
+  the gate; he recognises you: "Have we met?"); end after 2–3 loops or on "Go home" (drama, gd, wild, streamer).
+- Twist idea: on run 2 you see evidence of your own earlier attempt (the gate already closed, a second you by the
+  signpost) (gd).
+- Twist idea (the main rival view, currently absent): on a replay let one attempt succeed; the sepia town splits into a
+  second, slightly different-coloured copy, and "Go home" takes you to a time machine that's no longer yours: "You changed
+  it. But whose past was it?" Then the vignette compares self-consistency with branching timelines (teacher, phil).
+
+### GP3 · P1 · Reactions arrive 10–18 s late, and the counting is wrong
+- "He laughs. What a strange thing to say." plays 8–15 s after you tell him; "He doesn't even look at the sign" plays
+  after the meeting and after `phase: over`. Fix per G2 (reaction lines interrupt), or have him pause until his own
+  fail line has been heard; add a speech bubble on him for the laugh ("Ha! Good one, pal.") so it's visible at once
+  (camera, streamer, wild, teacher, calm, gd).
+- "Tell him who you are" and closing the gate put you on his path, so "block" also counts: "He steps around you, and
+  apologises." plays and the card says "You tried 2/3 ways" for things you didn't choose. Count a block only when the
+  player stands still in his path for ~1 s, and not within 2 s of a tell (bugs, phil, streamer, calm, gd).
+- "Wind, habit, a laugh." and the card are fixed text, whatever you tried; build the sentence from `S.attempts` ("A
+  laugh." / "Wind, habit.") and write the count in words with a singular variant ("You tried once, and something ordinary
+  got in the way." not "You tried once. Each time…") (drama, bugs, world, teacher).
+- "Tell him" on a moving target is hard to catch; let him slow for a second when you run towards him within ~5 m
+  (wild, bugs).
+
+### GP4 · P1 · The philosophy is half stated and one-sided
+- The setup never states the paradox, only half the loop: add the second half, e.g. "If they never meet, you're never
+  born. And then who came back to stop him?" (phil).
+- The voice asserts self-consistency as fact ("It was never going to un-happen." / "Maybe that's the only story that
+  works."), while the card ("You could have stopped him, in a sense. You just didn't.") is Lewis, and more careful.
+  Voice the "in a sense" line as the last spoken beat and soften `tried_2` ("Or maybe, somewhere else, it did.")
+  (phil, drama, calm).
+- Journal to-do inverts Lewis: not "you can, and you can't, at the same time" but "you can, in one sense, and can't, in
+  another, and both are true" (phil).
+- Notebook: add the self-consistency (Novikov) and branching (Deutsch) replies; "often traced to Barjavel (1943), though
+  earlier pulp stories had the idea"; SEP "Time Travel" is listed twice (phil).
+- Idea: one strong attempt that fails for a stranger ordinary reason (lock the gate with the key from the paper stand;
+  the key slips): Lewis's banana peel (phil). On "Tell him who you are", grandma overhears and smiles; card: "Maybe that's
+  why they got on so well." (a hint at causal loops) (teacher).
+
+### GP5 · P1 · Leaving early
+- "Go home" is live 0.4 m from the spawn, the first prompt you see: one E ends the vignette, counts as completed (✓) and
+  overwrites the journal's richer ending. Enable it after `see_gf`, or after the player has walked away and back; don't
+  overwrite a richer ending (G6) (gd, wild, world).
+- After an early leave, "That's your grandfather…" plays between the two reflection lines (G2); give the early exit its
+  own line ("You didn't stay to see it. It happened anyway.") instead of "the only story that works" (drama, phil, all).
+- Leaving early after turning the sign gives "Every time you tried, something ordinary got in the way" though nothing
+  did; `end()` never checks `leftEarly` (bugs).
+- Show the departure: walk the player into the machine, close the door, a brief shimmer (camera, vibes).
+
+### GP6 · P2 · Staging and world
+- The meeting (the image the vignette builds to) is a static wide shot with two ~20 px pegs at the frame edge; frame
+  the couple, give them a gesture (he lifts his bowler, she stands), hold 3 s (camera, drama, vibes, world, streamer).
+- Sepia is a whole-canvas CSS filter that also mutes the player; tint the scene's materials instead and leave the player
+  and the time machine in full colour ("you don't belong here"); the station roof is teal (vibes). World: the past reads
+  the same cream as everywhere; add grain (world).
+- The wind isn't visible (leaf/dust swirl, a tree sway); the railway is two lines on sand; the "late" train never arrives
+  (let it pull in as they meet); background walkers, a curtain twitch (vibes, world, streamer).
+- The fence is a row of post blockers that traps tap-to-walk; make it one segment blocker the steering knows about
+  (bugs). Two prompts at once ("Turn the signpost" and "Tell him who you are") (calm). The vendor's stall intrudes at the
+  bottom of the frame near the gate (camera). The fountain water sinks below the rim (vibes).
+- Keep: grandma's "Have we met? You have a familiar face.", the vendor's "It's something about your shoes." and
+  "Nothing ever happens round here", the gate-gust close-up.
+
+---
+
+## Infinite Monkey Theorem (`infinite-monkey`)
+
+### IM1 · P0 · The time scale teaches the opposite of the theorem
+Three lever pulls = 3 million years = the full line "to be, or not to be, that is the question" (`TARGETS` in
+`infinite-monkey.js`); the card says "Three million years of noise… It was simply bound to happen." A 39–41-character
+line is ~10^58–10^64 tries; the notebook says Borel used monkeys for events "so improbable they will never be seen in
+practice", and the walk-out ending ("forever is much, much longer than it sounds") is the true lesson. Players leave
+believing it takes a few million years. *Seen by 10/11.*
+- Make each pull multiply time by orders of magnitude (10^6 → 10^14 "until the stars go out" → a number the counter can't
+  show, in scientific notation → "∞"), with the pages still mostly noise ("Still just the word."), and let the line
+  appear only after the player keeps going past the end of the universe: "The stars went out long ago. They're still
+  typing." The tension becomes the player's own stubbornness (drama, teacher, phil, gd).
+- Or: holding the lever spins the counter through powers of ten, with each page showing the best fragment found so far
+  (length growing roughly logarithmically); walking out becomes a real position (finite vs. forever) (gd).
+- Card: "Longer than the universe will last, and then a line of Hamlet." Voice: "Given forever, it almost certainly
+  happens." (probability 1, not "had to"; the all-q monkey is a lovely hook for the "almost"); the title "Given forever"
+  names the one thing the player did not give (phil).
+
+### IM2 · P1 · The pages are scripted, and the lines don't match them
+- The first page is "Nothing but nonsense" but random text already contains short words ("no", "go"); the million-year
+  "word" is "the" inside "opthep.whka". Highlight the short accidental words on the first page ("A few words, already. Just
+  by chance."), and only count words with spaces around them (phil, calm, drama, vibes, streamer).
+- Randomness: sometimes a word, sometimes nothing ("Nothing. Again."); re-reading gives a fresh page ("More nonsense.")
+  instead of the same page and caption; seed pages per run (identical on every replay) (drama, gd, streamer).
+- Lines misaligned with pages: "A word. Just one" over a page showing two; two "A million years go by."; the question
+  played after the first wait (wild, bugs). Key `page_N` on the page actually shown (`S.waits`), `once` per million years.
+- Sequence break: read one page, pull five times, read → instant "There it is", the "a word / two words" beats skipped,
+  and the card still says three million. Enable the lever only when this million years' page has been read, cap it, and
+  build the card from `S.waits` (bugs).
+- The counter overshoots (1,010,417 / 2,020,833 / 3,031,250); clamp to exact multiples when a wait ends (bugs, phil,
+  teacher, gd, calm).
+
+### IM3 · P1 · A million years pass and the room doesn't change
+Only the paper stacks grow a little; same monkeys, same light, the banana crate never empties. The lever is the moment a
+streamer says "watch this" and nothing pays it off. *Seen by vibes, world, streamer, camera.*
+- A time-lapse during the wait: sun and shadow sweep the floor (day/night), dust and cobwebs, paper piles balloon and are
+  carried off, the crate empties and a new one is stacked on it ("Somebody has been restocking it."), greyer muzzles, a
+  wall clock whose hands blur; bigger effects on later pulls.
+- On the found line: every typewriter stops for two seconds of silence and all the monkeys turn to look at you, one lamp
+  brightens on the lucky desk; or push in on the one monkey pulling the page out (vibes, camera).
+- The room is a greybox exam hall (one taupe wall, 12–15 identical monkeys from behind): a scriptorium receding into haze,
+  warm desk lamps, the front row in three-quarter view, a few distinct monkeys (one asleep, one hiding its page, one on a
+  coffee break); the "Say hello" pool repeats the same stage direction (vibes, world).
+- Move the frog's cameo out of the 3-second time-lapse, where nobody can see it (world).
+
+### IM4 · P1 · Decision design and text
+- The only real choice is walk out vs. keep pulling, and the lever is a "next" button. Idea: after the line is found,
+  "Keep the page" or "Put it back in the pile" ("You kept it. Something about it mattered, though nobody meant it."),
+  which sets up the journal question on meaning; add Knapp & Michaels' wave poem to the notebook/to-dos (teacher).
+- "Wait a million years" is silently disabled until you've read a page (the glowing red lever is the first thing players
+  try); show a dimmed "Read a page first", or have a monkey hand you a page (G16) (gd, bugs).
+- "Walk out" is enabled before you've read anything and is a bare door frame on the lever's path, and the outside looks
+  like the inside; put a real door in it and change the light beyond (wild, camera, vibes). It's disabled until the intro
+  question has played (bugs).
+- The walk-out card's journal question presupposes the found line; use a per-ending question ("Would you have kept
+  waiting? Why?" / "If they ever did type it, would the words mean anything?") (bugs, phil, drama, teacher, gd, calm,
+  world). Walking out without reading still says "Most of it is noise." (bugs).
+- "Given forever, could they type Shakespeare?" names a person (pillar 4): "…a famous play?" (calm, vibes, streamer).
+- The prompt sits on the year counter; put the counter on the set (a mechanical flip counter or board), always opaque
+  (gd, camera, calm, vibes, streamer, world). The page overlay and the year label show through the game-over card; close
+  the page before `gameOver` (bugs, wild, teacher, gd, camera).
+- Notebook: the statistical-mechanics context (Borel, Eddington and the second law), the 2003 Paignton Zoo experiment
+  (the all-q monkey already alludes to it) (phil).
+
+---
+
+## Simulation Argument (`simulation-argument`)
+
+### SA1 · P1 · The choice is never posed, and the staging answers the argument
+- After the reveal, `choose` starts in silence: no line, no prompt in view, the lever ("Switch them off", r 1.8) and the
+  door (7–9 m away) show nothing until you blunder into them; players stood 15–30 s. At `choose`, light the lever and
+  crack the door open with light spilling in, voice one short beat ("You could switch them off. Or leave them be."), then
+  hold a silence. *Seen by 8/11.*
+- The choice (ethics towards the simulated) isn't the question the scene asked (credence: "which kind is yours?"). Tie
+  each ending to a horn of the trilemma without jargon: switching off = "If everyone did what you just did, there'd be
+  almost no little worlds, and you'd probably be real."; leaving them = "One more world. The odds that yours is the first
+  one just got worse." (drama, teacher, phil).
+- The "don't build more" horn can't be played: "Switch them off" and the door stay disabled until you choose "Run more
+  worlds", and idling does nothing (a soft stall). Enable the door and switch from the start with their own ending ("You
+  didn't make any more. If everyone decides that, almost nobody is simulated.") (phil, wild, gd, world: "Locked. From the
+  outside." as an early door line).
+- The pull-back shows your study under a dome on a giant's desk, i.e. it asserts you *are* simulated; Bostrom's is a
+  trilemma. Keep the shot (it's the best in the hall) but make it ambiguous: fade the giant's desk in and out, or cut
+  between a dome on a desk and an empty desk, ending on "which kind is yours?" (phil).
+- The switch-off reflection is only about risk to *you*; add a moral beat first: "They were real to themselves. Were they
+  real to you?" (teacher). "Above you, the lights flicker" in only one ending reads as retribution; flicker in both or
+  neither (phil).
+- Idea: "Run more worlds" adds a counter ("1 world like yours not inside a dome · 1,000 that are") so the odds land;
+  worlds visibly strain the machine (lamp dims, fan speeds up) (teacher, phil). A third, do-nothing ending ("nothing
+  changes whether you know or not") (teacher).
+- Notebook: the indifference principle and "ancestor simulations"; show the monitor *computing* the dome world (pixels,
+  a wireframe flicker) since terrariums don't need substrate-independence; a tiny copy of your study in one shelf dome
+  (phil).
+
+### SA2 · P1 · The endings show nothing
+- "Switch them off" dims only the lit materials: the paper sky stays cream and the window and photo stay bright, so it
+  reads as a render bug; the shelf domes vanish instead of going dark; "Above you, the lights flicker" is never shown.
+  Fade background and fog to near-black, keep the domes with dark glass, and cut to the reveal angle: the giant's desk
+  lamp stutters, the giant turns towards the dome; or a giant's hand hovering over their own switch (vibes, camera,
+  world, streamer).
+- Rewind that is also a twist: your lights come back up on their own, "Someone switched you back on." (drama).
+- "Leave them running": the player walks to the door and stops, card 4 s later. Open the door onto the giant's desk edge,
+  or pull back to the reveal with all the shelf domes glowing, and hold 2 s (camera, vibes, streamer).
+- After the reveal the giant disappears and the choice happens in an empty frame; keep the giant (blurred) or the dome's
+  rim in shot during `choose` (streamer).
+
+### SA3 · P2 · Simulation polish
+- Replay: skip to `choose` with "Back at the desk. They're still running." / "Last time you switched them off." (drama,
+  gd, wild, calm).
+- The window is a flat grey rectangle under "You've never actually checked how far it goes": paint a sky with a faint
+  seam or a repeating cloud; after the reveal show a sliver of the giant's room; dim it with the room (world, vibes).
+- "Look out of the window" parks the player behind the desk on non-walkable ground (1.1, -4.6), from which nothing can be
+  reached; put its interact point in front of the desk and make the gap non-walkable (teacher, wild, world, gd).
+- After the zoom you're returned behind the desk with nothing on screen; return in front of the monitor (calm).
+- The frog is as big as the monitor, sits behind the player's head, and the frog-inside gag is invisible; scale it down
+  ~40%, put it on the far side of the dome, use the zoom framing for 2 s (camera, vibes, world).
+- A teal inhabitant in the dome reads as you levitating; teal door and monitor (G18) (camera, vibes).
+- The giant is a floating head: give it shoulders, a hand by the dome and a desk-lamp pool (vibes, camera).
+- The study is empty before the shelves fill: builder's clutter (a soldering iron, sketches, a cracked dome, a coffee cup
+  with a tiny coffee cup inside) (world). Give one tiny person a human act, and on a second visit have one look up at the
+  dome (drama).
+- Asides are disabled until "Look closer"; enable them from arrival (gd). The lever intrudes on the zoom shot (camera,
+  vibes).
+
+---
+
+## Fermi Paradox (`fermi-paradox`)
+
+### FP1 · P0 · The player's big action and the scene's sky are off camera
+- "Send a message": the beam's lowest point is ~26 m above the dish, above the frame; only the dish tilts. Anchor it at
+  the feed horn (parent it to the bowl) and tilt the camera up along it, or show 3–4 faint expanding rings rising from the
+  feed and dwindling to a point, then hold on the empty sky for "Nothing comes back". *Seen by 8/11.*
+- "Look at the moon" (the chair "faces the moon"): the moon at (-150, 120, -200) is always off screen; move it into the
+  upper left of the default frame (~(-40, 35, -80)) or pan to it (camera, vibes, world, pilot-bugs).
+- The frog and its shooting star play below the frame (z≈7–10); route the cameo between the console and the dish (z≈1–3)
+  with the star in the upper third (camera, vibes, world, pilot-bugs).
+- The dish shows its convex back, reading as a mushroom; tilt it towards the camera to show the concave face, feed horn
+  and struts (vibes, pilot-bugs). The Milky Way band never enters frame; bring it across the visible sky with 2–3 star
+  sizes (vibes).
+
+### FP2 · P1 · The choice: hidden, accidental, and about a different debate
+- "Keep listening" (an ending) appears on the same spot and key as "Listen" the instant "So where is everybody?" ends,
+  so a second E ends the vignette with no silence after the question; the send lever sits on the last pixel of the frame
+  and is never mentioned (players didn't know it existed). Make keeping-listening the passive branch (sit in the chair;
+  nights pass after ~30–40 s of silence), enable both options 3–5 s after `ask`, keep the lever in frame, and add "Or you
+  could call out." (gd, wild, calm).
+- Send is disabled (no prompt at all) until you've listened; sending before listening is a real choice: enable it, or a
+  dimmed "Not yet. First, listen." (bugs, phil, drama, gd, wild).
+- The choice (send vs. listen) is the METI debate, not Fermi's (where are the visitors?), and the notebook has nothing on
+  METI, so the journal question asks about reading the player never got: add a notebook paragraph (Arecibo 1974, Brin's
+  "Great Silence" 1983, the 2015 statement against METI, the "stay quiet" idea); or make listening playable as the
+  paradox, with each night showing one hypothesis as an image (a planet going dark, a second silent dish pointed at you,
+  one far light) (phil, teacher).
+- Sending carries no risk before you do it: seed unease first (the logbook's last entry "Heard something. Didn't
+  answer."; the static falls silent for a moment), and make the send ending linger differently (a faint regular blip for
+  one beat) (drama).
+
+### FP3 · P1 · Voice and pacing
+- "Years pass. Nothing comes back. Maybe no one is there." draws an inference the physics can't support (a reply takes
+  8+ years from the nearest star); the card gets it right. "Years pass. Your message has barely left the neighbourhood."
+  (phil). `send_2` is four sentences on three caption lines (phil).
+- "Either they're rare, or they're quiet, or we're early" claims exhaustiveness and omits "they don't last" (Great Filter):
+  "Maybe they're rare. Maybe they don't last. Maybe they're quiet. Maybe we're early." Split the lines across a longer
+  (~25–30 s) time-lapse (year 1, 10, 40) so waiting is the experience; the card repeats the voice word for word, give it
+  a different beat (the logbook gets one more "Nothing") (phil, drama, pilot-bugs).
+- Idle after arrival: nothing for 60 s and no hint the monitor is where to go; a second arrival line pointing to the
+  static, or the console crackling (bugs, calm). Dead air after the question on stream: let the sky do something
+  (a satellite, the frog's star, a false-alarm twitch) (streamer).
+- Notebook accuracy: Hart argued we are probably the only civilisation *in the Galaxy*, from the absence of visitors (not
+  "no others", not "silence"); Fermi asked "something like 'Where is everybody?'"; the moon line: "Only one other world
+  has ever had footprints" (Mars, Venus, Titan had robotic visitors) (phil).
+- Replay: "The logbook has one new line in it: yours." (teacher).
+
+### FP4 · P2 · Fermi polish
+- The player is at the bottom edge under the caption in every shot, cut at the waist; in the lapse, reduced to the top
+  of a head: keep "you" as a small silhouette in the lower third (someone keeps listening) (camera, streamer, calm,
+  vibes).
+- The time-lapse turns the sky flat grey with stars on it: cycle quick dawn gradients and star trails; record the years
+  at the station (a stack of logbooks, faded paint, snow on the dish, the figure in the chair) (vibes, world, camera).
+- The hall portal is a brass telescope but the scene is a radio dish; make the portal a radio set, or put a telescope on
+  the hill (gd, streamer, vibes, world). The hut window is half black like an unloaded texture (vibes). The mug deserves
+  its own prompt (world).
+
+---
+
+## Tragedy of the Commons (`tragedy-of-the-commons`)
+
+### TC1 · P0 · The tragedy only happens if you start it
+Neighbours add sheep only as an echo of *your* "Add a sheep" (inside your `onUse`); with no adds the pasture is exactly
+sustainable forever (10 sheep: regrowth 0.02/s = 10 × 0.002/s), so doing nothing is a dead end (no line, no ending, no
+frog; Esc is the only way out) and the game teaches that the tragedy needs a first bad actor, the opposite of Lloyd and
+Hardin (each herder independently finds one more sheep rational; no villain needed). The card's "Every sheep made sense
+to the one who added it" is contradicted by the neighbour's "Well, you added one. Why shouldn't I?". *Seen by 9/11.*
+- After ~20–30 s, a neighbour adds a sheep on their own ("The blue house adds one. It's their right."), then another,
+  whether or not you do; your sheep speed it up or slow it down. Copying can stay as a second reason (reciprocity).
+- Give restraint its own ending: "You held back. They didn't. The grass went anyway." (drama, teacher, phil, gd, bugs).
+- Add "Take a sheep back" at your pen: the neighbours don't follow ("More for us, then."), the decline slows but doesn't
+  stop: "You held back. It wasn't enough on your own." (teacher, gd).
+
+### TC2 · P0 · The bell is a free win, available before any problem
+"Ring the bell" is live from the first second and always gives the same ending: rung at full grass it says "The grass
+came back" when it never went; rung at 0.09 it's instant and unanimous. *Seen by 10/11.*
+- Enable it only once the grass is visibly thinning (after the "thin" line), or give an early ring its own honest ending
+  ("Everyone came. Nobody saw the problem yet. They went home." / "You agreed on limits before anyone needed them. That
+  is rarer than it sounds.").
+- Make the agreement cost something and show it: at the meeting *you* walk one of your sheep back first, then the
+  neighbours follow; one hesitates and is watched until they do; below a threshold the meeting comes too late (drama,
+  teacher, gd, streamer). Card text depends on `recoverFrom`.
+- Idea: after the meeting, leave "Add a sheep" enabled briefly; sneak one in and a neighbour walks it back (monitoring and
+  a gentle sanction: Ostrom's conditions) (phil).
+- Walk the player into the meeting circle (scripted walk) and frame the five of them; the player currently stays at the
+  bell, under the caption, while "Together, you agree" plays (7/11). Swing the bell with rings (vibes).
+
+### TC3 · P1 · The private gain is invisible
+"One more sheep. A little more for you." but nothing on screen shows it: your sheep look like everyone's, the pen stays
+empty, there's no wool or tally. Adding is simply the wrong button. *Seen by teacher, gd, vibes, world, camera, streamer.*
+- Mark your sheep (a teal raddle dot or collar; each household's in its roof colour), make your house roof teal, have
+  added sheep walk out of your pen, and show your gain growing (a wool pile by your gate, a tally that out-earns the
+  neighbours for a while).
+- Idea: "Fence off your share" (the pasture splits into six small plots; "It worked. Nobody shares anything any more."),
+  so privatisation, regulation and Ostrom are all playable (teacher).
+
+### TC4 · P1 · Pacing and consequence
+- The question "So why would anyone stop?" comes at grass ≈0.28–0.63 and the collapse follows 8–14 s later; with E spam
+  it plays after the grass is gone or after the bell. Voice it after the first neighbour copies you (~0.95), slow the final
+  decline (pillar: no timers you can lose to), add a cooldown and a cap on "Add a sheep" (15 sheep in 5 s is possible)
+  (bugs, gd, wild).
+- Stale lines: "Five neighbours, two sheep each. The grass is thick." plays over bare dirt; drop it once the player acts
+  (G2) (wild, calm, world, camera). "Your neighbours notice. They add sheep too." never plays if you add a second sheep
+  within ~6 s: capture `const first = ++S.adds === 1` before the awaits (bugs, camera).
+- Hold the bare field 4–6 s before the card (sheep still, neighbours turning to look at you), then a gentle rewind as
+  the grass grows back and the sheep un-add (GAME.md's rewind) (drama, streamer, vibes).
+- Neighbours have no body language: as the grass drops they walk to the fence and lean on it; at the collapse they turn
+  to look at you; a neighbour walks a new sheep in through their gate when they copy you (world, camera).
+
+### TC5 · P2 · Commons text and polish
+- "Five neighbours, two sheep each" but four are visible: "Four neighbours and you" (phil, camera, world).
+- "A shared pasture. Anyone may graze their sheep here." makes it open access, the main historical objection to Hardin
+  (historical commons had stints; Hardin later said "unmanaged commons"): "A shared pasture, with no rules yet." and one
+  notebook sentence on it (phil).
+- Notebook: Hardin's own formula was "mutual coercion, mutually agreed upon", not "regulated from above"; his essay was
+  mainly about population, which deserves one neutral sentence (phil).
+- Sheep clump into one overlapping white pile; add separation steering and spread grazing targets; after the agreement
+  the extra sheep walk through the fence (add a gate) (calm, vibes, world).
+- The caption covers the player at the gate; a foreground house crops the bottom of the frame; the frog's fly catch is at
+  the bottom edge (wild, camera, vibes, streamer).
+- Keep: "Mine are the fat ones. Don't tell the others.", the neighbours' lines souring with the grass, the grass colour
+  as a live meter, "Nobody owned the pasture, and nobody had to.", the journal question about something shared in your
+  own life.
+
+---
+
 ## Keep (don't lose these)
 
 Mentioned again and again as the best of room 1:
@@ -532,6 +981,23 @@ Mentioned again and again as the best of room 1:
 - **Ship of Theseus:** the fisherman ("Forty years… they have replaced every board of it since… my grandad's rod. New
   line, new reel, new handle. Still his rod, though."), the shipwright ("Seemed a shame to burn them."), the old ship
   rising beside the dock.
+- **Hall:** the Magritte set (the apple-faced gentleman and "Everything we see hides another thing", the mirror that
+  shows your back, "Ceci n'est pas une pipe", Golconda, the train in the fireplace), the ✓ on finished portals.
+- **Grandfather Paradox:** the ordinary failures (wind, habit, a laugh, "He steps around you, and apologises."), the card
+  "You could have stopped him, in a sense. You just didn't." (Lewis in one sentence), the gate-gust close-up, grandma's
+  "Have we met? You have a familiar face.", the journal question.
+- **Infinite Monkey:** the typed page with the highlighted line, "But none of them meant a word of it" and the journal
+  question on meaning without a meaner, the all-q monkey, "Forever takes a lot of bananas", "(It pats your hand, and keeps
+  typing.)", the walk-out card.
+- **Simulation Argument:** the zoom into the dome and over the tiny person's shoulder at *their* dome, the shelves filling
+  with worlds, the pull-back to your study under a dome on a giant's desk (the best shot in the hall, and the game's
+  thumbnail), your own room going dark, the unremembered photo and the unchecked sky.
+- **Fermi Paradox:** "Someone should have come by now" (Hart in five words), "They left footprints, and went home.", the
+  logbook of "Nothing", the cold tea, the lamplit console on the cold hill, the star-trail time-lapse, the card "The
+  message is still travelling".
+- **Tragedy of the Commons:** the grass colour draining as a live meter, the neighbours' lines souring with the grass
+  ("Well, you added one. Why shouldn't I?", "Not my fault. I only did what everyone did."), "Mine are the fat ones",
+  "Nobody owned the pasture, and nobody had to.", the colour-coded households, the toppled toy sheep.
 - **House and shell:** the painting push-in, spawning beside the portal you used, the ✓ and the glowing journal, the
   handwritten journal page with its notes-to-self to-do lists, the title card and "Look around" onboarding, the
   game-over card over a frozen frame, the accurate notebooks (every citation checked by phil).
