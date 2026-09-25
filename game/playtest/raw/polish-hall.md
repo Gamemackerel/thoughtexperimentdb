@@ -36,3 +36,31 @@
 - **[polish] [UI]** The gentleman's speech bubble ("Good afternoon.") is drawn high above the fireplace, far from his head, and the "E Talk" pill sits between the bubble and him, covering his bowler hat. It reads as if the fireplace is speaking.
   Evidence: shots/006-t41.jpg.
   Suggestion: anchor the bubble just above his hat and hide the Talk prompt while a bubble is showing.
+
+### grandfather-paradox
+- **[major] [navigation]** The game-over card's "Back to the house" drops you in the *first room* at its default spawn (0, 5.5), not in the hall beside the grandfather clock. To try another hall vignette you have to walk to the ladder and climb again every time. (GAME.md: players should come back beside the portal they used.)
+  Evidence: t=297.7 s `clicksel "#over [data-act=home]"` → `level loaded: house`, you at (0.0, 5.5); shots/045.jpg.
+  Suggestion: for vignettes whose portal is in the hall, route "Back to the house" (and Esc) to `hall` with `ctx.from` set, and label the button "Back to the hall".
+- **[minor] [interaction]** You arrive standing 0.4 m from the time machine, inside the "Go home" radius, so "E Go home" is the first prompt of the vignette and stays up through the opening lines. One reflexive E press ends the vignette before it starts. Same pattern as the hall's hatch.
+  Evidence: `debug` at t=133 s: "Go home" dist 0.4 radius 2.4; shots/023-t133.jpg.
+  Suggestion: step the figure out of the machine a couple of metres (spawn ~(-12, 7)) or enable "Go home" only after the opening line.
+- **[minor] [UI]** Two-line captions render as two separate pills ("The past. The town where your grandparents" / "met."), with the second one a stub; at spawn the caption also sits right over the figure (spawn is at the bottom of the frame).
+  Evidence: shots/023-t133.jpg, 024.jpg, 036-t227.jpg.
+  Suggestion: `box-decoration-break: clone` is fine, but give the caption a single block background (display:inline-block with max-width) and balance the lines (`text-wrap: balance`); nudge the opening camera so the figure isn't under the caption.
+- **[minor] [collision]** The grandfather walks straight through you when you stand in his way: the narration says "He steps around you, and apologises", but the two figures overlap completely at (1.3, 1.0).
+  Evidence: shots/037-t231.jpg (t=231 s), caption at 236.3 s.
+  Suggestion: make his route steer around the player (the player is a blocker for NPC paths), or at least sidestep 0.8 m when within 1 m of you.
+- **[minor] [collision]** Houses, trees, the station platform/shelter and the time machine's surroundings have no blockers (level blockers list only fountain, sign, machine, grandma, paper stand and fence posts), so the figure can walk into the cottages. Conversely the short fence stops tap-to-walk dead: tapping a house behind it (walk to (-4, -14)) halts at (-8.4, -2.6) against the fence instead of going round its end.
+  Evidence: `eval level.blockers()`; walk result "did not arrive (still 12.2 away)"; shots/043.jpg.
+  Suggestion: add circle blockers for each house/tree/platform; give tap-to-walk a simple detour (try going around the blocker's end) instead of stopping.
+- **[minor] [pacing/interaction]** The whole walk from arrival to "They meet" takes ~25 s. On my first run I talked to the paper seller (an aside) and by the time I walked to the gate its prompt was already disabled ("it is disabled right now"); the vignette ended "You let it be" without my ever seeing a prompt. For a player exploring the asides the choice silently disappears.
+  Evidence: t=129 s arrive → 154.5 s phase over; the "Close the gate" prompt never appeared.
+  Suggestion: have the grandfather wait by the paper stand/fountain until the player has come within ~8 m of the square (or until the question line has played), so the window to act is tied to the player, not the clock.
+- **[polish] [movement]** A tap-walk in progress keeps going after the ending starts: I tapped towards the station at t≈287 s, the ending began, controls locked, and the figure kept walking until the card at (16.3, 3.2) ("moving" + "[controls locked/seated]").
+  Suggestion: cancel the tap target when the level locks controls.
+- **[polish] [camera]** The walkable disc (radius 26) has a huge empty foreground; walking there (e.g. (-18, 18)) makes the framer pull back so far that the town and the grandparents become tiny at the top of the frame.
+  Evidence: shots/041.jpg, shots/042.jpg.
+  Suggestion: shrink the walkable area to ~radius 18 around the square/station, or clamp the framer's zoom.
+- **[polish] [clipping]** At the paper stand the figure stands partly inside the counter and hides the seller (the "Paper! Read all about it!" bubble comes from someone you can't see).
+  Evidence: shots/024.jpg (t=141 s at (-9.5, 3.7)).
+  Suggestion: enlarge the stand blocker to the counter's footprint and put the seller in front/side of the counter where the camera sees him.

@@ -22,3 +22,10 @@
 - notebook (N) doesn't pause: grandfather line played while notebook open.
 - "Go home": no departure shot; player just stands by machine while stale "That's your grandfather" caption plays after the choice (049-t119). Card "You left the past alone" but subtitle = let-it-be text.
 - "Back to the house" from grandfather → first room default spawn (0,5.5), not the hall beside the clock (053).
+### infinite-monkey
+- stale hall prompt "Sit at the typewriter" on first frame (056-t5). establishing shot of 12 rows good (059-t8), caption over player body again.
+- camera static wide throughout (framer fixed pts); monkeys only from behind; no faces ever.
+- million-year wait: nothing changes on camera but counter + frog; "Wait a million years" prompt overlaps the years counter label (067-t28). Counter ends at 1,010,417 not 1,000,000.
+- found page: highlighted mark good (069-t54); but no camera beat — which monkey typed it? Page overlay remained on screen under/with the game-over card (status shows [page] + [gameover] at 59.1).
+- say hello: speech bubble "(It pats your hand, and keeps typing.)" clipped by "Say hello" prompt (070). Too high to see a pat.
+- walk out: player walks to a thin door frame, camera wide; exit door barely reads as a door (075-t84). Walk-out enabled without reading any page.

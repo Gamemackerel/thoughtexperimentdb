@@ -109,3 +109,25 @@
 - **[polish] [voice]** send_2 is four sentences on three caption lines, against GAME.md §5 ("one short sentence per trigger, rarely two").
   Evidence: shots/056-t194.jpg.
 - **[polish] [accuracy]** The moon aside, "Only one other world has ever had visitors", is true only of crewed visits; Mars, Venus and Titan have had robotic ones. Harmless, but the pedant hears it. "Only one other world has ever had footprints" says the same thing exactly.
+
+### tragedy-of-the-commons
+- **[major] [philosophy]** The neighbours never act on their own: they add sheep only as an echo of *your* "Add a sheep" (`onUse` adds one sheep per neighbour 2.5 s after yours). If you do nothing, the pasture is exactly sustainable forever (10 sheep: regrowth 0.02/s = 10 × 0.002/s eaten) and nothing ever happens; I idled 60 s at full grass. That inverts Hardin's argument, whose force is that *no* instigator is needed: each herder independently finds adding an animal rational (the whole +1 to him, a fraction of the −1 shared), so ruin follows from everyone's reasoning, not from one bad example. As built, it's a story about a ringleader and copycats (conditional cooperation), and it tells the player "the tragedy is your fault".
+  Evidence: run 2, t=63–124, grass stays 1.00, adds 0; game/vignettes/tragedy-of-the-commons.js `onUse` of "Add a sheep" (neighbours only add inside your handler); neighbour line "Well, you added one. Why shouldn't I?".
+  Suggestion: let neighbours add sheep on their own schedule (slowly, each after a little "why not?" beat), whether or not you do; your sheep then speed or slow it. Doing nothing becomes a real option with a real outcome ("You held back. They didn't. The grass went anyway."), which is the tragedy.
+- **[major] [philosophy]** "A shared pasture. Anyone may graze their sheep here." makes the pasture open-access, which is Hardin's model but not what historical commons were: English commons were regulated by custom and manorial courts (stints, i.e. per-household limits). This is the main historical objection to Hardin (e.g. Cox, "No Tragedy on the Commons", 1985), and Hardin himself later said he should have called it "the tragedy of the *unmanaged* commons". The notebook frames Ostrom as the rebuttal but never makes this distinction, so the player learns "commons = open access".
+  Evidence: arrive line t=9.4; notebook text.
+  Suggestion: notebook: add one sentence on open access vs managed commons and Hardin's later "unmanaged" qualification. Voice: "A shared pasture, with no rules yet. Anyone may graze here."
+- **[minor] [accuracy]** The notebook says Hardin "concluded that commons must be privatised or regulated from above". His actual formula was "mutual coercion, mutually agreed upon by the majority of the people affected" — close to what the bell ending does. And the essay's real subject was population ("Freedom to breed is intolerable"), which the notebook omits; since Hardin's views on population and immigration are the reason many readers now approach the essay warily, a curious player deserves one neutral sentence on it.
+  Evidence: notebook text (game/notebook/tragedy-of-the-commons.json).
+  Suggestion: "Hardin, writing mainly about population growth, argued for 'mutual coercion, mutually agreed upon', including privatisation or state regulation."
+- **[minor] [philosophy]** Ringing the bell produces instant, costless, permanent agreement ("You talked, set rules, and kept to them."). Ostrom's finding is that it works *under conditions*: clear boundaries, monitoring, graduated sanctions, rules made by those affected. The game asserts "kept to them" without ever letting anyone (including you) break them, so the cooperation ending is cheap talk that always works.
+  Evidence: runs 2 and 3: bell → agree → card within ~15 s; no further play.
+  Suggestion: after the meeting, leave "Add a sheep" enabled for a short while; if you sneak one in, a neighbour notices and walks it back (monitoring + a gentle sanction), and the card reflects it.
+- **[minor] [text]** Ringing the bell at full grass (before anyone added a sheep) still ends with "The grass came back." and "everyone looks after it".
+  Evidence: run 2, t=132.8–148.3, grass 1.00 throughout.
+  Suggestion: branch the card: "The grass was fine. You agreed on limits anyway, before anyone needed them." (a nice Ostrom point in itself).
+- **[polish] [text]** "Five neighbours, two sheep each" but there are four other households with herders plus you. Either "Five households" or "Four neighbours and you".
+  Evidence: herders line t=14.5; shot 069-t184.jpg shows four herders at the meeting.
+- **[polish] [staging]** At the meeting the four neighbours gather in the middle of the pasture while you stay at the bell, yet the line says "Together, you agree on limits".
+  Evidence: shots/069-t184.jpg.
+  Suggestion: walk the player to the meeting (scripted walk) before `agree`.
