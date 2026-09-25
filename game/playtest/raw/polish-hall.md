@@ -39,7 +39,7 @@
 
 ### grandfather-paradox
 - **[major] [navigation]** The game-over card's "Back to the house" drops you in the *first room* at its default spawn (0, 5.5), not in the hall beside the grandfather clock. To try another hall vignette you have to walk to the ladder and climb again every time. (GAME.md: players should come back beside the portal they used.)
-  Evidence: t=297.7 s `clicksel "#over [data-act=home]"` → `level loaded: house`, you at (0.0, 5.5); shots/045.jpg.
+  Evidence: t=297.7 s `clicksel "#over [data-act=home]"` → `level loaded: house`, you at (0.0, 5.5); shots/045.jpg. Esc mid-vignette does the same ("Leave this vignette and return to the house?" → first room at (0, 5.5)).
   Suggestion: for vignettes whose portal is in the hall, route "Back to the house" (and Esc) to `hall` with `ctx.from` set, and label the button "Back to the hall".
 - **[minor] [interaction]** You arrive standing 0.4 m from the time machine, inside the "Go home" radius, so "E Go home" is the first prompt of the vignette and stays up through the opening lines. One reflexive E press ends the vignette before it starts. Same pattern as the hall's hatch.
   Evidence: `debug` at t=133 s: "Go home" dist 0.4 radius 2.4; shots/023-t133.jpg.
@@ -66,3 +66,9 @@
 - **[polish] [clipping]** At the paper stand the figure stands partly inside the counter and hides the seller (the "Paper! Read all about it!" bubble comes from someone you can't see).
   Evidence: shots/024.jpg (t=141 s at (-9.5, 3.7)).
   Suggestion: enlarge the stand blocker to the counter's footprint and put the seller in front/side of the counter where the camera sees him.
+- **[minor] [interaction]** Tap-walking to the gate (tap on the gate at 250,390 on a 390x844 phone) routes you across the grandfather's path, so you "stand in his way" by accident: "He steps around you, and apologises" fires at 11.5 s, counting as a try before you reached the gate and pressed anything.
+  Evidence: portrait run, t=8.2 → 11.5 s, shots/049.jpg.
+  Suggestion: only count "stand in his way" when the player is stationary (e.g. stood still ≥1 s) in his path, not while walking through it.
+- **[minor] [portrait]** On a 390x844 phone the top ~35% of the screen is empty sky, the scene sits small in the middle, and at spawn the "E Go home" pill is cut off by the left edge (only "E" half visible). Three-line captions become three stacked pills. At 17 s the player is ~10 px wide at the far left edge — hard to tap near.
+  Evidence: shots/048.jpg, shots/050.jpg.
+  Suggestion: in portrait, tilt the camera down / tighten the framer so the square fills the width; clamp prompt pills inside the viewport with a 16 px margin.
