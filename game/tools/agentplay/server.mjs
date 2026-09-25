@@ -156,7 +156,8 @@ const commands = {
       const cands = interact.items.map((it, i) => ({ it, i, p: pr(it) })).filter((c) => c.p.toLowerCase().includes(text));
       if (!cands.length) return { err: 'no interactable matches; prompts are: ' + interact.items.map(pr).join(' | ') };
       const q = (c) => (typeof c.it.pos === 'function' ? c.it.pos() : c.it.pos);
-      cands.sort((a, b) => q(a).distanceTo(player.pos) - q(b).distanceTo(player.pos));
+      const en = (c) => { try { return c.it.enabled() ? 0 : 1; } catch { return 1; } };
+      cands.sort((a, b) => en(a) - en(b) || q(a).distanceTo(player.pos) - q(b).distanceTo(player.pos));   // enabled first, then nearest
       const c = cands[0], at = q(c), d = player.pos.clone().sub(at).setY(0);
       if (d.length() > c.it.radius * 0.6) { d.setLength(c.it.radius * 0.6); player.target = at.clone().add(d).setY(0); }
       window.__useIdx = c.i;

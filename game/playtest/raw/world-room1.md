@@ -11,3 +11,44 @@
 - **[major] [visual]** From the camera angles the house actually uses while you walk, the staircase reads as a jumble of beige cardboard boxes, not a loop; the "closed loop" illusion only works from one idea of camera, and the tiny grey climber is easy to miss. Standing at (-4,-3.2) the staircase also hides the player almost completely (only a teal sliver visible).
   Evidence: shots/003-stairs.jpg, shots/001-open.jpg
   Suggestion: darker step risers / alternating tones so steps read as steps, a railing, and fade/cut away the staircase when it occludes the player.
+- **[minor] [visual]** The upside-down floating armchair reads as a plain red box stuck to the back wall from every angle I saw (it sits right against the painting's top-left corner). The Dalí/Magritte cues (floating armchair, wall-door high up, clouds indoors) are there but read as props rather than a dream.
+  Evidence: shots/003-stairs.jpg, 006.jpg, 033-back.jpg
+  Suggestion: pull the armchair away from the wall into open air, give it visible legs/cushion/armrests, a slow bob and a soft shadow on the floor under it so it's clearly *floating*.
+- **[minor] [camera/set]** The rope ladder and ceiling hatch sit directly in front of the Trolley painting: on return from the trolley (spawn 1.5,-5.2) the ladder cuts the painting in half and the hatch covers its top; the house's own first portal is its most occluded object.
+  Evidence: shots/033-back.jpg, 006.jpg
+  Suggestion: move the ladder/hatch a couple of metres right (toward the long-legged table), or hang the painting further left.
+- **[minor] [environmental storytelling]** The house has no asides at all: `debug` lists only the 5 portals and the journal. The window in the floor, the melting clocks, the long-legged table, the endless climber and the floating chair can't be examined; standing on the floor window does nothing. Every vignette has `look()` asides, but the hub, where players spend the most time, has none.
+  Evidence: debug at t=2s (interactables #0–#5 only); walked onto the window at (-1.3,5.9): no response.
+  Suggestion: add 2–3 `look()` lines in the house (the window: "Sky, all the way down."; the climber: "He's nearly at the top. He has been for a while."; the clock), and let the frog live here between vignettes.
+- **[idea] [environmental storytelling]** Portals don't remember what happened inside. After finishing the trolley the painting only gains a ✓ on its label; the picture itself is unchanged.
+  Evidence: shots/033-back.jpg
+  Suggestion: let the painting change with your last ending (a third track painted in; the tiny teal figure on the rails after "You chose yourself"); same for the book's page, the doors' light.
+
+### trolley-problem
+- **[major] [world/logic]** Standing on the main track does nothing. On run 1 I was among the five workers at (16.7,0.2) when the trolley went; it passed straight through my figure (and the workers flew) while I stood untouched, and the narration said only "You left the lever alone." In a scene whose drastic ending is "put yourself on the track", physically putting yourself on it is ignored.
+  Evidence: t=58–66s, shots/013-t63.jpg (trolley passing through the teal figure).
+  Suggestion: either knock the player flying too (and add a line: "You stood with them."), or have the workers/people shoo you off the rails when the trolley starts, so it never visibly clips through you.
+- **[major] [navigation]** Tap-to-walk gets stuck against the row of five workers. From the side-track worker (14,-5.5) walking to the third lever (use "Pull this lever" / walk 16 12) stops at (15.1,-0.5) and never arrives; also from (16.7,0.2) I could not reach (14,-5.8). All points in between are walkable, so the steering just jams on the worker line. Cost me the whole choice window twice (the run played out while I stood stuck).
+  Evidence: t=141–161s ("could not get the Pull this lever prompt"), t=252–272s (stuck at 15.1,-0.5).
+  Suggestion: route around the ends of the worker line (treat the line as one obstacle with a path around), or let the player pass between workers.
+- **[minor] [set dressing]** The place is a bare beige disc with a clump of trees at the back; tracks simply end in mid-field at the east edge. The five "working on the track" have no tools, no barrow, no hut, no reason to be there; the house painting promises a green hill and a tunnel that I never saw framed in the vignette.
+  Evidence: shots/021-edge.jpg, 022-far.jpg vs the painting in shots/002-window.jpg
+  Suggestion: add a work site (shovels, a sleeper pile, a tea urn, a flag) and end the tracks in a buffer stop or another tunnel mouth; bring the tunnel/hill from the painting into the opening shot so the portal image and the destination rhyme.
+- **[polish] [asides]** "Look at the driver" narrates that he has fainted, but the camera stays wide; you never actually see the slumped driver. The Talk prompt also sits on top of the worker's speech bubble.
+  Evidence: shots/017-driver.jpg, shots/027-sideworker.jpg
+  Suggestion: brief close-up (or a visible slumped head in the cab window) when looking at the driver; offset the Talk prompt below the bubble.
+- **[keep-worthy note]** The workers' slowed-down speech ("Loooveeelyyy daaayyy fooor iiit…", "Theeeyyy aaalwaaayyys puuut meee ooon myyy ooown…" from the lone one) is the best world-building in the room: it makes the people real *and* the slow-motion felt. Keep it.
+
+### brain-in-a-vat
+- **[major] [set dressing]** The "sunny afternoon" exists only in the narration. Lines say "A sunny afternoon", "The grass, the trees, the warmth", "You sit down. The sun is warm", but the ground is the same flat paper-beige as every other island, there's no grass, no sun, no warm light, no sky, no birds or breeze. The payoff line "Real or not, it's the only sun you have" lands on a scene with no sun in it.
+  Evidence: shots/037-arrive.jpg, shots/060-t670.jpg (sitting on the bench)
+  Suggestion: give layer 0 a green grass tint, warm key light and long soft shadows, a visible low sun disc (or sunbeams through the trees), a few butterflies/birds; then the lab layer's cold neutral light becomes a real contrast.
+- **[minor] [set dressing]** The lab is just a machine, a table and a jar on a bare disc. Nobody runs it: no stool, no coffee mug, no clipboard, no lab coat on a hook. Layer 2's lab is a pixel copy of layer 1.
+  Evidence: shots/045-t577.jpg, 050-t609.jpg
+  Suggestion: one or two traces of an absent keeper (a cold mug of tea, a notebook with a sketch of the tree, a chair pushed back). Vary layer 2 subtly (the mug is still warm there) so the recursion invites "who's watching *this* one?". The machine lines ("Somewhere in here is that tree", "It sounds like a summer afternoon") are excellent and would pair well with that.
+- **[minor] [asides]** The cottage aside is lovely ("Nobody home. Come to think of it, you've never seen anyone go in.") but the house is otherwise inert: black window, closed door, no chimney smoke. Nothing in layer 0 subtly *wrong* besides the edge.
+  Evidence: shots/038-window.jpg
+  Suggestion: add one more simulated-world tell you can find if you poke around (the door is painted on; a tree's shadow points the wrong way; the same leaf falls twice, matching the frog's déjà vu).
+- **[polish] [camera]** At the edge prompt (9.9,15.9) the player is mostly cropped at the bottom of the screen under the "Step off the edge" pill; and in the final pull-back of the "No way out" ending the teal figure is not visible anywhere, so the last image of "you're still looking through the same eyes" has no "you" in it.
+  Evidence: shots/040-edge2.jpg, shots/052-t645.jpg
+  Suggestion: frame the player higher at the edge; keep the tiny teal figure visible (falling or landed) in the final stack shot.
