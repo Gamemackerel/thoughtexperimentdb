@@ -26,6 +26,12 @@ FEEDBACK.md          the consolidated improvement list, by thought experiment, f
 5. **Coordinator.** The main session launches the playtesters as background agents with the persona, session name,
    part and output path, waits for all of them, then reads every `raw/*.md` and consolidates them into `FEEDBACK.md`.
 
+## Pilot
+
+Two pilot playtesters (`raw/pilot-calm.md`: trolley; `raw/pilot-bugs.md`: Fermi) validated the setup; their harness
+notes led to `until`, `use`, `onscreen`, non-blocking `teleport`, and settling past the fade-in before the first frame
+(so one pilot finding, an "abstract close-up first frame" in the house, was a harness artifact).
+
 ## Running it again
 
 ```sh

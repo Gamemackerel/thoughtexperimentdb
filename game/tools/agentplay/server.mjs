@@ -17,7 +17,8 @@ fs.mkdirSync(path.join(dir, 'shots'), { recursive: true });
 const args = ['--no-sandbox', '--ignore-gpu-blocklist', '--force-color-profile=srgb'];
 args.push(...(process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']));
 const browser = await puppeteer.launch({ headless: true, args, userDataDir: path.join(dir, 'profile') });
-let page, errors = [], dialogs = [], shotN = 0;
+let page, errors = [], dialogs = [], lastLong = new Map();
+let shotN = Math.max(0, ...fs.readdirSync(path.join(dir, 'shots')).map((f) => parseInt(f) || 0));   // never overwrite earlier shots
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function newPage(w, h, mobile) {
@@ -46,7 +47,7 @@ async function newPage(w, h, mobile) {
 const adv = (sec, until) => page.evaluate((s, u) => window.__vt.advance(s, { until: u }), sec, until ?? null);
 const loaded = () => page.evaluate(() => !!window.__ted?.level && document.getElementById('flash') && !document.getElementById('flash').classList.contains('on'));
 async function settle(max = 6) {           // wait for a level to finish loading (imports are real-time, the flash is virtual)
-  for (let i = 0; i < max * 10; i++) { if (await loaded()) return true; await adv(0.1); await sleep(30); }
+  for (let i = 0; i < max * 10; i++) { if (await loaded()) { await adv(0.7); return true; } await adv(0.1); await sleep(30); }   // (+0.7 s: the fade-in after the flash)
   return false;
 }
 
@@ -71,7 +72,14 @@ async function status({ full = false } = {}) {
   const lines = [`t=${s.t}s  level=${s.level}${s.pos ? `  you at ${s.pos}${s.moving ? ` (${s.moving})` : ''}${s.canMove === false ? '  [controls locked/seated]' : ''}${s.firstPerson ? '  [first person]' : ''}` : ''}`];
   if (s.state) lines.push('level state: ' + JSON.stringify(s.state));
   if (s.log.length) lines.push('what happened:', ...s.log.map((l) => '  ' + l));
-  lines.push('on screen now:', ...(s.visible.length ? s.visible.map(([k, v]) => `  [${k}] ${v}`) : ['  (no text)']));
+  // long panels (notebook, journal) are printed in full only when they change
+  const vis = s.visible.map(([k, v]) => {
+    if (!['notebook', 'journal'].includes(k)) return `  [${k}] ${v}`;
+    if (lastLong.get(k) === v) return `  [${k}] (open; same text as shown before)`;
+    lastLong.set(k, v); return `  [${k}] ${v}`;
+  });
+  for (const k of lastLong.keys()) if (!s.visible.some(([kk]) => kk === k)) lastLong.delete(k);
+  lines.push('on screen now:', ...(vis.length ? vis : ['  (no text)']));
   if (s.interactables) lines.push('interactables:', ...s.interactables.map((l) => '  ' + l), 'triggers:', ...s.triggers.map((l) => '  ' + l), `spawn: ${JSON.stringify(s.spawn)}  voice busy: ${s.voiceBusy}`);
   if (dialogs.length) lines.push(...dialogs.splice(0));
   if (errors.length) lines.push('ERRORS:', ...errors.splice(0).slice(0, 20).map((e) => '  ' + e));
@@ -168,9 +176,28 @@ const commands = {
   async drag(dx, dy) {   // drag across the canvas (first-person look)
     await page.mouse.move(640, 360); await page.mouse.down(); await page.mouse.move(640 + +dx, 360 + +dy, { steps: 12 }); await page.mouse.up(); await adv(0.2); return status();
   },
-  async teleport(level) { await page.evaluate((l) => window.__ted.ctx.goto(l), level); await settle(8); await adv(0.2); return status(); },
+  async teleport(level) {
+    for (let i = 0; i < 40; i++) {
+      if (await page.evaluate((l) => window.__ted.level?.name === l, level) && await loaded()) break;
+      if (i % 10 === 0) await page.evaluate((l) => { window.__ted.ctx.goto(l); }, level);   // (goto is ignored while another is in progress)
+      await adv(0.25); await sleep(30);
+    }
+    await settle(8); return status();
+  },
   async walkable(x, z) { return String(await page.evaluate((x, z) => window.__ted.level.walkable(x, z), +x, +z)); },
-  async eval(...code) { const r = await page.evaluate(code.join(' ')); await adv(1 / 30); return JSON.stringify(r, null, 1)?.slice(0, 6000) ?? 'undefined'; },
+  // where a world point (x, y, z) appears on screen, and whether it's in frame
+  async onscreen(x, y, z) {
+    return page.evaluate((x, y, z) => {
+      const cam = window.__ted.ctx.stage.camera, v = new cam.position.constructor(x, y, z);
+      const behind = v.clone().sub(cam.position).dot(cam.getWorldDirection(v.clone())) < 0;
+      v.project(cam);
+      const px = Math.round((v.x * 0.5 + 0.5) * innerWidth), py = Math.round((-v.y * 0.5 + 0.5) * innerHeight);
+      const inFrame = !behind && px >= 0 && px <= innerWidth && py >= 0 && py <= innerHeight;
+      return `(${x}, ${y}, ${z}) → screen (${px}, ${py}) of ${innerWidth}x${innerHeight}: ${inFrame ? 'IN FRAME' : behind ? 'behind the camera' : 'OFF SCREEN'}`;
+    }, +x, +y, +z);
+  },
+  // (a promise result isn't awaited: the clock is frozen, so it might never settle)
+  async eval(...code) { const r = await page.evaluate((c) => { const v = (0, eval)(c); return v && typeof v.then === 'function' ? '(a promise: not awaited, since the clock is frozen; advance time to let it run)' : v; }, code.join(' ')); await adv(1 / 30); return JSON.stringify(r, null, 1)?.slice(0, 6000) ?? 'undefined'; },
   async quit() { setTimeout(async () => { await browser.close(); process.exit(0); }, 100); return 'bye'; },
 };
 
@@ -184,7 +211,7 @@ const srv = createServer((req, res) => {
         const { cmd, args } = JSON.parse(body);
         if (!commands[cmd]) out = `unknown command "${cmd}". Commands: ${Object.keys(commands).join(', ')}`;
         else if (!page && cmd !== 'open' && cmd !== 'quit') out = 'no game open yet: run `open [level]` first';
-        else out = await commands[cmd](...args);
+        else out = await Promise.race([commands[cmd](...args), sleep(240000).then(() => { throw new Error('timed out after 240 s real time (the session may be stuck: try `open` to restart it)'); })]);
       } catch (e) { out = 'COMMAND FAILED: ' + e.message; }
       res.end(out);
     });

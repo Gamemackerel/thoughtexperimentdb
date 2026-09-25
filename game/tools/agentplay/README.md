@@ -31,10 +31,11 @@ labels, level changes, `phase` changes of the level's state) and all the text on
 | `type <text>` | Type into the focused text box. To answer the journal question on the game-over card: `clicksel "#answer"` then `type ...`. |
 | `drag <dx> <dy>` | Drag across the screen (look around in first person). |
 | `debug` | Status plus the level's hidden map: every interactable (prompt text, position, radius, distance, enabled), trigger areas and the spawn. Use it when you're lost. (Being lost is itself feedback: say where and why.) |
+| `onscreen <x> <y> <z>` | Where a world point appears on screen right now, and whether it's in frame (for framing checks). |
 | `walkable <x> <z>` | Whether that point is walkable ground. |
 | `teleport <level>` | Jump straight to a level (the game's own `goto`). |
-| `eval <js>` | Run JavaScript in the page and print the result (`window.__ted` has `ctx`, `player`, `interact`, `level`; `level.__S` is the level's state). |
-| `quit` | Close your browser session. |
+| `eval <js>` | Run JavaScript in the page and print the result (promises aren't awaited: the clock is frozen) (`window.__ted` has `ctx`, `player`, `interact`, `level`; `level.__S` is the level's state). |
+| `quit` | Close your browser session. If a session ever hangs, `open` again restarts the page; as a last resort, kill the `server.mjs` process for your session and delete `build/agentplay/<session>/port`. |
 
 Notes:
 - Audio is muted: narration shows up as `caption:` lines (the words and their timing are exact). CSS fades are instant.
