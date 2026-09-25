@@ -122,6 +122,6 @@ game/
    - Replay acknowledges the second choice.
    - No line overlaps another. There's no dead end, and no moment where the player doesn't know they can move.
    - The camera keeps the player, the hazard and everyone at stake in frame from anywhere the player can walk.
-   - Both endings are reachable. Automated playthroughs (`build/trolleytest2.mjs`, `?fast=<speed>`) drive `window.__ted` to check them.
+   - Both endings are reachable. Automated playthroughs (`game/tools/playtest-trolley.mjs`, `?fast=<speed>`) drive `window.__ted` to check them.
    - The frog appears exactly once. Captions are readable.
    - It works with keyboard, gamepad and touch.
