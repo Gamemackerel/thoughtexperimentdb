@@ -1,0 +1,72 @@
+{
+  "arrive": {
+    "file": "arrive-7252e202.mp3",
+    "text": "A room, two boxes, and something that has never once been wrong.",
+    "dur": 4.49
+  },
+  "predictor": {
+    "file": "predictor-797a454f.mp3",
+    "text": "It predicted what you would choose, before you came in. Yesterday.",
+    "dur": 4.34
+  },
+  "box_a": {
+    "file": "box_a-a031f7ce.mp3",
+    "text": "The glass box holds a thousand. You can see it.",
+    "dur": 3.68
+  },
+  "box_b": {
+    "file": "box_b-8e925d37.mp3",
+    "text": "The closed box holds a million, but only if it predicted you'd take the closed box alone. If it predicted you'd take both, it's empty.",
+    "dur": 8.23
+  },
+  "ask": {
+    "file": "ask-a27de4b4.mp3",
+    "text": "The money is already in there, or it isn't. One box, or both?",
+    "dur": 4.55
+  },
+  "ledger": {
+    "file": "ledger-b0a35151.mp3",
+    "text": "Everyone who took one box left with a million. Everyone who took both left with a thousand.",
+    "dur": 5.88
+  },
+  "one_1": {
+    "file": "one_1-51797654.mp3",
+    "text": "You open it. A million.",
+    "dur": 2.46
+  },
+  "one_2": {
+    "file": "one_2-75076f88.mp3",
+    "text": "It saw you coming. But the thousand was right there, and taking it couldn't have changed what was in the box. Could it?",
+    "dur": 6.77
+  },
+  "both_1": {
+    "file": "both_1-2ec0f9e2.mp3",
+    "text": "The closed box is empty. A thousand.",
+    "dur": 3.32
+  },
+  "both_2": {
+    "file": "both_2-6d592573.mp3",
+    "text": "Whatever it predicted was done yesterday. Taking both was bound to get you more than taking one. So why are you poorer?",
+    "dur": 7.24
+  },
+  "again": {
+    "file": "again-cad2ee77.mp3",
+    "text": "The next day. The same room, the same boxes.",
+    "dur": 3.55
+  },
+  "again_same": {
+    "file": "again_same-5fdae232.mp3",
+    "text": "The same choice again. It knew.",
+    "dur": 2.72
+  },
+  "again_diff": {
+    "file": "again_diff-2f4c760e.mp3",
+    "text": "You chose the other way this time. It knew that too.",
+    "dur": 3.68
+  },
+  "end": {
+    "file": "end-bac7625b.mp3",
+    "text": "About half of everyone takes one box, and half take both. Each half thinks the answer is obvious.",
+    "dur": 6.4
+  }
+}

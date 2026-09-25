@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-3b11a1e5.mp3",
+    "text": "A locked room. Cards come in through a slot in the wall, covered in marks you can't read.",
+    "dur": 5.54
+  },
+  "card": {
+    "file": "card-2d8e660b.mp3",
+    "text": "A card comes in.",
+    "dur": 1.91
+  },
+  "card_again": {
+    "file": "card_again-dc104638.mp3",
+    "text": "Another card.",
+    "dur": 1.36
+  },
+  "ask": {
+    "file": "ask-56a30fa5.mp3",
+    "text": "There's a rulebook. You don't need to understand the marks. Only to match them.",
+    "dur": 4.88
+  },
+  "book": {
+    "file": "book-c894b2be.mp3",
+    "text": "A huge rulebook. For every card that comes in, it shows you which card to send back.",
+    "dur": 5.46
+  },
+  "sent": {
+    "file": "sent-86729821.mp3",
+    "text": "You post it back. Outside, someone reads it.",
+    "dur": 3.68
+  },
+  "wrong": {
+    "file": "wrong-93a93d3a.mp3",
+    "text": "Wrong card. Outside, a puzzled pause.",
+    "dur": 3.42
+  },
+  "heap": {
+    "file": "heap-efc746a7.mp3",
+    "text": "Thousands of cards, all answered. You never found out what any of them said.",
+    "dur": 4.96
+  },
+  "reveal": {
+    "file": "reveal-53775700.mp3",
+    "text": "Outside, a woman has been asking you questions. How are you. Do you like tea. What's the weather like. You answered perfectly.",
+    "dur": 7.47
+  },
+  "understand": {
+    "file": "understand-77f59eb6.mp3",
+    "text": "To her, whoever is in the room speaks fluent Chinese. You don't know a single word.",
+    "dur": 5.09
+  },
+  "end": {
+    "file": "end-4630fd26.mp3",
+    "text": "If following the rules isn't understanding, what is? And is a computer, following its rules, any different from you?",
+    "dur": 7.11
+  },
+  "stop_end": {
+    "file": "stop_end-3174a597.mp3",
+    "text": "You stop answering. The cards pile up by the slot.",
+    "dur": 3.81
+  }
+}

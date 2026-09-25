@@ -1,0 +1,20 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "You're a surgeon, on your rounds.",
+    "five": "Five of your patients will die without a transplant. Each needs a different organ. There are no donors.",
+    "visitor": "In the waiting room, a healthy young man, in for a check-up.",
+    "match": "His tests came back this morning. He's a match, for all five.",
+    "ask": "One life could save five. Would you?",
+    "window": "Outside, visiting hours. Someone is bringing flowers.",
+    "letgo_1": "He walks out into the sunshine. Five of your patients will die waiting.",
+    "letgo_2": "It's the same arithmetic as the lever, five lives or one. Almost nobody would operate. So what makes the lever different?",
+    "operate_1": "Five patients will live. A healthy man came in for a check-up, and never went home.",
+    "operate_2": "The numbers are the same as the lever. But nearly everyone calls this murder. Why does this one feel so different?"
+  }
+}

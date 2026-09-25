@@ -1,15 +1,20 @@
 {
-  "voice": { "name": "bm_fable", "speed": 0.9, "lang": "en-gb" },
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
   "pronounce": {},
   "lines": {
-    "arrive":    "The ship of Theseus. Its wood is getting old.",
-    "planks":    "New planks are stacked on the dock.",
-    "first":     "One new plank. Still the same ship, surely.",
-    "half":      "Half of it is new now.",
-    "all":       "Not one original plank is left. Is it still the same ship?",
-    "twist":     "Someone has kept every old plank.",
-    "rebuilt":   "Two ships. Which one is the ship of Theseus?",
-    "new_end":   "You chose the ship that kept sailing. Its parts changed. Its story didn't.",
-    "old_end":   "You chose the original wood. Every plank is the same. But is the ship?"
+    "arrive": "The ship of Theseus. Its wood is getting old.",
+    "planks": "New parts are laid out on the dock. Planks, deck boards, a mast and a sail.",
+    "first": "One new plank. Still the same ship, surely.",
+    "half": "More than half of it is new now.",
+    "all": "Not one original part is left. Is it still the same ship?",
+    "twist": "Someone has kept every old part.",
+    "rebuilt": "Two ships. Which one is the ship of Theseus?",
+    "new_end": "You chose the ship that kept sailing. Its parts changed. Its story didn't.",
+    "old_end": "You chose the original wood. Every part is the same. But is the ship?",
+    "mast": "Even the mast. The old one lies on the dock."
   }
 }

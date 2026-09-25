@@ -1,0 +1,52 @@
+{
+  "arrive": {
+    "file": "arrive-bbb505f4.mp3",
+    "text": "You're a surgeon, on your rounds.",
+    "dur": 2.8
+  },
+  "five": {
+    "file": "five-b21a5fbd.mp3",
+    "text": "Five of your patients will die without a transplant. Each needs a different organ. There are no donors.",
+    "dur": 6.37
+  },
+  "visitor": {
+    "file": "visitor-c9f40106.mp3",
+    "text": "In the waiting room, a healthy young man, in for a check-up.",
+    "dur": 4.1
+  },
+  "match": {
+    "file": "match-10fbcdd2.mp3",
+    "text": "His tests came back this morning. He's a match, for all five.",
+    "dur": 4.34
+  },
+  "ask": {
+    "file": "ask-dc1d8feb.mp3",
+    "text": "One life could save five. Would you?",
+    "dur": 3.06
+  },
+  "window": {
+    "file": "window-0ae632f3.mp3",
+    "text": "Outside, visiting hours. Someone is bringing flowers.",
+    "dur": 4.05
+  },
+  "letgo_1": {
+    "file": "letgo_1-e932dd5f.mp3",
+    "text": "He walks out into the sunshine. Five of your patients will die waiting.",
+    "dur": 4.83
+  },
+  "letgo_2": {
+    "file": "letgo_2-3d4b77ba.mp3",
+    "text": "It's the same arithmetic as the lever, five lives or one. Almost nobody would operate. So what makes the lever different?",
+    "dur": 7.65
+  },
+  "operate_1": {
+    "file": "operate_1-d011ec33.mp3",
+    "text": "Five patients will live. A healthy man came in for a check-up, and never went home.",
+    "dur": 5.62
+  },
+  "operate_2": {
+    "file": "operate_2-1e28b0b3.mp3",
+    "text": "The numbers are the same as the lever. But nearly everyone calls this murder. Why does this one feel so different?",
+    "dur": 6.79
+  }
+}

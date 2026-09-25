@@ -262,12 +262,13 @@ export default function hall(ctx) {
     { id: 'simulation-argument', name: 'Simulation Argument', pos: V(0, 0, -2.2), labelAt: V(0, 3, -3.6), prompt: 'Look into the screen' },
     { id: 'fermi-paradox', name: 'Fermi Paradox', pos: V(6.2, 0, -1.8), labelAt: V(6.2, 3, -2.8), prompt: 'Look through the telescope' },
     { id: 'tragedy-of-the-commons', name: 'Tragedy of the Commons', pos: V(11.5, 0, -2.2), labelAt: V(11.5, 2.6, -3.6), prompt: 'Open the gate' },
+    { id: 'gallery', name: 'Up the stairs', pos: V(-12.2, 0, -2.6), labelAt: V(-12, 2.4, -3.9), prompt: 'Climb the stairs' },
     { id: 'house', name: 'Down to the first room', pos: V(-15, 0, 1.4), labelAt: V(-15, 1.6, 1.4), prompt: 'Climb down', home: true },
   ];
   let entering = null;
   for (const p of portals) interact.add({ pos: p.pos, radius: 2.2, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
-  const spawnAt = { 'grandfather-paradox': [-10, -1.4], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'tragedy-of-the-commons': [11.5, -1.2] }[ctx.from];
+  const spawnAt = { 'grandfather-paradox': [-10, -1.4], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'tragedy-of-the-commons': [11.5, -1.2], gallery: [-12.2, -1.6] }[ctx.from];
   const blockers = [{ x: LR.x - 0.6, z: LR.z, r: 0.9 }, { x: LR.x + 0.6, z: LR.z, r: 0.9 }, { x: -15.6, z: -3.4, r: 0.6 }, { x: FIRE.x, z: FIRE.z + 0.5, r: 1.1 }, { x: 14.4, z: 1.3, r: 0.5 }, { x: -10, z: -3.9, r: 0.8 }, { x: -5, z: -3.5, r: 1 }, { x: 0, z: -3.5, r: 1 }, { x: 6.2, z: -2.8, r: 0.6 }, { x: 11.5, z: -3.6, r: 0.6 }];
 
   return {

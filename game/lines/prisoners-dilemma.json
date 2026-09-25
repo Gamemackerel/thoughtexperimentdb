@@ -1,0 +1,25 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "You and your partner have been arrested. They've put you in separate rooms.",
+    "deal": "The deal. If you talk and your partner stays silent, you walk free, and they get three years.",
+    "deal_2": "If you both stay silent, one year each. If you both talk, two years each.",
+    "ask": "You can't know what your partner will do. So what do you do?",
+    "glass": "Through the glass, your partner. They can't see you. They're thinking exactly what you're thinking.",
+    "r_cc": "You both stayed silent. One year each.",
+    "r_dc": "You talked. Your partner didn't. You walk free, and they get three years.",
+    "r_cd": "You stayed silent. Your partner talked. Three years for you.",
+    "r_dd": "You both talked. Two years each.",
+    "again": "A year later, you're both picked up again. Same rooms, same deal.",
+    "again_2": "And again. Same rooms, same deal.",
+    "remember": "This time, your partner remembers what you did.",
+    "end_coop": "Whatever the other does, talking is always better for you alone. And yet, trusting each other left you both better off.",
+    "end_defect": "Each of you did the sensible thing, every time. Together, you did worse than if you'd both kept quiet.",
+    "end_mixed": "Your partner simply did whatever you did last time. Played again and again, being kind, but not a pushover, tends to do well."
+  }
+}

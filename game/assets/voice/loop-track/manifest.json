@@ -1,0 +1,72 @@
+{
+  "arrive": {
+    "file": "arrive-71180223.mp3",
+    "text": "A runaway trolley. This line has a loop in it.",
+    "dur": 3.71
+  },
+  "five": {
+    "file": "five-eb73eb55.mp3",
+    "text": "Five people, working on the main line.",
+    "dur": 3.03
+  },
+  "one": {
+    "file": "one-1f5993cb.mp3",
+    "text": "Out on the loop, one very large man.",
+    "dur": 3.03
+  },
+  "lever": {
+    "file": "lever-76e998ed.mp3",
+    "text": "This lever sends the trolley round the loop.",
+    "dur": 3.16
+  },
+  "ask": {
+    "file": "ask-77ea307a.mp3",
+    "text": "The loop comes back round to the five. Only his weight would stop the trolley. Should you pull it?",
+    "dur": 5.77
+  },
+  "sign": {
+    "file": "sign-7173e620.mp3",
+    "text": "The sign says: loop line. Rejoins main line.",
+    "dur": 3.89
+  },
+  "pulled_1": {
+    "file": "pulled_1-ec799880.mp3",
+    "text": "The trolley went round the loop, and he stopped it. The five are safe.",
+    "dur": 4.15
+  },
+  "pulled_2": {
+    "file": "pulled_2-17895e0f.mp3",
+    "text": "Watch what the loop does if nobody is on it.",
+    "dur": 3.34
+  },
+  "ghost": {
+    "file": "ghost-8a8a72cf.mp3",
+    "text": "Without him, it comes all the way round, and hits the five anyway. Pulling only works because it hits him.",
+    "dur": 6.4
+  },
+  "stayed_1": {
+    "file": "stayed_1-8ba90775.mp3",
+    "text": "You left the lever. The trolley stayed on the main line.",
+    "dur": 3.71
+  },
+  "stayed_2": {
+    "file": "stayed_2-dfb18202.mp3",
+    "text": "The loop would have saved them, but only by running into him. That isn't a side effect. It's the plan.",
+    "dur": 6.5
+  },
+  "again_same": {
+    "file": "again_same-653d2825.mp3",
+    "text": "The same choice again.",
+    "dur": 2.3
+  },
+  "again_diff": {
+    "file": "again_diff-6ca19354.mp3",
+    "text": "This time, you chose the other way.",
+    "dur": 2.87
+  },
+  "end": {
+    "file": "end-c1566a96.mp3",
+    "text": "On a plain side track, the one is just in the way. On the loop, you need him to be there. Does that change anything?",
+    "dur": 6.5
+  }
+}

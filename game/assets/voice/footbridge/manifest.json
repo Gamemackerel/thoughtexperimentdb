@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-4bc73eab.mp3",
+    "text": "A runaway trolley again. This time, you're on a bridge above the line.",
+    "dur": 4.7
+  },
+  "five": {
+    "file": "five-823c25e0.mp3",
+    "text": "Five people, working on the track ahead. They can't hear it coming.",
+    "dur": 4.34
+  },
+  "big": {
+    "file": "big-15015cd1.mp3",
+    "text": "Beside you, a very large man, leaning on the railing.",
+    "dur": 3.94
+  },
+  "ask": {
+    "file": "ask-81df8e86.mp3",
+    "text": "If he fell in front of the trolley, it would stop. Would you push him?",
+    "dur": 4.15
+  },
+  "too_light": {
+    "file": "too_light-eb58cdc5.mp3",
+    "text": "You look over the edge. You're too light to stop it. Only he is heavy enough.",
+    "dur": 4.86
+  },
+  "pushed_1": {
+    "file": "pushed_1-4aede9a1.mp3",
+    "text": "He stopped the trolley. The five are safe.",
+    "dur": 3.06
+  },
+  "pushed_2": {
+    "file": "pushed_2-fac21f31.mp3",
+    "text": "One life for five, the same trade as the lever. But this time you had to put your hands on him.",
+    "dur": 5.85
+  },
+  "stayed_1": {
+    "file": "stayed_1-bc8cee54.mp3",
+    "text": "You didn't push. The trolley went under the bridge, and on to the five.",
+    "dur": 4.39
+  },
+  "stayed_2": {
+    "file": "stayed_2-2ff6c45e.mp3",
+    "text": "Most people would pull the lever, but won't push. The numbers didn't change. So what did?",
+    "dur": 5.67
+  },
+  "again_same": {
+    "file": "again_same-653d2825.mp3",
+    "text": "The same choice again.",
+    "dur": 2.3
+  },
+  "again_diff": {
+    "file": "again_diff-6ca19354.mp3",
+    "text": "This time, you chose the other way.",
+    "dur": 2.87
+  },
+  "end": {
+    "file": "end-84fb78a6.mp3",
+    "text": "Steering the trolley past someone feels different from using them to stop it. Even when the numbers are the same.",
+    "dur": 6.5
+  }
+}

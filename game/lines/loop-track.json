@@ -1,0 +1,24 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A runaway trolley. This line has a loop in it.",
+    "five": "Five people, working on the main line.",
+    "one": "Out on the loop, one very large man.",
+    "lever": "This lever sends the trolley round the loop.",
+    "ask": "The loop comes back round to the five. Only his weight would stop the trolley. Should you pull it?",
+    "sign": "The sign says: loop line. Rejoins main line.",
+    "pulled_1": "The trolley went round the loop, and he stopped it. The five are safe.",
+    "pulled_2": "Watch what the loop does if nobody is on it.",
+    "ghost": "Without him, it comes all the way round, and hits the five anyway. Pulling only works because it hits him.",
+    "stayed_1": "You left the lever. The trolley stayed on the main line.",
+    "stayed_2": "The loop would have saved them, but only by running into him. That isn't a side effect. It's the plan.",
+    "again_same": "The same choice again.",
+    "again_diff": "This time, you chose the other way.",
+    "end": "On a plain side track, the one is just in the way. On the loop, you need him to be there. Does that change anything?"
+  }
+}

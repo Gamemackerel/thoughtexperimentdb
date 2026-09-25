@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A village feast. One cake, eight slices, and you're doing the serving.",
+    "monster": "At the head of the table sits the monster. Cake makes it far happier than it makes anyone else. A hundred times happier, every bite.",
+    "meter": "That meter adds up everyone's happiness.",
+    "meter_2": "The meter doesn't care who is happy. Only how much happiness there is, all added up.",
+    "ask": "If the right thing is whatever makes the most happiness in total, who should get the cake?",
+    "first_villager": "A little happier.",
+    "first_monster": "The meter leaps.",
+    "hungry": "The villagers are watching the monster eat.",
+    "end_monster": "Every slice went to the monster. The most happiness there could be. And six people went without.",
+    "end_shared": "You shared it out. Less happiness, added up. But everyone had some.",
+    "end_mixed": "Some for the monster, some for the village.",
+    "end": "Add up happiness, and the monster should get everything. Most people feel something has gone wrong in the adding."
+  }
+}

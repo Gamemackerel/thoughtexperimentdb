@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-53203693.mp3",
+    "text": "Three doors. Behind one, a car. Behind the other two, goats.",
+    "dur": 4.39
+  },
+  "pick": {
+    "file": "pick-39e05143.mp3",
+    "text": "Pick a door.",
+    "dur": 1.25
+  },
+  "host_opens": {
+    "file": "host_opens-ba49d030.mp3",
+    "text": "The host knows where the car is. He opens one of the other doors. A goat.",
+    "dur": 4.94
+  },
+  "ask": {
+    "file": "ask-d1fcee51.mp3",
+    "text": "Stay with your door, or switch to the other one?",
+    "dur": 3.29
+  },
+  "car": {
+    "file": "car-1b5217b3.mp3",
+    "text": "The car!",
+    "dur": 1.07
+  },
+  "goat": {
+    "file": "goat-4cfd478a.mp3",
+    "text": "A goat.",
+    "dur": 1.04
+  },
+  "think": {
+    "file": "think-4ad1fd14.mp3",
+    "text": "It feels like fifty-fifty. Two doors left, one car.",
+    "dur": 4.15
+  },
+  "hint": {
+    "file": "hint-b2a16f58.mp3",
+    "text": "But your first pick was right only one time in three, and the host's goat doesn't change that.",
+    "dur": 5.69
+  },
+  "sim_offer": {
+    "file": "sim_offer-b5233e06.mp3",
+    "text": "Want to see it properly? The big button plays it a hundred times.",
+    "dur": 4.36
+  },
+  "sim": {
+    "file": "sim-72f179e9.mp3",
+    "text": "A hundred games staying, a hundred switching.",
+    "dur": 3.5
+  },
+  "sim_result": {
+    "file": "sim_result-45140782.mp3",
+    "text": "Stay, and you win about a third of the time. Switch, and you win about two thirds.",
+    "dur": 5.41
+  },
+  "end": {
+    "file": "end-a9ea0ce5.mp3",
+    "text": "The host's door wasn't random. By showing you a goat, he told you something.",
+    "dur": 4.99
+  }
+}

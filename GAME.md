@@ -117,6 +117,39 @@ a hovering apple (you can talk to him). Escher's stairs climb into the ceiling. 
 | A telescope | **Fermi Paradox** | Listen to the static under the stars | Send a message · keep listening |
 | A garden gate | **Tragedy of the Commons** | Add sheep to the shared pasture; the neighbours copy you; the grass thins | The grass is gone · ring the bell and agree on limits |
 
+### The trolley room (built)
+
+Once you've finished the Trolley Problem, the painting in the first room opens onto a railway waiting room instead:
+green panelling, a station clock, a departures board, a stationmaster at the ticket window, and a model railway going
+round a table (throw the lever to reverse it). Four paintings hang on the wall, three of them rendered live from little
+clay scenes (`game/core/paint.js`) so they match the original.
+
+| Painting | Vignette | What you can do | Endings |
+|---|---|---|---|
+| The lever | **The Trolley Problem** | (as in the first room) | |
+| The footbridge | **The Footbridge** | On a bridge over the line, beside a very large man. Push him, and he stops the trolley; look over the railing (you're too light) | You pushed him · you kept your hands to yourself (after two runs) |
+| The loop | **The Loop** | The side track loops back to the five; one big man on the loop. Pull the lever; a ghost trolley then shows the loop with nobody on it | You needed him there · you left the lever (after two runs) |
+| The surgeon | **The Transplant Surgeon** | Five patients, five organs, no donors; a healthy visitor in the waiting room. Send him home, or take him to theatre (the doors close; nothing is shown) | You sent him home · you operated |
+
+### The gallery (built)
+
+Up Escher's stairs from the hall: a long room after Picasso. The walls are broken into tilted, overlapping planes; the
+floor is cut into facets; the far left is washed blue, where an old man plays guitar; harlequin pillars frame the portals;
+a grey mural (a bull, a horse crying out, a lamp like an eye) runs along the top; a sheet-metal guitar stands on a plinth;
+a weeping woman hangs with both eyes on one side of her face; a painter in a striped shirt will talk to you.
+
+| Portal | Vignette | What you can do | Endings |
+|---|---|---|---|
+| A ring under glass | **The Ring of Gyges** | Find the ring in the bronze horse; turn it (R) to vanish; take apples, coins or the king's gold; walk past the guards | Throw it back into the dark · keep it and walk into the hills |
+| A cell door | **The Prisoner's Dilemma** | Sign the statement or say nothing, three times; your partner plays tit for tat | You kept quiet · you talked every time · it depended on last time |
+| Two boxes | **Newcomb's Paradox** | Take the closed box or both; the Predictor is never wrong; come back tomorrow | You took one box · you took both boxes |
+| A cake | **The Utility Monster** | Carry eight slices to six villagers or the monster; a meter adds up happiness | You fed the monster · you shared the cake · your own way |
+| A door with a slot | **The Chinese Room** | Take each card, find its rule in the book, post back the matching card; then see who you've been talking to | You answered perfectly · you stopped answering |
+| Three doors | **The Monty Hall Problem** | Pick, watch the host show a goat, stay or switch; then play a hundred times each way | Switching wins two times in three |
+
+Rooms are hubs: "Back to the house" on the game-over card (and Esc) returns you to the room you came from (`HOME_ROOM` and
+`ctx.hub` in `game/main.js`).
+
 New rooms: add a level in `game/house/`, register it in `LEVELS` (`game/main.js`), link it from an existing room with a
 portal whose id is the room's level id, and give it a spawn for `ctx.from` (so players come back beside the portal they
 used). Hall portals and spawns are in `game/house/hall.js`.
@@ -157,7 +190,10 @@ game/
     interact.js         proximity triggers, interactables + prompts, one-shot/repeatable events
     voice.js            plays pre-rendered lines with captions, and queues them so they never overlap
     ui.css              prompts, captions, notebook, portal flashes
-  house/house.js        the hub
+  house/house.js        the first room; house/hall.js, house/trolley-room.js, house/gallery.js: the other rooms
+  core/paint.js         paintings rendered live from little clay scenes
+  core/props.js         shared props (sheep, goat, car, text cards)
+  core/trolley-kit.js   framing camera, knock-away and slowed speech for the trolley variants
   vignettes/<id>.js     one module per thought experiment: build(ctx) → { update(dt), dispose() }
   lines/<id>.json       voice lines per vignette (id → text), with pronounce rules
   journal.json          the journal: one guided question and a to-do list of sources per vignette
@@ -167,6 +203,9 @@ game/
   tools/voice.mjs       renders lines with Kokoro → assets/voice
   tools/serve.mjs       local dev server → http://localhost:5173/game/ (also appends POST /feedback to feedback.txt)
   tools/playtest-asides.mjs  watches every frog cameo and tries every aside (screenshots to build/asides-*)
+  tools/playtest-variants.mjs  the trolley room and its three variants
+  tools/playtest-gallery.mjs   the Picasso gallery and its six vignettes
+  tools/shot.mjs        quick screenshots of any level after walking to given points
   tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
 ```
 

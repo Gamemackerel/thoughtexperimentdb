@@ -5,9 +5,9 @@
     "dur": 3.6
   },
   "planks": {
-    "file": "planks-8819a4c3.mp3",
-    "text": "New planks are stacked on the dock.",
-    "dur": 2.72
+    "file": "planks-daf847d9.mp3",
+    "text": "New parts are laid out on the dock. Planks, deck boards, a mast and a sail.",
+    "dur": 5.25
   },
   "first": {
     "file": "first-95a82d4a.mp3",
@@ -15,19 +15,19 @@
     "dur": 3.5
   },
   "half": {
-    "file": "half-2d8fc706.mp3",
-    "text": "Half of it is new now.",
-    "dur": 2.27
+    "file": "half-7ebc4150.mp3",
+    "text": "More than half of it is new now.",
+    "dur": 2.61
   },
   "all": {
-    "file": "all-adf28de5.mp3",
-    "text": "Not one original plank is left. Is it still the same ship?",
-    "dur": 4.36
+    "file": "all-b338b082.mp3",
+    "text": "Not one original part is left. Is it still the same ship?",
+    "dur": 4.26
   },
   "twist": {
-    "file": "twist-e1f2e6f0.mp3",
-    "text": "Someone has kept every old plank.",
-    "dur": 2.9
+    "file": "twist-0ee6deac.mp3",
+    "text": "Someone has kept every old part.",
+    "dur": 2.95
   },
   "rebuilt": {
     "file": "rebuilt-3b145c94.mp3",
@@ -40,8 +40,13 @@
     "dur": 5.12
   },
   "old_end": {
-    "file": "old_end-b4184554.mp3",
-    "text": "You chose the original wood. Every plank is the same. But is the ship?",
-    "dur": 4.78
+    "file": "old_end-06b9df15.mp3",
+    "text": "You chose the original wood. Every part is the same. But is the ship?",
+    "dur": 4.83
+  },
+  "mast": {
+    "file": "mast-94a42566.mp3",
+    "text": "Even the mast. The old one lies on the dock.",
+    "dur": 3.34
   }
 }

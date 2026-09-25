@@ -1,0 +1,77 @@
+{
+  "arrive": {
+    "file": "arrive-a928a126.mp3",
+    "text": "You and your partner have been arrested. They've put you in separate rooms.",
+    "dur": 4.55
+  },
+  "deal": {
+    "file": "deal-b6ace18c.mp3",
+    "text": "The deal. If you talk and your partner stays silent, you walk free, and they get three years.",
+    "dur": 5.56
+  },
+  "deal_2": {
+    "file": "deal_2-44a64fe7.mp3",
+    "text": "If you both stay silent, one year each. If you both talk, two years each.",
+    "dur": 5.2
+  },
+  "ask": {
+    "file": "ask-99f5919a.mp3",
+    "text": "You can't know what your partner will do. So what do you do?",
+    "dur": 3.76
+  },
+  "glass": {
+    "file": "glass-95a69f33.mp3",
+    "text": "Through the glass, your partner. They can't see you. They're thinking exactly what you're thinking.",
+    "dur": 5.41
+  },
+  "r_cc": {
+    "file": "r_cc-e55c6929.mp3",
+    "text": "You both stayed silent. One year each.",
+    "dur": 3.29
+  },
+  "r_dc": {
+    "file": "r_dc-907c0373.mp3",
+    "text": "You talked. Your partner didn't. You walk free, and they get three years.",
+    "dur": 4.55
+  },
+  "r_cd": {
+    "file": "r_cd-c74286fd.mp3",
+    "text": "You stayed silent. Your partner talked. Three years for you.",
+    "dur": 4.13
+  },
+  "r_dd": {
+    "file": "r_dd-5ffff15c.mp3",
+    "text": "You both talked. Two years each.",
+    "dur": 2.85
+  },
+  "again": {
+    "file": "again-a919ba3c.mp3",
+    "text": "A year later, you're both picked up again. Same rooms, same deal.",
+    "dur": 4.73
+  },
+  "again_2": {
+    "file": "again_2-9c4fc691.mp3",
+    "text": "And again. Same rooms, same deal.",
+    "dur": 3.13
+  },
+  "remember": {
+    "file": "remember-b283343f.mp3",
+    "text": "This time, your partner remembers what you did.",
+    "dur": 3.47
+  },
+  "end_coop": {
+    "file": "end_coop-202c2ef0.mp3",
+    "text": "Whatever the other does, talking is always better for you alone. And yet, trusting each other left you both better off.",
+    "dur": 6.95
+  },
+  "end_defect": {
+    "file": "end_defect-3119da04.mp3",
+    "text": "Each of you did the sensible thing, every time. Together, you did worse than if you'd both kept quiet.",
+    "dur": 6.5
+  },
+  "end_mixed": {
+    "file": "end_mixed-708e6bac.mp3",
+    "text": "Your partner simply did whatever you did last time. Played again and again, being kind, but not a pushover, tends to do well.",
+    "dur": 7.73
+  }
+}

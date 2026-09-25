@@ -1,0 +1,23 @@
+{
+  "title": "The Chinese Room",
+  "summary": "John Searle imagined himself locked in a room with a rulebook for manipulating Chinese characters. Questions in Chinese come in; by following the rules, he sends back answers good enough to convince people outside that the room understands Chinese. But he understands none of it. Searle argued that a computer running a program is in the same position: manipulating symbols by rules is not enough for understanding, however convincing the output. His critics answered that the understanding might belong to the whole system (the man, the book and the room together) rather than to the man.",
+  "citations": [
+    "John R. Searle, \"Minds, Brains, and Programs,\" Behavioral and Brain Sciences 3, no. 3 (1980): 417–457",
+    "David Cole, \"The Chinese Room Argument,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/chinese-room/"
+  ],
+  "essay": {
+    "creator": "Philosophy Vibe",
+    "title": "Functionalism and John Searle's Chinese Room Argument",
+    "url": "https://www.youtube.com/watch?v=EW5K1CyegJ0"
+  },
+  "also": [
+    {
+      "creator": "Carneades.org",
+      "title": "The Chinese Room (Thought Experiment)",
+      "url": "https://www.youtube.com/watch?v=1MwGFG2hg3k"
+    }
+  ],
+  "reading": [
+    "Alan M. Turing, \"Computing Machinery and Intelligence,\" Mind 59 (1950): 433–460"
+  ]
+}

@@ -4,94 +4,387 @@
     "title": "The Trolley Problem",
     "question": "Most people would pull the lever, but wouldn't push someone off a bridge to stop the same trolley. Is there a real difference between the two? What is it?",
     "todo": [
-      { "text": "read where it started: Philippa Foot, “The Problem of Abortion and the Doctrine of the Double Effect” (1967). The trolley is a tiny example in the middle of it" },
-      { "text": "then Judith Jarvis Thomson, “The Trolley Problem” (1985), who turned it into the puzzle, and “Turning the Trolley” (2008), where she changed her mind" },
-      { "text": "watch Gregory Sadler walk through Foot's cases", "url": "https://www.youtube.com/watch?v=PoN7uLlc55g" },
-      { "text": "and Michael Sandel's first Justice lecture", "url": "https://www.youtube.com/watch?v=kBdfcR-8hEY" },
-      { "text": "look up doing vs. allowing harm in the Stanford Encyclopedia of Philosophy", "url": "https://plato.stanford.edu/entries/doing-allowing/" }
+      {
+        "text": "read where it started: Philippa Foot, “The Problem of Abortion and the Doctrine of the Double Effect” (1967). The trolley is a tiny example in the middle of it"
+      },
+      {
+        "text": "then Judith Jarvis Thomson, “The Trolley Problem” (1985), who turned it into the puzzle, and “Turning the Trolley” (2008), where she changed her mind"
+      },
+      {
+        "text": "watch Gregory Sadler walk through Foot's cases",
+        "url": "https://www.youtube.com/watch?v=PoN7uLlc55g"
+      },
+      {
+        "text": "and Michael Sandel's first Justice lecture",
+        "url": "https://www.youtube.com/watch?v=kBdfcR-8hEY"
+      },
+      {
+        "text": "look up doing vs. allowing harm in the Stanford Encyclopedia of Philosophy",
+        "url": "https://plato.stanford.edu/entries/doing-allowing/"
+      }
     ]
   },
   "brain-in-a-vat": {
     "title": "Brain in a Vat",
     "question": "If you could never, ever tell the difference, would it matter to you whether your world was real? Why?",
     "todo": [
-      { "text": "read the First Meditation, where Descartes imagines an evil demon feeding him a false world (the plain-English version)", "url": "https://www.earlymoderntexts.com/assets/pdfs/descartes1641.pdf" },
-      { "text": "then Hilary Putnam, “Brains in a Vat” (1981), chapter 1 of Reason, Truth and History. He argues you can't even coherently say it" },
-      { "text": "watch Sanford Goldberg explain Putnam's argument", "url": "https://www.youtube.com/watch?v=lv_Br6RMRUk" },
-      { "text": "the Internet Encyclopedia of Philosophy entry on it", "url": "https://iep.utm.edu/brain-in-a-vat-argument/" },
-      { "text": "and the Stanford Encyclopedia entry on content externalism and skepticism", "url": "https://plato.stanford.edu/entries/skepticism-content-externalism/" }
+      {
+        "text": "read the First Meditation, where Descartes imagines an evil demon feeding him a false world (the plain-English version)",
+        "url": "https://www.earlymoderntexts.com/assets/pdfs/descartes1641.pdf"
+      },
+      {
+        "text": "then Hilary Putnam, “Brains in a Vat” (1981), chapter 1 of Reason, Truth and History. He argues you can't even coherently say it"
+      },
+      {
+        "text": "watch Sanford Goldberg explain Putnam's argument",
+        "url": "https://www.youtube.com/watch?v=lv_Br6RMRUk"
+      },
+      {
+        "text": "the Internet Encyclopedia of Philosophy entry on it",
+        "url": "https://iep.utm.edu/brain-in-a-vat-argument/"
+      },
+      {
+        "text": "and the Stanford Encyclopedia entry on content externalism and skepticism",
+        "url": "https://plato.stanford.edu/entries/skepticism-content-externalism/"
+      }
     ]
   },
   "platos-cave": {
     "title": "Plato's Cave",
     "question": "Think of something you once believed completely and later saw differently. What was it like to turn around, and did you try to tell anyone?",
     "todo": [
-      { "text": "read the original: Plato, Republic, Book VII (514a–521b). It's only a few pages", "url": "https://www.gutenberg.org/ebooks/1497" },
-      { "text": "watch Mahon McCann's reading of Book 7", "url": "https://www.youtube.com/watch?v=9qfrsUbxt5I" },
-      { "text": "or the short TED-Ed version", "url": "https://www.youtube.com/watch?v=1RWOpQXTltA" },
-      { "text": "Stanford Encyclopedia on the ethics and politics of the Republic", "url": "https://plato.stanford.edu/entries/plato-ethics-politics/" }
+      {
+        "text": "read the original: Plato, Republic, Book VII (514a–521b). It's only a few pages",
+        "url": "https://www.gutenberg.org/ebooks/1497"
+      },
+      {
+        "text": "watch Mahon McCann's reading of Book 7",
+        "url": "https://www.youtube.com/watch?v=9qfrsUbxt5I"
+      },
+      {
+        "text": "or the short TED-Ed version",
+        "url": "https://www.youtube.com/watch?v=1RWOpQXTltA"
+      },
+      {
+        "text": "Stanford Encyclopedia on the ethics and politics of the Republic",
+        "url": "https://plato.stanford.edu/entries/plato-ethics-politics/"
+      }
     ]
   },
   "ship-of-theseus": {
     "title": "Ship of Theseus",
     "question": "Which one was the real ship: the repaired one, or the one rebuilt from the old planks? What made you decide?",
     "todo": [
-      { "text": "find the original: Plutarch's Life of Theseus, section 23 (volume 1 of the Lives)", "url": "https://www.gutenberg.org/ebooks/14033" },
-      { "text": "Hobbes added the second ship built from the old planks, in De Corpore (1655), part II, ch. 11" },
-      { "text": "watch Jennifer Wang's Wireless Philosophy video", "url": "https://www.youtube.com/watch?v=dYAoiLhOuao" },
-      { "text": "Stanford Encyclopedia: identity over time", "url": "https://plato.stanford.edu/entries/identity-time/" }
+      {
+        "text": "find the original: Plutarch's Life of Theseus, section 23 (volume 1 of the Lives)",
+        "url": "https://www.gutenberg.org/ebooks/14033"
+      },
+      {
+        "text": "Hobbes added the second ship built from the old planks, in De Corpore (1655), part II, ch. 11"
+      },
+      {
+        "text": "watch Jennifer Wang's Wireless Philosophy video",
+        "url": "https://www.youtube.com/watch?v=dYAoiLhOuao"
+      },
+      {
+        "text": "Stanford Encyclopedia: identity over time",
+        "url": "https://plato.stanford.edu/entries/identity-time/"
+      }
     ]
   },
   "grandfather-paradox": {
     "title": "The Grandfather Paradox",
     "question": "If you could go back, do you think you could change anything at all? What would stop you, or what wouldn't?",
     "todo": [
-      { "text": "David Lewis, “The Paradoxes of Time Travel” (1976). He says you can, and you can't, at the same time" },
-      { "text": "the story it's usually traced to: René Barjavel's novel Le Voyageur imprudent (1943)" },
-      { "text": "watch the Edinburgh INTROPHIL video on grandfather paradoxes", "url": "https://www.youtube.com/watch?v=4IWQfL0Ah8k" },
-      { "text": "Stanford Encyclopedia: time travel", "url": "https://plato.stanford.edu/entries/time-travel/" }
+      {
+        "text": "David Lewis, “The Paradoxes of Time Travel” (1976). He says you can, and you can't, at the same time"
+      },
+      {
+        "text": "the story it's usually traced to: René Barjavel's novel Le Voyageur imprudent (1943)"
+      },
+      {
+        "text": "watch the Edinburgh INTROPHIL video on grandfather paradoxes",
+        "url": "https://www.youtube.com/watch?v=4IWQfL0Ah8k"
+      },
+      {
+        "text": "Stanford Encyclopedia: time travel",
+        "url": "https://plato.stanford.edu/entries/time-travel/"
+      }
     ]
   },
   "infinite-monkey": {
     "title": "The Infinite Monkey Theorem",
     "question": "The monkeys typed “To be, or not to be” without meaning it. Do the words mean anything when no one meant them? Why?",
     "todo": [
-      { "text": "the original: Émile Borel's 1913 paper on statistical mechanics, where the typing monkeys first appear" },
-      { "text": "and Arthur Eddington's version in The Nature of the Physical World (1928), ch. 4" },
-      { "text": "watch Today I Found Out on the time someone actually tried it", "url": "https://www.youtube.com/watch?v=cEbX8EM3IEU" },
-      { "text": "the Wikipedia article has the actual odds", "url": "https://en.wikipedia.org/wiki/Infinite_monkey_theorem" }
+      {
+        "text": "the original: Émile Borel's 1913 paper on statistical mechanics, where the typing monkeys first appear"
+      },
+      {
+        "text": "and Arthur Eddington's version in The Nature of the Physical World (1928), ch. 4"
+      },
+      {
+        "text": "watch Today I Found Out on the time someone actually tried it",
+        "url": "https://www.youtube.com/watch?v=cEbX8EM3IEU"
+      },
+      {
+        "text": "the Wikipedia article has the actual odds",
+        "url": "https://en.wikipedia.org/wiki/Infinite_monkey_theorem"
+      }
     ]
   },
   "simulation-argument": {
     "title": "The Simulation Argument",
     "question": "If you found out for certain that you were in a simulation, would anything you care about change? What, and why?",
     "todo": [
-      { "text": "read the original paper: Nick Bostrom, “Are You Living in a Computer Simulation?” (2003)", "url": "https://www.simulation-argument.com/" },
-      { "text": "watch Bostrom explain it himself", "url": "https://www.youtube.com/watch?v=nnl6nY8YKHs" },
-      { "text": "David Chalmers, Reality+ (2022), for the case that a simulated world is still real" },
-      { "text": "the Wikipedia overview of the simulation hypothesis", "url": "https://en.wikipedia.org/wiki/Simulation_hypothesis" }
+      {
+        "text": "read the original paper: Nick Bostrom, “Are You Living in a Computer Simulation?” (2003)",
+        "url": "https://www.simulation-argument.com/"
+      },
+      {
+        "text": "watch Bostrom explain it himself",
+        "url": "https://www.youtube.com/watch?v=nnl6nY8YKHs"
+      },
+      {
+        "text": "David Chalmers, Reality+ (2022), for the case that a simulated world is still real"
+      },
+      {
+        "text": "the Wikipedia overview of the simulation hypothesis",
+        "url": "https://en.wikipedia.org/wiki/Simulation_hypothesis"
+      }
     ]
   },
   "fermi-paradox": {
     "title": "The Fermi Paradox",
     "question": "Would you send the message, not knowing who, or what, might hear it? Why?",
     "todo": [
-      { "text": "read Eric Jones's account of the lunch where Fermi asked “Where is everybody?” (Los Alamos, 1985)", "url": "https://www.osti.gov/biblio/5746675" },
-      { "text": "Michael Hart's 1975 paper arguing the silence means there's no one out there" },
-      { "text": "watch Kurzgesagt, part 1", "url": "https://www.youtube.com/watch?v=sNhhvQGsMEc" },
-      { "text": "and part 2, the possible answers", "url": "https://www.youtube.com/watch?v=1fQkVqno-uI" },
-      { "text": "Wikipedia keeps a long list of proposed solutions", "url": "https://en.wikipedia.org/wiki/Fermi_paradox" }
+      {
+        "text": "read Eric Jones's account of the lunch where Fermi asked “Where is everybody?” (Los Alamos, 1985)",
+        "url": "https://www.osti.gov/biblio/5746675"
+      },
+      {
+        "text": "Michael Hart's 1975 paper arguing the silence means there's no one out there"
+      },
+      {
+        "text": "watch Kurzgesagt, part 1",
+        "url": "https://www.youtube.com/watch?v=sNhhvQGsMEc"
+      },
+      {
+        "text": "and part 2, the possible answers",
+        "url": "https://www.youtube.com/watch?v=1fQkVqno-uI"
+      },
+      {
+        "text": "Wikipedia keeps a long list of proposed solutions",
+        "url": "https://en.wikipedia.org/wiki/Fermi_paradox"
+      }
     ]
   },
   "tragedy-of-the-commons": {
     "title": "The Tragedy of the Commons",
     "question": "Think of something shared in your own life: a kitchen, a road, the air. What keeps it from being used up, or what would?",
     "todo": [
-      { "text": "the original: William Forster Lloyd's lectures on population (1833), with the overgrazed pasture", "url": "https://archive.org/details/twolecturesonch00lloygoog" },
-      { "text": "Garrett Hardin, “The Tragedy of the Commons,” Science (1968), which made it famous" },
-      { "text": "then Elinor Ostrom, Governing the Commons (1990). Real communities that did agree on limits" },
-      { "text": "watch an explainer on Ostrom's work", "url": "https://www.youtube.com/watch?v=OEcMLEwaltc" },
-      { "text": "Wikipedia overview", "url": "https://en.wikipedia.org/wiki/Tragedy_of_the_commons" }
+      {
+        "text": "the original: William Forster Lloyd's lectures on population (1833), with the overgrazed pasture",
+        "url": "https://archive.org/details/twolecturesonch00lloygoog"
+      },
+      {
+        "text": "Garrett Hardin, “The Tragedy of the Commons,” Science (1968), which made it famous"
+      },
+      {
+        "text": "then Elinor Ostrom, Governing the Commons (1990). Real communities that did agree on limits"
+      },
+      {
+        "text": "watch an explainer on Ostrom's work",
+        "url": "https://www.youtube.com/watch?v=OEcMLEwaltc"
+      },
+      {
+        "text": "Wikipedia overview",
+        "url": "https://en.wikipedia.org/wiki/Tragedy_of_the_commons"
+      }
+    ]
+  },
+  "footbridge": {
+    "title": "The Footbridge",
+    "question": "You'd pull a lever to save five, but would you push someone? If the two feel different, what exactly is the difference?",
+    "todo": [
+      {
+        "text": "read Judith Jarvis Thomson, “Killing, Letting Die, and the Trolley Problem” (1976), where the man on the bridge comes from"
+      },
+      {
+        "text": "watch Christina Hendricks on the “fat man” case",
+        "url": "https://www.youtube.com/watch?v=sMKZ6OHVE0g"
+      },
+      {
+        "text": "David Edmonds, Would You Kill the Fat Man? A whole book on this one bridge"
+      },
+      {
+        "text": "Stanford Encyclopedia: the doctrine of double effect",
+        "url": "https://plato.stanford.edu/entries/double-effect/"
+      }
+    ]
+  },
+  "loop-track": {
+    "title": "The Loop",
+    "question": "On the loop, the plan only works because the trolley hits him. Does that make pulling the lever worse than in the ordinary case? Why?",
+    "todo": [
+      {
+        "text": "read Thomson, “The Trolley Problem” (1985), where the loop first appears"
+      },
+      {
+        "text": "watch Christina Hendricks on the bystander and the loop",
+        "url": "https://www.youtube.com/watch?v=QtKjuHfjXFc"
+      },
+      {
+        "text": "the 90-second version from Carneades",
+        "url": "https://www.youtube.com/watch?v=pO6APdiyYRg"
+      },
+      {
+        "text": "Stanford Encyclopedia: the doctrine of double effect",
+        "url": "https://plato.stanford.edu/entries/double-effect/"
+      }
+    ]
+  },
+  "transplant": {
+    "title": "The Transplant Surgeon",
+    "question": "Five lives for one, just like the lever. Why does nearly everyone say the surgeon mustn't? What would you point to?",
+    "todo": [
+      {
+        "text": "read Thomson, “Killing, Letting Die, and the Trolley Problem” (1976), where the surgeon sits next to the trolley"
+      },
+      {
+        "text": "watch Gregory Sadler on killing and letting die",
+        "url": "https://www.youtube.com/watch?v=clhP-rJdFE0"
+      },
+      {
+        "text": "and Michael Sandel's Justice lecture, which puts the doctor and the trolley side by side",
+        "url": "https://www.youtube.com/watch?v=kBdfcR-8hEY"
+      },
+      {
+        "text": "Stanford Encyclopedia: doing vs. allowing harm",
+        "url": "https://plato.stanford.edu/entries/doing-allowing/"
+      }
+    ]
+  },
+  "ring-of-gyges": {
+    "title": "The Ring of Gyges",
+    "question": "If you knew for certain that nobody would ever find out, is there anything you'd do that you don't do now? What keeps you from it?",
+    "todo": [
+      {
+        "text": "read the original: Plato, Republic, Book II (359a–360d). Glaucon tells the story",
+        "url": "https://www.gutenberg.org/ebooks/1497"
+      },
+      {
+        "text": "then keep going: the rest of the Republic is Socrates trying to answer it"
+      },
+      {
+        "text": "watch Gregory Sadler on the ring",
+        "url": "https://www.youtube.com/watch?v=N_74l1VPjWI"
+      },
+      {
+        "text": "Stanford Encyclopedia: Plato's ethics and politics in the Republic",
+        "url": "https://plato.stanford.edu/entries/plato-ethics-politics/"
+      }
+    ]
+  },
+  "prisoners-dilemma": {
+    "title": "The Prisoner's Dilemma",
+    "question": "Talking is better for you whatever your partner does, yet trusting each other left you both better off. When have you been in a situation like this, and what did you do?",
+    "todo": [
+      {
+        "text": "watch Veritasium on the prisoner's dilemma and the tournaments",
+        "url": "https://www.youtube.com/watch?v=mScpHTIi-kM"
+      },
+      {
+        "text": "read Robert Axelrod, The Evolution of Cooperation (1984). Why tit for tat kept winning"
+      },
+      {
+        "text": "the game started at RAND in 1950 (Flood and Dresher); Albert Tucker added the prisoners"
+      },
+      {
+        "text": "Stanford Encyclopedia: prisoner's dilemma",
+        "url": "https://plato.stanford.edu/entries/prisoner-dilemma/"
+      }
+    ]
+  },
+  "newcombs-paradox": {
+    "title": "Newcomb's Paradox",
+    "question": "One box or two? Write down the argument for the answer you didn't choose, as strongly as you can. Does it change your mind?",
+    "todo": [
+      {
+        "text": "read Robert Nozick, “Newcomb's Problem and Two Principles of Choice” (1969)"
+      },
+      {
+        "text": "watch Veritasium, who found people split 50/50",
+        "url": "https://www.youtube.com/watch?v=Ol18JoeXlVI"
+      },
+      {
+        "text": "and Julia Galef on why it's a problem for rationality",
+        "url": "https://www.youtube.com/watch?v=2KxJ6eTY9bA"
+      },
+      {
+        "text": "Stanford Encyclopedia: causal decision theory",
+        "url": "https://plato.stanford.edu/entries/decision-causal/"
+      }
+    ]
+  },
+  "utility-monster": {
+    "title": "The Utility Monster",
+    "question": "The monster really would be happier. What, if anything, is wrong with giving it the whole cake? What does adding up happiness leave out?",
+    "todo": [
+      {
+        "text": "read Robert Nozick, Anarchy, State, and Utopia (1974), p. 41, where the monster appears in a single paragraph"
+      },
+      {
+        "text": "watch Learn Liberty on who decides the greater good",
+        "url": "https://www.youtube.com/watch?v=8xt-mIrJh0g"
+      },
+      {
+        "text": "Stanford Encyclopedia: consequentialism",
+        "url": "https://plato.stanford.edu/entries/consequentialism/"
+      },
+      {
+        "text": "Wikipedia on the utility monster",
+        "url": "https://en.wikipedia.org/wiki/Utility_monster"
+      }
+    ]
+  },
+  "chinese-room": {
+    "title": "The Chinese Room",
+    "question": "You answered perfectly and understood nothing. What would it take for the room, or a computer, to really understand? How would you ever tell?",
+    "todo": [
+      {
+        "text": "read John Searle, “Minds, Brains, and Programs” (1980), and the replies printed alongside it"
+      },
+      {
+        "text": "and Alan Turing, “Computing Machinery and Intelligence” (1950), the test the room is aimed at"
+      },
+      {
+        "text": "watch Philosophy Vibe on functionalism and the room",
+        "url": "https://www.youtube.com/watch?v=EW5K1CyegJ0"
+      },
+      {
+        "text": "Stanford Encyclopedia: the Chinese room argument",
+        "url": "https://plato.stanford.edu/entries/chinese-room/"
+      }
+    ]
+  },
+  "monty-hall": {
+    "title": "The Monty Hall Problem",
+    "question": "Before you saw the tally, did switching feel like it shouldn't matter? Try explaining why it does to someone else, without any numbers.",
+    "todo": [
+      {
+        "text": "watch Numberphile's Monty Hall video",
+        "url": "https://www.youtube.com/watch?v=4Lb-6rxZxx0"
+      },
+      {
+        "text": "find Steve Selvin's two letters in The American Statistician (1975), where it started"
+      },
+      {
+        "text": "look up the letters Marilyn vos Savant got after her Parade column (1990). Many were from mathematicians, and they were wrong"
+      },
+      {
+        "text": "Wikipedia has good diagrams",
+        "url": "https://en.wikipedia.org/wiki/Monty_Hall_problem"
+      }
     ]
   }
 }

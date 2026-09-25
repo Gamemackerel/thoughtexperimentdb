@@ -1,0 +1,17 @@
+{
+  "title": "The Prisoner's Dilemma",
+  "summary": "Two partners in crime are questioned separately. If one confesses and the other stays silent, the one who talks goes free and the other gets a long sentence; if both stay silent, both get a short one; if both talk, both get a medium one. Whatever the other does, each is better off talking, yet if both reason that way, both end up worse off than if they had trusted each other. The game was devised by Merrill Flood and Melvin Dresher at RAND in 1950, and Albert Tucker gave it the prisoners' story. When the game is repeated, Robert Axelrod's tournaments found that a simple strategy, tit for tat (cooperate first, then copy what the other did last time), did remarkably well.",
+  "citations": [
+    "Merrill M. Flood, \"Some Experimental Games,\" RAND Research Memorandum RM-789 (1952), reporting the 1950 experiment with Melvin Dresher",
+    "Robert Axelrod, The Evolution of Cooperation (Basic Books, 1984)",
+    "Steven Kuhn, \"Prisoner's Dilemma,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/prisoner-dilemma/"
+  ],
+  "essay": {
+    "creator": "Veritasium",
+    "title": "This game theory problem will change the way you see the world",
+    "url": "https://www.youtube.com/watch?v=mScpHTIi-kM"
+  },
+  "reading": [
+    "William Poundstone, Prisoner's Dilemma (Doubleday, 1992)"
+  ]
+}

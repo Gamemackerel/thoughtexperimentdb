@@ -1,0 +1,24 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A room, two boxes, and something that has never once been wrong.",
+    "predictor": "It predicted what you would choose, before you came in. Yesterday.",
+    "box_a": "The glass box holds a thousand. You can see it.",
+    "box_b": "The closed box holds a million, but only if it predicted you'd take the closed box alone. If it predicted you'd take both, it's empty.",
+    "ask": "The money is already in there, or it isn't. One box, or both?",
+    "ledger": "Everyone who took one box left with a million. Everyone who took both left with a thousand.",
+    "one_1": "You open it. A million.",
+    "one_2": "It saw you coming. But the thousand was right there, and taking it couldn't have changed what was in the box. Could it?",
+    "both_1": "The closed box is empty. A thousand.",
+    "both_2": "Whatever it predicted was done yesterday. Taking both was bound to get you more than taking one. So why are you poorer?",
+    "again": "The next day. The same room, the same boxes.",
+    "again_same": "The same choice again. It knew.",
+    "again_diff": "You chose the other way this time. It knew that too.",
+    "end": "About half of everyone takes one box, and half take both. Each half thinks the answer is obvious."
+  }
+}

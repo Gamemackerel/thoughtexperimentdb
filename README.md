@@ -1,11 +1,13 @@
 # Thought Experiment Database
 
-**An art game about thought experiments.** You walk through a surreal house (an Escher and Dalí first room, a Magritte
-hall) and step through paintings, books, doors and clocks into short playable vignettes: the Trolley Problem, Brain in a
-Vat, Plato's Cave, the Ship of Theseus, the Grandfather Paradox, the Infinite Monkey Theorem, the Simulation Argument, the
-Fermi Paradox and the Tragedy of the Commons. You act, the world responds, and a quiet narrator says a little about what
-you did. After each one, a question for your journal, which also keeps the original sources and video essays to go
-further.
+**An art game about thought experiments.** You walk through a surreal house and step through paintings, books, doors
+and clocks into short playable vignettes. There are four rooms. The first is after Escher and Dalí: the Trolley Problem,
+Brain in a Vat, Plato's Cave and the Ship of Theseus. The hall is after Magritte: the Grandfather Paradox, the Infinite
+Monkey Theorem, the Simulation Argument, the Fermi Paradox and the Tragedy of the Commons. The trolley room holds the
+Footbridge, the Loop and the Transplant Surgeon. The gallery is after Picasso: the Ring of Gyges, the Prisoner's Dilemma,
+Newcomb's Paradox, the Utility Monster, the Chinese Room and the Monty Hall Problem. You act, the world responds, and a
+quiet narrator says a little about what you did. After each one there's a question for your journal, which also keeps
+the original sources and video essays for going further.
 
 Play it: `npm install`, then `npm run play` and open http://localhost:5173/game/. How it's made, and how to add a new
 vignette: [GAME.md](GAME.md). Playtest notes left on the game-over card land in `feedback.txt`.

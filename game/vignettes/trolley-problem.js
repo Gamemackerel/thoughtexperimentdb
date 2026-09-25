@@ -162,7 +162,7 @@ export default function trolley(ctx) {
   interact.add({
     pos: () => frame.position, radius: 2.4, height: 3.6, prompt: 'Step back through the frame',
     enabled: () => S.frameOn > 0.9 && S.phase === 'slow' && !selfChosen(),
-    onUse: () => ctx.goto('house'),
+    onUse: () => ctx.goto(ctx.hub),
   });
   interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five'); } });
   interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one'); } });

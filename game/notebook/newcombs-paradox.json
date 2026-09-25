@@ -1,0 +1,23 @@
+{
+  "title": "Newcomb's Paradox",
+  "summary": "A reliable Predictor has put a thousand in a clear box, and either a million or nothing in a closed box: a million if it predicted you would take only the closed box, nothing if it predicted you would take both. The prediction was made before you choose. One argument says take both: whatever is in the closed box is already there, and taking the clear box too can only add. Another says take one: those who take one box walk away rich. The physicist William Newcomb devised the problem; Robert Nozick published it in 1969, noting that almost everyone finds the answer obvious, and that people divide almost evenly over which answer that is.",
+  "citations": [
+    "Robert Nozick, \"Newcomb's Problem and Two Principles of Choice,\" in Essays in Honor of Carl G. Hempel, ed. Nicholas Rescher (Reidel, 1969): 114–146",
+    "Paul Weirich, \"Causal Decision Theory,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/decision-causal/"
+  ],
+  "essay": {
+    "creator": "Veritasium",
+    "title": "This Paradox Splits Smart People 50/50",
+    "url": "https://www.youtube.com/watch?v=Ol18JoeXlVI"
+  },
+  "also": [
+    {
+      "creator": "Julia Galef",
+      "title": "Newcomb's Problem and the tragedy of rationality",
+      "url": "https://www.youtube.com/watch?v=2KxJ6eTY9bA"
+    }
+  ],
+  "reading": [
+    "\"Newcomb's paradox,\" Wikipedia: https://en.wikipedia.org/wiki/Newcomb%27s_paradox"
+  ]
+}

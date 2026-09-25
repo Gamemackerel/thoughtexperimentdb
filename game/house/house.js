@@ -235,7 +235,7 @@ export default function house(ctx) {
 
   // ---- portals
   const portals = [
-    { id: 'trolley-problem', name: 'The Trolley Problem', pos: V(PAINTING.x, 0, -6.4), labelAt: PAINTING.clone().add(V(0, 1.75, 0.2)), prompt: 'Step into the painting', open: true },
+    { id: 'trolley-problem', name: 'The Trolley Problem', roomName: 'The Trolley Room', pos: V(PAINTING.x, 0, -6.4), labelAt: PAINTING.clone().add(V(0, 1.75, 0.2)), prompt: 'Step into the painting', open: true },
     { id: 'brain-in-a-vat', name: 'Brain in a Vat', pos: BOOK.clone(), labelAt: BOOK.clone().add(V(0, 2.2, 0)), prompt: 'Open the book', open: true },
     { id: 'platos-cave', name: "Plato's Cave", pos: V(-7, 0, 3.4), labelAt: V(-7.7, 3.7, 3.4), prompt: 'Open the door', open: true },
     { id: 'hall', name: 'Up to the hall', pos: V(2.5, 0, 2.6), labelAt: V(2.5, 5.2, 1.9), prompt: 'Climb the ladder', open: true },
@@ -273,7 +273,7 @@ export default function house(ctx) {
     root,
     ground: [ground],
     // come back out next to the portal you went through
-    spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
+    spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'trolley-room': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
       'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, hall: { x: 2.5, z: 3.4, rotY: 0 }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
     walkable: (x, z) => Math.abs(x) < ROOM && Math.abs(z) < ROOM && Math.hypot(x - FLOOR_WINDOW.x, z - FLOOR_WINDOW.z) > FLOOR_WINDOW.r + 0.2,
     blockers: () => [...blockers, ...stairBlock],
@@ -310,11 +310,15 @@ export default function house(ctx) {
         const d = Math.hypot(ctx.player.pos.x - p.pos.x, ctx.player.pos.z - p.pos.z);
         const o = clamp((6 - d) / 2.5);
         const done = save.done.has(p.id) ? ' ✓' : '';
-        ctx.ui.label('portal-' + p.id, entering || ctx.journalOpen ? 0 : o, `<span class="dot" style="background:${css(p.open ? palette.agent : palette.rail)}"></span>${p.name}${done}`, p.labelAt);
+        ctx.ui.label('portal-' + p.id, entering || ctx.journalOpen ? 0 : o, `<span class="dot" style="background:${css(p.open ? palette.agent : palette.rail)}"></span>${p.roomName && save.done.has(p.id) ? p.roomName : p.name}${done}`, p.labelAt);
       }
       if (entering) {
         entering.t += dt;
-        if (entering.t > 1.3 && !entering.gone) { entering.gone = true; ctx.goto(entering.portal.id); }
+        if (entering.t > 1.3 && !entering.gone) {
+          entering.gone = true;
+          // once you've been through the trolley painting, it opens onto a room of trolley paintings
+          ctx.goto(entering.portal.id === 'trolley-problem' && save.done.has('trolley-problem') ? 'trolley-room' : entering.portal.id);
+        }
       }
     },
   };

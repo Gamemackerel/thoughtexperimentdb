@@ -17,6 +17,24 @@ const LEVELS = {
   'simulation-argument': () => import('./vignettes/simulation-argument.js'),
   'fermi-paradox': () => import('./vignettes/fermi-paradox.js'),
   'tragedy-of-the-commons': () => import('./vignettes/tragedy-of-the-commons.js'),
+  'trolley-room': () => import('./house/trolley-room.js'),
+  footbridge: () => import('./vignettes/footbridge.js'),
+  'loop-track': () => import('./vignettes/loop-track.js'),
+  transplant: () => import('./vignettes/transplant.js'),
+  gallery: () => import('./house/gallery.js'),
+  'ring-of-gyges': () => import('./vignettes/ring-of-gyges.js'),
+  'prisoners-dilemma': () => import('./vignettes/prisoners-dilemma.js'),
+  'newcombs-paradox': () => import('./vignettes/newcombs-paradox.js'),
+  'utility-monster': () => import('./vignettes/utility-monster.js'),
+  'chinese-room': () => import('./vignettes/chinese-room.js'),
+  'monty-hall': () => import('./vignettes/monty-hall.js'),
+};
+// rooms of the house (hubs), and which room each vignette belongs to (where "back" goes)
+const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery']);
+const HOME_ROOM = {
+  'grandfather-paradox': 'hall', 'infinite-monkey': 'hall', 'simulation-argument': 'hall', 'fermi-paradox': 'hall', 'tragedy-of-the-commons': 'hall',
+  footbridge: 'trolley-room', 'loop-track': 'trolley-room', transplant: 'trolley-room',
+  'ring-of-gyges': 'gallery', 'prisoners-dilemma': 'gallery', 'newcombs-paradox': 'gallery', 'utility-monster': 'gallery', 'chinese-room': 'gallery', 'monty-hall': 'gallery',
 };
 
 // ---------------------------------------------------------------- stage (full window, crisp on hi-dpi)
@@ -55,6 +73,7 @@ const save = {
 const ctx = {
   stage, get ui() { return ui; }, player, interact, voice, save, wait,
   goto: (name) => goto(name),
+  hub: 'house',                // the room of the house you last came from (where "back" goes)
   toast(text, secs = 3) { toastEl.innerHTML = text; toastEl.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('on'), secs * 1000); },
   async flash(on) { flash.classList.toggle('on', on); await wait(0.6); },
   // a speech bubble over someone (or something) for a few seconds; one at a time per speaker
@@ -118,7 +137,7 @@ over.addEventListener('click', (e) => {
   const act = e.target.dataset?.act; if (!act) return;
   sendFeedback();
   over.hidden = true;
-  goto(act === 'again' ? level.name : 'house');
+  goto(act === 'again' ? level.name : ctx.hub);
 });
 
 // ---------------------------------------------------------------- levels
@@ -132,6 +151,8 @@ async function goto(name) {
   interact.clear(); voice.stop(); bubbles.clear(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
+  if (HUBS.has(name)) ctx.hub = name;
+  else if (!HUBS.has(ctx.from)) ctx.hub = HOME_ROOM[name] ?? 'house';
   // every level starts from the default light; levels may dim or tint it
   stage.hemi.intensity = 1.6; stage.sun.intensity = 2.4; stage.hemi.color.set(0xfff6e8); stage.sun.color.set(0xfff1dc);
   stage.renderer.toneMappingExposure = 1.05;
@@ -178,7 +199,7 @@ addEventListener('keydown', (e) => {
   if (e.code === 'Escape') {
     if (!nb.hidden) { nb.hidden = true; return; }
     if (!journalEl.hidden) { closeJournal(); return; }
-    if (level && level.name !== 'house' && confirm('Leave this vignette and return to the house?')) goto('house');
+    if (level && !HUBS.has(level.name) && confirm('Leave this vignette and return to the house?')) goto(ctx.hub);
   }
 });
 nb.addEventListener('pointerdown', (e) => { if (e.target.classList.contains('close')) nb.hidden = true; });

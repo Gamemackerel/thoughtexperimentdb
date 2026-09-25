@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "Three doors. Behind one, a car. Behind the other two, goats.",
+    "pick": "Pick a door.",
+    "host_opens": "The host knows where the car is. He opens one of the other doors. A goat.",
+    "ask": "Stay with your door, or switch to the other one?",
+    "car": "The car!",
+    "goat": "A goat.",
+    "think": "It feels like fifty-fifty. Two doors left, one car.",
+    "hint": "But your first pick was right only one time in three, and the host's goat doesn't change that.",
+    "sim_offer": "Want to see it properly? The big button plays it a hundred times.",
+    "sim": "A hundred games staying, a hundred switching.",
+    "sim_result": "Stay, and you win about a third of the time. Switch, and you win about two thirds.",
+    "end": "The host's door wasn't random. By showing you a goat, he told you something."
+  }
+}

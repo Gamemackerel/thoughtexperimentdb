@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A locked room. Cards come in through a slot in the wall, covered in marks you can't read.",
+    "card": "A card comes in.",
+    "card_again": "Another card.",
+    "ask": "There's a rulebook. You don't need to understand the marks. Only to match them.",
+    "book": "A huge rulebook. For every card that comes in, it shows you which card to send back.",
+    "sent": "You post it back. Outside, someone reads it.",
+    "wrong": "Wrong card. Outside, a puzzled pause.",
+    "heap": "Thousands of cards, all answered. You never found out what any of them said.",
+    "reveal": "Outside, a woman has been asking you questions. How are you. Do you like tea. What's the weather like. You answered perfectly.",
+    "understand": "To her, whoever is in the room speaks fluent Chinese. You don't know a single word.",
+    "end": "If following the rules isn't understanding, what is? And is a computer, following its rules, any different from you?",
+    "stop_end": "You stop answering. The cards pile up by the slot."
+  }
+}

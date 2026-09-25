@@ -1,0 +1,17 @@
+{
+  "title": "The Monty Hall Problem",
+  "summary": "On a game show there are three doors: a car behind one, goats behind the other two. You pick a door; the host, who knows where the car is, opens one of the others to show a goat, and offers you the chance to switch. Most people feel it's now fifty-fifty, but switching wins two times in three: your first pick is right only a third of the time, and when it's wrong the host's choice leaves the car behind the other door. Steve Selvin posed it in 1975; when Marilyn vos Savant gave the answer in Parade magazine in 1990, thousands of readers, many with PhDs, wrote in to say she was wrong.",
+  "citations": [
+    "Steve Selvin, \"A Problem in Probability,\" letter to the editor, The American Statistician 29, no. 1 (1975): 67",
+    "Steve Selvin, \"On the Monty Hall Problem,\" The American Statistician 29, no. 3 (1975): 134"
+  ],
+  "essay": {
+    "creator": "Numberphile",
+    "title": "Monty Hall Problem",
+    "url": "https://www.youtube.com/watch?v=4Lb-6rxZxx0"
+  },
+  "reading": [
+    "Jason Rosenhouse, The Monty Hall Problem (Oxford University Press, 2009)",
+    "\"Monty Hall problem,\" Wikipedia: https://en.wikipedia.org/wiki/Monty_Hall_problem"
+  ]
+}

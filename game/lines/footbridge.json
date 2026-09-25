@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A runaway trolley again. This time, you're on a bridge above the line.",
+    "five": "Five people, working on the track ahead. They can't hear it coming.",
+    "big": "Beside you, a very large man, leaning on the railing.",
+    "ask": "If he fell in front of the trolley, it would stop. Would you push him?",
+    "too_light": "You look over the edge. You're too light to stop it. Only he is heavy enough.",
+    "pushed_1": "He stopped the trolley. The five are safe.",
+    "pushed_2": "One life for five, the same trade as the lever. But this time you had to put your hands on him.",
+    "stayed_1": "You didn't push. The trolley went under the bridge, and on to the five.",
+    "stayed_2": "Most people would pull the lever, but won't push. The numbers didn't change. So what did?",
+    "again_same": "The same choice again.",
+    "again_diff": "This time, you chose the other way.",
+    "end": "Steering the trolley past someone feels different from using them to stop it. Even when the numbers are the same."
+  }
+}

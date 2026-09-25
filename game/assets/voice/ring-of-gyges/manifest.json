@@ -1,0 +1,67 @@
+{
+  "arrive": {
+    "file": "arrive-17136f6f.mp3",
+    "text": "You're a shepherd. After the storm, the ground has split open.",
+    "dur": 4.15
+  },
+  "horse": {
+    "file": "horse-a33e431a.mp3",
+    "text": "Down in the crack, a hollow bronze horse. Inside it, a gold ring.",
+    "dur": 4.73
+  },
+  "take": {
+    "file": "take-11dc47b9.mp3",
+    "text": "You take the ring.",
+    "dur": 1.85
+  },
+  "turn": {
+    "file": "turn-6f022f47.mp3",
+    "text": "Turn it inwards, and you vanish. Turn it back, and you're here again.",
+    "dur": 4.34
+  },
+  "ask": {
+    "file": "ask-b18cee68.mp3",
+    "text": "Nobody can see you. Nobody would ever know. Would you still do what's right?",
+    "dur": 4.86
+  },
+  "took": {
+    "file": "took-166aaf12.mp3",
+    "text": "Nobody saw.",
+    "dur": 1.59
+  },
+  "guards": {
+    "file": "guards-78598408.mp3",
+    "text": "The guards look straight through you.",
+    "dur": 2.56
+  },
+  "treasury": {
+    "file": "treasury-7e8fa7c9.mp3",
+    "text": "The king's gold. Nobody is watching.",
+    "dur": 3.16
+  },
+  "flock": {
+    "file": "flock-568583d6.mp3",
+    "text": "Your sheep. If you vanished, they'd just carry on eating.",
+    "dur": 3.68
+  },
+  "throw_clean": {
+    "file": "throw_clean-8be41aa9.mp3",
+    "text": "You drop the ring back into the dark. You never found out what you would have done with it.",
+    "dur": 4.96
+  },
+  "throw_took": {
+    "file": "throw_took-34a44ff7.mp3",
+    "text": "You drop the ring back into the dark. What you took, you keep. Nobody will ever know.",
+    "dur": 5.22
+  },
+  "keep_clean": {
+    "file": "keep_clean-ed41f481.mp3",
+    "text": "You keep the ring, and walk off into the hills. You haven't used it. Yet.",
+    "dur": 4.75
+  },
+  "keep_took": {
+    "file": "keep_took-1c5fcc65.mp3",
+    "text": "You keep the ring, and walk off into the hills. You already know what you'd do with it.",
+    "dur": 4.94
+  }
+}

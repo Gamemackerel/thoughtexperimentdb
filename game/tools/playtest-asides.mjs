@@ -18,8 +18,15 @@ const PLAN = {
   'fermi-paradox': { watch: [0, 6], start: true },
   'tragedy-of-the-commons': { watch: [-4.5, 16.5], start: true },
   'platos-cave': { cave: true },
+  footbridge: { wait: 9, watch: [2, 1.5] },
+  'loop-track': { wait: 9, watch: [-7.2, 3.8] },
+  transplant: { watch: [9, 1], start: true },
+  'prisoners-dilemma': { watch: [-3.6, 1.2], start: true },
+  'newcombs-paradox': { watch: [0, 1.6], start: true },
+  'utility-monster': { watch: [-1, 3.4], start: true },
+  'chinese-room': { watch: [1, 0.6], start: true },
 };
-const ASIDE = /^(Talk|Say hello|Look|Read the)/;
+const ASIDE = /^(Talk|Say hello|Look|Read the)/;   // (ring of gyges and monty hall start their frogs mid-scene: see playtest-gallery)
 
 for (const [id, plan] of Object.entries(PLAN)) {
   if (only && only !== id) continue;

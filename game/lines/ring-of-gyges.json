@@ -1,0 +1,23 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "You're a shepherd. After the storm, the ground has split open.",
+    "horse": "Down in the crack, a hollow bronze horse. Inside it, a gold ring.",
+    "take": "You take the ring.",
+    "turn": "Turn it inwards, and you vanish. Turn it back, and you're here again.",
+    "ask": "Nobody can see you. Nobody would ever know. Would you still do what's right?",
+    "took": "Nobody saw.",
+    "guards": "The guards look straight through you.",
+    "treasury": "The king's gold. Nobody is watching.",
+    "flock": "Your sheep. If you vanished, they'd just carry on eating.",
+    "throw_clean": "You drop the ring back into the dark. You never found out what you would have done with it.",
+    "throw_took": "You drop the ring back into the dark. What you took, you keep. Nobody will ever know.",
+    "keep_clean": "You keep the ring, and walk off into the hills. You haven't used it. Yet.",
+    "keep_took": "You keep the ring, and walk off into the hills. You already know what you'd do with it."
+  }
+}

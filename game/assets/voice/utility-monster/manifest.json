@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-3af2b9d0.mp3",
+    "text": "A village feast. One cake, eight slices, and you're doing the serving.",
+    "dur": 4.83
+  },
+  "monster": {
+    "file": "monster-a68f9a8f.mp3",
+    "text": "At the head of the table sits the monster. Cake makes it far happier than it makes anyone else. A hundred times happier, every bite.",
+    "dur": 7.97
+  },
+  "meter": {
+    "file": "meter-005edf97.mp3",
+    "text": "That meter adds up everyone's happiness.",
+    "dur": 3.24
+  },
+  "meter_2": {
+    "file": "meter_2-c4da2aba.mp3",
+    "text": "The meter doesn't care who is happy. Only how much happiness there is, all added up.",
+    "dur": 5.43
+  },
+  "ask": {
+    "file": "ask-ee599171.mp3",
+    "text": "If the right thing is whatever makes the most happiness in total, who should get the cake?",
+    "dur": 5.17
+  },
+  "first_villager": {
+    "file": "first_villager-103cdee4.mp3",
+    "text": "A little happier.",
+    "dur": 1.49
+  },
+  "first_monster": {
+    "file": "first_monster-f8329b41.mp3",
+    "text": "The meter leaps.",
+    "dur": 1.52
+  },
+  "hungry": {
+    "file": "hungry-6c87ff0c.mp3",
+    "text": "The villagers are watching the monster eat.",
+    "dur": 2.9
+  },
+  "end_monster": {
+    "file": "end_monster-214ab378.mp3",
+    "text": "Every slice went to the monster. The most happiness there could be. And six people went without.",
+    "dur": 5.93
+  },
+  "end_shared": {
+    "file": "end_shared-94a89fd8.mp3",
+    "text": "You shared it out. Less happiness, added up. But everyone had some.",
+    "dur": 4.52
+  },
+  "end_mixed": {
+    "file": "end_mixed-ccff4b61.mp3",
+    "text": "Some for the monster, some for the village.",
+    "dur": 3.06
+  },
+  "end": {
+    "file": "end-ebc09706.mp3",
+    "text": "Add up happiness, and the monster should get everything. Most people feel something has gone wrong in the adding.",
+    "dur": 6.48
+  }
+}
