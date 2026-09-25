@@ -1,7 +1,12 @@
 # polish · room 1 (house, trolley-problem, brain-in-a-vat, platos-cave, ship-of-theseus)
 
 ## Summary
-(in progress)
+- Collision is the weakest layer: the first room has none for furniture (you walk through the Penrose stairs, desk, ladder, coat stand), the cave's low wall has walk-through gaps, and trees/posts/stacks everywhere are mostly ghost geometry. Nothing traps you, but everything clips.
+- Prompts are the second: they sit on the figure's head, collide with captions and speech bubbles, and in two places a live prompt is invisible or overlaps a vignette-ending action ("Sit back down" in the cave behind the first-person camera; "Sit down" next to the tree in Brain in a Vat).
+- Captions at the bottom band hide the player whenever the framer puts the figure low (vat edge, cave outside), and stale queued lines play after endings, even over the game-over card.
+- Occlusion: the figure disappears behind the Penrose stairs, the vat cottage, the cave mound and the fisherman, with no silhouette or fade.
+- Phone portrait needs its own framing: rooms become a thin band, labels keep desktop size and cover the portals, and the trolley's choice is ~10 px tall.
+- Every ending in room 1 is reachable and nothing soft-locked; movement itself (steering, edge sliding, tap-to-walk) feels smooth apart from walking in place against blockers.
 
 ## Findings
 ### house
@@ -120,3 +125,13 @@
 - **[polish] [visual]** The ramp where the beach meets the pier renders as flickery horizontal stripes (looks like z-fighting between the ramp and the sand).
   Evidence: shots/091-ship-arrive.jpg (x≈410–480, y≈430–490), 113-pier-join.jpg.
   Suggestion: lift the ramp a few mm above the sand or give it a polygon offset.
+
+## Keep
+- Edge sliding on world boundaries (holding W+D along the pier, the vat's disc edge, the house walls) is smooth, with no jitter or snagging.
+- The first-person yaw limit while chained in the cave feels right, and the switch to third person outside reads clearly.
+- The game-over card layout on desktop: generous, calm and readable. On phone it fits without scrolling (apart from the stray caption).
+- The trolley's self-lever run and the vat's three-layer fall play cleanly end to end with no stuck states; Play again / Back to the house always worked and returned you beside the portal you used.
+
+## Harness notes
+- `use board the ship of old planks` from (16,-1.2) stopped at (16,-0.5) with the other ship's prompt still active and gave up after 20 s. A plain `walk 16 1.2` + `press e` worked. This may be the harness picking the wrong interactable when two share an x position, and it partly overlaps the game's own prompt-overlap problem noted above.
+- `use` reports "trying to walk to a target but not getting closer" after it has already pressed E and the portal transition has locked controls. That's harmless.
