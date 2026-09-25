@@ -1,7 +1,11 @@
 # generic-wild · room 1 (house, trolley-problem, brain-in-a-vat, platos-cave, ship-of-theseus)
 
 ## Summary
-(in progress)
+- The room survives a player who won't play along: every portal and Esc worked, no crashes or console errors, every ending I went for was reachable, and Play again / Back to the house always came back cleanly.
+- What it doesn't anticipate is the obvious "wrong" move. I stood on the trolley track in front of the trolley, and the trolley passed through me while the narrator said "You left the lever alone." In Brain in a Vat I sat on the bench in the first second and got an ending about doubt I'd never felt.
+- Mashing E is punished or glitchy in a few places. In the cave the "Sit back down" prompt is already under you when the chains fall, so one stray E ends the vignette. Talk bubbles get stuck on screen (cave: one followed me outside into daylight and onto the game-over card; also the Ship's fisherman).
+- If you walk the wrong way, the game mostly goes quiet: nothing nudges you to turn around in the cave, nothing happens if you idle at the Ship's choice, and after going back into the cave the way up is a silent dead end.
+- If you rush, the payoffs shrink. Brain in a Vat can be cleared in about 60 s. The Ship's replay makes you redo six planks before you get to choose again.
 
 ## Findings
 ### house
@@ -10,6 +14,11 @@
   Suggestion: give the staircase a rounded/convex collider or add a waypoint so tap-to-walk slides around its left edge instead of pinning against it.
 - **[idea] [interaction]** Standing on the sky window in the floor (0,5.5 → -1.3,5.9) and pressing E / N does nothing. As a player who does the "wrong" thing, the hole in the floor is the first thing I'd poke.
   Suggestion: one `look()` aside line or a tiny wobble/cloud drift when you step on it.
+- **[minor] [journal]** The journal keeps only the last ending per vignette. My trolley entry says "Someone is always on the track" and the "You chose yourself" ending I reached first is gone. Brain in a Vat shows "You stayed", not "No way out". A player who tries the weird ending first loses the record of it.
+  Evidence: `052-journal.jpg`.
+  Suggestion: list every ending reached (small ticks or dates), and keep the answer tied to the ending it was written for.
+- **[polish] [prompt]** Both doors in the room use the same prompt, "Open the door" (Plato's Cave and the sky door to Ship of Theseus). The floating labels tell them apart, but the prompt alone doesn't.
+  Suggestion: "Open the purple door" / "Open the sky door".
 
 ### trolley-problem
 - **[major] [narrative/bug]** Run 1: I ignored the lever and walked straight onto the main track in front of the trolley at (-5, 0) and stood there. The trolley slowed, the whole choice beat played around me, then in `go` it drove *through* my figure (it tilts, is shoved, controls lock), hits the five, rewinds — and the narrator says "You left the lever alone. The trolley stayed on its track." Standing on the track (the classic "throw yourself in" move) is not anticipated at all; nothing happens to me and the reflection is wrong about what I did.
@@ -87,3 +96,14 @@
   Suggestion: include the player (and carried plank) in the framer points with some margin.
 - **[polish] [prompt]** The two boarding spots are at (16, -0.9) and (16, 0.9) with 2.4 m radii, so they overlap; whichever is nearer shows. A player spamming E on the dock boards whichever ship happens to be closer.
   Suggestion: put the boarding prompts at each ship's own gangplank, a few metres apart.
+
+## Keep
+- Esc works everywhere (mid-fall in Brain in a Vat, mid-work on the Ship, on the game-over card), with a simple confirm, and you come back beside the portal you used.
+- The trolley's third lever overrides the first-lever state cleanly ("chose yourself" still works even if you left lever 1 on the branch). The lever can be toggled back and forth freely during the slow-down.
+- Brain in a Vat's "Step off the edge" follows you to whichever edge you reach, so running off in any direction works.
+- The cave's first person with a limited turn while chained, and the flash cut to daylight, landed even when I rushed.
+- The asides (fisherman, prisoners, the machine) are short, funny and never block progress.
+
+## Harness notes
+- `use Talk` in ship-of-theseus waited 20 s on a disabled `Talk` (the shipwright at 12.5,-1.1) instead of the enabled fisherman. `use` seems to pick the first/nearest match regardless of `enabled`. I walked there and pressed E instead.
+- `use Pull the lever` issued during the trolley's `go` phase blocked until the lever re-enabled in the next run, so the command silently spanned a whole rewind/reflection.

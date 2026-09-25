@@ -98,3 +98,9 @@
 - **[minor] [camera/UI]** In first person the caption box sits exactly where the key object is: the fire when you first face it, and the figure when you arrive outside (third person).
   Evidence: 081-tofire.jpg (fire hidden behind "Behind you, a fire…"), 086-t626.jpg (caption over the player).
   Suggestion: raise the first-person look pitch slightly so the fire sits in the middle third, and make the caption smaller/lower with a translucent background in dark scenes.
+- **[minor] [lighting]** The painted sun and the actual light disagree: the sun disc hangs at the top centre behind the tree, but the tree's shadow falls to the right and towards the camera. In the one scene whose line is "the sun that lights them all", the sun visibly isn't the light source.
+  Evidence: 097-t728.jpg ("You stay in the light": sun behind the tree, shadow to the right).
+  Suggestion: place the directional light on the line from the sun disc (SUN = OUT+(6,11,-46)) so shadows point away from it, toward the camera; the "stay in the light" framing could then put the figure in a sunlit patch, not in the tree's shade.
+- **[minor] [narrative/timing]** Lines queue up past their moment: "A path leads up, towards a light." plays after you're already outside; "It's too bright to look at." plays outside; and after "You stay in the light." the narrator still says "You could stay up here. Or go back down, and tell them." right before the game-over card, contradicting the choice you just made.
+  Evidence: run at t≈716–730 (captions log: 716.7 path, 719.9 too bright, 727.0 stay, 729.1 could stay… then gameover 730.3).
+  Suggestion: drop queued discovery lines when the player has moved past their trigger (clear the voice queue on transit), and cancel 'choose' once an ending starts.

@@ -38,3 +38,7 @@
 - pond (132): "Your reflection" but no reflection visible; camera behind player.
 - return (134/137): best cave composition (fire+carriers+wall+prisoners). 
 - tell them (140) POV decent.
+- replay opening goes straight to the wall (142) -> 109 was only on door entry.
+- "Sit back down" is the only prompt when chains loosen; E immediately ends vignette (551.5).
+- stay ending (153): tree eclipses sun, you sit in its shade under caption: "You stay in the light".
+- after stay ending, queued "You could stay up here. Or go back down..." plays (599.4) after "You stay in the light" (597.3). "too bright" plays outside (590.2).

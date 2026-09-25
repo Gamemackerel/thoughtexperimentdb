@@ -74,3 +74,29 @@
 - **[polish] [text]** The notebook opens with "This short film traces the idea…", which reads oddly inside a game.
   Evidence: shots/059-notebook.jpg.
   Suggestion: a game-specific intro line in `game/notebook/` or a replacement of "This short film" with "This page".
+
+### platos-cave
+- **[major] [UI/touch]** When the chains come loose, the "E Sit back down" prompt is live (status lists it) but is not drawn anywhere: its anchor is the seat you're sitting in, i.e. under the first-person camera. On desktop an innocent E press ends the vignette with no visible prompt; on a phone (touch, where you must tap the prompt) the "keep watching" ending is effectively unreachable from the seat.
+  Evidence: shots/089-desk-free.jpg (desktop, prompt live, nothing on screen), 083-phone-free.jpg (390×844, same).
+  Suggestion: in first person, render prompts whose anchor is off-screen/behind the camera as a fixed pill at bottom-centre (above the caption band); or anchor "Sit back down" to the wall in front of the seat.
+- **[major] [collision]** The low wall (parapet, 18 m wide at z 2.6) is blocked only by four 1.6 m circles at x = -6, -2, 2, 6, which leaves gaps at x≈0, ±4 and ±8. `walk 0 5` from the seat went straight through the middle of the wall to (0, 4.9) in 2 s, into the puppeteers' walkway (the puppeteers themselves have no blockers).
+  Evidence: t=469.9–471.9 s; shots/065-through-wall.jpg; blockers in game/vignettes/platos-cave.js:181.
+  Suggestion: use a box blocker for the parapet (x −9…9, z 2.35…2.85) plus end caps, and small blockers for the four puppeteers; if walking behind the wall is meant to be possible, open a visible gap at its ends.
+- **[major] [UI overlap]** After "Sit under the tree" (stay ending), the queued line "You could stay up here. Or go back down, and tell them." plays after "You stay in the light." and its caption renders on top of the game-over card, overlapping the Play again / Back to the house buttons on a phone.
+  Evidence: t=40.2 s caption vs 41.4 s game-over; shots/087-phone-over.jpg.
+  Suggestion: flush the voice queue when an ending starts, and hide captions (or put them under the card's z-index) while the card is open.
+- **[major] [camera/occlusion]** Outside, walking round behind the cave-mouth mound (e.g. (283, 1)) hides the figure completely: the screen shows only the mound. At (286, 12) the figure is cut in half by the bottom edge of the frame.
+  Evidence: shots/073-behind-mound.jpg, 072-mound-side.jpg.
+  Suggestion: make the far side of the mound non-walkable (enlarge the ARCH blocker to cover its back half) or let the framer swing to keep the player visible; keep the figure above the bottom 15% of the frame.
+- **[minor] [collision/feel]** Walking straight ahead from the seat you can press your face into the shadow wall: at (0.4, -8.6) the whole screen is a flat brown fill with no shadows and no feedback.
+  Evidence: shots/080-at-wall.jpg.
+  Suggestion: stop the walkable area ~2.5 m from the wall (WALL_Z + 2.5) so the shadows stay in view, or add a narrator beat when you touch it.
+- **[minor] [interaction]** Back in the cave, "Tell them" (r 3.6 at (0,-1.4)) and the prisoners' "Talk" (r 3.2) prompts overlap: arriving at (2.1,-0.4) both fired within 0.1 s. An E meant to tell them can just trigger small talk (or vice versa); the tell is the ending.
+  Evidence: t=554.0 "ETalk", 554.1 "ETell them".
+  Suggestion: disable the "Talk" asides once you've come back down (or make them part of telling).
+- **[minor] [pacing/sync]** Walking briskly from the fire to the mouth, the transit to outside triggers at (15,6) before the mouth lines finish; "It's too bright to look at." then plays after you're already outside in full daylight, and "A path leads up, towards a light." never plays.
+  Evidence: phone run t=25.5–31 s.
+  Suggestion: hold the transit until the mouth line has played (the fade can wait ~2 s), or drop stale lines tied to the previous place when `where` changes.
+- **[polish] [phone]** In portrait, the chained first-person view shows only one shadow (the tree) on the wall; the others pass outside the narrow horizontal view. The top half of the outdoor portrait shot is empty sky, and prompts still show an "E" key cap on a touch device.
+  Evidence: shots/083-phone-free.jpg, 085-phone-tree.jpg.
+  Suggestion: widen the horizontal FOV in portrait (fit the wall width, not height); on touch show "Tap" or a hand icon instead of "E".
