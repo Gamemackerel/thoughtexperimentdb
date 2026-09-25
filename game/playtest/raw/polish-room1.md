@@ -51,6 +51,9 @@
   Suggestion: an in-game styled confirm pill (same style as the game-over buttons), plus a small persistent "leave" corner icon for touch.
 - **[polish] [clarity]** At arrival the return frame is invisible (`frameOn: 0` until after the first run) though its spot (-19,10) is right next to the spawn; the only way out during run 1 is Esc.
   Suggestion: show the frame faintly from the start (it's where you came in), and make it active.
+- **[major] [phone/camera]** In 390×844 portrait, the choice moment is unreadable: the figure, the lever and the six workers are each ~10 px tall, the side track and the lone worker run off the right edge, and the top ~35% of the screen is empty sky. Tapping the lever (a ~8 px target) or tapping the ground next to it is fiddly.
+  Evidence: shots/115-phone-trolley.jpg (t=15 s, slow phase).
+  Suggestion: in portrait, frame the switch area (lever, fork, both groups) rather than the whole line, rotate the camera so the tracks run top-to-bottom, and enlarge the tap radius of the prompt/lever.
 
 ### brain-in-a-vat
 - **[major] [UI overlap/camera]** Walking along the near (camera-side) edge of the sunny world, the figure sits at the very bottom of the frame, exactly where the caption pill is: the caption "If none of this were real, how would you ever know?" covers both the figure and the "E Step off the edge" prompt, so the one action the scene is steering you to is unreadable. The framer keeps the whole disc in shot rather than the player.

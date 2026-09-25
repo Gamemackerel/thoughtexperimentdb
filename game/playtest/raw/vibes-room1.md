@@ -1,7 +1,11 @@
 # vibes · room 1 (house, trolley-problem, brain-in-a-vat, platos-cave, ship-of-theseus)
 
 ## Summary
-(in progress)
+- Room 1 has a real, coherent language when it commits: the checkered floating house, the dolly *into* the trolley painting, the recursive brain-in-a-vat stack, the rim-lit puppets in the cave, the colour-coded tracks (blue for the five, yellow for the one, teal for you), the VHS rewind and the handwritten journal are all art-directed moments worth keeping.
+- The biggest vibes problem is **one beige world everywhere**: trolley island, vat world, vat lab, the outside of the cave and the ship's shore all use the same pale sand disc, faceted trees and cream sky. Places the narration calls "sunny", "warm", "real" or "the sun that lights them all" look paler than the cave. Each vignette needs its own palette and light, and the "real/true" places need to be the most vivid.
+- Effects that carry the philosophy are the weakest: the vat's "flicker" is a full-screen CSS-looking stripe overlay, the cave pond has no reflection, the cave's shadows are hard cut-outs from a cone fire, and the sun's position contradicts its shadows.
+- Signature objects don't read: the Penrose stairs look like a ring of boxes, the armchair is a red block, the ship of Theseus reads as a basket of floating boards.
+- Transitions are mostly white flashes; only the painting has a proper entry, and nothing has a matching exit. Typography depends on system fonts, and there are too many text styles (captions, toasts, labels, bubbles, notebook, game-over card) that don't share one voice.
 
 ## Findings
 ### house
@@ -130,3 +134,17 @@
 - **[minor] [affordance]** The two "Board" prompts sit 1.8 m apart at the same x; standing in the middle of the pier only ever offers "Board the ship of new planks". I had to step to the old ship's side to get the other prompt (the harness's `use` couldn't reach it either).
   Evidence: interactables #2 (16,-0.9) and #3 (16,0.9), r 2.4; player at (15.1,-0.1) only got the new-ship prompt for 70 s.
   Suggestion: put each prompt at its own gangplank at the ship's side (e.g. z = ±2.5), and show both labels when standing between them.
+
+## Keep
+- The dolly into the trolley painting (entering a picture); the gold frame as the way home.
+- Track colour-coding by who's on it (blue/yellow/teal) and the teal ring + teal lever knob for "you".
+- Toy-like consequence (people knocked flying like skittles) and the VHS rewind with washed-out grade and RGB-split "REWIND".
+- The brain-in-a-vat reveal shot and the recursive stack of worlds (059-t470.jpg): the best single image in room 1.
+- Cave: the first-person puppet silhouettes, rim-lit by the fire (082-fire2.jpg); the prisoners' faces lit orange turning to you; the over-exposed walk into the light.
+- The journal page (ruled paper, Caveat handwriting, blue-ink answers, red "todo:"), and Caveat for whatever the player writes on the game-over card.
+- The game-over card over a frozen, washed-out frame of your ending.
+- The phone-portrait framing of the floating house (128-phone.jpg).
+
+## Harness notes
+- `use board the ship of old planks` failed ("could not get the prompt within 20s") while standing between the two boarding prompts; walking to (16, 1.6) and pressing `e` worked. Probably the same nearest-prompt issue a player hits (see ship finding).
+- `debug` right after `open title` fails with "Cannot read properties of null (reading 'spawn')" (no level loaded yet); harmless.
