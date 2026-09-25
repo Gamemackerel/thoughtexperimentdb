@@ -78,3 +78,23 @@
 - **[minor] [lighting]** The "You stayed" ending ("You sit down. The sun is warm." / "Real or not, it's the only sun you have.") has no visual payoff: the light, colour and camera are exactly as before you sat. This is the most tender ending in room 1 and it's static.
   Evidence: 066-t504.jpg (identical grade to 045-t422.jpg).
   Suggestion: on sitting, slowly shift the key light to low golden hour (warmer, longer shadows), bloom a little, and let the camera ease in on the bench; a leaf or two could drift down.
+
+### platos-cave
+- **[major] [visual]** "Outside. The real things, and the sun that lights them all." is the emotional peak of the allegory, and it's the palest image in the vignette: the same beige ground and faceted trees as every other island, a cream sky, and a sun that is two flat, low-contrast pastel-yellow discs. The cave (saturated orange firelight, black silhouettes) is far more vivid than the world of "real things", which inverts the allegory visually.
+  Evidence: 086-t626.jpg, 087-t637.jpg, 089-around.jpg vs 072-t526.jpg / 082-fire2.jpg.
+  Suggestion: make the outside the most colourful place in room 1: real green grass, blue sky gradient, crisp saturated colours, strong sun with bloom/god-rays and real cast shadows (so "the sun that lights them all" is visible in every object's shadow). Fade from over-exposed white to full colour over a few seconds (eyes adjusting) instead of arriving at a finished pale frame.
+- **[major] [visual]** The pond has no reflection. "Your reflection. Another kind of shadow, but this one looks back." plays over a flat matte blue-grey ellipse; the frog's cameo (looking at itself in the pond) has the same problem.
+  Evidence: 087-t637.jpg, 089-around.jpg.
+  Suggestion: use `Reflector` (three/examples) or a mirrored, slightly darkened, rippled duplicate of the figure/frog/trees under a semi-transparent water plane. This is one of the few places the art has to carry the line.
+- **[minor] [visual]** The cave isn't a cave: there's no ceiling (flat dark void above), the shadow wall is a free-standing flat plane whose top edge and side are visible when you turn your head, and the rocks are hard-faceted low-poly boulders. From your chained seat you can also already see the bright white disc of the cave mouth in your peripheral turn.
+  Evidence: 075-turnleft.jpg, 076-turnright.jpg (wall edge, open void, white disc on the right).
+  Suggestion: close the space with a rough dome/ceiling mesh catching faint firelight, curve the wall into the rock so it has no edge, soften/round the rocks (clay kit), and hide the mouth from the seat (a bend in the tunnel) so the light is a discovery.
+- **[minor] [visual]** The shadows on the wall are pixel-sharp, fully opaque cut-outs, and the fire is a cluster of five cream cones with no glow, embers or flicker of its own. Shadows from a campfire should be soft-edged, wobble and breathe with the flame.
+  Evidence: 070-t520.jpg, 072-t526.jpg (hard shadows), 082-fire2.jpg (cone fire).
+  Suggestion: blur/penumbra the shadow projection (or render the shadow layer at low res + blur), jitter its scale/position slightly with the flame; give the fire animated flame cards or noise-shaded cones, an additive glow sprite, and a few rising ember particles.
+- **[polish] [visual]** The wall's radial gradient bands visibly (concentric rings) in the dark oranges.
+  Evidence: 070-t520.jpg (rings around the centre).
+  Suggestion: add a little dithering/noise (film grain) to the wall shader or post pass; a rock texture would also hide it.
+- **[minor] [camera/UI]** In first person the caption box sits exactly where the key object is: the fire when you first face it, and the figure when you arrive outside (third person).
+  Evidence: 081-tofire.jpg (fire hidden behind "Behind you, a fire…"), 086-t626.jpg (caption over the player).
+  Suggestion: raise the first-person look pitch slightly so the fire sits in the middle third, and make the caption smaller/lower with a translucent background in dark scenes.

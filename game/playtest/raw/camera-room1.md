@@ -28,3 +28,13 @@
 - "Here, too, the edge flickers." cut after 0.3s by "You step off the edge." (377.0 → 377.3)
 - ending pullback 094/096: player a 12px speck at bottom edge y~700, under caption.
 - look at machine: stays wide, reels unreadable (082).
+### platos-cave (notes)
+- 109 (t447): opening third-person frame shows fire/carriers/prisoners before you ever turn around (spoils reveal?) -> verify on replay
+- chained POV shadows clean (110-111), dark strip bottom.
+- reveal line "Behind you, a fire..." (118/119): frame 75% black void, fire tips at bottom under caption. Eye pitch too high / no gaze guide.
+- "A path leads up, towards a light" (121): light not in frame; I got disoriented, fire collision; mouth small at q2 (123).
+- "too bright to look at" (127): frame goes grey, not bright.
+- outside arrival (128) empty in-between frame, sun cut at edge; then 131 lovely; caption covers player (129/130).
+- pond (132): "Your reflection" but no reflection visible; camera behind player.
+- return (134/137): best cave composition (fire+carriers+wall+prisoners). 
+- tell them (140) POV decent.

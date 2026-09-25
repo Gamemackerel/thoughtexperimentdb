@@ -69,3 +69,21 @@
 - **[polish] [visual]** "Look in the pond" says "Your reflection… this one looks back" but the pond is a flat blue disc with no reflection of the figure.
   Evidence: `042-t594.jpg`.
   Suggestion: a mirrored, darkened copy of the peg figure in the pond (or a simple planar reflection) while standing at its edge.
+
+### ship-of-theseus
+- **[minor] [bug/UI]** Same stuck-bubble pattern as the cave: I mashed E at the fisherman (3 presses in 0.4 s, each skipping to his next line) and his bubble "Mind you, they have replaced every board of it since." (with a ghost of another behind it) was still hanging over him ~20 s later while I was carrying planks at the other end of the dock.
+  Evidence: talk at t≈643.5–643.9 s, still on screen at 663 s; `047-carrying.jpg`.
+  Suggestion: same fix as the cave (bubble lifetime; a new line replaces and re-times the old one; clear on distance).
+- **[minor] [pacing/replay]** `Play again` (and leaving with Esc mid-work) resets to 0 swaps, so every replay means six more fetch-and-carry trips (~40 s of chores) before you get to the only real decision. As an impatient player I'd quit instead of trying the other ship.
+  Evidence: runs at t 668–709 s and 776–828 s.
+  Suggestion: on Play again, start at the `choose` beat with both ships built (one line: "Back at the dock. Two ships."), or let one E swap two planks.
+- **[minor] [design]** Doing nothing isn't an option at the choice: I stood 60 s in `choose` (t 709–765 s) and nothing happened, no line, no nudge, no ending. GAME.md says doing nothing is always a real option.
+  Suggestion: after ~40 s idle, a line ("Both ships wait. Maybe it doesn't matter which one you call by its name.") and a third ending, "You stayed on the dock".
+- **[minor] [narrative]** The two reflections aren't symmetrical: the new ship gets a verdict ("Its parts changed. Its story didn't." / card: "it never stopped being the ship that sailed"), the old wood gets a question ("But is the ship?" / "Whether that makes it the same ship is the question"). Picking the weird option felt like being told I was wrong.
+  Evidence: t 766.9 s and 830.0 s.
+  Suggestion: make both lines state the case for that ship and leave the question open in both (e.g. old: "Every plank it started with. Its wood never changed. Its voyages did.").
+- **[polish] [camera]** Carrying a plank back onto the beach toward the spawn (-4, 2), the figure sits at the left edge of the frame with the plank cut off.
+  Evidence: `051-carryaway.jpg`.
+  Suggestion: include the player (and carried plank) in the framer points with some margin.
+- **[polish] [prompt]** The two boarding spots are at (16, -0.9) and (16, 0.9) with 2.4 m radii, so they overlap; whichever is nearer shows. A player spamming E on the dock boards whichever ship happens to be closer.
+  Suggestion: put the boarding prompts at each ship's own gangplank, a few metres apart.
