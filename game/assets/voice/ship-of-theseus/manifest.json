@@ -1,0 +1,47 @@
+{
+  "arrive": {
+    "file": "arrive-f52aefdd.mp3",
+    "text": "The ship of Theseus. Its wood is getting old.",
+    "dur": 3.6
+  },
+  "planks": {
+    "file": "planks-8819a4c3.mp3",
+    "text": "New planks are stacked on the dock.",
+    "dur": 2.72
+  },
+  "first": {
+    "file": "first-95a82d4a.mp3",
+    "text": "One new plank. Still the same ship, surely.",
+    "dur": 3.5
+  },
+  "half": {
+    "file": "half-2d8fc706.mp3",
+    "text": "Half of it is new now.",
+    "dur": 2.27
+  },
+  "all": {
+    "file": "all-adf28de5.mp3",
+    "text": "Not one original plank is left. Is it still the same ship?",
+    "dur": 4.36
+  },
+  "twist": {
+    "file": "twist-e1f2e6f0.mp3",
+    "text": "Someone has kept every old plank.",
+    "dur": 2.9
+  },
+  "rebuilt": {
+    "file": "rebuilt-3b145c94.mp3",
+    "text": "Two ships. Which one is the ship of Theseus?",
+    "dur": 3.34
+  },
+  "new_end": {
+    "file": "new_end-54499c28.mp3",
+    "text": "You chose the ship that kept sailing. Its parts changed. Its story didn't.",
+    "dur": 5.12
+  },
+  "old_end": {
+    "file": "old_end-b4184554.mp3",
+    "text": "You chose the original wood. Every plank is the same. But is the ship?",
+    "dur": 4.78
+  }
+}

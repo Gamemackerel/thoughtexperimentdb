@@ -1,0 +1,22 @@
+// Automated playtest (needs `npm run play` running): node game/tools/playtest-brain-in-a-vat.mjs
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required', '--disable-features=OnDeviceModelService,OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,AIPromptAPI'] });
+const p = await b.newPage(); await p.setViewport({ width: 1280, height: 720 });
+const errs = []; p.on('pageerror', (e) => errs.push('PAGEERROR ' + e.message)); p.on('console', (m) => { if (m.type() === 'error' && !m.text().includes('404')) errs.push(m.text()); });
+await p.goto('http://localhost:5173/game/?level=brain-in-a-vat'); await new Promise((r) => setTimeout(r, 1500)); await p.click('#begin');
+const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+const shot = (n) => { console.log('step', n); return p.screenshot({ path: `build/biv-${n}.png` }); };
+const walkTo = (x, z) => p.evaluate((x, z) => { const P = window.__ted.player; P.target = P.pos.clone().set(x, 0, z); }, x, z);
+const pressWhenReady = async () => { for (let i = 0; i < 40; i++) { if (await p.evaluate(() => document.getElementById('prompt').classList.contains('on'))) break; await sleep(0.25); } await p.keyboard.press('KeyE'); };
+const S = () => p.evaluate(() => ({ ...window.__ted.level.__S }));
+await sleep(3); await shot('01-arrive');
+await walkTo(-3, -1); await sleep(3); await shot('02-house');
+await walkTo(17.5, 4); await sleep(5); await shot('03-edge');
+await pressWhenReady(); await sleep(1.2); await shot('04-fall');
+await sleep(2.2); await shot('05-reveal'); await sleep(3); await shot('06-lab');
+await walkTo(400 + 13.5, 3); await sleep(5); await shot('07-labedge');
+await pressWhenReady(); await sleep(4.5); await shot('08-lab2');
+await sleep(4); await walkTo(800 + 13.5, 3); await sleep(5);
+await pressWhenReady(); await sleep(9); await shot('09-end');
+console.log(errs.join("\n") || "no errors"); console.log(JSON.stringify(await p.evaluate(() => window.__ted.level?.__S ?? null)));
+await b.close();

@@ -14,7 +14,7 @@ const BRAIN_POS = V(0, 3.62, 0);
 const COMPUTER_POS = V(-5.6, 0, -1.4);
 
 // ---------------------------------------------------------------- props specific to this film
-function makeBrain() {
+export function makeBrain() {
   const g = new THREE.Group();
   const mat = clay(0xf58e9f, { roughness: 0.6, emissive: 0x7a2a3a, emissiveIntensity: 0.25 });
   for (const s of [-1, 1]) {
@@ -41,7 +41,7 @@ function makeBrain() {
   return g;
 }
 
-function makeVat() {
+export function makeVat() {
   const g = new THREE.Group();
   const metal = clay(0x8b909a, { metalness: 0.5, roughness: 0.35 });
   const base = mesh(new THREE.CylinderGeometry(1.3, 1.4, 0.36, 40), metal);
@@ -62,7 +62,7 @@ function makeVat() {
   return g;
 }
 
-function makeComputer() {
+export function makeComputer() {
   const g = new THREE.Group();
   const body = mesh(new THREE.BoxGeometry(2.8, 4.2, 1.5), clay(0x8a929e));
   body.position.y = 2.1;

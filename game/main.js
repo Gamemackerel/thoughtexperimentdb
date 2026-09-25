@@ -7,6 +7,9 @@ import { Voice } from './core/voice.js';
 const LEVELS = {
   house: () => import('./house/house.js'),
   'trolley-problem': () => import('./vignettes/trolley-problem.js'),
+  'brain-in-a-vat': () => import('./vignettes/brain-in-a-vat.js'),
+  'platos-cave': () => import('./vignettes/platos-cave.js'),
+  'ship-of-theseus': () => import('./vignettes/ship-of-theseus.js'),
 };
 
 // ---------------------------------------------------------------- stage (full window, crisp on hi-dpi)
@@ -71,6 +74,10 @@ async function goto(name) {
   interact.clear(); voice.stop(); nb.hidden = true;
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
+  // every level starts from the default light; levels may dim or tint it
+  stage.hemi.intensity = 1.6; stage.sun.intensity = 2.4; stage.hemi.color.set(0xfff6e8); stage.sun.color.set(0xfff1dc);
+  stage.renderer.toneMappingExposure = 1.05;
+  player.sit(false); player.locked = false; player.obj.visible = true;
   const mod = await LEVELS[name]();
   level = mod.default(ctx);
   level.name = name;

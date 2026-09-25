@@ -64,6 +64,15 @@ Every vignette also has:
 - **The frog:** it appears exactly once per vignette, preferably during the choice, visible but never central. It hops in and out
   of view and is never mentioned.
 
+### The first room (built)
+
+| Portal | Vignette | What you can do | Endings |
+|---|---|---|---|
+| The painting | **The Trolley Problem** | Walk to the lever; pull it or don't; after the first run, a third track and lever lead to you | Choose yourself · three runs |
+| The book on the lectern | **Brain in a Vat** | Wander a sunny little world; its edges flicker; step off and fall outward into a lab where your world floats above a brain, and again | Sit on the bench · no way out (three layers) |
+| The purple door | **Plato's Cave** | Chained, watching shadows; the chains fall; turn to the fire, climb into the light | Keep watching · stay in the light · go back and tell them |
+| The sky door | **Ship of Theseus** | Carry new planks and replace all six of the ship's old ones; the old planks become a second ship | Board the new ship · board the old wood |
+
 ## 4. Controls
 
 - **Move:** WASD / arrow keys, a gamepad left stick, or tap/click on the ground to walk there.
@@ -89,17 +98,20 @@ Every vignette also has:
 game/
   index.html            entry: loads the House, handles portals, notebook, captions, saves
   core/                 game runtime on top of engine/core.js
-    player.js           the teal "you": movement, collisions (walkable areas + blockers), walk animation
-    camera.js           authored camera rigs: follow rails and framed shots, blended
+    player.js           the teal "you": movement with steering around obstacles, sitting, scripted walks, walk animation
+    camera.js           makeFramer(): fits a set of points exactly on screen from a fixed angle (the default vignette camera)
+    notebook.js         builds the notebook page from a film's script.json or game/notebook/<id>.json
     interact.js         proximity triggers, interactables + prompts, one-shot/repeatable events
     voice.js            plays pre-rendered lines with captions, and queues them so they never overlap
     ui.css              prompts, captions, notebook, portal flashes
   house/house.js        the hub
   vignettes/<id>.js     one module per thought experiment: build(ctx) → { update(dt), dispose() }
   lines/<id>.json       voice lines per vignette (id → text), with pronounce rules
+  notebook/<id>.json    notebook data for vignettes without a film (same fields as a film's `publish`)
   assets/voice/<id>/    generated audio (committed; small)
   tools/voice.mjs       renders lines with Kokoro → assets/voice
   tools/serve.mjs       local dev server → http://localhost:5173/game/
+  tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
 ```
 
 - Everything visual comes from `engine/core.js` (palette, clay kit, frog, particles, ghosts). Scenes are still
@@ -122,6 +134,8 @@ game/
    - Replay acknowledges the second choice.
    - No line overlaps another. There's no dead end, and no moment where the player doesn't know they can move.
    - The camera keeps the player, the hazard and everyone at stake in frame from anywhere the player can walk.
-   - Both endings are reachable. Automated playthroughs (`game/tools/playtest-trolley.mjs`, `?fast=<speed>`) drive `window.__ted` to check them.
+   - Every ending is reachable. Write a `game/tools/playtest-<id>.mjs` that drives `window.__ted` through each path (see the
+     existing ones; the trolley supports `?fast=<speed>`). Wait for the prompt before pressing E.
+   - Tap-to-walk works everywhere: the player steers around obstacles, but check that nothing traps them.
    - The frog appears exactly once. Captions are readable.
    - It works with keyboard, gamepad and touch.

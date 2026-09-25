@@ -19,6 +19,9 @@ export class Player {
     addEventListener('blur', () => this.keys.clear());
   }
 
+  // seated pose (bench, chained in the cave): no walking until you stand
+  sit(on = true) { this.sitting = on; if (on) { this.vel.set(0, 0, 0); this.target = null; } }
+
   place(x, z, rotY = 0) { this.pos.set(x, 0, z); this.obj.rotation.y = rotY; this.vel.set(0, 0, 0); this.target = null; }
 
   // raw input as a 2D vector (x right, y forward)
@@ -36,7 +39,7 @@ export class Player {
   // level: { walkable(x,z), blockers(): [{x,z,r}] }; camera: THREE.Camera (movement is camera-relative)
   update(dt, t, level, camera) {
     const want = new THREE.Vector3();
-    if (this.enabled) {
+    if (this.enabled && !this.sitting) {
       const inp = this.locked ? new THREE.Vector2() : this.input();
       if (inp.lengthSq() > 0.01) {
         this.target = null;
@@ -62,6 +65,7 @@ export class Player {
     }
     this.walkT += dt * (4 + 7 * spd);
     const body = this.obj.userData.body;
+    if (this.sitting) { body.position.y = -0.42; body.rotation.set(0, 0, 0); return; }
     body.position.y = Math.abs(Math.sin(this.walkT)) * (0.02 + 0.13 * spd);
     body.rotation.z = Math.sin(this.walkT) * 0.06 * spd;
     body.rotation.x = 0.08 * spd;
@@ -73,11 +77,15 @@ export class Player {
     return true;
   }
 
+  // try the step; if blocked, steer: progressively angled steps slide you around obstacles (no pathfinding needed
+  // for the gentle layouts of the vignettes). Only give up a tap-to-walk target when every direction is blocked.
   move(step, level) {
     const p = this.pos;
-    if (this.ok(p.x + step.x, p.z + step.z, level)) { p.x += step.x; p.z += step.z; return; }
-    if (this.ok(p.x + step.x, p.z, level)) { p.x += step.x; this.vel.z *= 0.5; return; }
-    if (this.ok(p.x, p.z + step.z, level)) { p.z += step.z; this.vel.x *= 0.5; return; }
+    for (const a of [0, 0.35, -0.35, 0.7, -0.7, 1.1, -1.1, 1.5, -1.5]) {
+      const c = Math.cos(a), s = Math.sin(a), k = a === 0 ? 1 : 0.8;
+      const sx = (step.x * c - step.z * s) * k, sz = (step.x * s + step.z * c) * k;
+      if (this.ok(p.x + sx, p.z + sz, level)) { p.x += sx; p.z += sz; return; }
+    }
     this.vel.multiplyScalar(0.3); this.target = null;
   }
 }

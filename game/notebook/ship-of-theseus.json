@@ -1,0 +1,15 @@
+{
+  "title": "The Ship of Theseus",
+  "summary": "Plutarch tells how the Athenians preserved the ship of the hero Theseus by replacing its planks as they decayed, until it became a standing example for philosophers: was it still the same ship? Thomas Hobbes sharpened the puzzle. If someone kept every discarded plank and rebuilt them into a ship, which of the two would be the ship of Theseus? The case is still a centrepiece of debates about identity over time and about how an object relates to what it is made of.",
+  "citations": [
+    "Plutarch, Life of Theseus 23.1 (c. 100 CE)",
+    "Thomas Hobbes, De Corpore (Elements of Philosophy, Concerning Body), Part II, ch. 11 (1655)",
+    "\"Material Constitution,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/material-constitution/"
+  ],
+  "essay": { "creator": "Daniel Bonevac", "title": "The Ship of Theseus—What is an object?", "url": "https://www.youtube.com/watch?v=IthckRCcMEc" },
+  "also": [{ "creator": "Jennifer Wang, Wireless Philosophy", "title": "Metaphysics: Ship of Theseus", "url": "https://www.youtube.com/watch?v=dYAoiLhOuao" }],
+  "reading": [
+    "\"Identity Over Time,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/identity-time/",
+    "David Wiggins, Sameness and Substance Renewed (Cambridge University Press, 2001)"
+  ]
+}

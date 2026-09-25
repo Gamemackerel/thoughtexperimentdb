@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-2150e33b.mp3",
+    "text": "A cave. All your life, you've faced this wall.",
+    "dur": 3.53
+  },
+  "shadows": {
+    "file": "shadows-2d29bf7f.mp3",
+    "text": "Shapes pass by. The others name them, and guess what comes next.",
+    "dur": 4.44
+  },
+  "loose": {
+    "file": "loose-d27e1d91.mp3",
+    "text": "Your chains have come loose.",
+    "dur": 2.46
+  },
+  "turn": {
+    "file": "turn-90f8994b.mp3",
+    "text": "Behind you, a fire. People carrying cutouts. The shadows were only this.",
+    "dur": 5.09
+  },
+  "climb": {
+    "file": "climb-9ee58d4d.mp3",
+    "text": "A path leads up, towards a light.",
+    "dur": 2.82
+  },
+  "bright": {
+    "file": "bright-d54658d3.mp3",
+    "text": "It's too bright to look at.",
+    "dur": 2.22
+  },
+  "outside": {
+    "file": "outside-5d42581c.mp3",
+    "text": "Outside. The real things, and the sun that lights them all.",
+    "dur": 4.02
+  },
+  "choose": {
+    "file": "choose-a4c69e84.mp3",
+    "text": "You could stay up here. Or go back down, and tell them.",
+    "dur": 3.74
+  },
+  "back_dark": {
+    "file": "back_dark-8d10e1f6.mp3",
+    "text": "Down here, you can barely see anymore.",
+    "dur": 2.95
+  },
+  "tell": {
+    "file": "tell-7d92c27c.mp3",
+    "text": "They laugh. The climb has ruined your eyes, they say. Nobody else will go.",
+    "dur": 4.83
+  },
+  "stay_end": {
+    "file": "stay_end-ea76c0f0.mp3",
+    "text": "You stay in the light.",
+    "dur": 1.72
+  },
+  "watch_end": {
+    "file": "watch_end-aaa39405.mp3",
+    "text": "You turn back to the wall. The shapes are familiar. It's easier.",
+    "dur": 4.26
+  }
+}

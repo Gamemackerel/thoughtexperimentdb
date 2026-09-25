@@ -184,10 +184,17 @@ export default function house(ctx) {
   // ---- portals
   const portals = [
     { id: 'trolley-problem', name: 'The Trolley Problem', pos: V(PAINTING.x, 0, -6.4), labelAt: PAINTING.clone().add(V(0, 1.75, 0.2)), prompt: 'Step into the painting', open: true },
-    { id: 'brain-in-a-vat', name: 'Brain in a Vat', pos: BOOK.clone(), labelAt: BOOK.clone().add(V(0, 2.2, 0)), prompt: 'Open the book', open: false },
-    { id: 'platos-cave', name: "Plato's Cave", pos: V(-7, 0, 3.4), labelAt: V(-7.7, 3.7, 3.4), prompt: 'Open the door', open: false },
-    { id: 'ship-of-theseus', name: 'Ship of Theseus', pos: V(5.2, 0, 3.1), labelAt: V(5.2, 3.7, 2.2), prompt: 'Open the door', open: false },
+    { id: 'brain-in-a-vat', name: 'Brain in a Vat', pos: BOOK.clone(), labelAt: BOOK.clone().add(V(0, 2.2, 0)), prompt: 'Open the book', open: true },
+    { id: 'platos-cave', name: "Plato's Cave", pos: V(-7, 0, 3.4), labelAt: V(-7.7, 3.7, 3.4), prompt: 'Open the door', open: true },
+    { id: 'ship-of-theseus', name: 'Ship of Theseus', pos: V(5.2, 0, 3.1), labelAt: V(5.2, 3.7, 2.2), prompt: 'Open the door', open: true },
   ];
+  // soft glows behind the book and the doors (brighter once you've been through)
+  const glowMat = () => new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+  const glows = [
+    [new THREE.Mesh(new THREE.CircleGeometry(1.1, 32), glowMat()), 'brain-in-a-vat', BOOK.clone().add(V(0, 1.6, 0)), [-Math.PI / 2 + 0.35, 0, 0]],
+    [new THREE.Mesh(new THREE.PlaneGeometry(2, 3.6), glowMat()), 'platos-cave', V(-7.7, 1.55, 3.4), [0, Math.PI / 2, 0]],
+    [new THREE.Mesh(new THREE.PlaneGeometry(2, 3.6), glowMat()), 'ship-of-theseus', V(5.35, 1.55, 2.35), [0, -0.5, 0]],
+  ].map(([m, id, pos, rot]) => { m.position.copy(pos); m.rotation.set(...rot); root.add(m); return [m, id]; });
   let entering = null;
   for (const p of portals) {
     interact.add({
@@ -196,6 +203,7 @@ export default function house(ctx) {
         if (!p.open) return ctx.toast(`<b>${p.name}</b> — not yet. This one is still being made.`);
         entering = { t: 0, portal: p };
         ctx.player.enabled = false;
+        if (p.id !== 'trolley-problem') entering.t = 0.9;   // books and doors: straight through
       },
     });
   }
@@ -209,12 +217,14 @@ export default function house(ctx) {
   return {
     root,
     ground: [ground],
-    spawn: ctx.from === 'trolley-problem' ? { x: PAINTING.x, z: -5.2, rotY: 0 } : { x: 0, z: 5.5, rotY: Math.PI },
+    // come back out next to the portal you went through
+    spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
+      'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
     walkable: (x, z) => Math.abs(x) < ROOM && Math.abs(z) < ROOM && Math.hypot(x - FLOOR_WINDOW.x, z - FLOOR_WINDOW.z) > FLOOR_WINDOW.r + 0.2,
     blockers: () => blockers,
     start() { if (!save.done.size) ctx.toast('Look around. Some things here lead elsewhere.', 5); },
     camera(player) {
-      if (entering) {
+      if (entering && entering.portal.id === 'trolley-problem') {
         const k = easeInOut(entering.t / 1.3);
         return { pos: V(PAINTING.x, 3.7, lerp(-1.2, -6.9, k)), look: PAINTING.clone(), stiffness: 6 };
       }
@@ -234,6 +244,7 @@ export default function house(ctx) {
       clouds.forEach((c, k) => { c.position.set(((time * 0.4 + k * 7) % 22) - 11, 7.4 + k * 0.7, -6.4 + k * 0.4); });   // high, along the back wall
       skyTex.offset.x = time * 0.01;
       halo.material.opacity = save.done.has('trolley-problem') ? 0.22 + 0.08 * Math.sin(time * 2) : 0.1 + 0.08 * Math.sin(time * 2);
+      glows.forEach(([m, id]) => (m.material.opacity = save.done.has(id) ? 0.3 + 0.1 * Math.sin(time * 2) : 0.08 + 0.06 * Math.sin(time * 2 + 1)));
       // names appear as you approach
       for (const p of portals) {
         const d = Math.hypot(ctx.player.pos.x - p.pos.x, ctx.player.pos.z - p.pos.z);

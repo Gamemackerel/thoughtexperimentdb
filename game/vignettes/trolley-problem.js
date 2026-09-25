@@ -7,6 +7,7 @@ import {
   makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makePathGlow, makeLever, makeTunnel,
   makeEmitter, makeFrog, animateFrog,
 } from '/engine/core.js';
+import { loadNotebook } from '../core/notebook.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const line = (a, b) => new THREE.LineCurve3(a, b);
@@ -163,13 +164,7 @@ export default function trolley(ctx) {
 
   // notebook (the scholarship lives here, never in the voice)
   const level = { root, ground: [], notebook: '', __S: null };
-  fetch('/experiments/trolley-problem/script.json').then((r) => r.json()).then((sc) => {
-    const p = sc.publish;
-    level.notebook = `<h2>The Trolley Problem</h2><p>${p.summary.split('\n\n')[1]}</p>
-      <h3>Where it comes from</h3><ul>${p.citations.map((c) => `<li>${c}</li>`).join('')}</ul>
-      <h3>Go deeper</h3><ul><li><a href="${p.essay.url}" target="_blank">${p.essay.creator}, “${p.essay.title}”</a></li>${(p.also ?? []).map((a) => `<li><a href="${a.url}" target="_blank">${a.creator}, “${a.title}”</a></li>`).join('')}</ul>
-      <h3>Read</h3><ul>${p.reading.map((c) => `<li>${c}</li>`).join('')}</ul>`;
-  }).catch(() => {});
+  loadNotebook(level, '/experiments/trolley-problem/script.json', 'The Trolley Problem');
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({ visible: false }));
   groundPlane.rotation.x = -Math.PI / 2; root.add(groundPlane); level.ground.push(groundPlane);
 
