@@ -1,7 +1,12 @@
 # bugs · the hall
 
 ## Summary
-(in progress)
+- The hall and its five vignettes all play end to end and every listed ending is reachable, but async "ending chains" outlive their level: pressing Esc during an ending in Simulation or Fermi shows that vignette's game-over card **in the first room**, locks the controls and writes a bogus `"house"` journal entry (100% reproducible). Narration from a vignette also leaks into the next level.
+- Navigation back is wrong: every way out of a hall vignette (game-over "Back to the house", Esc) lands in the first room, never beside the portal in the hall; the hall's `ctx.from` spawns are dead code. Esc in the hall itself asks "Leave this vignette?".
+- Several sequence breaks give endings whose text contradicts what happened: Commons "the grass came back" when it never went (bell at t=10 s), Monkeys "three million years" after five, Grandfather "something always got in the way" after leaving before anything could.
+- Event counting is off in Grandfather: telling him who you are (or closing the gate) also counts as "standing in his way", so the card says "You tried 2 ways" and an extra failure line plays.
+- Voice-queue timing makes key questions arrive after the decision (Monkeys, Grandfather, and Commons, where with fast play the question lands when the grass is already at 0.01).
+- None of the five hall vignettes acknowledges a replay (GAME.md: "Replay acknowledges the second choice"): replays play identical lines.
 
 ## Findings
 ### hall
@@ -13,6 +18,13 @@
   Suggestion: spawn ~1 m further into the hall (x ≈ -12.3).
 - **[polish] [UI]** The first room's toast "Look around. Some things here lead elsewhere." is carried up the ladder and still on screen when the hall loads (t=3.9s), then replaced by the hall toast.
   Suggestion: clear toasts in `goto()` with the other overlays.
+
+- **[minor] [bug/text]** Esc in the hall asks "Leave this vignette and return to the house?" (the hall isn't a vignette) and drops you in the first room. Main.js only exempts `level.name !== 'house'`.
+  Suggestion: exempt hub levels (`house`, `hall`) from the Esc prompt, or word it "Go back down to the first room?".
+- **[minor] [cross-cutting] [replay]** No hall vignette acknowledges a second run: Grandfather, Monkeys, Simulation, Fermi and Commons all replay the exact same lines after "Play again" (checked 2+ replays each), against the GAME.md checklist item "Replay acknowledges the second choice".
+  Suggestion: keep a per-vignette run history in `save` and add one "again"/"differently" line per vignette.
+- **[minor] [cross-cutting] [asides]** `look()` asides are disabled whenever *any* narration is playing (`!ctx.voice.busy`, extras.js l.24), so the prompt blinks away during lines: e.g. Grandfather "Read the paper" shows `[disabled]` at t=28.8 s in phase `walk` while the intro plays. In Grandfather the voice is busy most of the scene.
+  Suggestion: queue the aside line instead of disabling the prompt, or only block while another *aside* line is playing.
 
 ### grandfather-paradox
 Played 6 runs: do nothing ×2, close gate, tell him, turn sign + Go home early, plus Esc-with-notebook. Endings reached: "You let it be", "It had already happened". Did not reach "You left the past alone" (see first finding).
@@ -82,3 +94,12 @@ Played 5 runs: bell straight away, 6 spaced adds → collapse, 1 add + talk + be
   Suggestion: let the neighbours add sheep on their own after ~20 s of inaction (which is also truer to the model: you don't need to start it), so doing nothing leads to the collapse or the bell.
 - Verified OK: neighbour talk lines change with the grass level ("Well, you added one. Why shouldn't I?" at grass 0.47); "Look at your sheep" works.
 
+## Keep
+- The hall itself is solid: all five portals labelled, completed ones get "✓", talk asides cycle correctly, the gentleman's lines are lovely.
+- Esc with the notebook open closes only the notebook; Play again cleanly resets each vignette's state (`waits`, `years`, `grass`, `attempts`, piles, sheep).
+- Grandfather's "ordinary reasons" failure design (wind, habit, a laugh, stepping around you) is exactly Lewis's point and reads well.
+- Neighbours' lines in Commons that change with the grass level; Monkeys' page with the highlighted line; Simulation's pull-back to the giant.
+- Journal answers typed on the card persist and show in the first-room journal.
+
+## Harness notes
+- `use "Tell him who you are"` (a prompt on a moving character) chased the grandfather for 20 s without triggering; manual `walk`/`hold` worked. Also `walk` often stops early against a line of fence posts ("did not arrive, blocked").

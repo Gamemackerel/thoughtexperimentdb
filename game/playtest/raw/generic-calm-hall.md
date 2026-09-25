@@ -45,3 +45,7 @@
 - Listen (36.5) -> 4 lines -> "So where is everybody?" + prompt "Keep listening" at 50.5. The lever "Send a message" is cut off at the right edge of the frame (074, 072) and never mentioned; I didn't know sending was an option. Pressed Keep listening -> time-lapse -> card 69.3 "You kept listening". Journal question then asks "Would you send the message" - what message?
 - Caption box covers the player at the monitor (072). Didn't see the frog/shooting star.
 - Portal is a telescope, scene has a radio dish - fine but nobody "looks through" anything.
+### fermi-paradox run 2
+- Replay: listen lines replay identically, no acknowledgement of last time. `onscreen` says lever at screen (1279,637) - literally the last pixel.
+- Send a message: camera tilts up to the dish, no visible signal/beam leaving (081), player's head cut off at the bottom. "Years pass... staying quiet" then card at 118 "You called out" - text good.
+- Whole vignette ~40s from arrival to card if you follow prompts; felt short but the time-lapse sky is pretty.

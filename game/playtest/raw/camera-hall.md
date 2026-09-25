@@ -29,3 +29,13 @@
 - found page: highlighted mark good (069-t54); but no camera beat — which monkey typed it? Page overlay remained on screen under/with the game-over card (status shows [page] + [gameover] at 59.1).
 - say hello: speech bubble "(It pats your hand, and keeps typing.)" clipped by "Say hello" prompt (070). Too high to see a pat.
 - walk out: player walks to a thin door frame, camera wide; exit door barely reads as a door (075-t84). Walk-out enabled without reading any page.
+### simulation-argument
+- first frame: stale "Look into the screen" hall prompt, player only a sliver at bottom-right (079-t6); establishing then fine (083). Hall prompt "Look into the screen" vs in-level "Look closer".
+- zoom into dome: best camera in the hall set (088, 091, 094: over-shoulder of tiny blue person at their own dome). Lever base/handle intrudes big & dark at right edge (088, 091).
+- pull-back from nested zoom (096-t31): blue giant head cropped bottom-left + teal inhabitant floating mid-top: reads as "you" floating; confusing. Then hard cut to wide (097).
+- frog: large (shoulder-size of player) and in 100-t39 sits on the desk directly behind player's head: the "frog looks into the dome, frog inside looks back" gag is occluded by the player.
+- reveal (104→106-t51→107): strong. But caption pill sits over the dome base covering tiny-you (106). Giant is a floating head.
+- choose phase: silent, back to same wide; nothing points to lever vs door.
+- off: room darkens, but window stays bright & the void beyond is still paper-white; "Above you, the lights flicker" but camera never looks up (112, 115).
+- leave running: player stops by door, no exit, no look-back; static wide (123-t146).
+- photo aside: tiny on wall, no insert (120). First attempt at photo during choose phase: "disabled" for 20s (harness `use`), worked on replay.
