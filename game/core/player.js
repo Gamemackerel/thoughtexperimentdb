@@ -67,7 +67,11 @@ export class Player {
         want.addScaledVector(fwd, inp.y).addScaledVector(right, inp.x);
       } else if (this.target) {
         want.subVectors(this.target, this.pos).setY(0);
-        if (want.length() < 0.25) { this.target = null; want.set(0, 0, 0); } else want.normalize();
+        const left = want.length();
+        // give up a tap-to-walk that has stopped getting closer (pushing into a wall or a counter)
+        if (this.stuck?.target !== this.target) this.stuck = { target: this.target, best: left, t: 0 };
+        this.stuck.t += dt; if (left < this.stuck.best - 0.15) { this.stuck.best = left; this.stuck.t = 0; }
+        if (left < 0.25 || this.stuck.t > 1.2) { this.target = null; want.set(0, 0, 0); } else want.normalize();
       }
     }
     const desired = want.multiplyScalar(this.speed);
@@ -94,8 +98,19 @@ export class Player {
   ok(x, z, level) {
     if (!level.walkable(x, z)) return false;
     // blocked by an obstacle, unless you're already inside it (something moved onto you) and this step leads out
-    for (const b of level.blockers?.() ?? []) { const d = Math.hypot(x - b.x, z - b.z); if (d < b.r + 0.35 && d <= Math.hypot(this.pos.x - b.x, this.pos.z - b.z)) return false; }
+    for (const b of level.blockers?.() ?? []) { const d = clearance(b, x, z); if (d < 0.35 && d <= clearance(b, this.pos.x, this.pos.z)) return false; }
     return true;
+  }
+
+  // the nearest point to (x, z) you could stand on (for taps on a table, a counter, a person)
+  freeNear(x, z, level) {
+    const free = (px, pz) => level.walkable(px, pz) && (level.blockers?.() ?? []).every((b) => clearance(b, px, pz) >= 0.4);
+    if (free(x, z)) return { x, z };
+    for (let r = 0.3; r <= 4; r += 0.3) for (let k = 0; k < 16; k++) {
+      const a = (k / 16) * Math.PI * 2, px = x + Math.cos(a) * r, pz = z + Math.sin(a) * r;
+      if (free(px, pz)) return { x: px, z: pz };
+    }
+    return null;
   }
 
   // try the step; if blocked, steer: progressively angled steps slide you around obstacles (no pathfinding needed
@@ -109,4 +124,12 @@ export class Player {
     }
     this.vel.multiplyScalar(0.3); this.target = null;
   }
+}
+
+// how far (x, z) is from the edge of a blocker: a circle { x, z, r } or a box { x, z, w, d, rot } (negative inside)
+function clearance(b, x, z) {
+  if (b.w === undefined) return Math.hypot(x - b.x, z - b.z) - b.r;
+  const c = Math.cos(-(b.rot ?? 0)), s = Math.sin(-(b.rot ?? 0)), dx = x - b.x, dz = z - b.z;
+  const lx = Math.abs(dx * c - dz * s) - b.w / 2, lz = Math.abs(dx * s + dz * c) - b.d / 2;
+  return lx > 0 || lz > 0 ? Math.hypot(Math.max(lx, 0), Math.max(lz, 0)) : Math.max(lx, lz);
 }

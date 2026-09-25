@@ -96,3 +96,26 @@ body.game #ui { position: fixed; inset: 0; }
 /* speech bubbles (people you can talk to) */
 #ui .label.speech { font: italic 500 clamp(16px, 1.6vw, 21px)/1.3 var(--serif); white-space: normal; width: max-content; max-width: 280px;
   padding: 9px 16px; border-radius: 16px; text-align: center; }
+
+/* the way home (in a vignette) and its quiet "are you sure" */
+#home { position: absolute; left: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); pointer-events: auto; cursor: pointer; border: 0;
+  font: 600 14px var(--sans); color: var(--ink); background: rgba(255, 252, 245, 0.82); padding: 8px 14px; border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(60, 40, 20, 0.12); }
+#home[hidden] { display: none; }
+#leave { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); pointer-events: auto; text-align: center;
+  background: rgba(255, 252, 245, 0.97); border-radius: 16px; padding: 22px 26px; box-shadow: 0 20px 60px rgba(40, 25, 10, 0.25); }
+#leave[hidden] { display: none; }
+#leave .q { font: 400 20px/1.4 var(--serif); margin: 0 0 14px; }
+#leave .buttons { display: flex; gap: 10px; justify-content: center; }
+#leave button { font: 600 16px var(--sans); padding: 9px 20px; border-radius: 999px; border: 0; background: var(--ink); color: #fffaf1; cursor: pointer; }
+#leave button.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+/* while a page, the notebook, the journal or the card is open, world labels stay out of the way */
+body.overlaid #ui .labels { visibility: hidden !important; }
+body.carded #caption { opacity: 0; }
+#over .prev { display: block; font: italic 400 15px/1.4 var(--serif); color: var(--muted); margin: -2px 0 8px; }
+#over .prev[hidden] { display: none; }
+/* journal: endings found and answers over time */
+#journal .endings { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 2px; }
+#journal .ending { font: 600 22px/30px "Caveat", var(--serif); color: var(--doing); }
+#journal .ending small { font-size: 17px; color: var(--muted); font-weight: 400; }
+#journal .answer small { display: block; font: 400 17px/24px "Caveat", var(--serif); color: var(--muted); }

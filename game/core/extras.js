@@ -9,19 +9,20 @@ const wpos = (o) => (o.isObject3D ? o.getWorldPosition(new THREE.Vector3()) : o)
 export function talk(ctx, { who, lines, prompt = 'Talk', radius = 1.9, offset = [0, 3.1, 0], enabled = () => true, at = null }) {
   let i = 0;
   return ctx.interact.add({
-    pos: at ? () => at : () => wpos(who), radius, prompt, height: 2,
+    pos: at ? () => at : () => wpos(who), radius, prompt, height: 2, aside: true,
     enabled: () => enabled() && who.visible !== false,
     onUse: () => { const text = typeof lines === 'function' ? lines(i) : lines[i % lines.length]; i++; ctx.speak(who, text, { offset }); },
   });
 }
 
 // look(ctx, { pos, lines: ['voice_id', ...], prompt, radius, enabled })
-// Each use plays the next narrator line; once they're all said the prompt goes away. Waits for the narrator to be free.
+// Each use plays the next narrator line (queued after anything already being said); once they're all said the prompt
+// goes away.
 export function look(ctx, { pos, lines, prompt = 'Look', radius = 1.9, height = 2, enabled = () => true }) {
   let i = 0;
   return ctx.interact.add({
-    pos: typeof pos === 'function' ? pos : () => wpos(pos), radius, prompt, height,
-    enabled: () => enabled() && i < lines.length && !ctx.voice.busy,
+    pos: typeof pos === 'function' ? pos : () => wpos(pos), radius, prompt, height, aside: true,
+    enabled: () => enabled() && i < lines.length,
     onUse: () => { ctx.voice.say(lines[i++], { pauseAfter: 0.2 }); },
   });
 }

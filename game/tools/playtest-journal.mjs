@@ -20,10 +20,11 @@ await p.click('#answer'); await p.keyboard.type('Yes. Even if nobody hears it, s
 await p.click('#feedback'); await p.keyboard.type('[automated test] the beam from the dish is hard to see');
 await p.screenshot({ path: 'build/playtest-journal-1-over.png' });
 const leaked = await p.evaluate(() => !document.getElementById('notebook').hidden);
-await p.click('#over [data-act="home"]'); await sleep(4);
+await p.click('#over [data-act="home"]'); await sleep(4);                 // back to the hall (Fermi's room)
+await p.evaluate(() => window.__ted.ctx.goto('house')); await sleep(4);     // then down to the first room, where the desk is
 await walk(-2, -5.8); await sleep(5); await press(); await sleep(1);
 await p.screenshot({ path: 'build/playtest-journal-2-journal.png' });
-const text = await p.evaluate(() => document.getElementById('journal').innerText);
+const text = await p.evaluate(() => { const j = document.getElementById('journal'); return j.innerText + [...j.querySelectorAll('textarea')].map((t) => t.value).join(' '); });
 const after = fs.existsSync('feedback.txt') ? fs.readFileSync('feedback.txt', 'utf8') : '';
 console.log('journal open:', text.includes('Fermi'), '| answer kept:', text.includes('saying we were here'), '| todo shown:', text.includes('Kurzgesagt'));
 console.log('feedback written:', after.length > before, '| keys leaked to notebook:', leaked, '| errors:', errs.join(' | ') || 'none');

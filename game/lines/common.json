@@ -1,0 +1,9 @@
+{
+  "voice": { "name": "bm_fable", "speed": 0.9, "lang": "en-gb" },
+  "pronounce": {},
+  "_about": "Lines the shell says in any vignette: when an ending comes round again, whether it's the same as last time.",
+  "lines": {
+    "again_same": "The same ending as last time.",
+    "again_diff": "Last time, it ended differently."
+  }
+}

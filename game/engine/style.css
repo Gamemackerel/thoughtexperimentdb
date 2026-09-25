@@ -8,8 +8,8 @@
   --allowing: #5b7fa6;
   --one: #e2a93b;
   --agent: #3f8f86;
-  --serif: "Iowan Old Style", "Palatino", Georgia, serif;
-  --sans: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Newsreader", "Iowan Old Style", "Palatino", Georgia, serif;
+  --sans: "Figtree", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #ui { position: absolute; inset: 0; font-family: var(--sans); color: var(--ink); pointer-events: none; }
 #ui > div { position: absolute; visibility: hidden; }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Thought Experiments</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Figtree:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
 <link rel="stylesheet" href="/game/engine/style.css">
 <link rel="stylesheet" href="/game/core/ui.css">
 <script type="importmap">
@@ -33,11 +33,13 @@
     <button id="begin">Enter the house</button>
   </div>
   <div id="over" hidden><div class="kicker"></div><h1></h1><p></p>
-    <label class="ask"><span class="q"></span>
+    <label class="ask"><span class="q"></span><span class="prev" hidden></span>
       <textarea id="answer" rows="3" placeholder="What do you think, and why? (This goes in your journal.)"></textarea></label>
     <label class="feedback"><span>Anything confusing, broken or missing? Tell the builder.</span>
       <textarea id="feedback" rows="2" placeholder="e.g. I couldn't find my way back into the cave"></textarea></label>
     <div class="buttons"><button data-act="again">Play again</button><button data-act="home" class="ghost">Back to the house</button></div></div>
+  <button id="home" hidden>← the house</button>
+  <div id="leave" hidden><p class="q"></p><div class="buttons"><button data-act="leave">Leave</button><button data-act="stay" class="ghost">Stay</button></div></div>
   <div id="flash"></div>
 </div>
 <script type="module" src="/game/main.js"></script>

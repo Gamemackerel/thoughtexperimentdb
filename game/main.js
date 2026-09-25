@@ -59,11 +59,16 @@ const uiRoot = document.getElementById('ui');
 let ui = createUI(uiRoot, stage);
 const player = new Player();
 const interact = new Interact(stage);
+interact.onUse = () => { player.target = null; };               // using something stops a tap-to-walk
 const voice = new Voice();
 const journal = new Journal();
 
 // ---------------------------------------------------------------- helpers exposed to levels
-const wait = (s) => new Promise((r) => setTimeout(r, s * 1000));
+// Every level change bumps `gen`. A level's pending waits (and voice lines) from before the change never resolve, so its
+// scripts stop where they are instead of running on into the next level (ending it, or opening its card over the house).
+let gen = 0;
+const wait = (s) => { const g = gen; return new Promise((r) => setTimeout(() => { if (g === gen) r(); }, s * 1000)); };
+const ROOM_NAME = { house: 'the first room', hall: 'the hall', 'trolley-room': 'the trolley room', gallery: 'the gallery' };
 const flash = document.getElementById('flash'), toastEl = document.getElementById('toast'), nb = document.getElementById('notebook');
 let toastTimer;
 const save = {
@@ -78,34 +83,48 @@ const ctx = {
   async flash(on) { flash.classList.toggle('on', on); await wait(0.6); },
   // a speech bubble over someone (or something) for a few seconds; one at a time per speaker
   speak(target, text, { secs = Math.max(2.6, text.length / 14), offset = [0, 2.3, 0] } = {}) {
-    bubbles.set(target.uuid ?? target, { target, text, t: 0, secs, offset, key: bubbleKey++ });
+    const id = target.uuid ?? target, old = bubbles.get(id);
+    if (old) ui.label('speech-' + old.key, 0, old.text, old.target, old.offset, 'speech');   // never leave the old one stuck
+    bubbles.set(id, { target, text, t: 0, secs, offset, key: bubbleKey++ });
   },
   // a typewritten page held up to the camera (closes with E / Space / tap)
   page(html) { pageEl.innerHTML = html + '<div class="hint">E · put it down</div>'; pageEl.hidden = false; },
   get pageOpen() { return !pageEl.hidden; },
-  // ends a vignette: a quiet card with "play again" / "back to the house"
-  // ends a vignette: the card also asks the journal question and takes a note for the builder
-  gameOver({ kicker = 'Game over', title, text = '' }) {
-    player.enabled = false;
+  // ends a vignette: a quiet card with "play again" / "back to <the room>". It also asks the journal question and takes a
+  // note for the builder. If you've been here before, the narrator notices whether it ended the same way.
+  async gameOver({ kicker = 'The end', title, text = '' }) {
+    if (busy || !level || HUBS.has(level.name)) return;
+    const g = gen, id = level.name;
+    player.enabled = false; player.target = null;
+    const before = journal.endings(id);
+    journal.reach(id, title);
+    if (before.length) {
+      await voice.say(before[before.length - 1] === title ? 'again_same' : 'again_diff', { common: true, once: false });
+      if (g !== gen) return;
+    }
+    clearBubbles();
     over.querySelector('.kicker').textContent = kicker;
     over.querySelector('h1').textContent = title;
     over.querySelector('p').textContent = text;
-    const id = level.name, q = journal.question(id);
+    const q = journal.question(id), prev = journal.lastAnswer(id);
     over.querySelector('.ask').hidden = !q;
     over.querySelector('.ask .q').textContent = q;
-    answerEl.value = journal.answer(id); feedbackEl.value = '';
-    journal.write(id, { ending: title });
+    const prevEl = over.querySelector('.prev');
+    prevEl.hidden = !prev; prevEl.textContent = prev ? `Last time you wrote: “${prev.text}”` : '';
+    answerEl.value = ''; feedbackEl.value = '';
+    over.querySelector('[data-act="home"]').textContent = `Back to ${ROOM_NAME[ctx.hub] ?? 'the house'}`;
     over.hidden = false;
   },
   // the journal on the desk in the first room
   openJournal() {
     journalEl.innerHTML = journal.render(save.done);
     journalEl.hidden = false; player.enabled = false;
-    for (const ta of journalEl.querySelectorAll('textarea')) { fit(ta); ta.addEventListener('input', () => { fit(ta); journal.write(ta.dataset.id, { answer: ta.value }); }); }
+    for (const ta of journalEl.querySelectorAll('textarea')) { fit(ta); ta.addEventListener('input', () => { fit(ta); journal.edit(ta.dataset.id, +ta.dataset.i, ta.value); }); }
   },
   get journalOpen() { return !journalEl.hidden; },
 };
 const bubbles = new Map(); let bubbleKey = 0;
+function clearBubbles() { for (const b of bubbles.values()) ui.label('speech-' + b.key, 0, b.text, b.target, b.offset, 'speech'); bubbles.clear(); }
 const over = document.getElementById('over');
 const pageEl = document.getElementById('page');
 pageEl.addEventListener('pointerdown', () => (pageEl.hidden = true));
@@ -121,7 +140,8 @@ for (const el of [over, journalEl]) for (const t of ['keydown', 'keyup']) el.add
   if (e.code === 'Escape') { e.target.blur(); if (el === journalEl) closeJournal(); }
   e.stopPropagation();
 });
-answerEl.addEventListener('input', () => journal.write(level.name, { answer: answerEl.value }));
+// the answer is kept with the ending it was written after (every answer, not just the latest)
+function keepAnswer() { const t = answerEl.value.trim(); if (t && level) journal.answer(level.name, over.querySelector('h1').textContent, t); }
 // playtest feedback goes to feedback.txt at the repo root (via the dev server), with enough context to reproduce
 function sendFeedback() {
   const text = feedbackEl.value.trim(); if (!text) return;
@@ -133,11 +153,21 @@ function sendFeedback() {
     screen: `${innerWidth}x${innerHeight}`, ua: navigator.userAgent,
   }) }).catch(() => {});
 }
-over.addEventListener('click', (e) => {
+function leaveCard(act) { keepAnswer(); sendFeedback(); over.hidden = true; goto(act === 'again' ? level.name : ctx.hub); }
+over.addEventListener('click', (e) => { const act = e.target.dataset?.act; if (act) leaveCard(act); });
+
+// the way home, always in view in a vignette (and Esc): a small pill, then a quiet "are you sure"
+const homeBtn = document.getElementById('home'), leaveEl = document.getElementById('leave');
+homeBtn.addEventListener('click', () => askLeave());
+function askLeave() {
+  if (!level || HUBS.has(level.name) || busy) return;
+  leaveEl.querySelector('.q').textContent = `Leave, and go back to ${ROOM_NAME[ctx.hub] ?? 'the house'}?`;
+  leaveEl.hidden = false; player.enabled = false;
+}
+leaveEl.addEventListener('click', (e) => {
   const act = e.target.dataset?.act; if (!act) return;
-  sendFeedback();
-  over.hidden = true;
-  goto(act === 'again' ? level.name : ctx.hub);
+  leaveEl.hidden = true;
+  if (act === 'leave') goto(ctx.hub); else player.enabled = true;
 });
 
 // ---------------------------------------------------------------- levels
@@ -145,10 +175,13 @@ let level = null, busy = false;
 const cam = { pos: new THREE.Vector3(0, 10, 20), look: new THREE.Vector3() };
 async function goto(name) {
   if (busy) return; busy = true;
+  gen++; voice.abandon();                                      // the old level's scripts stop here
+  player.enabled = false; player.target = null;
   await ctx.flash(true);
-  over.hidden = true;
-  if (level) { stage.scene.remove(level.root); level.dispose?.(); }
-  interact.clear(); voice.stop(); bubbles.clear(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
+  over.hidden = true; leaveEl.hidden = true;
+  if (level) { stage.scene.remove(level.root); level.dispose?.(); voice.abandon(); }
+  interact.clear(); clearBubbles(); nb.hidden = true; pageEl.hidden = true; journalEl.hidden = true;
+  toastEl.classList.remove('on');
   uiRoot.innerHTML = ''; ui = createUI(uiRoot, stage);        // fresh overlays for every level
   ctx.from = level?.name ?? null;                              // where we came from (e.g. to spawn by the right painting)
   if (HUBS.has(name)) ctx.hub = name;
@@ -168,8 +201,11 @@ async function goto(name) {
   const c = level.camera(player, 0, 0);
   cam.pos.copy(c.pos); cam.look.copy(c.look);
   time = 0;
+  homeBtn.hidden = HUBS.has(name);
+  homeBtn.textContent = `← ${ROOM_NAME[ctx.hub] ?? 'the house'}`;
   await ctx.flash(false);
   busy = false;
+  interact.grace(0.8);                                          // a key held from the last scene doesn't act in this one
   level.start?.();
 }
 
@@ -189,7 +225,9 @@ canvas.addEventListener('pointerup', (e) => {
   ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
   ray.setFromCamera(ndc, stage.camera);
   const hit = ray.intersectObjects(level.ground ?? [], false)[0];
-  if (hit && level.walkable(hit.point.x, hit.point.z)) player.target = hit.point.clone().setY(0);
+  if (!hit) return;
+  const spot = player.freeNear(hit.point.x, hit.point.z, level);          // a tap on furniture walks you up to it
+  if (spot) player.target = new THREE.Vector3(spot.x, 0, spot.z);
 });
 addEventListener('keydown', (e) => {
   if (e.code === 'KeyN' && level?.notebook) {
@@ -199,7 +237,9 @@ addEventListener('keydown', (e) => {
   if (e.code === 'Escape') {
     if (!nb.hidden) { nb.hidden = true; return; }
     if (!journalEl.hidden) { closeJournal(); return; }
-    if (level && !HUBS.has(level.name) && confirm('Leave this vignette and return to the house?')) goto(ctx.hub);
+    if (!leaveEl.hidden) { leaveEl.hidden = true; player.enabled = true; return; }
+    if (!over.hidden) { leaveCard('home'); return; }            // on the card, Esc just goes back
+    askLeave();
   }
 });
 nb.addEventListener('pointerdown', (e) => { if (e.target.classList.contains('close')) nb.hidden = true; });
@@ -215,10 +255,13 @@ function frame(now) {
     interact.update(player);
     for (const [k, b] of bubbles) {
       b.t += dt;
-      const o = Math.min(1, b.t / 0.2, (b.secs - b.t) / 0.4);
+      const o = b.t > b.secs ? 0 : Math.min(1, b.t / 0.2, (b.secs - b.t) / 0.4);
       ui.label('speech-' + b.key, Math.max(0, o), b.text, b.target, b.offset, 'speech');
       if (b.t > b.secs) bubbles.delete(k);
     }
+    // world labels (portal names, counters) hide under the page, notebook, journal and card
+    document.body.classList.toggle('overlaid', !pageEl.hidden || !nb.hidden || !over.hidden || !journalEl.hidden || !leaveEl.hidden);
+    document.body.classList.toggle('carded', !over.hidden);                // no captions over the game-over card
     const c = level.camera(player, time, dt);
     const k = c.cut ? 1 : 1 - Math.exp(-dt * (c.stiffness ?? 3));
     cam.pos.lerp(c.pos, k); cam.look.lerp(c.look, k);

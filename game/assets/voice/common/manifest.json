@@ -1,0 +1,12 @@
+{
+  "again_same": {
+    "file": "again_same-4f10765a.mp3",
+    "text": "The same ending as last time.",
+    "dur": 2.72
+  },
+  "again_diff": {
+    "file": "again_diff-67f5b0be.mp3",
+    "text": "Last time, it ended differently.",
+    "dur": 2.8
+  }
+}
