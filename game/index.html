@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thought Experiments</title>
+<link rel="stylesheet" href="/engine/style.css">
+<link rel="stylesheet" href="/game/core/ui.css">
+<script type="importmap">
+{ "imports": {
+    "three": "/node_modules/three/build/three.module.js",
+    "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body class="game">
+<canvas id="gl"></canvas>
+<div id="ui"></div>
+<div id="hud">
+  <div id="prompt"></div>
+  <div id="caption"></div>
+  <div id="toast"></div>
+  <div id="notebook" hidden></div>
+  <div id="title">
+    <div class="kicker">A house of</div>
+    <h1>Thought Experiments</h1>
+    <p class="how">Walk with <b>WASD</b> or the arrow keys, or tap where you want to go.<br>
+      <b>E</b> or <b>Space</b> to interact · <b>N</b> for the notebook · <b>Esc</b> to leave a vignette.</p>
+    <button id="begin">Enter the house</button>
+  </div>
+  <div id="flash"></div>
+</div>
+<script type="module" src="/game/main.js"></script>
+</body>
+</html>

@@ -53,6 +53,8 @@ window.renderAt = renderAt;
 window.showThumb = (html, side = 'left') => { document.body.classList.add('thumb'); ui.thumb(html, side); stage.render(); };
 window.duration = timeline.duration;
 renderAt(0);
+// ?clean hides every overlay (for clean stills, e.g. the game's paintings)
+if (q.has('clean')) document.getElementById('ui').style.display = 'none';
 window.ready = true;
 
 if (preview) {

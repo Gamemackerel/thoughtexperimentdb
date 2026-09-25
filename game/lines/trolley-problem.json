@@ -1,0 +1,20 @@
+{
+  "voice": { "name": "bm_fable", "speed": 0.9, "lang": "en-gb" },
+  "pronounce": { "If you": "Iff you" },
+  "lines": {
+    "arrive":      "A runaway trolley.",
+    "five":        "Five people, working on the track. They can't hear it coming.",
+    "one":         "On the side track, just one.",
+    "lever":       "This lever switches the tracks.",
+    "ask":         "Should you pull it?",
+    "pulled_1":    "You pulled the lever. The five are safe.",
+    "pulled_2":    "But the one on the side track was never in danger, until you moved the trolley.",
+    "stayed_1":    "You left the lever alone. The trolley stayed on its track.",
+    "stayed_2":    "You didn't make this happen. But you could have changed it.",
+    "again_same":  "The same choice again. It seems clear to you.",
+    "again_diff":  "This time you chose the other way. Most people feel the pull of both.",
+    "twist_1":     "A third track. This one leads to you.",
+    "twist_2":     "Would you turn the trolley onto yourself? If not, is it fair to turn it onto someone else?",
+    "leave":       "You can try again, or step back through the frame."
+  }
+}

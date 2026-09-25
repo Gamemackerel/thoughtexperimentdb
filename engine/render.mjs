@@ -212,7 +212,7 @@ async function capture(format) {
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
   page.on('pageerror', (e) => console.log('[page error]', e.message));
   await page.setViewport({ width: F.w, height: F.h, deviceScaleFactor: scale });
-  await page.goto(url + (format === 'vertical' ? '&format=vertical' : '') + (burn(F) ? '' : '&captions=off'));
+  await page.goto(url + (format === 'vertical' ? '&format=vertical' : '') + (burn(F) ? '' : '&captions=off') + (opt('clean', false) ? '&clean' : ''));
   await page.waitForFunction('window.ready === true', { timeout: 60000 });
   const clip = { x: 0, y: 0, width: F.w, height: F.h };
 

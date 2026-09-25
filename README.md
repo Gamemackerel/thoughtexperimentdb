@@ -16,6 +16,9 @@ each and a checkbox for each film that's been made.
 **Making a new film? Start with [PRODUCTION.md](PRODUCTION.md)**. It covers research, writing, direction, the engine, QA
 and the frog.
 
+**The game (branch `game`):** an art game where each thought experiment is a playable vignette, reached through a surreal
+house. Run `npm run play` and open http://localhost:5173/game/. The design and the process for new vignettes are in [GAME.md](GAME.md).
+
 ## Repository layout
 
 ```

@@ -1,0 +1,72 @@
+{
+  "arrive": {
+    "file": "arrive-2a45fddf.mp3",
+    "text": "A runaway trolley.",
+    "dur": 2.14
+  },
+  "five": {
+    "file": "five-7c2f6e02.mp3",
+    "text": "Five people, working on the track. They can't hear it coming.",
+    "dur": 4.05
+  },
+  "one": {
+    "file": "one-d2b70682.mp3",
+    "text": "On the side track, just one.",
+    "dur": 2.66
+  },
+  "lever": {
+    "file": "lever-81513dc2.mp3",
+    "text": "This lever switches the tracks.",
+    "dur": 2.74
+  },
+  "ask": {
+    "file": "ask-bf6d4d9a.mp3",
+    "text": "Should you pull it?",
+    "dur": 1.41
+  },
+  "pulled_1": {
+    "file": "pulled_1-5c0f642b.mp3",
+    "text": "You pulled the lever. The five are safe.",
+    "dur": 2.93
+  },
+  "pulled_2": {
+    "file": "pulled_2-6c5ebc33.mp3",
+    "text": "But the one on the side track was never in danger, until you moved the trolley.",
+    "dur": 4.88
+  },
+  "stayed_1": {
+    "file": "stayed_1-8b671f0e.mp3",
+    "text": "You left the lever alone. The trolley stayed on its track.",
+    "dur": 3.87
+  },
+  "stayed_2": {
+    "file": "stayed_2-85bb87a8.mp3",
+    "text": "You didn't make this happen. But you could have changed it.",
+    "dur": 3.6
+  },
+  "again_same": {
+    "file": "again_same-2a44b3b8.mp3",
+    "text": "The same choice again. It seems clear to you.",
+    "dur": 3.34
+  },
+  "again_diff": {
+    "file": "again_diff-37a412c9.mp3",
+    "text": "This time you chose the other way. Most people feel the pull of both.",
+    "dur": 4.57
+  },
+  "twist_1": {
+    "file": "twist_1-c75e72ec.mp3",
+    "text": "A third track. This one leads to you.",
+    "dur": 2.98
+  },
+  "twist_2": {
+    "file": "twist_2-b56a2eba.mp3",
+    "text": "Would you turn the trolley onto yourself? If not, is it fair to turn it onto someone else?",
+    "dur": 5.49
+  },
+  "leave": {
+    "file": "leave-98b7e2ec.mp3",
+    "text": "You can try again, or step back through the frame.",
+    "dur": 3.47
+  }
+}

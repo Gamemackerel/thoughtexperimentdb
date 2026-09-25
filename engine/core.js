@@ -526,6 +526,8 @@ export function ghostify(obj, color, opacity = 0.4) {
   const g = obj.clone(true);
   const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.45, roughness: 0.6, transparent: true, opacity, depthWrite: false });
   g.traverse((c) => { if (c.isMesh) { c.material = mat; c.castShadow = false; c.receiveShadow = false; } });
+  // clone() deep-copies userData as plain JSON; re-point part references (e.g. a person's body) at the clone's own parts
+  if (obj.userData.body) g.userData.body = g.children[obj.children.indexOf(obj.userData.body)];
   g.userData.ghostMat = mat;
   g.userData.baseOpacity = opacity;
   g.userData.setOpacity = (o) => { mat.opacity = opacity * o; g.visible = o > 0.001; };
