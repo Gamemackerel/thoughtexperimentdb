@@ -52,3 +52,23 @@
 - **[polish] [camera]** At the edge prompt (9.9,15.9) the player is mostly cropped at the bottom of the screen under the "Step off the edge" pill; and in the final pull-back of the "No way out" ending the teal figure is not visible anywhere, so the last image of "you're still looking through the same eyes" has no "you" in it.
   Evidence: shots/040-edge2.jpg, shots/052-t645.jpg
   Suggestion: frame the player higher at the edge; keep the tiny teal figure visible (falling or landed) in the final stack shot.
+
+### platos-cave
+- **[major] [world/philosophy]** The world outside doesn't contain the real versions of the shadows. The cutouts are a tree, a bird, a jar and a horse, but outside there are only a couple of trees, a pond and the sun: no horse grazing, no birds, no jar by the pond. The prisoner even says "Shh. The horse is next." — so the one thing you'd most want to see for real is missing. That's the central image of the allegory (the objects themselves, then the sun) and the easiest environmental story in the game.
+  Evidence: outside at (292.5,6.0), shots/078-t759.jpg, 081-t768.jpg; cutout kinds in `game/vignettes/platos-cave.js` (`kinds = ['tree','bird','jar','horse']`).
+  Suggestion: put a real horse (slowly grazing), two or three birds crossing the sky, and a clay jar at the pond outside; if you want a look() aside, the horse: "It's much bigger than its shadow."
+- **[minor] [set dressing]** The pond says "Your reflection. Another kind of shadow, but this one looks back." but the pond is a flat blue disc: no reflection of the teal figure is drawn. The cave mouth is a flat white circle between rocks; "A path leads up, towards a light" but there's no visible slope or steps.
+  Evidence: shots/081-t768.jpg (flat pond, frog in it), shots/075-mouth.jpg
+  Suggestion: a mirrored, slightly darker copy of the player (and frog) under the pond surface; a few rough steps rising into the glow at the mouth.
+- **[minor] [asides/life]** The other prisoners can only be talked to while still chained (one line, "Shh. The horse is next."); once free, all four Talk prompts are disabled, and the puppeteers can't be approached at all. On "Tell them", the caption says "They laugh" but nobody visibly laughs: no speech bubbles, no shaking.
+  Evidence: debug at t=748s (Talk #0–#3 disabled); shots/086-t785.jpg
+  Suggestion: keep the prisoners talkable when you're free ("Sit down, you're blocking the bird."), give each puppeteer one bubble (they're bored, or they don't know what the shadows look like), and show laughing bubbles ("Ha!", "The sun!") at "Tell them".
+- **[major] [controls/ending]** Pressing E twice to talk to your neighbour ends the vignette. When the chains come loose the "Talk" prompt shows at your seat for ~3 s, then is replaced in the same spot by "Sit back down"; my second E (meant as another Talk) instantly gave "Game over · You kept watching", about 30 s into my first visit, before I'd turned round.
+  Evidence: t=698.6s Talk → t≈702s second E → phase over at t≈709s, shots/068-over.jpg
+  Suggestion: make "Sit back down" need a short hold or only appear after you've stood up and moved a step away from the seat, or keep repeating Talk while it's the closest action.
+- **[minor] [narration timing]** After choosing "Sit under the tree", the queued line "You could stay up here. Or go back down, and tell them." plays *after* "You stay in the light.", offering a choice that's already been made, right before the game-over card.
+  Evidence: t=832.9s "You stay in the light." → t=835.0s "You could stay up here…" → 836.2s game over
+  Suggestion: drop queued prompt lines when an ending starts.
+- **[polish] [navigation]** In first person with no fire in view, the cave is a black void; after `hold w 3` from the seat I walked past the fire and stood at (-1.8,7.9) facing pure black with no cue where the exit is. The glow of the mouth only reads once you face +x.
+  Evidence: shots/073-walk1.jpg
+  Suggestion: a faint shaft of daylight on the cave floor leading toward the mouth, or a cave ceiling with rock texture lit from the mouth side, so the dark has a direction.

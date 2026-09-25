@@ -1,13 +1,23 @@
 # streamer · room 1 (house, trolley-problem, brain-in-a-vat, platos-cave, ship-of-theseus)
 
 ## Summary
-(in progress)
+- Room 1 has at least one great clip per vignette: the trolley impact and ragdolled workers, "you" still on the bench and then the brain with your world floating above it, the whiteout into daylight, the fisherman's "grandad's rod" joke. The trolley's third track is a perfect chat-vote twist.
+- The biggest stream-killer is **one-tap endings**: in the Vat ("Sit down", 3 m from spawn) and the Cave ("Sit back down" the moment the chains fall; "Sit under the tree" the moment you're outside) a single E ends the vignette before the interesting part. Chat bounces with "wait, that's it?".
+- **Dead air and repetition** on replay: the Ship makes you redo six identical plank carries (~50 s), the Trolley's Play again drops the third track, and the Cave replays its 22 s chained intro. Play again should get you to the choice faster.
+- **Readability at stream size**: the cave in first person is mostly black exactly when its reveal line plays, the Vat's edge flicker is too faint, and the player is often a tiny speck or sits under the two-line caption at the key moment.
+- Bugs that look bad on camera: the fisherman's speech bubbles stay stuck for the rest of the Ship scene (they even float over the sea in the ending shot); standing on the trolley track makes the trolley pass straight through you; stale narration lines play after an ending, or in the house after you've left.
 
 ## Findings
 ### house
+- **[minor] [streaming]** The notebook (`N`) doesn't pause anything. I opened it during the trolley's slow phase and the trolley kept coming (t=24→29 s, phase `slow`, pt advancing). A streamer who opens it to read the background to chat loses the choice. The trolley notebook text also says "This short film walks through…", which is the film's blurb and reads oddly inside a game.
+  Suggestion: freeze the level clock while the notebook is open, and reword the notebook intro for the game ("This scene…").
 - **[minor] [thumbnail]** Walking up to the trolley painting, the rope ladder stands right in front of it and slices the train in half; the "Your journal" label also overlaps the "Step into the painting" prompt. That's the one shot a streamer would grab for "entering the first painting".
   Evidence: shots/002-painting.jpg (player at 1.5,-4.5).
   Suggestion: move the ladder a metre or two right of the painting, or hide the journal label while another prompt is active.
+
+- **[minor] [clarity]** Both house doors say just "Open the door" (purple door → cave, sky door → ship). Standing between them you can't tell from the prompt which one you'll get; I went into the cave when I meant the ship.
+  Evidence: house, me at (-5.6, 3.4), prompt "Open the door".
+  Suggestion: "Open the purple door" / "Open the sky door", or put the vignette name in the prompt.
 
 ### trolley-problem
 - **[major] [streaming / chat-vote]** I stood right on the main track among the five workers (talking to them) when the trolley came. It drove straight through me: no hit, no line, no reaction. "I'll stand on the track myself" is THE first thing chat will shout; right now it's a non-event that makes the scene look broken on camera.
@@ -60,9 +70,6 @@
 - **[minor] [bug]** Pressing Esc half a second after arriving in the cave showed the "Leave this vignette?" dialog, I accepted it, and nothing happened: I stayed chained in the cave for another 17 s until a second Esc worked. Then, back in the house, the cave's line "Your chains have come loose." played as a caption in the first room.
   Evidence: t=558.3 s Esc accepted → still `platos-cave` at 575 s; after second Esc, house loaded at 575.9 s and caption "Your chains have come loose." at 577.6 s.
   Suggestion: honour an accepted leave during the arrival transition (or don't show the dialog then), and flush the voice queue on level change.
-- **[minor] [clarity]** Both house doors say just "Open the door" (purple door → cave, sky door → ship). Standing between them you can't tell from the prompt which one you'll get; I went into the cave when I meant the ship.
-  Evidence: house, me at (-5.6, 3.4), prompt "Open the door".
-  Suggestion: "Open the purple door" / "Open the sky door", or put the vignette name in the prompt.
 
 ### ship-of-theseus
 - **[major] [bug]** The fisherman's speech bubbles never go away. I talked to him 4 times at t≈720–727 s; all four bubbles stayed "on screen" for the rest of the scene (still listed at 874 s), and the last one ("This was my grandad's rod…") floats over open water in the sailing ending shot and on the game-over card.
@@ -84,3 +91,15 @@
 - **[polish] [narration pillar]** The first line is "The ship of Theseus. Its wood is getting old." and the question "Which one is the ship of Theseus?". That's a name in the narration, which GAME.md §1 says to avoid.
   Suggestion: "An old ship. Its wood is getting old." / "Which one is the real ship?"
 - **[keep]** The fisherman's lines ("Forty years I have fished off this dock. / Mind you, they have replaced every board of it since. / This was my grandad's rod. New line, new reel, new handle. / Still his rod, though.") are the funniest, most clip-able writing in the room. The rebuilder's "I kept every one. Seemed a shame to burn them." is great too.
+
+## Keep
+- Trolley: slow-mo worker bubbles, the impact/ragdoll shots, the rewind, and the third track ("Would you? If not, is it fair to send it to someone else?"), which is the best chat-vote in the room.
+- Vat: the cut to the brain with your world above it, and the nested labs (shots/044-t346.jpg is the thumbnail).
+- Cave: the whiteout into daylight, the dark-adapted return, the prisoner bubbles ("Best seat in the house, this.").
+- Ship: the fisherman and rebuilder lines, and the old-plank ship appearing beside the new one.
+- Game-over card titles are short and quotable ("Someone is always on the track", "No way out"). Big serif titles read even at 640×360.
+- Captions stay readable at 640×360 (shots/111-small.jpg).
+
+## Harness notes
+- `use "Talk"` / `use "Board the ship of old planks"` sometimes reported the prompt "disabled" or never appeared, because the auto-walk got blocked (plank stack) or stopped where a nearer prompt won. Walking manually worked. I've reported the in-game causes above.
+- `use "Open the door"` in the house picks the nearest door. Both doors share the prompt text (see house finding).
