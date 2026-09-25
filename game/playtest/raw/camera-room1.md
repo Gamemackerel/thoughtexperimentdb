@@ -42,3 +42,12 @@
 - "Sit back down" is the only prompt when chains loosen; E immediately ends vignette (551.5).
 - stay ending (153): tree eclipses sun, you sit in its shade under caption: "You stay in the light".
 - after stay ending, queued "You could stay up here. Or go back down..." plays (599.4) after "You stay in the light" (597.3). "too bright" plays outside (590.2).
+### ship-of-theseus (notes)
+- sky door (158): door edge-on, label+prompt stack cover it; white flash transition (159).
+- establishing (161) nice; fisherman cropped at right edge.
+- swap moment (167/170): which plank changed barely legible; frog on bollard big.
+- rebuild (176/178): old ship cropped at bottom, caption over it; new ship mast cut top; old-plank stack vanishes (cut) - no shot of "someone" building.
+- choose (187): "Board the ship of old planks" pill sits over the NEW ship's hull.
+- board = teleport hard cut (689.0, player jumps to (-1.5,0)).
+- sail new (179): hull clips through dock; stepped/jagged plank ends at stern (179/182).
+- sail old (188): hull clips dock; same camera move for both endings, final frame empty water.

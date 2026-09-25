@@ -23,6 +23,12 @@
 - **[polish] [UI]** Portal name labels ("The Trolley Problem", "Your journal", "Up to the hall") are large bold 26px-ish sans pills that dominate the frame and sit on top of the art they name; the journal label stays on screen through the whole dolly into the painting.
   Evidence: 004-painting.jpg (label over the ceiling door/painting), 008-t20.jpg (dolly into the painting with "Your journal" pill still bottom-left).
   Suggestion: hide all labels/prompts as soon as a portal transition starts; make labels smaller, lighter (serif small caps or a brass museum-plaque style) so they feel like part of the house.
+- **[minor] [composition]** On desktop the house camera is so tight that you never see the best thing about it: that the room is a diorama slab floating in the paper sky with clouds drifting over the walls. At phone portrait size the whole floating room is visible and it's the most beautiful image of the house; on 1280×720 it's cropped to a floor with walls, and the high clouds are mostly cut off at the top edge.
+  Evidence: 128-phone.jpg (390×844: floating slab, clouds, all portals in one picture) vs 001-open.jpg / 006-t17.jpg (1280×720, cloud cut at the top edge).
+  Suggestion: open on a wide establishing shot of the floating room (like the phone framing) and ease into the follow camera; let the follow camera pull back a little when the player is still for a few seconds.
+- **[polish] [UI]** At phone size the portal labels are huge relative to the scene: "Up to the hall" covers the whole trolley painting and the stairs.
+  Evidence: 128-phone.jpg.
+  Suggestion: scale label font with the viewport (clamp(12px, 3.2vw, 20px)) and fade labels that overlap another portal.
 
 ### trolley-problem
 - **[minor] [visual]** The step-into-the-painting dolly is a great idea, but at the end the camera is so close that the painting texture is visibly upscaled and blurry (jpeg-soft edges on the trolley windows), just before the white flash.
@@ -104,3 +110,23 @@
 - **[minor] [narrative/timing]** Lines queue up past their moment: "A path leads up, towards a light." plays after you're already outside; "It's too bright to look at." plays outside; and after "You stay in the light." the narrator still says "You could stay up here. Or go back down, and tell them." right before the game-over card, contradicting the choice you just made.
   Evidence: run at t≈716–730 (captions log: 716.7 path, 719.9 too bright, 727.0 stay, 729.1 could stay… then gameover 730.3).
   Suggestion: drop queued discovery lines when the player has moved past their trigger (clear the voice queue on transit), and cancel 'choose' once an ending starts.
+
+### ship-of-theseus
+- **[major] [visual]** The ship — the object the whole vignette is about — doesn't read as a ship. The hull is a few bent strips floating apart with gaps between them over a flat deck slab and a dark keel bar; plank ends at bow and stern stop in a stepped "staircase" instead of closing into a stem; there's no bow shape, no stern post, no oars/eye. From the default camera it reads as a sled or a basket of boards. The rebuilt old-plank ship looks identical, just browner.
+  Evidence: 103-t742.jpg, 110-t797.jpg (planks floating apart), 113-t811.jpg (stepped plank ends at the bow).
+  Suggestion: model a small clay Greek boat: a continuous lapstrake hull where the six "planks" are visible strakes that meet at a raised stem and sternpost, a painted eye on the bow (classic, and it gives the ship a face), a steering oar. Swapping a strake should change only its colour/texture, so "same shape, different stuff" is the visual thesis.
+- **[minor] [visual]** "Old" vs "new" wood is only a hue shift (grey-tan vs honey). The old planks don't look old: no weathering, cracks, barnacles, peeling paint.
+  Evidence: 106-t758.jpg (one new plank next to five old), 111-t800.jpg.
+  Suggestion: give old strakes a darker, rougher, slightly greenish material with a noise/crack texture and a hint of barnacle bumps along the waterline; new ones clean pale pine with visible grain. Carrying one should show the difference close up.
+- **[minor] [visual]** The sea is a flat matte grey-blue plane with faint concentric banding; no waves, highlights, foam at the pilings, or wake when the ship sails off. The ending "sail away" shot is a boat sliding over felt.
+  Evidence: 103-t742.jpg, 113-t811.jpg, 122-t955.jpg.
+  Suggestion: a simple animated vertex-wave water (clay-style, low amplitude), a lighter foam ring around each piling and the hull, a V-shaped wake trail on sail, and a slight bob/roll on the boats.
+- **[polish] [rendering]** The sails and the ship's shadow show a stippled/dithered pattern (screen-door transparency and noisy soft-shadow filtering); the same speckle appears on shadows in the house.
+  Evidence: 113-t811.jpg (sail texture and speckled shadow on the water), 122-t955.jpg, 001-open.jpg (speckled shadow under the ladder/table).
+  Suggestion: make the sail an opaque (or alpha-blended, not alpha-hashed) cloth material; raise shadow map resolution / use VSM or PCF with more taps so the clay look keeps soft, clean shadows.
+- **[polish] [visual]** Where the pier meets the sand there is a jagged stepped notch (sand geometry poking through the planks), and the island is a perfect beige circle, like every other level.
+  Evidence: 103-t742.jpg, 106-t758.jpg (bottom-left).
+  Suggestion: end the pier on a few steps or a ramp into the sand and give the shoreline a wet darker band and an irregular outline.
+- **[minor] [affordance]** The two "Board" prompts sit 1.8 m apart at the same x; standing in the middle of the pier only ever offers "Board the ship of new planks". I had to step to the old ship's side to get the other prompt (the harness's `use` couldn't reach it either).
+  Evidence: interactables #2 (16,-0.9) and #3 (16,0.9), r 2.4; player at (15.1,-0.1) only got the new-ship prompt for 70 s.
+  Suggestion: put each prompt at its own gangplank at the ship's side (e.g. z = ±2.5), and show both labels when standing between them.

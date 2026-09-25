@@ -100,3 +100,20 @@
 - **[polish] [phone]** In portrait, the chained first-person view shows only one shadow (the tree) on the wall; the others pass outside the narrow horizontal view. The top half of the outdoor portrait shot is empty sky, and prompts still show an "E" key cap on a touch device.
   Evidence: shots/083-phone-free.jpg, 085-phone-tree.jpg.
   Suggestion: widen the horizontal FOV in portrait (fit the wall width, not height); on touch show "Tap" or a hand icon instead of "E".
+
+### ship-of-theseus
+- **[minor] [camera/occlusion + UI overlap]** At the far end of the pier (25, 0), talking to the fisherman: the figure stands directly behind him from the camera's view (only a sliver of teal above his hat is visible), the carried plank disappears, and the "E Talk" prompt pill sits on top of the last line of his speech bubble ("Forty years I have fished off this / dock." – "dock." is covered).
+  Evidence: shots/110-talk-carry.jpg.
+  Suggestion: put his talk spot on the camera side of him (block the strip behind him, x > 24.8), and stack speech bubbles above prompts (or hide the prompt while a bubble is showing).
+- **[minor] [collision]** The pier's posts have no blockers and the walkable strip (|z| < 1.45) reaches the post line, so holding W along the pier leaves the figure standing on top of / inside a post (e.g. (10.3,-1.4), and (16, 1.1) at the old ship's prompt). The plank stack's blocker is a 0.35 m circle, but the stack is ~1.5 m long: at (7.6, 0.4) the figure's lower body is inside the stack.
+  Evidence: shots/093-pier-edge.jpg, 101-near-old.jpg, 092-stack-clip.jpg.
+  Suggestion: shrink the walkable strip to |z| < 1.1 (inside the posts) and use a box blocker for the stack and scrap pile.
+- **[minor] [interaction]** "Board the ship of new planks" and "Board the ship of old planks" are 1.8 m apart (both r 2.4) in the middle of the pier; which one you get depends on a few centimetres, and at (16, 1.3) the "old planks" pill is drawn over the *new* ship in the background, so the label seems to point at the wrong boat. `use board the ship of old planks` from (16,-1.2) stopped at (16,-0.5) still showing the new-ship prompt.
+  Evidence: shots/101-near-old.jpg; t=68–89 s.
+  Suggestion: anchor each board prompt at its own gangway on the ship's side of the pier (z ±1.3) with smaller radii (≈1.2), and draw a short leader line or put the pill over the corresponding hull.
+- **[polish] [visual/collision]** When the old-planks ship sails away it passes through the end of the pier: the hull overlaps the pier deck next to the fisherman, who seems to stand in the boat.
+  Evidence: shots/105-t142.jpg.
+  Suggestion: moor the rebuilt ship ~1 m further out or give its departure path an outward arc before it heads along the pier.
+- **[polish] [visual]** The ramp where the beach meets the pier renders as flickery horizontal stripes (looks like z-fighting between the ramp and the sand).
+  Evidence: shots/091-ship-arrive.jpg (x≈410–480, y≈430–490), 113-pier-join.jpg.
+  Suggestion: lift the ramp a few mm above the sand or give it a polygon offset.
