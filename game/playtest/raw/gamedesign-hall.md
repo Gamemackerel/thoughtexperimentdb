@@ -28,3 +28,25 @@
 - **[minor] [bug/narration]** After leaving early, the queued `see_gf` line ("That's your grandfather. Young, and in a hurry.") plays *between* the two reflection lines, since the grandfather still walks into view.
   Evidence: run 3 captions: 149.6 "You came all this way…", 153.3 "That's your grandfather…", 157.1 "Maybe that's…".
   Suggestion: stop discovery triggers once `S.phase === 'over'`.
+
+### infinite-monkey
+- **[major] [core loop/decision]** The loop is a fixed 3-step progress bar: pull lever (3.2 s), read page, repeat; the third pull *always* yields "to be, or not to be", with pages 1 and 2 scripted to show exactly one and two words. There is no uncertainty, no decision and no reason to read between pulls (I pulled 3× without reading, then one read ended the vignette at t=197). The only real choice is "Walk out", and the lever is a "next" button. It also teaches the opposite of the idea: that Hamlet is 3 million years away.
+  Evidence: run 2, `waits` 0→3 by lever only, one `Read a page` → `phase: over`, card "Three million years of noise, and then a line of Hamlet."
+  Suggestion: make the wait an act of patience the player controls and can give up on: e.g. holding the lever spins the counter by orders of magnitude (10³, 10⁶ … 10⁵⁰ years; add a "the universe ends" beat when it passes ~10¹⁰⁰), with each page showing the *best* fragment so far found by chance (length growing roughly logarithmically). The ending then asks whether you keep holding past the heat death, which turns "walk out" into a real position (the finite vs. the ideal "forever").
+- **[minor] [affordance]** "Wait a million years" is silently disabled until you have read one page (`enabled: S.readAt >= 0`). A player who goes to the glowing red lever first (the most game-like object in the room) gets nothing: no prompt, no line, `use` fails for 20 s ×3.
+  Evidence: run 2, three `use wait a million years` attempts from t=87 to 160, `waits` stayed 0.
+  Suggestion: always enable the lever, or show it with a dimmed prompt "Read a page first", or have the monkey nearest the lever hand you a page.
+- **[minor] [UI]** The prompt pill "E Wait a million years" sits exactly on top of the years counter label, so the one piece of feedback for the action (the counter) is hidden while you stand at the lever.
+  Evidence: shots/025-t38.jpg.
+  Suggestion: anchor the counter to the back wall (a big mechanical odometer) or offset the prompt below the lever.
+- **[minor] [feedback]** The counter overshoots: after "A million years go by." it rests at 1,010,417 and 2,010,417 years, but 3,000,000 on the final pull. It reads like a bug.
+  Evidence: status after each pull.
+  Suggestion: clamp the counter to the exact target at the end of each wait.
+- **[minor] [narrative/journal]** The *Walk out* card says "You never saw it happen", but the journal question on the same card says "The monkeys typed 'To be, or not to be' without meaning it…", so it presumes an event the player didn't see.
+  Evidence: run 1 card at t=76.
+  Suggestion: per-ending journal question, or phrase it conditionally ("If a monkey typed…").
+- **[polish] [UI]** On the Hamlet ending the page overlay stays up behind the game-over card; the typewriter text shows through and makes the card hard to read.
+  Evidence: shots/029-card2.jpg.
+  Suggestion: close `ctx.page` before `ctx.gameOver`, or let the player close the page first and hold the card until then.
+- **[polish] [feedback]** Re-reading without waiting gives the identical page and the same caption again ("Two words, in the right order."); "Read a page" implies a fresh one.
+  Suggestion: new random page each read with a line like "More nonsense." until the next wait.

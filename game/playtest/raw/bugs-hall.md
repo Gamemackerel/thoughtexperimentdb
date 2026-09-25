@@ -34,3 +34,21 @@ Played 6 runs: do nothing ×2, close gate, tell him, turn sign + Go home early, 
   Suggestion: build that sentence from the attempts that happened.
 - Verified OK: Esc with notebook open closes only the notebook; second Esc leaves. Journal answer saves (`ted.journal`), clock shows "Grandfather Paradox ✓" in the hall. Frog appears once during the walk.
 
+### infinite-monkey
+Played 4 runs: lever ×5 then read; proper read/lever ×3; walk out; Esc mid-wait. Endings: "Given forever", "You walked away".
+- **[major] [bug/voice leak]** The vignette's intro narration keeps playing after you leave. Recipe: Play again → read a page → pull the lever → Esc during the million-year wait (t=145 s). In the first room: caption "They hit the keys at random. They will never stop." (shots/022-after-esc-wait.jpg), then at t=153 s "Given forever, could they type Shakespeare?". The intro is a fire-and-forget `(async () => { await ctx.wait(1); await voice.say('arrive'); … voice.say('ask') })()` (infinite-monkey.js l.119); `dispose()` → `voice.stop()` doesn't cancel the awaits still pending, so they resume in the next level. Same pattern exists in grandfather-paradox.js l.125 and likely every vignette.
+  Suggestion: give each level a generation token/AbortSignal (`ctx.alive()`), have `ctx.wait` and `voice.say` reject or no-op once the level is disposed.
+- **[major] [bug/sequence break]** The whole escalation can be skipped, and the ending text lies about it. Recipe: read one page (unlocks the lever: `readAt >= 0` is all it checks), pull the lever 5 times in a row, then read → instant "There it is." Card: "Three million years of noise, and then a line of Hamlet." with the lever label reading 5,031,250 years. The "A word…" / "Two words…" beats never play. The lever has no cap (`waits` 4, 5, …).
+  Suggestion: enable the lever only when `S.readAt === S.waits` (you've read this million years' page), and build the card text from `S.waits` (or cap it at 3).
+- **[minor] [bug]** The year counter overshoots: each pull ends at 1,010,417 / 2,020,833 / 3,031,250 years, not whole millions (`years += dt*(1e6/3.2)` for one frame past `k>=1`).
+  Suggestion: set `S.years = S.waits * 1e6` when the wait ends.
+- **[minor] [bug/voice]** Lines fire twice or late when you act quickly: spamming E on the lectern (read, put down, read) queued "Nonsense. Nothing but nonsense." twice (t=10.0 and 13.3 s). And the question "Given forever, could they type Shakespeare?" is spoken *after* the player has already read and pulled the lever (t=67.7 s in run 2, 23.6 s in run 1), because the intro chain waits behind the queued page/lever lines.
+  Suggestion: `page_0` with `once: true` per million years (key on `S.waits`), and drop the intro's `ask` if the player has already pulled the lever (or say it before enabling the lectern).
+- **[minor] [narrative]** Walking out without ever reading a page still says "Most of it is noise." and the game-over journal question ("The monkeys typed 'To be, or not to be' without meaning it…") presupposes the found ending, which this player never saw.
+  Suggestion: a journal question per ending, or a neutral one ("Would you have kept waiting? Why?"); gate the "noise" line on `S.readAt >= 0`.
+- **[polish] [UI]** On the found ending, the page overlay and the "250 years" / years label stay visible behind the translucent game-over card (shots/020-mk-over.jpg): three layers of text on top of each other.
+  Suggestion: close the page and hide world labels when `gameOver` shows.
+- **[polish] [UX]** "Walk out" is disabled until the intro's `ask` line has been said (~20 s, longer if lines are queued); a player who walks straight to the door gets no prompt and no hint.
+  Suggestion: enable it from the start, or after the first line.
+- Verified OK: Play again resets `waits/years/readAt` and the paper piles.
+

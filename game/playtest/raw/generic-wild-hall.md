@@ -14,3 +14,9 @@
 - Draft: Back to the house from grandfather card -> house first room spawn (0,5.5), not hall beside clock (shot 018).
 - Draft: Esc from infinite-monkey at 8.3s → house; monkey captions "They hit the keys at random" (9.8s, in house) and "Given forever, could they type Shakespeare?" (13.6s, in hall) kept playing. Voice queue not flushed on level change.
 - Draft: Esc in the hall → confirm "Leave this vignette and return to the house?" → first room. main.js:181 treats hall as vignette. main.js:121 & 181 goto('house') always.
+- Draft monkey: fast player (read→lever→read) — caption "A word. Just one" shown over the page with highlighted "to be" (two words) (shot 027). "Given forever, could they type Shakespeare?" plays after first million-year wait. Arrive line plays during wait. Voice queue FIFO lag.
+- Draft monkey: card says "Three million years of noise, and then a line of Hamlet" — real expected time is astronomically more; counter is linear 1M per pull.
+- Draft monkey: Walk out enabled once 'ask' said; first-timer can end in ~20s without reading anything.
+- Draft monkey found: Hamlet page shows while caption "Two words, in the right order." then a second "A million years go by." (139.3) before "There it is" (142). Page overlay stays under game-over card, text bleeds through (shot 029).
+- Draft sim: "Look out of the window" walked me behind the desk to (1.1,-4.6) (walkable=false); from there walk to photo (-3,-3.5) "blocked", use Run more worlds couldn't get prompt in 20s. Had to walk out via (-1.4,-0.4). Shot 035.
+- Draft sim: choose phase: 30+ s of silence, no prompt visible from where the reveal drops you, no line naming the options (shot 041). Switch off / leave are disabled until 'choose' — before that the door does nothing.
