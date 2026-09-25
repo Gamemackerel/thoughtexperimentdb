@@ -4,7 +4,7 @@ An art game made of playable vignettes, one per thought experiment. You don't sc
 each dilemma and act. The world responds, and a quiet narrator says a little about what you did. It plays like a cutscene you're inside: the camera is authored and the pacing is slow, but the
 choice is yours.
 
-The films (on `main`) and the game share one engine, one visual language, one voice, one frog and one research
+The films and the game share one engine, one visual language, one voice, one frog and one research
 standard. `PRODUCTION.md` still governs research, writing quality, colour roles and sources. This document covers
 what's different for the game.
 
