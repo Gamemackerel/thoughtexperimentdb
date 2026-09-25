@@ -67,3 +67,33 @@
   Suggestion: the vignette's scheduled `voice.say` (after its `wait()`) must be cancelled on dispose; guard queued lines with the level instance (e.g. drop any `say` whose level is no longer current).
 - **[major] [structure]** Esc ("return to the house?") from a hall vignette also lands you in the first room at (0, 5.5), not in the hall by the typewriter. Same issue as the card's "Back to the house" (see grandfather-paradox).
   Suggestion: as above; the Esc dialog text could say "return to the hall".
+
+### simulation-argument
+- **[major] [environment]** The window the narrator makes you look at is a flat pale-grey rectangle. "Look out of the window" → "Outside, the sky. You've never actually checked how far it goes." — but there is no sky in it, no clouds, nothing to check. It's the one aside that plants the twist (your world has an edge), and the prop doesn't carry it. After the reveal (your study is a dome on a giant's desk) the window still shows the same grey.
+  Evidence: shots 055, 060-window.jpg, 069 (after switch-off the window stays bright grey while the room goes dark).
+  Suggestion: paint a sky with clouds that, looked at closely, has a faint seam or a repeating cloud (the same one twice, like the hall's wallpaper); after the reveal, let the window show a sliver of the giant's warm room. Its brightness should follow the room lights when you switch them off.
+- **[minor] [environment]** The study is almost empty: a desk, a rug, three bare shelves, one photo, one window, one wall. The bare shelves pay off beautifully when "Run more worlds" fills them with domes (shot 063), but before that the room has no sense of the person who lives there, the builder of worlds (no notes, mugs, tools, spare parts, a half-built dome).
+  Suggestion: dress the desk and floor with builder's clutter: a soldering iron, sketches of little houses pinned to the wall, a failed dome with a crack, a coffee cup (inside the dome, a tiny coffee cup on the tiny desk).
+- **[minor] [consequence]** "Switch them off": the room darkens, but the shelf domes simply vanish (shelves bare in shots 069/070) instead of going dark, and "Above you, the lights flicker" isn't shown: the camera stays on the room, no giant, no flicker above.
+  Suggestion: keep the domes on the shelves with their light out (dark glass), and cut once to the giant's desk lamp flickering above the dome for the "Above you" line.
+- **[polish] [frog]** The frog's reciprocal gag (a frog inside the dome looks back) is too small to read from the fixed room camera; I only saw the big frog on the desk (shot 060).
+  Suggestion: if the player is within 2 m of the desk during the cameo, use the "Look closer" zoom framing for 2 s.
+- **[polish] [collision]** Tapping the photo from the window side walks you into the gap between the desk and the wall and stops there (player at (1.1, -4.6), "did not arrive… blocked", shot 061). Tap-walk won't route around the desk.
+  Suggestion: add the desk-to-wall gap as non-walkable, or improve steering to go round the front of the desk.
+- **[polish] [structure]** The exit door is dead until the very end: in the explore phase you can't leave the study through it (only Esc). A world-builder wants to try the door early ("what's outside?").
+  Suggestion: let the door be used early with a small line ("Locked. From the outside.") that sets up the twist.
+
+### fermi-paradox
+- **[major] [environment]** "Look at the moon" (the folding chair aside) talks about the moon, but there is no moon on screen. It exists (`fermi-paradox.js` l.64, at (-150, 120, -200)) but `onscreen` puts it at (-387, -339), far outside the frame; the fixed camera never looks that way. The chair faces an empty patch of stars.
+  Evidence: shot 079-moon.jpg with the caption "Only one other world has ever had visitors…"; `onscreen -150 120 -200` → OFF SCREEN.
+  Suggestion: move the moon into the upper-left of the frame (e.g. around (-40, 35, -80)) so the chair visibly faces it, or pan the camera up toward it for the aside.
+- **[minor] [environment]** "Nights become years", but nothing at the station records the years. During the keep-listening time-lapse the sky spins and flickers grey, and the hut, logbook, mug, chair and dish stay exactly as they were (shot 087). The logbook ("every night, the same entry: Nothing") is the perfect accumulator and isn't used.
+  Suggestion: during the lapse, grow the logbook into a stack of logbooks on the crate, fade the hut's paint, let snow come and go on the dish, add a second mug; at the end the teal figure could be sitting in the chair.
+- **[minor] [frog]** The frog's shooting-star cameo runs entirely off screen. Its path (around z = 7–10) is behind/below the camera while you stand at the monitor after "Listen"; `onscreen 1.2 0.3 7.2` → (988, 779) OFF SCREEN, and the cameo reported `done` without appearing in any of my screenshots (091–094).
+  Suggestion: route the frog between the monitor and the dish (z ≈ 1–3), where the camera already looks, and have the shooting star cross the upper third of the frame.
+- **[polish] [portal]** You enter through a brass optical telescope in the hall and arrive at a radio dish listening to static. It's a small but noticeable break for the portal-as-object idea.
+  Suggestion: make the hall portal a small radio/headphones on a stand, or a telescope with a radio receiver beside it; or put a little optical telescope at the station too.
+- **[polish] [asides]** The logbook aside has a second line ("Your tea has gone cold. It always does, out here.") on the same prompt as the logbook; there is a mug on the crate, but nothing tells you to look at it, and it's queued behind the logbook.
+  Suggestion: give the mug its own "Pick up the mug" prompt.
+- **[polish] [consequence]** "Send a message": no visible signal leaves the dish (shot 095), just the sky spinning. The one action that affects the universe has no visual.
+  Suggestion: a slow expanding ring of light from the dish, shrinking to a point among the stars.

@@ -1,51 +1,71 @@
 # generic-calm · hall
 
-(notes in progress)
+Screenshots are in `build/agentplay/generic-calm-hall/shots/`. Times are game time in seconds.
+
+## Summary
+- The hall is a delight: I understood right away that the objects were doors ("More doors, of a sort"), the labels helped, and the gentleman with the apple made me smile. As a hub, though, it lets you down: every way out of a hall vignette (card, Esc) drops you back in the **first room**, so you climb the ladder every time.
+- **Grandfather Paradox** was the most confusing. On my first visit, as a careful player who listened to the narrator, the game ended before I had done anything. The grandfather's walk takes about 28 s and the question is asked about 10 s before he meets her.
+- **Infinite Monkey** misled me as a newcomer. After three lever pulls the full line shows up at "3 million years", and I came away thinking that's roughly how long it takes. The "walk out" ending ("forever is much, much longer than it sounds") says the opposite.
+- **Simulation Argument** is the best of the five: the zoom into the domes and the pull-back to a giant's face really landed. But after the reveal there's about 20 s of silence, no prompt, and no hint that walking out of the door is a choice.
+- **Fermi** and **Commons** are clear and gentle, but the other option is hidden or never named. In Fermi the "Send a message" lever sits at the edge of the frame. In Commons, ringing the bell straight away skips the dilemma and still says "the grass came back".
+- In several places a line plays late or out of date (after you've acted, or after you've left). It made me doubt that the game had registered what I did.
 
 ## Findings
 ### hall
-- Arrived via ladder: pressing E on "Climb the ladder" cut straight to the hall in ~1s, no visible climb. Label "Down to the first room" + prompt sit on top of the player's head at spawn (shot 002-arrive.jpg).
-- Hall: lovely. Gentleman talk cycles through 5 lines. His speech bubbles stayed on screen ("[speech]" listed) while I walked ~25 units away to the clock at 42s (spoken at 24-31s).
-- No things to look at in hall besides gentleman (debug shows only portals+Talk). Pipe, mirror, apple room, easel are not interactable - as first-timer I'd want a line on the pipe.
-### grandfather-paradox run 1
-- Arrive at 43.6; captions 44.6, 49.6, 54.0, 58.4 ("So what happens if you stop him?"). I walked to the square at ~56. Gate already passed (disabled) by 60s. Tried "Tell him who you are": `use` failed in 20s - couldn't catch him. 68.7 phase over, they meet. Game over "You let it be" at 80.9. Whole run ~37s, I never got to act. The question is posed only 10s before the meeting.
-- Caption at arrival overlaps player (008).
-### gp runs 2-5
-- Run2: closed gate at 91s (good, wind blows it, camera closes in nicely 016), block counted automatically, turned signpost - "Turn the signpost" and "Tell him" prompts both shown at once (107.1) - which does E do? Ending "It had already happened... You tried 3 ways... You could have stopped him, in a sense. You just didn't." -> "in a sense" + "never going to un-happen" feels contradictory to a first-timer.
-- Run3: use "Tell him" from spawn: failed again, couldn't catch him. Run4: waited at (-2,0) in his path: prompt at 195.5, pressed E, pause 2.5s, but "He laughs..." line queued behind "ask" line, played at 203.7 (8s later) when he's already gone. Also block_fail fired though I only stood there.
-- Notebook doesn't pause the scene (u advanced from .07 to .92 while reading). With a ~28s walk, reading the notebook costs you the run.
-- Read the paper: works, debug listed it "[disabled]" at 1.9 dist (harness?).
-- Go home early at 242.6: phase over, but queued lines "At the station..." and "So what happens if you stop him?" still played AFTER I left (243.4, 247.8). Then card "You left the past alone" at 261 - 18s after pressing Go home.
-- Run always ends in game over after one pass; no in-scene replay / "same or different" acknowledgement.
-- **Back to the house** from the GP game-over card took me to the FIRST ROOM spawn (0,5.5), not the hall beside the clock. Had to climb the ladder again.
-### infinite-monkey run 1
-- Arrive 269. "0 years" label is faint grey on grey at start (032). Room = one wall in a void.
-- Narration: "Given forever, could they type Shakespeare?" (name in voice). Card: "a line of Hamlet".
-- Wait a million years: counter spins 3s, overshoots to 1,010,417 (034-036). Prompt "Wait a million years" sits on top of the counter label (036).
-- Frog visible in the wait (034) but I only glimpsed it.
-- After wait 1: "A word. Just one" - highlighted "the" is inside "opthep" (038), not a standalone word. Re-reading shows the same page & repeats caption.
-- Wait 2: "Two words". Wait 3: full "to be, or not to be, that is the question" at ~3 million years (040). Game over at 333.7 ("Given forever... bound to happen"). Whole vignette ~65s of game time, 3 lever pulls. As a first-timer I now believe it takes ~3 million years - scale badly misrepresented; the whole point (it's astronomically unlikely, forever is needed) is lost.
-- Game-over card appeared over the open page (I hadn't put it down).
-### infinite-monkey run 2
-- Crate aside: "Forever takes a lot of bananas." good. Arrival line 2 "They hit the keys at random" didn't play on replay (maybe preempted by crate).
-- Walk out ending: "forever is much, much longer than it sounds" - great, contradicts the other ending's 3 million years. Journal question on this card still says "The monkeys typed 'To be, or not to be'..." though I never saw that.
-- Back to the house -> first room again (0,5.5).
-### simulation-argument run 1
-- Arrival 7.8 caption fine. Asides window/photo: nice lines. First "use Look at the photo" in explore seemed not to fire (no caption; time jumped to 46s) - unsure, harness?
-- Look closer: zoom into the dome, then deeper into the inner dome (046,047) - lovely. After zoom (57s) returned to explore with nothing on screen, no prompt at my position (1.9,-3.2, behind the desk) -> didn't know what to do; had to walk around to find "Run more worlds" at the monitor.
-- Run more worlds: shelves fill with domes, "which kind is yours?", reveal pull-back to giant's face over my dome (054) - best moment so far.
-- Then phase "choose" at 87.8 with NO line, no prompt, ~20s of silence; "Leave them running" is at the door 9 units away and nothing hints it's a choice. I stood there confused.
-- Switch them off: room darkens, "Above you, the lights flicker." (058) - lands well. Card at 120.8.
-### simulation-argument run 2
-- Replay: no acknowledgement of last choice. Door has no prompt before the choose phase (walked to it at 7,1: "Leave them running" disabled, nothing shown) - fine but no sign it'll matter later.
-- Leave them running: "You let them run. Maybe someone is doing the same for you." Card 181.5 - good.
-- Esc from the vignette also lands in the first room, not the hall.
-### fermi-paradox run 1
-- Arrival 8.1 "A clear night..." then 18s nothing; no hint to go to the monitor. Asides: moon line and logbook line are great.
-- Listen (36.5) -> 4 lines -> "So where is everybody?" + prompt "Keep listening" at 50.5. The lever "Send a message" is cut off at the right edge of the frame (074, 072) and never mentioned; I didn't know sending was an option. Pressed Keep listening -> time-lapse -> card 69.3 "You kept listening". Journal question then asks "Would you send the message" - what message?
-- Caption box covers the player at the monitor (072). Didn't see the frog/shooting star.
-- Portal is a telescope, scene has a radio dish - fine but nobody "looks through" anything.
-### fermi-paradox run 2
-- Replay: listen lines replay identically, no acknowledgement of last time. `onscreen` says lever at screen (1279,637) - literally the last pixel.
-- Send a message: camera tilts up to the dish, no visible signal/beam leaving (081), player's head cut off at the bottom. "Years pass... staying quiet" then card at 118 "You called out" - text good.
-- Whole vignette ~40s from arrival to card if you follow prompts; felt short but the time-lapse sky is pretty.
+- **[major] [navigation]** From every hall vignette, both *Back to the house* on the game-over card and Esc put me at the first room's spawn (0, 5.5), not beside the hall portal I used. I had to climb the ladder again each time. It happened after GP (262 s), Monkeys (434 s) and Simulation (Esc, 197 s). This breaks GAME.md's "spawn for `ctx.from`". Suggestion: return to the hall spawn next to the portal that was used (the hall already has spawns). Or relabel the button "Back to the hall".
+- **[minor] [clarity]** Talking to the gentleman at around 24–31 s left his speech bubbles in the "on screen" list until I opened the clock at 42 s, about 25 units away. Suggestion: clear a talk bubble when the player walks out of range or after a set time.
+- **[minor] [ui]** At the hall spawn, the "Climb down" prompt and the "Down to the first room" label sit on the player's head (002-arrive.jpg). Suggestion: offset the spawn by a metre from the hatch, or place the label above the hatch rather than over the figure.
+- **[idea] [world]** The pipe, the mirror, the apple room, the easel and the fireplace train are all lovely, but none of them can be interacted with; only the gentleman has a prompt. As a first-timer I walked up to the pipe expecting a line. Suggestion: add 1–2 `look()` asides, e.g. the pipe ("It isn't a pipe. It's a picture of one.") and the mirror.
+- **[polish] [feedback]** Completed portals get only a "✓" on the label (101-glow.jpg). I couldn't see any glow on the objects themselves. Suggestion: add a soft glow on the finished portal object, as GAME.md describes.
+
+### grandfather-paradox
+- **[major] [pacing]** On my first run I arrived at 43.6 s, listened to the four setup lines (44.6, 49.6, 54.0, 58.4) and walked toward the square. By 60 s the gate was already behind him (disabled), and `use "Tell him who you are"` couldn't reach him within 20 s. They met at 68.7 s and the card read "You let it be". I never got to act. The question "So what happens if you stop him?" comes only about 10 s before the meeting. Suggestion: have him wait (at the time machine or a first stop) until the "ask" line has finished, or slow his first segments a lot. Give the player a beat to choose after the question.
+- **[major] [feedback]** When I stood in his path and pressed E on "Tell him who you are" (195.5 s), he paused for 2.5 s. But "He laughs. What a strange thing to say." was queued behind the "ask" line and played at 203.7 s, 8 s later, when he was already walking away. Suggestion: consequence lines should interrupt setup lines, or hold his pause until the reaction line has played.
+- **[minor] [bug]** After "Go home" (242.6 s, phase over), the queued setup lines "At the station, a woman is waiting…" and "So what happens if you stop him?" still played at 243.4 s and 247.8 s. The card didn't appear until 261 s. Suggestion: flush the voice queue when the level ends.
+- **[minor] [clarity]** At 107 s two prompts ("Turn the signpost" and "Tell him who you are") showed at the same time, and I couldn't tell which one E would trigger. Suggestion: show one prompt at a time (nearest or highest priority).
+- **[minor] [clarity]** Standing still in his path counted as an attempt ("He steps around you" at 208 s) even though I didn't mean it as one. The card then said "You tried 2 ways". Suggestion: fine to keep, but count "block" only if the player moved into his path during the walk.
+- **[minor] [narrative]** The "It had already happened" card says "You could have stopped him, in a sense. You just didn't." The narration had just said "It was never going to un-happen." To a first-timer these contradict each other. Suggestion: explain the "in a sense" plainly, or drop it from the card and leave it to the notebook.
+- **[minor] [pacing]** The notebook (N) doesn't pause the scene. While I read it, his walk went from u = .07 to .92. With a walk this short, reading the notebook costs you the run. Suggestion: pause the level update while the notebook is open.
+- **[minor] [design]** Every run ends in a game-over card after one pass. Nothing inside the scene says "you tried the same thing again" or "something different this time". Suggestion: allow two passes in one visit, with the narrator acknowledging the second choice, as GAME.md describes.
+- **[polish] [camera]** The arrival caption covers the player (008-gp-arrive.jpg). The close-up when the gate blows open (016) is lovely.
+
+### infinite-monkey
+- **[major] [philosophy]** After three "Wait a million years" pulls, the page showed the full "to be, or not to be, that is the question" at about 3,031,250 years (040-r2.jpg). The card said "Three million years of noise, and then a line of Hamlet… It was simply bound to happen." I now believe it takes about three million years. The notebook says the lesson is "how unimaginably long forever would have to be", and the walk-out ending says "forever is much, much longer than it sounds". Suggestion: make each pull jump many orders of magnitude (e.g. 10^6 → 10^20 → 10^40 years; the counter could switch to "a number with 40 zeros"), or have the narrator say how absurdly lucky this page was.
+- **[minor] [clarity]** After the first wait, "A word. Just one, by pure chance." highlights "the" inside "opthep.whka" (038-word.jpg). It isn't a standalone word, so I didn't believe it. Suggestion: generate the lucky word with spaces around it.
+- **[minor] [narrative]** On the walk-out ending the journal question still says "The monkeys typed 'To be, or not to be' without meaning it…" but I never saw that happen. Suggestion: use a different question for the walk-out ending, e.g. "Would you keep waiting? Why?".
+- **[minor] [ui]** The year counter overshoots to "1,010,417 years" after "a million years". The "Wait a million years" prompt sits right on top of the counter label (036). The "0 years" label is faint grey on grey when you arrive (032). Suggestion: clamp the counter to round numbers and move the prompt below the lever.
+- **[polish] [narrative]** "Given forever, could they type Shakespeare?" names a person in the narration, which GAME.md says shouldn't happen. Suggestion: "…could they type a line of a famous play?".
+- **[polish] [clarity]** Re-reading straight after a wait shows the same page and repeats the same caption. Suggestion: vary the page, or say "Still the same page".
+
+### simulation-argument
+- **[major] [clarity]** After the reveal (phase "choose" at 87.8 s) there was no line and no prompt, and I got 20 s of silence. "Leave them running" is on the door about 9 units away, and nothing had suggested the door was an option. I only found it with `debug`. Suggestion: add a line at "choose", such as "Switch them off, or leave them running?", and light up both the switch and the door.
+- **[minor] [clarity]** After the zoom (57 s) the game returned to explore with me standing behind the desk (1.9, −3.2), with no prompt and nothing on screen. I had to walk round the desk to find "Run more worlds" at the monitor. Suggestion: after the zoom, put the player in front of the monitor, or add a short line pointing to it.
+- **[minor] [design]** The replay doesn't acknowledge my previous choice (same arrival line, same beats).
+- **[polish] [narrative]** The door has no prompt before the choice (it's disabled while you explore). A careful player tries it early, nothing happens, and they don't try again. Suggestion: give it a small line while it's disabled ("Not yet. The little world is still running.").
+
+### fermi-paradox
+- **[major] [clarity]** The "Send a message" lever is never mentioned. At the monitor it sits on the last pixel of the frame (`onscreen` gave (1279, 637); 074, 072). On my first run I pressed the only prompt I could see ("Keep listening") and got the ending. The card then asked "Would you send the message…", but I hadn't known there was one. Suggestion: keep the lever in frame at the choice and add a line after "So where is everybody?", e.g. "Or you could call out."
+- **[minor] [pacing]** After the arrival line (8.1 s) there's nothing for about 18 s, and no hint that the monitor is where to go. Suggestion: add a second arrival line pointing to the static on the screen.
+- **[minor] [camera]** When I sent the message, the camera tilted up to the dish but nothing visibly left it (081), and the player's head was cut off at the bottom of the frame. Suggestion: show a faint ring or pulse going up from the dish, and keep the figure in frame.
+- **[polish] [camera]** Captions cover the player at the monitor (072). I didn't see the frog or the shooting star on either run.
+
+### tragedy-of-the-commons
+- **[major] [design]** Ringing the bell straight away, with no sheep added and grass at 1.0, gives "You agreed on limits… The grass came back." But the grass had never gone, and the dilemma never happened. Suggestion: enable the bell only once the grass has started to thin, or write an honest early-bell variant ("You agreed before anything went wrong. Rare, and wise.").
+- **[minor] [bug]** On run 3 I added two sheep during the intro. The "One more sheep" and "Your neighbours notice" lines never played. Instead the stale intro line "Five neighbours, two sheep each. The grass is thick." played at 302.6 s, when the grass was at 0.83 and I had 4 sheep. Suggestion: drop queued intro lines once the player acts.
+- **[minor] [visual]** After the neighbours copy me, the sheep bunch into one tight clump in the lower left (092, 093). It looks like a bug, not grazing. Suggestion: spread their wander targets across the whole pasture.
+- **[polish] [ui]** The "Add a sheep" prompt covers the player (092).
+- **[polish] [design]** If you do nothing for 40 s, nothing happens and there's no line. Suggestion: after about 30 s, a neighbour could say "Thinking of adding one? Everyone else is." to nudge the choice without forcing it.
+
+## Keep
+- The hall's look: sky walls, curtains, the apple-faced gentleman's lines ("Everything we see hides another thing"), and the mirror that shows your back.
+- GP: the wind blowing the gate open with the close-up, the paper seller ("Nothing ever happens round here"), and the idea that ordinary things get in the way.
+- Monkeys: reading the typed page as a paper card, the highlighted line, the bananas aside, and the walk-out ending text.
+- Simulation: the zoom into the dome, then into the dome inside it; the shelves filling; the pull-back to a giant face; the room darkening with "Above you, the lights flicker."
+- Fermi: the moon and logbook asides, and the night-to-years time-lapse.
+- Commons: the diorama reads at a glance; the pasture turning to bare dirt; the neighbours gathering in the meeting.
+- Game-over cards and the journal: warm, and the questions made me want to write an answer.
+
+## Harness notes
+- `debug` listed "Read the paper" (GP) as `[disabled]` when I was 1.9 units away, but `use` then worked fine.
+- `use "Look at the photo"` in Simulation during explore seemed not to fire the first time (no caption, and the clock jumped from 17 s to 46 s). It worked later.
+- `use` couldn't catch the moving grandfather. Walking into his path and pressing E worked.

@@ -72,3 +72,28 @@
 - **[minor] [portrait]** On a 390x844 phone the top ~35% of the screen is empty sky, the scene sits small in the middle, and at spawn the "E Go home" pill is cut off by the left edge (only "E" half visible). Three-line captions become three stacked pills. At 17 s the player is ~10 px wide at the far left edge — hard to tap near.
   Evidence: shots/048.jpg, shots/050.jpg.
   Suggestion: in portrait, tilt the camera down / tighten the framer so the square fills the width; clamp prompt pills inside the viewport with a 16 px margin.
+
+### infinite-monkey
+- **[minor] [UI overlap]** The "E Wait a million years" prompt is drawn exactly on top of the years counter above the lever, so the moment the counting stops you can't read the total: "1,010,417 years" sits hidden behind the prompt pill.
+  Evidence: shots/055-t28.jpg (t=27.6 s at (4.9, 6.3)).
+  Suggestion: move the counter higher (or to the wall behind the lever) or anchor the lever prompt below/beside the lever; they should never share an anchor.
+- **[polish] [UI]** The counter overshoots: after "A million years go by." it settles on 1,010,417 / 2,020,833 / 3,031,250 years instead of round millions (the ending card then says "Three million years").
+  Evidence: labels at 25.6 s, 66.8 s, 86.9 s.
+  Suggestion: clamp the count to `waits × 1,000,000` at the end of the animation.
+- **[minor] [UI]** World labels stay visible over overlays: the years counter pokes out from behind the read-a-page sheet (shots/053.jpg, 056.jpg right edge) and shows through the game-over card next to the journal textarea ("…,250 years", shots/059.jpg).
+  Suggestion: hide world labels (ctx.ui.label) while the page or the game-over card is open.
+- **[minor] [portrait/touch]** On 390x844 the page sheet is wider than the screen: text starts at the very left edge and the "E · put it down" hint is cut off ("put it dow"). On touch there is no E; tapping the page does close it, but nothing says so.
+  Evidence: shots/064.jpg.
+  Suggestion: size the page to `min(90vw, …)` and show "tap to put it down" on touch devices.
+- **[minor] [collision]** The exit door has no blocker: tap-walking to it (walk to (-9, 6.5)) parks the figure inside the door frame, where the door hides it completely, and before the "ask" line has played there is no prompt at all, so it just looks like you walked into a wall.
+  Evidence: shots/060.jpg (t=204 s).
+  Suggestion: add a thin blocker along the door slab and stop the player in front of it; show "Walk out" as soon as the room is introduced (or show a disabled-looking prompt) so the door reads as an exit.
+- **[polish] [interaction]** The crate prompt competes with the nearest monkey's: standing at the crate at (-9.4, 2.8) the prompt flips from "Look in the crate" to "Say hello" (monkey at (-7.5, 2.0)), and the monkey's pill floats over the monkey rather than the crate. The figure also stands partly inside the crate.
+  Evidence: shots/061.jpg, t=219.7 s both prompts fire on the same frame.
+  Suggestion: prefer the interactable the player is facing / closest to, keep the crate's radius clear of the front-left monkey, and enlarge the crate blocker to its box (1.3 × 0.9).
+- **[polish] [interaction]** "Read a page" as a tap target: the lectern's blocker (r 0.5) sits under its prompt, so walking to the lectern leaves the figure pushing against it ("trying to walk to a target but not getting closer") while the page is open.
+  Evidence: status at t=11.1 s, 58.7 s, 67.9 s at (0, 8.0)/(1.8, 6.2).
+  Suggestion: when an interaction is triggered, clear the walk target.
+- **[polish] [text]** On the "walk out" ending the journal question still says "The monkeys typed 'To be, or not to be'…", though in that run you never saw it happen.
+  Evidence: game-over at t=229.5 s.
+  Suggestion: a variant question for the walk-out ending.

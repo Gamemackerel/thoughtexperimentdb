@@ -94,3 +94,45 @@
 - **[minor] [bug/mood]** Esc in the monkey room → "Leave this vignette and return to the house?" is a native browser `confirm()` (game/main.js:181), a grey OS dialog that breaks the paper-and-clay look. It sends you to the first room, not the hall. The monkey room's queued line "They hit the keys at random. They will never stop." then played as a caption in the first room.
   Evidence: t=414.6 level=house; caption at t=416.1 in house; shot 075-t417.jpg.
   Suggestion: an in-game cream card matching the game-over styling ("Leave? · Stay / Go back to the hall"). Clear the voice queue on `goto`. For hall vignettes, return to the hall at the portal's spawn.
+
+### simulation-argument
+- **[keep-worthy, noted in Keep]** The zoom into the dome, then into the dome inside it, and the pull-back reveal of your study under glass on a giant's desk, a huge peg head looming, is the best sequence in my part: clear, uncanny, and a perfect thumbnail (102-t106.jpg, 082-t19.jpg).
+- **[major] [visual/lighting]** "Switch them off" dims only the study's lit materials. The paper sky around the island stays bright cream, and the window (a `MeshBasic`-style flat panel) and the photo stay fully lit. The result is a brown room with a glowing white rectangle in a bright void, which reads as a render bug, not a blackout. "Above you, the lights flicker" is also never shown from above: the giant's lamp isn't on screen in this shot.
+  Evidence: 106-t123.jpg, 107-t125.jpg, 108-t127.jpg (the window stays #d6dde3-bright; the background stays cream).
+  Suggestion: fade the scene background and fog to near-black with the lights, use lit materials for the window and photo (or dim them explicitly), and cut to the reveal angle for the flicker: the giant's desk lamp stutters and the giant's head turns toward the dome.
+- **[minor] [visual]** The study window is a blank grey-blue rectangle with no frame, sill, sky gradient or clouds, even though an aside is about looking out of it ("Outside, the sky. You've never actually checked how far it goes."). It's the cheapest-looking object in the vignette, and it sits right above the desk the camera frames.
+  Evidence: 079-t11.jpg, 087-t33.jpg.
+  Suggestion: frame it, give it a sky with clouds, and on the aside make the clouds tile visibly or a low-res pixel edge show for a second: the line's joke, shown.
+- **[minor] [visual]** The giant is a floating head: a huge peg sphere with two eyes and no neck, shoulders, hands or lamp, hanging in the paper void. It's close to great, but it reads more "moon with eyes" than "someone at a desk looking at you".
+  Evidence: 102-t106.jpg, 103-t108.jpg.
+  Suggestion: add the top of a body (shoulders, a sleeve), one hand resting beside the dome, and a warm desk-lamp pool on the giant's desk. Scale cues sell the regress.
+- **[minor] [visual]** "Leave them running" ends with the player walking to the teal door and stopping. No door opens, no last image, then the card. It's the gentler ending and deserves an image as strong as the blackout.
+  Evidence: 112-t176.jpg → card at t=178.6.
+  Suggestion: open the door onto the giant's desk edge (or onto bright paper sky), or pull back to the reveal shot with all the shelf domes glowing softly. Hold 2 s before the card.
+- **[polish] [visual]** Colour roles: the study door is solid teal (the player's colour), as is the monitor screen, so "you" doesn't stand out in your own room. The frog, looking into the dome, is almost the size of the monitor and dwarfs the dome it's meant to be peeking into.
+  Evidence: 087-t33.jpg (the frog beside the desk is bigger than the monitor; teal door at right).
+  Suggestion: paint the door a warm wood or oxblood and the monitor phosphor green, and scale the frog down ~40 % for this cameo.
+- **[polish] [camera]** The first zoom shot has the dark grey monitor housing looming half in frame at the right edge (a near-plane intruder), and in the second shot the teal figure is cropped at the left edge.
+  Evidence: 080-t15.jpg (grey blob right), 082-t19.jpg (teal figure half off left).
+  Suggestion: hide the monitor from the zoom camera, or push the camera further in along the dome axis.
+
+### fermi-paradox
+- **[major] [visual/camera]** The two sky elements the scene is built on never appear on screen. The moon (`moon.position (-150, 120, -200)`) and the Milky Way band are outside the fixed camera's frame the whole time, yet "Look at the moon" is an aside ("Only one other world has ever had visitors…") and the chair "faces the moon". What you do see is a uniform scatter of 1-px white dots, not "more stars than anyone could count".
+  Evidence: 119-t9.jpg, 122-t17.jpg (the moon aside fires; no moon in frame), 126-t33.jpg.
+  Suggestion: move the moon into the upper left of the default frame, or have the "Look at the moon" aside pan the camera up to it. Bring the Milky Way band diagonally across the visible sky with a soft additive glow and 2–3 star sizes and temperatures (warm, white, blue). On "Billions of stars…", tilt the camera slowly up so the sky takes over the frame.
+- **[major] [visual]** The radio dish reads as a grey-brown mushroom. The camera sees the flat back and underside of the bowl, never the concave face, and the base is a traffic-cone frustum. When you send the message, the camera looks straight at the back of the dish and nothing visibly leaves it.
+  Evidence: 119-t9.jpg, 138-t85.jpg, 139-t87.jpg (send: no beam, no pulse).
+  Suggestion: tilt the dish toward the camera so we see the parabolic inside with its feed horn and struts, and give it a lattice base. On send, show 3–4 faint expanding rings of light rising from the feed into the sky and dwindling to a point, then hold on the empty sky. That's the image of "still travelling".
+- **[minor] [visual]** The time-lapse ("Nights become years") flattens the sky to a uniform slate grey, with the white star dots still visible on it. It reads as a lighting glitch, not dawn and dusk cycling.
+  Evidence: 134-t54.jpg.
+  Suggestion: cycle a few quick dawn gradients (warm horizon band, darker zenith), fading stars on each dawn and bringing them back each night, and let star trails streak while the sky wheels. That's the classic long-exposure image and fits "nights become years".
+- **[minor] [camera/UI]** The camera sits low, with the player at the very bottom of the frame, exactly where the caption pill lives. In most shots the teal figure is partly hidden behind the caption or cut off by the frame edge. The three-line caption during "send" stacks three separate pills.
+  Evidence: 119-t9.jpg, 126-t33.jpg (player behind the caption), 144-t97.jpg (three pills, player cut off at the bottom right).
+  Suggestion: raise the framing so the player sits in the lower third but above ~560 px, and cap captions at two lines.
+- **[minor] [visual]** The frog's shooting-star cameo happens mostly off frame. The frog appears as a giant green blob cut off in the bottom-right corner, close to the camera, and I never saw the shooting star in the same shot.
+  Evidence: 125-t30.jpg.
+  Suggestion: sit the frog on the crate or the chair in mid-ground, and send the star across the visible sky above it.
+- **[polish] [visual]** Two continuity nits. The hall portal is a brass telescope, but the vignette has a radio dish and no telescope. The hut's window is half cream, half black, like a texture that didn't finish loading.
+  Evidence: 121-t13.jpg (the hut window).
+  Suggestion: put a small brass telescope on the hilltop next to the chair (the player arrives beside it), and make the window a warm lit pane with a mullion.
+- **[keep]** The warm pool of lamplight under the console on the cold blue-grey hill is the prettiest lighting in my part (126-t33.jpg).

@@ -39,3 +39,10 @@
 - off: room darkens, but window stays bright & the void beyond is still paper-white; "Above you, the lights flicker" but camera never looks up (112, 115).
 - leave running: player stops by door, no exit, no look-back; static wide (123-t146).
 - photo aside: tiny on wall, no insert (120). First attempt at photo during choose phase: "disabled" for 20s (harness `use`), worked on replay.
+### fermi-paradox
+- establishing low angle, sky fills top 2/3: lovely (131, 133). Player cut at waist by bottom edge; caption sits on top of player every line (131, 134, 137, 148).
+- hall says "telescope"; the portal/level is a radio dish (fine) but the stale "Look through the telescope" prompt hangs on the first frame (128-t8).
+- MOON: "Look at the moon" (chair) → moon at (-150,120,-200) is OFF SCREEN (-401,-340) always; chair described as facing moon. Line says "Only one other world has ever had visitors" while nothing visible (134-t17).
+- FROG: cameo spot (1.2,7.2) projects to (979,819) = below frame when player at console. Never saw frog/shooting star in any listen frames (135–141).
+- keep listening: camera tilts up; player reduced to top of head at bottom edge then fully under caption (143, 146). Flash fade makes night grey.
+- SEND: beam mesh world centre (5,133,-84), low end ~(5,26,-10.6) → onscreen (626,-373) OFF SCREEN. No visible message leaving in 149–153; only the dish tilts slightly. The choice's payoff is invisible.
