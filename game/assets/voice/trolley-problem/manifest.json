@@ -88,5 +88,20 @@
     "file": "driver-a3a3e807.mp3",
     "text": "The driver has fainted. He'll wake up later with no idea any of this happened.",
     "dur": 5.28
+  },
+  "wavered": {
+    "file": "wavered-04749d99.mp3",
+    "text": "You pulled the lever, then put it back. The trolley stayed on its track.",
+    "dur": 4.34
+  },
+  "again_diff_2": {
+    "file": "again_diff_2-ade1cb24.mp3",
+    "text": "You've changed your mind again.",
+    "dur": 2.53
+  },
+  "stood_end": {
+    "file": "stood_end-ac6242de.mp3",
+    "text": "You didn't pull anything. You stood with them, and the trolley took you all.",
+    "dur": 4.52
   }
 }

@@ -89,7 +89,9 @@ the game's feedback box (`feedback.txt`). Items decided as skip are left out; se
 ## Simulation Argument
 - [ ] **SA1** Pose the choice after the reveal; tie each ending to a horn of the argument; a "build none" ending; an
       ambiguous reveal.
-- [ ] **SA2** Endings you can see: real darkness and the giant's lamp stuttering; the door opens onto the giant's desk.
+- [ ] **SA2** Endings you can see. Switching off (your note): a pause on what you just did (you ended a universe), then
+      zoom out to the giant reaching for their own lever, and the lights simply go out. No flicker. Leaving them running:
+      the door opens onto the giant's desk.
 - [ ] **SA3** The window spot, the teal inhabitant, the frog's size, and collision.
 
 ## Fermi Paradox

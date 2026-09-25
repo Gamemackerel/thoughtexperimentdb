@@ -25,6 +25,9 @@
     "self_pull": "You step onto the track.",
     "self_end": "The five are safe. So is the one. You chose yourself.",
     "end": "Whatever you choose, someone is standing on the track. You only decide who.",
-    "driver": "The driver has fainted. He'll wake up later with no idea any of this happened."
+    "driver": "The driver has fainted. He'll wake up later with no idea any of this happened.",
+    "wavered": "You pulled the lever, then put it back. The trolley stayed on its track.",
+    "again_diff_2": "You've changed your mind again.",
+    "stood_end": "You didn't pull anything. You stood with them, and the trolley took you all."
   }
 }

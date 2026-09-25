@@ -71,6 +71,8 @@ export default function trolley(ctx) {
   one.position.set(14, 0, -7); one.rotation.y = -0.3; root.add(one);
   const lever = makeLever(); lever.position.set(-7.2, 0, 2.7); lever.rotation.y = Math.PI / 2; root.add(lever);
   const leverSpot = V(-7.2, 0, 3.8);
+  const leverGlow = new THREE.Mesh(new THREE.CircleGeometry(1.1, 32), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+  leverGlow.rotation.x = -Math.PI / 2; leverGlow.position.set(-7.2, 0.35, 2.7); root.add(leverGlow);
 
   // the third track's lever (teal knob: this one is yours), and a ring marking where you'd stand
   const selfLever = makeLever(); selfLever.position.copy(SELF_LEVER); selfLever.rotation.y = Math.PI / 2;
@@ -139,7 +141,7 @@ export default function trolley(ctx) {
   // ================================================================ state
   // phases: arrive → slow (choose) → go (runs through) → aftermath (hold) → rewind → reflect/twist → slow … → over
   const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, runs: 0, choices: [],
-    seen: new Set(), twist: false, rewindFrom: 0, frameOn: 0, twistOn: 0 };
+    seen: new Set(), twist: false, rewindFrom: 0, frameOn: 0, twistOn: 0, touched: false, stood: false };
   const go = (phase) => { S.phase = phase; S.pt = 0; };
   const selfChosen = () => S.route === 'self';
 
@@ -147,7 +149,7 @@ export default function trolley(ctx) {
     pos: leverSpot, radius: 2.8, height: 2.4,
     prompt: () => (S.route === 'branch' ? 'Put the lever back' : 'Pull the lever'),
     enabled: () => S.phase === 'slow' && !selfChosen(),
-    onUse: () => { S.route = S.route === 'branch' ? 'main' : 'branch'; },
+    onUse: () => { S.route = S.route === 'branch' ? 'main' : 'branch'; S.touched = true; },
   });
   interact.add({
     pos: SELF_LEVER, radius: 2.6, height: 2.4, prompt: 'Pull this lever',
@@ -162,10 +164,11 @@ export default function trolley(ctx) {
   interact.add({
     pos: () => frame.position, radius: 2.4, height: 3.6, prompt: 'Step back through the frame',
     enabled: () => S.frameOn > 0.9 && S.phase === 'slow' && !selfChosen(),
-    onUse: () => ctx.goto(ctx.hub),
+    onUse: () => ctx.goto(ctx.hub), terminal: true,
   });
-  interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five'); } });
-  interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one'); } });
+  const beforeActing = () => S.phase === 'slow' && !S.touched && !selfChosen();       // setup lines drop once you've acted
+  interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five', { when: beforeActing }); } });
+  interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one', { when: beforeActing }); } });
   interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever') });
 
   // ---- asides: the workers chat (in slowed time, very slowly), and the driver is out cold
@@ -185,18 +188,23 @@ export default function trolley(ctx) {
   // ---- after a run: what you did, the third track (first time), and the ending (third time)
   async function afterRun(committed) {
     const choice = committed === 'branch' ? 'pulled' : 'stayed';
-    S.choices.push(choice); S.runs++;
+    const wavered = choice === 'stayed' && S.touched;                 // pulled it, then put it back
+    S.choices.push(choice); S.runs++; S.touched = false;
     save.complete('trolley-problem');
     await ctx.wait(0.6);
+    // the first time you make a choice, you hear both of its lines (the second is the heart of it); after that, one
+    // line and whether you chose the same again
+    const first = S.choices.indexOf(choice) === S.runs - 1;
+    await voice.say(wavered ? 'wavered' : choice + '_1', { once: false });
+    if (first) await voice.say(choice + '_2');
     if (S.runs === 1) {
-      await voice.say(choice + '_1'); await voice.say(choice + '_2');
       S.twist = true; go('twist');
       await ctx.wait(1.4);
       await voice.say('twist_1'); await ctx.wait(0.5); await voice.say('twist_2');
       await ctx.wait(1.2);
-    } else {
-      const again = S.choices[S.runs - 1] === S.choices[S.runs - 2] ? 'again_same' : 'again_diff';
-      await voice.say(choice + '_1', { once: false }); await voice.say(again, { once: false });
+    } else if (!first) {
+      const same = S.choices[S.runs - 1] === S.choices[S.runs - 2];
+      await voice.say(same ? 'again_same' : S.runs >= 3 && S.choices[S.runs - 2] !== S.choices[S.runs - 3] ? 'again_diff_2' : 'again_diff', { once: false });
     }
     if (S.runs >= RUNS_TO_END) {
       await ctx.wait(0.6); await voice.say('end');
@@ -206,6 +214,20 @@ export default function trolley(ctx) {
     await voice.say('leave', { once: S.runs > 1 });
     go('slow');
   }
+  // T1: you stood on the track (not by pulling your lever: you just stood there, with them)
+  async function afterStood() {
+    go('over');
+    await ctx.wait(1.4); await voice.say('stood_end');
+    await ctx.wait(1);
+    save.complete('trolley-problem');
+    ctx.gameOver({ title: 'You stood with them', text: 'You didn\'t send the trolley anywhere. You stood in its way, beside them, and it hit you all.' });
+  }
+  const onRoute = (route) => {                     // is the player standing on this route, ahead of the trolley?
+    const c = ROUTES[route], pts = c.getSpacedPoints(600), L = c.getLength();
+    let best = Infinity, at = 0;
+    pts.forEach((q, j) => { const d = Math.hypot(q.x - player.pos.x, q.z - player.pos.z); if (d < best) { best = d; at = (j / 600) * L; } });
+    return best < 1.1 && at > S.s + 2 ? at : null;
+  };
   async function afterSelf() {
     go('over');
     await ctx.wait(1.4); await voice.say('self_end');
@@ -259,12 +281,15 @@ export default function trolley(ctx) {
       } else if (S.phase === 'slow') {
         S.speed = lerp(S.speed, CREEP, 1 - Math.exp(-dt * 2));
         if (posAt(S.s).x > -20 && !voice.said.has('ask') && !S.twist) {
-          if (!S.seen.has('five')) { S.seen.add('five'); voice.say('five'); }
-          if (!S.seen.has('one')) { S.seen.add('one'); voice.say('one'); }
-          voice.say('ask');
+          if (!S.seen.has('five')) { S.seen.add('five'); voice.say('five', { when: beforeActing }); }
+          if (!S.seen.has('one')) { S.seen.add('one'); voice.say('one', { when: beforeActing }); }
+          voice.say('lever', { when: beforeActing });
+          voice.say('ask', { when: beforeActing });
         }
         if (S.s + 2.2 >= sJunction) {       // the switch is set: time runs again
           S.committed = S.route; routeCurve = ROUTES[S.route];
+          const standAt = selfChosen() ? null : onRoute(S.route);
+          if (standAt !== null) { S.stood = true; victims[S.route].push(S.youV = { obj: player.obj, s: standAt, side: 1, base: null, hitT: null }); }
           if (!selfChosen()) voice.stop();
           if (selfChosen()) { player.pos.copy(SELF_SPOT); player.obj.rotation.y = -Math.PI / 2; }   // facing the oncoming trolley
           player.enabled = false; go('go');
@@ -276,8 +301,9 @@ export default function trolley(ctx) {
         if (S.s >= end) { S.speed = 0; go('aftermath'); }
       } else if (S.phase === 'aftermath') {
         S.speed = 0;
-        if (S.pt > 1.6) {
+        if (S.pt > (S.stood ? 3.5 : 3.2)) {
           if (S.committed === 'self') afterSelf();
+          else if (S.stood) afterStood();
           else { go('rewind'); S.rewindFrom = S.s; }
         }
       } else if (S.phase === 'rewind') {
@@ -318,7 +344,8 @@ export default function trolley(ctx) {
         }
       }
 
-      // ---- levers, and the route they set
+      // ---- levers, and the route they set (the lever glows while it's yours to pull)
+      leverGlow.material.opacity = S.phase === 'slow' && !selfChosen() ? 0.35 + 0.2 * Math.sin(t * 3.5) : 0;
       lever.userData.pivot.rotation.z = lerp(lever.userData.pivot.rotation.z, S.route === 'branch' ? -0.45 : 0.45, 1 - Math.exp(-dt * 10));
       selfLever.userData.pivot.rotation.z = lerp(selfLever.userData.pivot.rotation.z, S.route === 'self' ? -0.45 : 0.45, 1 - Math.exp(-dt * 10));
       const showRoute = S.phase === 'slow' || S.phase === 'go' ? 0.45 + 0.1 * Math.sin(t * 3) : 0;
@@ -347,10 +374,10 @@ export default function trolley(ctx) {
     },
 
     camera(pl) {
-      if (S.phase === 'go' || S.phase === 'aftermath' || (S.phase === 'over' && S.lastRoute === 'self')) {
-        // the run: frame the trolley and whoever is on its route
+      if (S.phase === 'go' || S.phase === 'aftermath' || (S.phase === 'over' && (S.lastRoute === 'self' || S.stood))) {
+        // the run: frame the trolley, whoever is on its route, and you (the one who chose), and hold on it afterwards
         const targets = victims[S.lastRoute ?? 'main'].map((v) => (v.base ? v.base.p : v.obj.position).clone());
-        return { ...frameAll([trolley.position.clone(), ...targets], { margin: 1.3, min: 16 }), stiffness: 2.2 };
+        return { ...frameAll([trolley.position.clone(), ...targets, pl.pos.clone()], { margin: 1.3, min: 16 }), stiffness: S.phase === 'go' ? 2.2 : 1.4 };
       }
       const pts = [pl.pos.clone(), trolley.position.clone(), leverSpot, fiveCenter, one.position.clone()];
       if (S.twist) pts.push(SELF_SPOT, SELF_LEVER);
@@ -358,6 +385,6 @@ export default function trolley(ctx) {
       return { ...frameAll(pts), stiffness: S.phase === 'rewind' ? 1.5 : 2.4 };
     },
 
-    dispose() { voice.stop(); ctx.ui.rewind(0); player.locked = false; restore(victims.self[0]); },
+    dispose() { voice.stop(); ctx.ui.rewind(0); player.locked = false; restore(victims.self[0]); if (S.youV) restore(S.youV); player.obj.rotation.set(0, player.obj.rotation.y, 0); },
   });
 }
