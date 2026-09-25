@@ -15,6 +15,29 @@ it, and what to change.
   a per-vignette change, the vignette section says so.
 - GAME.md rules are cited where the game breaks its own design (e.g. §5 "Never tell the player they were right or wrong").
 
+## Fix these first
+
+The ten changes with the most reach, in a sensible order. The first four are shell fixes that remove whole classes of
+bugs across all nine vignettes.
+
+1. **G2 · Cancel a level's scripts when it ends or is left.** A generation token for `ctx.wait` / `voice.say`, and
+   `gameOver`/`save`/`journal` ignoring a disposed level. This fixes the blocker (another vignette's game-over card in the
+   first room), leaking lines, and stale lines after endings. Then give reaction lines priority over descriptive ones.
+2. **G3 · Stuck speech bubbles** (a few lines in `ctx.speak`).
+3. **G14 · Return to the hall** from hall vignettes (a `home` per level, `ctx.from`).
+4. **G1 / G16 · No ending one E-press from the spawn or on a shared prompt**, and the house rules for affordances,
+   exits and doing nothing; pause the game under the notebook (G5).
+5. **Philosophy that plays the opposite of the theory:** the monkeys' time scale (IM1), the commons that needs you to start
+   it and the free bell (TC1, TC2), the lopsided Ship endings (S1), the trolley's lost reflection and leading lines (T2,
+   T4).
+6. **T1 · The trolley passes through the player**; honour standing on the track.
+7. **Grandfather's clock** (GP1): the scene must wait for the player and pose the question before the options expire.
+8. **Off-camera payoffs:** Fermi's beam, moon and frog (FP1); the cave's reveal in first person (C2); Simulation's
+   endings (SA2); show what the narration says (G17).
+9. **G15 / G7 · The second pass:** a shared rewind/replay helper, then one replay line and one rewind in every vignette
+   (the grandfather loop first).
+10. **G6 · A journal that keeps every ending and every answer.**
+
 ---
 
 ## Global (engine, shell, cross-vignette)
@@ -69,7 +92,7 @@ Talking to someone again before their bubble expires freezes the old bubble half
 level: over the sea in the sailing ending, outside the cave in daylight, on the game-over card. Cause (`game/main.js`,
 `ctx.speak`): the speaker's entry in `bubbles` is replaced with a new `key`, so `ui.label('speech-'+oldKey)` is never
 updated or hidden again; expired bubbles are also deleted without setting their label to 0. *Seen by 10/12 in room 1
-and 8/11 in the hall (the apple-faced gentleman's bubbles stay at full opacity 28 m away).*
+and 9/12 in the hall (the apple-faced gentleman's bubbles stay at full opacity 28 m away).*
 - In `speak()`, if the target already has a bubble, hide its label first (or reuse the key). On delete, call
   `ui.label('speech-'+key, 0, …)`. Clear all bubbles on phase changes that move the camera far away, and on `gameOver`.
 - Also hide a bubble when its speaker is off-screen, and stop a second Talk opening while a bubble is showing (wild).
@@ -157,11 +180,26 @@ appears. *Seen by 4/12 (polish, camera, vibes, streamer).*
 - Reduce the number of text styles (captions, toasts, labels, bubbles, notebook, game-over card) to one narration voice
   and three type treatments; `resize: none` on the card's textareas (vibes).
 
+### G13 · P2 · Smaller shell items
+- Esc opens the browser's native `confirm()`; use an in-game styled pill. On the game-over card, Esc should act as
+  "Back to the house" without asking (calm, polish, bugs).
+- Esc accepted during the arrival transition is ignored (streamer: had to press it twice in the cave). Honour it, or don't
+  show the dialog until the level has loaded.
+- "GAME OVER" reads as a loss in a game with no fail states; use "The end" or the vignette's name as the kicker (gd).
+- Clear prompts and labels on level unload (camera saw a stale "…ck through the frame" pill during the trolley exit).
+- Hide all labels and prompts when a portal transition starts (vibes).
+- The frog appears at arrival in Brain in a Vat and big in the foreground in Ship; GAME.md wants it during the choice,
+  mid-ground (wild, gd, camera).
+- Transitions: only the painting has a real entrance and nothing has a matching exit. Give each portal its own entry
+  (pages of the book, darkness through the purple door, painted sky through the sky door) and a reverse exit (pull back
+  out of the painting) (vibes, camera).
+- Idea: an optional, local "what others chose on this computer" tally on the game-over card (teacher).
+
 ### G14 · P0 · Leaving a hall vignette drops you in the first room
 Both "Back to the house" on the game-over card and Esc hard-code `goto('house')` (`game/main.js` ~l.121 and ~l.181), so
 every hall vignette returns you to the first room's default spawn (0, 5.5) and costs a ladder climb and a walk back down
 the hall; the hall's per-portal `ctx.from` spawns (`hall.js` ~l.270) are dead code. Esc *in the hall* also asks "Leave
-this vignette and return to the house?". *Seen by 10/10 hall playtesters so far.*
+this vignette and return to the house?". *Seen by 12/12 hall playtesters.*
 - Give each level a `home` (room-1 vignettes → `house`, hall vignettes → `hall`) and use it in both handlers with
   `ctx.from` set to the vignette id; label the button "Back to the hall" there.
 - Don't treat hub rooms (`house`, `hall`) as vignettes in the Esc handler: no confirm, or "Climb down to the first room?".
@@ -169,7 +207,7 @@ this vignette and return to the house?". *Seen by 10/10 hall playtesters so far.
 ### G15 · P1 · One run straight to the card: the hall has no second pass at all
 None of the five hall vignettes has consequence → rewind → a replay that remembers you → twist; each is a single
 ~20–90 s run to the game-over card, and Play again restarts cold with identical lines (grandfather ~27 s, simulation
-~50 s of repeated narration before the choice returns). *Seen by 10/10 hall playtesters.* This is G7 at its sharpest;
+~50 s of repeated narration before the choice returns). *Seen by 12/12 hall playtesters.* This is G7 at its sharpest;
 per-vignette suggestions are in each hall section.
 - Build the loop once as a shared helper (`ctx.runs`, `voice.say('again_same' | 'again_diff')`, an in-scene rewind),
   then give each vignette at least one rewind pass and a replay line. For grandfather, the loop *is* the theory.
@@ -186,6 +224,12 @@ without "Run more worlds"). Write these into GAME.md and apply them everywhere:
 - Also: `look()` asides are disabled whenever any narration is playing (`!ctx.voice.busy`, `extras.js` ~l.24), so prompts
   blink away during lines and a second aside is silently dropped; queue the aside's line instead (bugs-hall, phil-hall,
   camera-hall, streamer-hall).
+- Hide world labels (year counters, portal names) while the page overlay, notebook or game-over card is open; they
+  currently show through (polish-hall, bugs-hall, vibes-hall).
+- Cancel the tap-to-walk target when an interaction fires or the level locks controls (the figure keeps walking after an
+  ending starts, or resumes an old target after a page closes) (polish-hall).
+- On touch there's no way to open the notebook (its hint says "N · close"); add a small notebook icon on touch devices
+  and "tap to close" wording; the monkey page is wider than a phone and its hint is cut off (polish-hall).
 - Tapping an interactable's mesh should walk you to its interaction point and show its prompt (`interact.js`), not to
   the nearest ground behind it (gd-hall: tapping the little world walked the player behind the desk).
 
@@ -205,21 +249,6 @@ without "Run more worlds"). Write these into GAME.md and apply them everywhere:
   the plain voice; consider plain teasers ("A shared field") with the proper name in the notebook and journal (drama-hall).
 - Label and prompt disagree ("Up to the hall" / "Climb the ladder"; the Fermi portal is a telescope but the scene is a
   radio dish) (phil-hall, gd-hall, streamer-hall, vibes-hall).
-
-### G13 · P2 · Smaller shell items
-- Esc opens the browser's native `confirm()`; use an in-game styled pill. On the game-over card, Esc should act as
-  "Back to the house" without asking (calm, polish, bugs).
-- Esc accepted during the arrival transition is ignored (streamer: had to press it twice in the cave). Honour it, or don't
-  show the dialog until the level has loaded.
-- "GAME OVER" reads as a loss in a game with no fail states; use "The end" or the vignette's name as the kicker (gd).
-- Clear prompts and labels on level unload (camera saw a stale "…ck through the frame" pill during the trolley exit).
-- Hide all labels and prompts when a portal transition starts (vibes).
-- The frog appears at arrival in Brain in a Vat and big in the foreground in Ship; GAME.md wants it during the choice,
-  mid-ground (wild, gd, camera).
-- Transitions: only the painting has a real entrance and nothing has a matching exit. Give each portal its own entry
-  (pages of the book, darkness through the purple door, painted sky through the sky door) and a reverse exit (pull back
-  out of the painting) (vibes, camera).
-- Idea: an optional, local "what others chose on this computer" tally on the game-over card (teacher).
 
 ---
 
@@ -605,6 +634,9 @@ Empire of Light window is cut off; in phone portrait the table finally appears b
 - Hall spawn (-13.5, 1.4) is inside the "Climb down" radius and behind the red curtain, with the "Down to the first
   room" label and the prompt stacked on the player's head: the first E sends you straight back down. Spawn ~1.5 m further
   in (x≈-12) (bugs, camera, vibes, wild, calm).
+- Blockers for the telescope and gate are ~1 m behind the props, so you stand inside the tripod or the gate bars; the
+  apple room uses two circles for a box; holding W+D into the back wall between the clock and the typewriter table wedges
+  you at (-6.2, -4.1), from which tap-to-walk refuses to go right; the Escher stairs pass through the clock case (polish).
 - The first room's toast is carried up the ladder (clear toasts in `goto`); climbing shows a frame of empty void first
   (hold the fade until the hall has rendered) (bugs, camera, world).
 - Talk-spam on the apple-faced gentleman stacks bubbles that stay frozen at full opacity 28 m away (G3) (bugs, world,
@@ -638,7 +670,7 @@ Empire of Light window is cut off; in phone portrait the table finally appears b
 The grandfather starts walking the moment you arrive; the question "So what happens if you stop him?" is voiced at
 segment 3, the same moment "Close the gate" is disabled (`enabled: S.seg < 3`), ~10 s before he meets her. A player who
 listens to the setup, reads the paper or the notebook, or talks to the vendor gets "You let it be" ~25–37 s after
-arriving without ever having had an enabled option in reach. *Seen by 10/11.*
+arriving without ever having had an enabled option in reach. *Seen by 10/12.*
 - Hold him at his door (checking his watch) until the player first moves off the machine or the `see_gm`/`ask` lines
   have played; voice the question *before* the first opportunity; then slow him right down (the trolley's crawl) while
   the player is within reach of an interactable.
@@ -648,7 +680,7 @@ arriving without ever having had an enabled option in reach. *Seen by 10/11.*
 - Pause him while the notebook is open (G5).
 
 ### GP2 · P1 · No loop: the one vignette where the rewind *is* the theory
-One pass to the card; Play again starts cold with the same line. *Seen by 8/11.*
+One pass to the card; Play again starts cold with the same line. *Seen by 8/12.*
 - After "They meet", rewind inside the fiction (clock hands spin back, you're at the machine: "Again.") and let the player
   try up to 3 walks in one visit; on each loop the ordinary obstacles get more pointed (the wind comes *before* you reach
   the gate; he recognises you: "Have we met?"); end after 2–3 loops or on "Go home" (drama, gd, wild, streamer).
@@ -705,6 +737,9 @@ One pass to the card; Play again starts cold with the same line. *Seen by 8/11.*
   the same cream as everywhere; add grain (world).
 - The wind isn't visible (leaf/dust swirl, a tree sway); the railway is two lines on sand; the "late" train never arrives
   (let it pull in as they meet); background walkers, a curtain twitch (vibes, world, streamer).
+- The grandfather walks straight through you while the narrator says "He steps around you"; make him sidestep (the
+  player is a blocker for NPC paths). Houses, trees and the platform have no blockers; the walkable disc (r 26) has a
+  huge empty foreground that makes the framer pull back until the town is tiny (shrink to ~18) (polish).
 - The fence is a row of post blockers that traps tap-to-walk; make it one segment blocker the steering knows about
   (bugs). Two prompts at once ("Turn the signpost" and "Tell him who you are") (calm). The vendor's stall intrudes at the
   bottom of the frame near the gate (camera). The fountain water sinks below the rim (vibes).
@@ -720,7 +755,7 @@ Three lever pulls = 3 million years = the full line "to be, or not to be, that i
 `infinite-monkey.js`); the card says "Three million years of noise… It was simply bound to happen." A 39–41-character
 line is ~10^58–10^64 tries; the notebook says Borel used monkeys for events "so improbable they will never be seen in
 practice", and the walk-out ending ("forever is much, much longer than it sounds") is the true lesson. Players leave
-believing it takes a few million years. *Seen by 10/11.*
+believing it takes a few million years. *Seen by 10/12.*
 - Make each pull multiply time by orders of magnitude (10^6 → 10^14 "until the stars go out" → a number the counter can't
   show, in scientific notation → "∞"), with the pages still mostly noise ("Still just the word."), and let the line
   appear only after the player keeps going past the end of the universe: "The stars went out long ago. They're still
@@ -785,7 +820,7 @@ streamer says "watch this" and nothing pays it off. *Seen by vibes, world, strea
 - After the reveal, `choose` starts in silence: no line, no prompt in view, the lever ("Switch them off", r 1.8) and the
   door (7–9 m away) show nothing until you blunder into them; players stood 15–30 s. At `choose`, light the lever and
   crack the door open with light spilling in, voice one short beat ("You could switch them off. Or leave them be."), then
-  hold a silence. *Seen by 8/11.*
+  hold a silence. *Seen by 8/12.*
 - The choice (ethics towards the simulated) isn't the question the scene asked (credence: "which kind is yours?"). Tie
   each ending to a horn of the trilemma without jargon: switching off = "If everyone did what you just did, there'd be
   almost no little worlds, and you'd probably be real."; leaving them = "One more world. The odds that yours is the first
@@ -834,7 +869,10 @@ streamer says "watch this" and nothing pays it off. *Seen by vibes, world, strea
 - The study is empty before the shelves fill: builder's clutter (a soldering iron, sketches, a cracked dome, a coffee cup
   with a tiny coffee cup inside) (world). Give one tiny person a human act, and on a second visit have one look up at the
   dome (drama).
-- Asides are disabled until "Look closer"; enable them from arrival (gd). The lever intrudes on the zoom shot (camera,
+- Asides are disabled until "Look closer"; enable them from arrival (gd).
+- The bookshelves' single small blocker lets you walk behind them and vanish; the exit door has no blocker, so tapping it
+  walks you through and out of its prompt radius; when the choice opens you're just outside the switch's 1.8 radius
+  (widen to ~2.4); in portrait "Leave them running" runs off the screen (polish). The lever intrudes on the zoom shot (camera,
   vibes).
 
 ---
@@ -844,7 +882,7 @@ streamer says "watch this" and nothing pays it off. *Seen by vibes, world, strea
 ### FP1 · P0 · The player's big action and the scene's sky are off camera
 - "Send a message": the beam's lowest point is ~26 m above the dish, above the frame; only the dish tilts. Anchor it at
   the feed horn (parent it to the bowl) and tilt the camera up along it, or show 3–4 faint expanding rings rising from the
-  feed and dwindling to a point, then hold on the empty sky for "Nothing comes back". *Seen by 8/11.*
+  feed and dwindling to a point, then hold on the empty sky for "Nothing comes back". *Seen by 8/12.*
 - "Look at the moon" (the chair "faces the moon"): the moon at (-150, 120, -200) is always off screen; move it into the
   upper left of the default frame (~(-40, 35, -80)) or pan to it (camera, vibes, world, pilot-bugs).
 - The frog and its shooting star play below the frame (z≈7–10); route the cameo between the console and the dish (z≈1–3)
@@ -852,6 +890,11 @@ streamer says "watch this" and nothing pays it off. *Seen by vibes, world, strea
 - The dish shows its convex back, reading as a mushroom; tilt it towards the camera to show the concave face, feed horn
   and struts (vibes, pilot-bugs). The Milky Way band never enters frame; bring it across the visible sky with 2–3 star
   sizes (vibes).
+
+- The camera doesn't follow the player: the walkable disc is r 20 but anything past z≈9 is out of frame, so holding S or
+  A for a few seconds walks the figure completely off screen; at spawn the feet are at the bottom edge under the caption.
+  Add the player to the framer's points, or clamp walkable to r≈11 around the hut, dish and lever. In portrait the send
+  lever is off screen, so a phone player never learns the second choice exists (polish).
 
 ### FP2 · P1 · The choice: hidden, accidental, and about a different debate
 - "Keep listening" (an ending) appears on the same spot and key as "Listen" the instant "So where is everybody?" ends,
@@ -905,7 +948,7 @@ Neighbours add sheep only as an echo of *your* "Add a sheep" (inside your `onUse
 sustainable forever (10 sheep: regrowth 0.02/s = 10 × 0.002/s), so doing nothing is a dead end (no line, no ending, no
 frog; Esc is the only way out) and the game teaches that the tragedy needs a first bad actor, the opposite of Lloyd and
 Hardin (each herder independently finds one more sheep rational; no villain needed). The card's "Every sheep made sense
-to the one who added it" is contradicted by the neighbour's "Well, you added one. Why shouldn't I?". *Seen by 9/11.*
+to the one who added it" is contradicted by the neighbour's "Well, you added one. Why shouldn't I?". *Seen by 9/12.*
 - After ~20–30 s, a neighbour adds a sheep on their own ("The blue house adds one. It's their right."), then another,
   whether or not you do; your sheep speed it up or slow it down. Copying can stay as a second reason (reciprocity).
 - Give restraint its own ending: "You held back. They didn't. The grass went anyway." (drama, teacher, phil, gd, bugs).
@@ -914,7 +957,7 @@ to the one who added it" is contradicted by the neighbour's "Well, you added one
 
 ### TC2 · P0 · The bell is a free win, available before any problem
 "Ring the bell" is live from the first second and always gives the same ending: rung at full grass it says "The grass
-came back" when it never went; rung at 0.09 it's instant and unanimous. *Seen by 10/11.*
+came back" when it never went; rung at 0.09 it's instant and unanimous. *Seen by 10/12.*
 - Enable it only once the grass is visibly thinning (after the "thin" line), or give an early ring its own honest ending
   ("Everyone came. Nobody saw the problem yet. They went home." / "You agreed on limits before anyone needed them. That
   is rarer than it sounds.").
@@ -924,7 +967,7 @@ came back" when it never went; rung at 0.09 it's instant and unanimous. *Seen by
 - Idea: after the meeting, leave "Add a sheep" enabled briefly; sneak one in and a neighbour walks it back (monitoring and
   a gentle sanction: Ostrom's conditions) (phil).
 - Walk the player into the meeting circle (scripted walk) and frame the five of them; the player currently stays at the
-  bell, under the caption, while "Together, you agree" plays (7/11). Swing the bell with rings (vibes).
+  bell, under the caption, while "Together, you agree" plays (7/12). Swing the bell with rings (vibes).
 
 ### TC3 · P1 · The private gain is invisible
 "One more sheep. A little more for you." but nothing on screen shows it: your sheep look like everyone's, the pen stays
@@ -955,6 +998,9 @@ empty, there's no wool or tally. Adding is simply the wrong button. *Seen by tea
   notebook sentence on it (phil).
 - Notebook: Hardin's own formula was "mutual coercion, mutually agreed upon", not "regulated from above"; his essay was
   mainly about population, which deserves one neutral sentence (phil).
+- Nothing but the neighbours and the bell post has a blocker: you walk through the fence into the flock and half into
+  cottages; add blockers (a ring for the fence with a gate gap), or make the pasture walkable on purpose with sheep that
+  step aside; "Add a sheep" sits on your head while you press it 5–6 times (polish).
 - Sheep clump into one overlapping white pile; add separation steering and spread grazing targets; after the agreement
   the extra sheep walk through the fence (add a gate) (calm, vibes, world).
 - The caption covers the player at the gate; a foreground house crops the bottom of the frame; the frog's fly catch is at

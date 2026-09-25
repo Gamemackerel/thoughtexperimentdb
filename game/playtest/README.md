@@ -43,3 +43,11 @@ node game/tools/agentplay/play.mjs <persona>-<part> open house
 Launch prompt per playtester: "Read game/playtest/brief.md and follow it. Your persona is `<id>` in
 game/playtest/personas.md. Session: `<id>-<part>`. Part: <room 1 | the hall> (<levels>). Write to
 game/playtest/raw/<id>-<part>.md."
+
+## The 2026-09-25 run
+
+- Pilot: 2 playtesters (trolley, Fermi). Swarm: 24 playtesters, a rolling pool of at most 12 at a time (each persona's
+  hall run started when its room-1 run finished). Each took ~15–22 min and 150–280k tokens, played every vignette in its
+  part at least twice and reached every listed ending.
+- Output: 26 reports in `raw/` (~500 KB), consolidated into `FEEDBACK.md`: 18 global items and 50+ per-level items with
+  priorities, "seen by" counts, a "fix these first" list, a keep list and the harness artifacts that were filtered out.

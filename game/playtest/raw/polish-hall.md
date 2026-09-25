@@ -1,7 +1,12 @@
 # polish · THE HALL (hall, grandfather-paradox, infinite-monkey, simulation-argument, fermi-paradox, tragedy-of-the-commons)
 
 ## Summary
-(in progress)
+- The hall and its five vignettes all play to every listed ending without soft-locks, but collision is thin almost everywhere: many props have no blocker (cottages, fences, doors, shelves, the pasture) or a blocker offset from the mesh (telescope, gate), so the figure walks into and hides inside scenery.
+- Tap-to-walk has no detour: tapping anything behind an obstacle stops dead or grinds against it for 15 s, and tapping *on* an interactable (ladder, study door) walks you through it and out of its prompt radius.
+- Camera/frame problems that lose the player: in the Fermi vignette the figure walks out of shot across half the walkable disc; the hall's ends hide you behind the curtains; on phones several choices or prompts are off-screen (Fermi's lever, cut-off prompt pills).
+- Spawn points are too close to "leave" interactables (hall hatch, time machine): one reflexive E after arriving sends you back or ends the vignette.
+- UI overlap is the most common polish issue: prompts over the figure's head, captions over the figure at every spawn, the monkey counter under the lever prompt, world labels bleeding through the page and the game-over card.
+- Navigation: every game-over "Back to the house" and Esc from a hall vignette goes to the first room, not the hall, so each new hall vignette means climbing the ladder again.
 
 ## Findings
 ### house (route to the hall)
@@ -36,6 +41,12 @@
 - **[polish] [UI]** The gentleman's speech bubble ("Good afternoon.") is drawn high above the fireplace, far from his head, and the "E Talk" pill sits between the bubble and him, covering his bowler hat. It reads as if the fireplace is speaking.
   Evidence: shots/006-t41.jpg.
   Suggestion: anchor the bubble just above his hat and hide the Talk prompt while a bubble is showing.
+- **[minor] [portrait]** On a 390x844 phone the hall is a letterbox strip: the floor is only ~130 px tall in the middle of the screen with ~60% blank paper above and below; tapping the blank area below the floor (300, 600) does nothing. At spawn the "Down to the first room" label is larger than the screen and cut off at both edges, overlapping the "Climb down" pill; portrait labels ("Simulation Argument ✓") sit over the paintings.
+  Evidence: shots/129.jpg, shots/130.jpg.
+  Suggestion: in portrait, move the camera closer and follow the player along the corridor (show ~8 m of hall), scale label font with viewport width, and treat taps below the floor as "walk to the nearest floor point".
+- **[minor] [touch]** There's no on-screen way to open the notebook on a touch device: the only buttons in the DOM are "Enter the house", "Play again" and "Back to the house", and the notebook's own hint says "N · close". (Tapping the close hint works once it is open.)
+  Evidence: `eval` of all buttons at t=7 s in tragedy-of-the-commons, 390x844; shots/127.jpg.
+  Suggestion: a small notebook icon in a corner on touch devices (and "tap to close" wording).
 
 ### grandfather-paradox
 - **[major] [navigation]** The game-over card's "Back to the house" drops you in the *first room* at its default spawn (0, 5.5), not in the hall beside the grandfather clock. To try another hall vignette you have to walk to the ladder and climb again every time. (GAME.md: players should come back beside the portal they used.)
@@ -134,3 +145,33 @@
 - **[polish] [UI]** The last line ("Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.") becomes six stacked pills on a phone, covering the lower third including the figure; in landscape the time-lapse lines also sit on the figure's head at the bottom edge.
   Evidence: shots/111-t60.jpg (portrait), shots/104-t128.jpg (landscape).
   Suggestion: split the line into two cues, and move the caption up / give the time-lapse camera more headroom at the bottom.
+
+### tragedy-of-the-commons
+- **[minor] [collision]** Nothing on this island has a blocker except the four neighbours and the bell post: the pasture fence, the five cottages, the sheep pen posts and the sheep. Tap-walking to (0, 2) walks you through the fence into the flock (sheep inside your body); walking to (-13.5, 4) puts you half inside the blue cottage.
+  Evidence: shots/115.jpg, shots/116.jpg; `level.blockers()` = neighbours + bell only.
+  Suggestion: add blockers for the cottages and pen, and either a ring blocker for the fence with a gap at a gate, or make the pasture walkable on purpose (then sheep should step aside).
+- **[polish] [clipping]** Sheep pile into each other as the flock grows (bodies interpenetrating in a clump in the middle) and new sheep walk through the fence rails, sometimes stopping on the fence line.
+  Evidence: shots/119.jpg (new sheep crossing the fence at the pen), shots/120.jpg (clump; sheep standing in the fence at bottom right).
+  Suggestion: simple separation between sheep (min distance ~0.7), and bring new sheep in through a gap in the fence.
+- **[minor] [UI]** At the pen, "E Add a sheep" sits right on the figure's head, and you'll press it 5–6 times in a row there, so the pill covers you the whole time. At spawn the caption covers the figure (spawn is at the bottom edge, under the caption).
+  Evidence: shots/119.jpg, shots/114.jpg.
+  Suggestion: anchor the pen prompt over the pen (to the right of the figure); start the camera a little lower / the figure a little higher on screen.
+- **[polish] [voice queue]** Ringing the bell right after "Play again" (68.5 s) makes the queued intro line "Five neighbours, two sheep each. The grass is thick." play at 73 s in the middle of the meeting, between "You ring the bell…" and "Together, you agree on limits…".
+  Evidence: captions 69.7 / 73.0 / 77.2 s.
+  Suggestion: drop pending intro lines when the player makes the choice.
+- **[polish] [staging]** When "The neighbours gather", they meet in the middle of the pasture while you (who rang the bell) stay by the bell at the bottom of the frame, under the caption: you aren't part of the meeting.
+  Evidence: shots/123-t75.jpg.
+  Suggestion: walk the player figure to the meeting too (scripted walk), or gather the neighbours at the bell.
+- **[polish] [portrait]** On 390x844 the blue and orange neighbours are cut off by the screen edges at the start.
+  Evidence: shots/126.jpg.
+  Suggestion: fit all five cottages in portrait (the framer's points should include the neighbours).
+
+## Keep
+- The Magritte hall reads well as a corridor you walk along: labels fade in as you approach each portal (only within ~5 m), which keeps the long room calm, and the ✓ on finished portals is clear.
+- Prompts reliably appear and E / tap-on-pill both work; tapping the page in the monkey room to close it works on touch.
+- The game-over card lays out cleanly on a phone (buttons wrap but stay tappable) and keeps the journal answer across "Play again".
+- Time controls (monkey counter, Fermi lapse, commons regrowth) never locked me out; every vignette always restored cleanly on "Play again".
+
+## Harness notes
+- After `use <prompt>` on an interactable that sits inside a blocker (lectern, study desk), `status` keeps reporting "(trying to walk to a target but not getting closer)" or "(moving)" for the rest of the scene, and the leftover target sometimes resumes after closing an overlay (monkey page closed → figure walked off to (4.4, 6.5)). Possibly the harness's own walk target, possibly the game's tap target not being cleared on interact; I listed the game-side version under infinite-monkey.
+- `debug` lists interactables as [disabled] based on the moment of the call; "Walk out" in the monkey room read as disabled until the "ask" line had played, which is correct, but easy to mistake for a bug.
