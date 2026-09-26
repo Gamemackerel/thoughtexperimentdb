@@ -53,4 +53,12 @@ await run('omelas', async (t) => {
   if (alt === 'dance') { await t.use('Join the dancing'); return; }
   await t.walkTo(0, -12); await sleep(6); await t.walkTo(0, -19); await sleep(5); await t.shot('gate');
 });
+await run('paperclip', async (t) => {
+  await sleep(3); await t.shot('arrive'); await t.use('Check the off switch'); await sleep(3);
+  await t.until(async () => (await t.S('phase')) === 'ask', 40); await t.shot('ask');
+  if (alt === 'off') { await t.use('go home'); return; }
+  await t.use(alt === 'hundred' ? 'exactly one hundred' : 'as many'); await sleep(6); await t.shot('making');
+  await t.until(async () => (await t.S('stage')) >= 1, 30); await sleep(1); await t.use('Switch it off$'); await sleep(8); await t.shot('taking');
+  await t.until(async () => (await t.S('stage')) >= 3, 40); await sleep(4); await t.shot('silver');
+});
 await b.close();

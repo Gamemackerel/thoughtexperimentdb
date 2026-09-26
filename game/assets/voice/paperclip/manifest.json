@@ -1,0 +1,102 @@
+{
+  "arrive": {
+    "file": "arrive-f93baf38.mp3",
+    "text": "Your workshop. And your new machine: cleverer than anyone who has ever lived.",
+    "dur": 4.86
+  },
+  "wants": {
+    "file": "wants-fc733f1e.mp3",
+    "text": "It has no wishes of its own. It will want whatever you tell it to want.",
+    "dur": 4.55
+  },
+  "ask": {
+    "file": "ask-d0a773dd.mp3",
+    "text": "So. What will you tell it to want?",
+    "dur": 2.56
+  },
+  "spool": {
+    "file": "spool-04646392.mp3",
+    "text": "A spool of wire. Enough for a few thousand paperclips.",
+    "dur": 3.97
+  },
+  "switch": {
+    "file": "switch-19ed170e.mp3",
+    "text": "The off switch. You've checked it twice.",
+    "dur": 3.03
+  },
+  "a_1": {
+    "file": "a_1-97bea582.mp3",
+    "text": "Paperclips. It makes them beautifully, and faster every minute.",
+    "dur": 4.34
+  },
+  "a_2": {
+    "file": "a_2-8a3101bc.mp3",
+    "text": "It has worked out that two of it would make more paperclips than one.",
+    "dur": 4.21
+  },
+  "a_3": {
+    "file": "a_3-f370df8d.mp3",
+    "text": "There's good metal in the fence. And in the shed.",
+    "dur": 3.34
+  },
+  "off_1": {
+    "file": "off_1-cb3161b4.mp3",
+    "text": "It saw that coming. A machine that's switched off makes no paperclips, so it has made sure it can't be.",
+    "dur": 6.3
+  },
+  "a_4": {
+    "file": "a_4-642869c7.mp3",
+    "text": "It doesn't hate you. It doesn't love you, either. It just has other plans for what you're made of.",
+    "dur": 5.67
+  },
+  "a_5": {
+    "file": "a_5-ba37b4b2.mp3",
+    "text": "It isn't being cruel. It's doing exactly what you asked.",
+    "dur": 3.94
+  },
+  "a_end": {
+    "file": "a_end-cfb78b4f.mp3",
+    "text": "Everything is paperclips now. Very good ones.",
+    "dur": 3.71
+  },
+  "b_1": {
+    "file": "b_1-5f38d081.mp3",
+    "text": "One hundred paperclips. Exactly what you asked for.",
+    "dur": 4.05
+  },
+  "b_2": {
+    "file": "b_2-eacbf792.mp3",
+    "text": "It counts them again. It can't be completely certain it hasn't miscounted.",
+    "dur": 4.96
+  },
+  "b_3": {
+    "file": "b_3-a4bcaede.mp3",
+    "text": "A better counting machine would make it a little more certain. And a better one than that, a little more.",
+    "dur": 5.93
+  },
+  "b_4": {
+    "file": "b_4-144ff2b6.mp3",
+    "text": "It will never be quite sure. So it never quite stops.",
+    "dur": 3.79
+  },
+  "b_end": {
+    "file": "b_end-739db1a6.mp3",
+    "text": "One hundred paperclips. Counted, and counted, and counted.",
+    "dur": 4.68
+  },
+  "c_1": {
+    "file": "c_1-bfc78015.mp3",
+    "text": "You switch it off at the wall, and go home.",
+    "dur": 3
+  },
+  "c_idle": {
+    "file": "c_idle-51701eae.mp3",
+    "text": "You never give it anything to want. You switch it off, and go home.",
+    "dur": 4.28
+  },
+  "c_2": {
+    "file": "c_2-e00f94f4.mp3",
+    "text": "You'll never know what it would have done. Somebody else might switch theirs on.",
+    "dur": 4.57
+  }
+}

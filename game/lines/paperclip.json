@@ -1,0 +1,30 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "Your workshop. And your new machine: cleverer than anyone who has ever lived.",
+    "wants": "It has no wishes of its own. It will want whatever you tell it to want.",
+    "ask": "So. What will you tell it to want?",
+    "spool": "A spool of wire. Enough for a few thousand paperclips.",
+    "switch": "The off switch. You've checked it twice.",
+    "a_1": "Paperclips. It makes them beautifully, and faster every minute.",
+    "a_2": "It has worked out that two of it would make more paperclips than one.",
+    "a_3": "There's good metal in the fence. And in the shed.",
+    "off_1": "It saw that coming. A machine that's switched off makes no paperclips, so it has made sure it can't be.",
+    "a_4": "It doesn't hate you. It doesn't love you, either. It just has other plans for what you're made of.",
+    "a_5": "It isn't being cruel. It's doing exactly what you asked.",
+    "a_end": "Everything is paperclips now. Very good ones.",
+    "b_1": "One hundred paperclips. Exactly what you asked for.",
+    "b_2": "It counts them again. It can't be completely certain it hasn't miscounted.",
+    "b_3": "A better counting machine would make it a little more certain. And a better one than that, a little more.",
+    "b_4": "It will never be quite sure. So it never quite stops.",
+    "b_end": "One hundred paperclips. Counted, and counted, and counted.",
+    "c_1": "You switch it off at the wall, and go home.",
+    "c_idle": "You never give it anything to want. You switch it off, and go home.",
+    "c_2": "You'll never know what it would have done. Somebody else might switch theirs on."
+  }
+}
