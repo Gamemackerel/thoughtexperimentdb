@@ -9,13 +9,14 @@
     "arrive": "A room full of typewriters, and a monkey at each one.",
     "typing": "They hit the keys at random. They will never stop.",
     "ask": "Given forever, could they type Shakespeare?",
-    "page_0": "Nonsense. Nothing but nonsense.",
+    "page_0": "The best so far. Still nonsense.",
     "wait": "A million years go by.",
-    "page_1": "A word. Just one, by pure chance.",
-    "page_2": "Two words, in the right order.",
+    "page_1": "The best so far. One real word, by pure chance.",
+    "page_2": "The best so far. Two words, in the right order.",
     "found": "There it is. To be, or not to be.",
     "found_2": "Given forever, it had to happen. But none of them meant a word of it.",
     "leave_end": "Most of it is noise. Forever is longer than it sounds.",
-    "bananas": "A crate of bananas. Forever takes a lot of bananas."
+    "bananas": "A crate of bananas. Forever takes a lot of bananas.",
+    "best": "Every page they type is checked. This is the best one so far: out of all of them, the one that looks most like English."
   }
 }

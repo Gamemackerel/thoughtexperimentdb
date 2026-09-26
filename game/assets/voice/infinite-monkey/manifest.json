@@ -15,9 +15,9 @@
     "dur": 3.19
   },
   "page_0": {
-    "file": "page_0-705f7313.mp3",
-    "text": "Nonsense. Nothing but nonsense.",
-    "dur": 2.93
+    "file": "page_0-00c3a6f2.mp3",
+    "text": "The best so far. Still nonsense.",
+    "dur": 2.98
   },
   "wait": {
     "file": "wait-747c16bb.mp3",
@@ -25,14 +25,14 @@
     "dur": 2.27
   },
   "page_1": {
-    "file": "page_1-ae944b13.mp3",
-    "text": "A word. Just one, by pure chance.",
-    "dur": 3
+    "file": "page_1-74defdaa.mp3",
+    "text": "The best so far. One real word, by pure chance.",
+    "dur": 4
   },
   "page_2": {
-    "file": "page_2-f51528f0.mp3",
-    "text": "Two words, in the right order.",
-    "dur": 2.61
+    "file": "page_2-0ede78a2.mp3",
+    "text": "The best so far. Two words, in the right order.",
+    "dur": 3.66
   },
   "found": {
     "file": "found-74f970f6.mp3",
@@ -53,5 +53,10 @@
     "file": "bananas-16587049.mp3",
     "text": "A crate of bananas. Forever takes a lot of bananas.",
     "dur": 4.28
+  },
+  "best": {
+    "file": "best-95137f5e.mp3",
+    "text": "Every page they type is checked. This is the best one so far: out of all of them, the one that looks most like English.",
+    "dur": 7.26
   }
 }

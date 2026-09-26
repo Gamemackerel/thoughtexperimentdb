@@ -7,6 +7,7 @@ import {
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
+import { textTexture } from '../core/props.js';
 import { makeFramer } from '../core/camera.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -37,9 +38,12 @@ function page(waits, seed) {
   const r = seeded(seed), letters = 'abcdefghijklmnopqrstuvwxyz        ,.;';
   const noise = (n) => Array.from({ length: n }, () => letters[Math.floor(r() * letters.length)]).join('');
   const target = TARGETS[Math.min(waits, 3)];
-  if (!target) return noise(520);
-  const before = noise(Math.floor(160 + r() * 140));
-  return `${before}<mark>${target}</mark>${noise(520 - before.length - target.length)}`;
+  // the page on the lectern is the best one found so far, out of every page every monkey has typed
+  const typed = Math.round((waits + 0.02) * 12 * 60 * 24 * 365 * 1e6 / 3).toLocaleString('en-GB');
+  const head = `<b>THE BEST PAGE SO FAR</b>\nout of ${typed} pages typed\n\n`;
+  if (!target) return head + noise(470);
+  const before = noise(Math.floor(140 + r() * 120));
+  return `${head}${before}<mark>${target}</mark>${noise(470 - before.length - target.length)}`;
 }
 
 export default function infiniteMonkey(ctx) {
@@ -69,6 +73,9 @@ export default function infiniteMonkey(ctx) {
   const top = mesh(new THREE.BoxGeometry(1.2, 0.1, 0.9), clay(palette.wood)); top.position.y = 1.35; top.rotation.x = 0.35; lect.add(top);
   const pg = mesh(new THREE.BoxGeometry(0.55, 0.02, 0.7), clay(0xfbf6ea)); pg.position.set(0, 1.42, 0); pg.rotation.x = 0.35; lect.add(pg);
   lect.position.copy(LECTERN); root.add(lect);
+  const bestSign = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 0.34), new THREE.MeshBasicMaterial({ map: textTexture('BEST PAGE SO FAR', { w: 512, h: 134, font: 'bold 50px sans-serif', bg: '#2b2a33', fg: '#f6efe0' }) }));
+  bestSign.position.copy(LECTERN).add(V(0, 2.05, -0.25)); root.add(bestSign);
+  const signPost = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.7, 6), clay(palette.ink)); signPost.position.copy(LECTERN).add(V(0, 1.7, -0.3)); root.add(signPost);
   const lever = makeLever(); lever.position.copy(LEVER); root.add(lever);
   const arch = new THREE.Group(); const amat = clay(0xf2e6d4);
   for (const x of [-1, 1]) { const p = mesh(new THREE.BoxGeometry(0.3, 3, 0.4), amat); p.position.set(x, 1.5, 0); arch.add(p); }
@@ -97,12 +104,13 @@ export default function infiniteMonkey(ctx) {
   loadNotebook(level, '/game/notebook/infinite-monkey.json', 'The Infinite Monkey Theorem');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
 
-  interact.add({ pos: LECTERN, radius: 2.2, height: 2, prompt: 'Read a page', enabled: () => S.phase === 'explore',
+  interact.add({ pos: LECTERN, radius: 2.2, height: 2, prompt: 'Read the best page so far', enabled: () => S.phase === 'explore',
     onUse: async () => {
       ctx.page(page(S.waits, 11 + S.waits * 7 + Math.floor(S.years)));
       S.readAt = S.waits;
       if (S.waits >= 3) { S.phase = 'over'; await ctx.wait(0.6); await voice.say('found'); await voice.say('found_2'); await ctx.wait(1); save.complete('infinite-monkey');
         return ctx.gameOver({ title: 'Given forever', text: 'Three million years of noise, and then a line of Hamlet. Nobody meant it. It was simply bound to happen.' }); }
+      if (S.waits === 0) voice.say('best');
       voice.say(['page_0', 'page_1', 'page_2'][S.waits], { once: false });
     } });
   interact.add({ pos: LEVER, radius: 2.2, height: 2, prompt: 'Wait a million years', enabled: () => S.phase === 'explore' && S.readAt >= 0,
