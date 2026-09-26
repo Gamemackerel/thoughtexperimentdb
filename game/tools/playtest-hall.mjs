@@ -57,8 +57,12 @@ await run('fermi-paradox', async (t) => {
   await t.waitOver(40); await t.shot('end');
 });
 await run('tragedy-of-the-commons', async (t) => {
+  const S = () => t.p.evaluate(() => { const s = window.__ted.level.__S; return { grass: s.grass, phase: s.phase }; });
   await sleep(4); await t.shot('arrive');
-  for (let i = 0; i < 3; i++) { await t.at(3.4, 12.4, 2); await sleep(3.5); }
-  await t.shot('crowded'); await sleep(15); await t.shot('thin'); await t.waitOver(80); await t.shot('end');
+  if (process.env.COMMONS === 'idle') { await sleep(30); await t.shot('neighbour'); await sleep(40); await t.shot('thin'); await t.waitOver(120); await t.shot('end'); return; }
+  await t.at(2.5, 15.4, 2); await sleep(2); await t.at(2.5, 15.4, 2); await sleep(12); await t.shot("added");
+  await t.at(-3.6, 14.8, 2); await sleep(5); await t.shot('early');                  // an early ring: they come and go
+  for (let i = 0; i < 200; i++) { if ((await S()).grass < 0.6) break; await sleep(0.5); }
+  await t.shot('thin'); await t.at(-3.6, 14.8, 2); await sleep(6); await t.shot('meeting'); await t.waitOver(40); await t.shot('end');
 });
 await b.close();

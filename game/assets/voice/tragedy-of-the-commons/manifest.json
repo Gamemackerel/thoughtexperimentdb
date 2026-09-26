@@ -1,52 +1,87 @@
 {
   "arrive": {
-    "file": "arrive-9c8c7f5e.mp3",
-    "text": "A shared pasture. Anyone may graze their sheep here.",
-    "dur": 4.08
+    "file": "arrive-1113fe6b.mp3",
+    "text": "A shared pasture, with no rules yet. Anyone may graze their sheep here.",
+    "dur": 5.15
   },
   "herders": {
-    "file": "herders-52cea759.mp3",
-    "text": "Five neighbours, two sheep each. The grass is thick.",
-    "dur": 3.79
+    "file": "herders-fb773eaa.mp3",
+    "text": "Four neighbours and you, two sheep each. With so few sheep, the grass grows back as fast as it's eaten.",
+    "dur": 6.77
+  },
+  "neighbour_adds": {
+    "file": "neighbour_adds-20f56100.mp3",
+    "text": "The blue house adds a sheep. It's their right.",
+    "dur": 3.34
   },
   "add_1": {
-    "file": "add_1-bf32c053.mp3",
-    "text": "One more sheep. A little more for you. The grass belongs to everyone.",
-    "dur": 4.62
+    "file": "add_1-77f43782.mp3",
+    "text": "One more sheep. A little more wool for you. The grass belongs to everyone.",
+    "dur": 4.68
   },
   "follow": {
-    "file": "follow-949976f6.mp3",
-    "text": "Your neighbours notice. They add sheep too.",
-    "dur": 3.27
+    "file": "follow-351b0991.mp3",
+    "text": "Your neighbours notice. Two of them add sheep too.",
+    "dur": 3.58
+  },
+  "ask": {
+    "file": "ask-b17a8df5.mp3",
+    "text": "Each extra sheep is all profit to its owner, and the cost is shared by everyone. So why would anyone stop?",
+    "dur": 6.79
   },
   "thin": {
     "file": "thin-fcdddf06.mp3",
     "text": "The grass is getting thin.",
     "dur": 2.25
   },
-  "ask": {
-    "file": "ask-65a573cc.mp3",
-    "text": "Each extra sheep helps its owner, but the cost is shared by all. So why would anyone stop?",
-    "dur": 5.88
+  "take_back": {
+    "file": "take_back-ec43e5be.mp3",
+    "text": "You take one of yours back to the pen. Nobody follows.",
+    "dur": 3.94
+  },
+  "bell_early": {
+    "file": "bell_early-e7997049.mp3",
+    "text": "You ring the bell. The neighbours come, look at the thick grass, and wander home again.",
+    "dur": 5.15
   },
   "bell": {
     "file": "bell-d2f144fc.mp3",
     "text": "You ring the bell. The neighbours gather.",
     "dur": 2.85
   },
+  "agree_1": {
+    "file": "agree_1-1e16a0e5.mp3",
+    "text": "You go first. Your own sheep go back to the pen.",
+    "dur": 3.53
+  },
   "agree": {
-    "file": "agree-3663c952.mp3",
-    "text": "Together, you agree on limits. Nobody owns the grass, but everyone looks after it.",
-    "dur": 5.36
+    "file": "agree-9f5bd00b.mp3",
+    "text": "Then the others. Nobody owns the grass, but together you agree to look after it.",
+    "dur": 5.17
   },
   "collapse": {
     "file": "collapse-d902c6d5.mp3",
     "text": "The grass is gone. For everyone.",
     "dur": 2.69
   },
+  "held_end": {
+    "file": "held_end-d4135a64.mp3",
+    "text": "You held back. They didn't. The grass went anyway.",
+    "dur": 3.6
+  },
+  "took_back_end": {
+    "file": "took_back_end-21e0bb1b.mp3",
+    "text": "You took yours back. It wasn't enough on your own.",
+    "dur": 3.34
+  },
   "sheep": {
-    "file": "sheep-0a6b2563.mp3",
-    "text": "This one's yours. She has no idea about any of this.",
-    "dur": 3.89
+    "file": "sheep-d992953f.mp3",
+    "text": "This one's yours: the teal mark. She has no idea about any of this.",
+    "dur": 4.83
+  },
+  "wool": {
+    "file": "wool-b9e0163e.mp3",
+    "text": "Your wool. More sheep, more wool. For now.",
+    "dur": 2.98
   }
 }

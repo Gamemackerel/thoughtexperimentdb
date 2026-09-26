@@ -6,15 +6,22 @@
   },
   "pronounce": {},
   "lines": {
-    "arrive": "A shared pasture. Anyone may graze their sheep here.",
-    "herders": "Five neighbours, two sheep each. The grass is thick.",
-    "add_1": "One more sheep. A little more for you. The grass belongs to everyone.",
-    "follow": "Your neighbours notice. They add sheep too.",
+    "arrive": "A shared pasture, with no rules yet. Anyone may graze their sheep here.",
+    "herders": "Four neighbours and you, two sheep each. With so few sheep, the grass grows back as fast as it's eaten.",
+    "neighbour_adds": "The blue house adds a sheep. It's their right.",
+    "add_1": "One more sheep. A little more wool for you. The grass belongs to everyone.",
+    "follow": "Your neighbours notice. Two of them add sheep too.",
+    "ask": "Each extra sheep is all profit to its owner, and the cost is shared by everyone. So why would anyone stop?",
     "thin": "The grass is getting thin.",
-    "ask": "Each extra sheep helps its owner, but the cost is shared by all. So why would anyone stop?",
+    "take_back": "You take one of yours back to the pen. Nobody follows.",
+    "bell_early": "You ring the bell. The neighbours come, look at the thick grass, and wander home again.",
     "bell": "You ring the bell. The neighbours gather.",
-    "agree": "Together, you agree on limits. Nobody owns the grass, but everyone looks after it.",
+    "agree_1": "You go first. Your own sheep go back to the pen.",
+    "agree": "Then the others. Nobody owns the grass, but together you agree to look after it.",
     "collapse": "The grass is gone. For everyone.",
-    "sheep": "This one's yours. She has no idea about any of this."
+    "held_end": "You held back. They didn't. The grass went anyway.",
+    "took_back_end": "You took yours back. It wasn't enough on your own.",
+    "sheep": "This one's yours: the teal mark. She has no idea about any of this.",
+    "wool": "Your wool. More sheep, more wool. For now."
   }
 }
