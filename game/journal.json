@@ -372,7 +372,7 @@
   },
   "monty-hall": {
     "title": "The Monty Hall Problem",
-    "question": "Before you saw the tally, did switching feel like it shouldn't matter? Try explaining why it does to someone else, without any numbers.",
+    "question": "Was the result surprising to you? Why does switching increase your odds of winning?",
     "todo": [
       {
         "text": "watch Numberphile's Monty Hall video",

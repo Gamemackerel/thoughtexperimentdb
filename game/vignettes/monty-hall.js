@@ -12,7 +12,7 @@ import { makeGoat, makeCar, textTexture } from '../core/props.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const DOOR_X = [-4, 0, 4], DOOR_Z = -3, BACK = -6.2;
-const HOST_HOME = V(6.8, 0, -0.9), BUTTON = V(6.8, 0, 1.6);
+const HOST_HOME = V(6.8, 0, -0.9), BUTTON = V(5.4, 0, 0.4);
 const COLORS = [0xe0674f, 0xf2c14e, 0x5b7fa6];
 
 export default function montyHall(ctx) {
