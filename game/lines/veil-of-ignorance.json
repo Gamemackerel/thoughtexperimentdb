@@ -1,0 +1,28 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A hilltop, in the fog. Five of you, and none of you knows who you are.",
+    "veil": "When the veil lifts, you'll each be born into the town that's chosen here. Rich or poor, lucky or not. You won't know which until then.",
+    "towns": "On the table, three towns. The numbers are what each house will have.",
+    "town_1": "In the first town, everyone has the same. Five each.",
+    "town_2": "In the second, most have very little, and one has a fortune. On average, it's the richest town of the three.",
+    "town_3": "In the third, some have more than others. But even the least well off have more than anyone in the first town.",
+    "ask": "Which town will you choose, not knowing who you'll be?",
+    "chosen": "The veil lifts.",
+    "others_chose": "You don't choose. So the others do. And the veil lifts.",
+    "eq_1": "Everyone has the same. So do you.",
+    "eq_2": "Nobody was left with less. Nobody could have more, either.",
+    "g_rich": "The big house. You won.",
+    "g_mid": "A good house. Not the best, but better than most.",
+    "g_poor": "One of the small houses. It was always the likeliest place to land.",
+    "g_2": "On average, this was the richest town. But nobody lives an average life.",
+    "r_low": "One of the smallest houses. Still more than anyone has in the first town.",
+    "r_mid": "Not the biggest house, and not the smallest.",
+    "r_2": "You chose the town where the worst place to land was as good as it could be."
+  }
+}

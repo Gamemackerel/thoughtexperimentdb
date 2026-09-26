@@ -86,4 +86,10 @@ await run('experience-machine', async (t) => {
   if (alt === 'home') { await t.use('Go home'); await sleep(5); await t.shot('street'); return; }
   await t.use('Climb into the tank'); await sleep(7); await t.shot('tank');
 });
+await run('veil-of-ignorance', async (t) => {
+  await sleep(3); await t.shot('fog'); await t.use('Look closely', 5, 1); await sleep(6);
+  await t.until(async () => (await t.S('phase')) === 'choose', 60); await t.shot('choose');
+  if (alt === 'idle') { await sleep(70); return; }
+  await t.use('Choose this town', 5, alt === 'equal' ? 0 : alt === 'gamble' ? 1 : 2); await sleep(8); await t.shot('lifted'); await sleep(5); await t.shot('picked'); await sleep(5); await t.shot('down');
+});
 await b.close();

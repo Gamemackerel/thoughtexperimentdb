@@ -1,0 +1,92 @@
+{
+  "arrive": {
+    "file": "arrive-c6d30bbd.mp3",
+    "text": "A hilltop, in the fog. Five of you, and none of you knows who you are.",
+    "dur": 4.65
+  },
+  "veil": {
+    "file": "veil-4d0ff11a.mp3",
+    "text": "When the veil lifts, you'll each be born into the town that's chosen here. Rich or poor, lucky or not. You won't know which until then.",
+    "dur": 7.73
+  },
+  "towns": {
+    "file": "towns-9c3d3a1f.mp3",
+    "text": "On the table, three towns. The numbers are what each house will have.",
+    "dur": 4.81
+  },
+  "town_1": {
+    "file": "town_1-3ce7bc9c.mp3",
+    "text": "In the first town, everyone has the same. Five each.",
+    "dur": 4.02
+  },
+  "town_2": {
+    "file": "town_2-bdcaa899.mp3",
+    "text": "In the second, most have very little, and one has a fortune. On average, it's the richest town of the three.",
+    "dur": 6.87
+  },
+  "town_3": {
+    "file": "town_3-e69ad305.mp3",
+    "text": "In the third, some have more than others. But even the least well off have more than anyone in the first town.",
+    "dur": 6.4
+  },
+  "ask": {
+    "file": "ask-c571fe65.mp3",
+    "text": "Which town will you choose, not knowing who you'll be?",
+    "dur": 3.4
+  },
+  "chosen": {
+    "file": "chosen-a4377852.mp3",
+    "text": "The veil lifts.",
+    "dur": 1.52
+  },
+  "others_chose": {
+    "file": "others_chose-b5d676d9.mp3",
+    "text": "You don't choose. So the others do. And the veil lifts.",
+    "dur": 3.74
+  },
+  "eq_1": {
+    "file": "eq_1-066a964f.mp3",
+    "text": "Everyone has the same. So do you.",
+    "dur": 3
+  },
+  "eq_2": {
+    "file": "eq_2-7eea4763.mp3",
+    "text": "Nobody was left with less. Nobody could have more, either.",
+    "dur": 4.23
+  },
+  "g_rich": {
+    "file": "g_rich-6ff2afa5.mp3",
+    "text": "The big house. You won.",
+    "dur": 2.32
+  },
+  "g_mid": {
+    "file": "g_mid-bc5f57f8.mp3",
+    "text": "A good house. Not the best, but better than most.",
+    "dur": 3.45
+  },
+  "g_poor": {
+    "file": "g_poor-1214bc11.mp3",
+    "text": "One of the small houses. It was always the likeliest place to land.",
+    "dur": 4.65
+  },
+  "g_2": {
+    "file": "g_2-740ab80e.mp3",
+    "text": "On average, this was the richest town. But nobody lives an average life.",
+    "dur": 5.12
+  },
+  "r_low": {
+    "file": "r_low-28653969.mp3",
+    "text": "One of the smallest houses. Still more than anyone has in the first town.",
+    "dur": 4.91
+  },
+  "r_mid": {
+    "file": "r_mid-1ee8c017.mp3",
+    "text": "Not the biggest house, and not the smallest.",
+    "dur": 3.11
+  },
+  "r_2": {
+    "file": "r_2-db3458f4.mp3",
+    "text": "You chose the town where the worst place to land was as good as it could be.",
+    "dur": 4.78
+  }
+}
