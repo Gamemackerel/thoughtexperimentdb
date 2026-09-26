@@ -1,0 +1,57 @@
+{
+  "arrive": {
+    "file": "arrive-b95d691a.mp3",
+    "text": "A little town, on a still afternoon. You need to know the time.",
+    "dur": 4.28
+  },
+  "notice": {
+    "file": "notice-7b145152.mp3",
+    "text": "Market day, Saturday. Choir practice, Thursday. A lost cat. Clock repairs, enquire within.",
+    "dur": 6.37
+  },
+  "bench": {
+    "file": "bench-a197b854.mp3",
+    "text": "A bench in the sun. The whole town seems to be having a nap.",
+    "dur": 4.23
+  },
+  "reads": {
+    "file": "reads-f44e465a.mp3",
+    "text": "The town clock says two o'clock. It has always kept good time.",
+    "dur": 4.39
+  },
+  "asked": {
+    "file": "asked-017df303.mp3",
+    "text": "The postman looks at his watch. It's ticking.",
+    "dur": 3.45
+  },
+  "true": {
+    "file": "true-2df335ea.mp3",
+    "text": "And the church bell strikes two. It is two o'clock.",
+    "dur": 3.71
+  },
+  "wait": {
+    "file": "wait-4fc94163.mp3",
+    "text": "The afternoon goes by.",
+    "dur": 2.09
+  },
+  "stopped": {
+    "file": "stopped-d4b9ff47.mp3",
+    "text": "The town clock hasn't moved. It stopped at two o'clock yesterday. You happened to look at it in the one minute of the day it was right.",
+    "dur": 7.29
+  },
+  "end": {
+    "file": "end-ee35da75.mp3",
+    "text": "You believed it. It was true. And you had good reason. So did you know what time it was?",
+    "dur": 5.59
+  },
+  "stopped_2": {
+    "file": "stopped_2-6430bc94.mp3",
+    "text": "The town clock hasn't moved. It stopped yesterday, at two. If you'd looked at that, you'd have believed exactly the same thing.",
+    "dur": 7.31
+  },
+  "asked_end": {
+    "file": "asked_end-801f15d9.mp3",
+    "text": "But you asked someone whose watch was going. This time, you weren't only right.",
+    "dur": 4.94
+  }
+}

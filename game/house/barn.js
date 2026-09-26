@@ -7,21 +7,10 @@ import { THREE, palette, css, clamp, lerp, seeded, clay, mesh, makePerson, anima
 import { talk } from '../core/extras.js';
 import { textTexture } from '../core/props.js';
 import { canvasTexture, strokes } from '../core/brush.js';
+import { makeHill } from '../core/grantwood.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const HALF = 13, BACK = -5, FRONT = 3.4;
-
-// A Grant Wood hill: a smooth round dome striped with crop rows.
-function makeHill(r, h, color, rows, rnd) {
-  const tex = canvasTexture(256, 256, (g, w, hh) => {
-    g.fillStyle = color; g.fillRect(0, 0, w, hh);
-    g.strokeStyle = 'rgba(40,60,20,0.28)'; g.lineWidth = 4;
-    for (let i = 0; i < rows; i++) { g.beginPath(); const y = (i / rows) * hh; g.moveTo(0, y); g.bezierCurveTo(w * 0.3, y + 18, w * 0.7, y - 18, w, y); g.stroke(); }
-  });
-  const m = mesh(new THREE.SphereGeometry(1, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.95 }));
-  m.scale.set(r, h, r * (0.7 + rnd() * 0.4));
-  return m;
-}
 
 export default function barn(ctx) {
   const { stage, interact, save } = ctx;

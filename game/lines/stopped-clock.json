@@ -1,0 +1,21 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A little town, on a still afternoon. You need to know the time.",
+    "notice": "Market day, Saturday. Choir practice, Thursday. A lost cat. Clock repairs, enquire within.",
+    "bench": "A bench in the sun. The whole town seems to be having a nap.",
+    "reads": "The town clock says two o'clock. It has always kept good time.",
+    "asked": "The postman looks at his watch. It's ticking.",
+    "true": "And the church bell strikes two. It is two o'clock.",
+    "wait": "The afternoon goes by.",
+    "stopped": "The town clock hasn't moved. It stopped at two o'clock yesterday. You happened to look at it in the one minute of the day it was right.",
+    "end": "You believed it. It was true. And you had good reason. So did you know what time it was?",
+    "stopped_2": "The town clock hasn't moved. It stopped yesterday, at two. If you'd looked at that, you'd have believed exactly the same thing.",
+    "asked_end": "But you asked someone whose watch was going. This time, you weren't only right."
+  }
+}
