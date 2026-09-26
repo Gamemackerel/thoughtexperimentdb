@@ -171,7 +171,7 @@ leaveEl.addEventListener('click', (e) => {
 });
 
 // ---------------------------------------------------------------- levels
-let level = null, busy = false;
+let level = null, busy = false, pendingStart = null;
 const cam = { pos: new THREE.Vector3(0, 10, 20), look: new THREE.Vector3() };
 async function goto(name) {
   if (busy) return; busy = true;
@@ -206,7 +206,7 @@ async function goto(name) {
   await ctx.flash(false);
   busy = false;
   interact.grace(0.8);                                          // a key held from the last scene doesn't act in this one
-  level.start?.();
+  if (document.getElementById('title').classList.contains('gone')) level.start?.(); else pendingStart = () => level.start?.();
 }
 
 // ---------------------------------------------------------------- input: tap/click to walk, notebook, leave
@@ -279,4 +279,6 @@ window.__ted = { ctx, player, interact, get level() { return level; } };   // de
 
 // ---------------------------------------------------------------- title → house
 const title = document.getElementById('title');
-document.getElementById('begin').addEventListener('click', () => { title.classList.add('gone'); goto(new URLSearchParams(location.search).get('level') ?? 'house'); });
+const startLevel = new URLSearchParams(location.search).get('level');
+if (!startLevel) goto('house').then(() => { if (!title.classList.contains('gone')) player.enabled = false; });   // the house is already there, behind the title
+document.getElementById('begin').addEventListener('click', () => { title.classList.add('gone'); if (startLevel) goto(startLevel); else { player.enabled = true; time = 0; pendingStart?.(); pendingStart = null; } });

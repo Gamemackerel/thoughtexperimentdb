@@ -32,7 +32,7 @@ body.game #ui { position: fixed; inset: 0; }
 #notebook .close { position: absolute; top: 16px; right: 20px; font: 600 14px var(--sans); color: var(--muted); cursor: pointer; }
 
 #title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: rgba(243, 235, 221, 0.9); pointer-events: auto; text-align: center; transition: opacity 0.8s; }
+  background: radial-gradient(ellipse at center, rgba(243, 235, 221, 0.82), rgba(243, 235, 221, 0.45) 70%); pointer-events: auto; text-align: center; transition: opacity 0.8s; }
 #title.gone { opacity: 0; pointer-events: none; }
 #title .kicker { font: 600 18px/1 var(--sans); letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); }
 #title h1 { font: 500 clamp(44px, 7vw, 96px)/1.05 var(--serif); margin: 18px 0; }

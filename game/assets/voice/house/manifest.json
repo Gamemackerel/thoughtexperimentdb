@@ -1,0 +1,17 @@
+{
+  "window": {
+    "file": "window-72f47c0d.mp3",
+    "text": "Sky, all the way down.",
+    "dur": 2.35
+  },
+  "climber": {
+    "file": "climber-8e8eb2f2.mp3",
+    "text": "He's nearly at the top. He has been for a while.",
+    "dur": 3.4
+  },
+  "clock": {
+    "file": "clock-9800766c.mp3",
+    "text": "It's still keeping time. Just more slowly.",
+    "dur": 3.42
+  }
+}
