@@ -49,8 +49,12 @@ await run('simulation-argument', async (t) => {
   await sleep(6); await t.at(1.4, -1.8); await sleep(9); await t.shot('off'); await sleep(8); await t.shot('giant'); await t.waitOver(40); await t.shot('end');
 });
 await run('fermi-paradox', async (t) => {
-  await sleep(2); await t.shot('arrive'); await t.at(-3.5, 1.7); await sleep(12); await t.shot('listened');
-  await t.at(8.5, 1.7); await sleep(3); await t.shot('send'); await t.waitOver(20); await t.shot('end');
+  const open = async () => { for (let i = 0; i < 120; i++) { if (await t.p.evaluate(() => window.__ted.level.__S.open)) return; await sleep(0.5); } };
+  await sleep(2); await t.shot('arrive'); await t.at(-5.6, 1.7); await sleep(3); await t.shot('logbook');
+  await t.at(-3.5, 1.7); await open(); await sleep(2); await t.shot('listened');
+  if (process.env.FERMI === 'listen') { await t.at(0.8, 4.3); await sleep(6); await t.shot('lapse'); await sleep(8); await t.shot('years'); }
+  else { await t.at(6.6, 1.3); await sleep(2); await t.shot('send'); await sleep(3); await t.shot('beam'); await sleep(6); await t.shot('lapse'); }
+  await t.waitOver(40); await t.shot('end');
 });
 await run('tragedy-of-the-commons', async (t) => {
   await sleep(4); await t.shot('arrive');

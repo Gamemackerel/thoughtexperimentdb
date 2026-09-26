@@ -1,9 +1,10 @@
 {
   "title": "The Fermi Paradox",
-  "summary": "Over lunch at Los Alamos in 1950, the physicist Enrico Fermi asked, \"Where is everybody?\" There are hundreds of billions of stars in our galaxy, many far older than the Sun, and many with planets; even slow travellers could have crossed the galaxy many times over. Michael Hart argued in 1975 that the absence of visitors means there are no other civilisations. Others suggest that life is rare, that civilisations destroy themselves or stay quiet, or that we are simply early.",
+  "summary": "Over lunch at Los Alamos in 1950, the physicist Enrico Fermi asked something like \"Where is everybody?\" There are hundreds of billions of stars in our galaxy, many far older than the Sun, and many with planets; even slow travellers could have crossed the galaxy many times over. Michael Hart argued in 1975 that, since no one has visited us, we are probably the only civilisation in the Galaxy. Others suggest that life is rare, that civilisations don't last, that they stay quiet, or that we are simply early.\n\nWhether to call out is a newer argument. In 1974 the Arecibo telescope beamed a short message towards the star cluster M13; it will arrive in about 25,000 years. David Brin, writing about the \"Great Silence\" in 1983, asked whether others keep quiet for a reason. In 2015 a group of scientists signed a statement that no one should transmit on behalf of the whole Earth without a worldwide discussion first. Others answer that we have been leaking radio into space for a century already, and that saying hello is worth the risk.",
   "citations": [
     "Eric M. Jones, \"'Where is everybody?' An account of Fermi's question,\" Los Alamos report LA-10311-MS (1985)",
-    "Michael H. Hart, \"An Explanation for the Absence of Extraterrestrials on Earth,\" Quarterly Journal of the Royal Astronomical Society 16 (1975): 128–135"
+    "Michael H. Hart, \"An Explanation for the Absence of Extraterrestrials on Earth,\" Quarterly Journal of the Royal Astronomical Society 16 (1975): 128–135",
+    "David Brin, \"The 'Great Silence': the Controversy Concerning Extraterrestrial Intelligent Life,\" Quarterly Journal of the Royal Astronomical Society 24 (1983): 283–309"
   ],
   "essay": {
     "creator": "Kurzgesagt – In a Nutshell",

@@ -4,6 +4,11 @@
     "text": "A clear night. More stars than anyone could count.",
     "dur": 3.55
   },
+  "arrive_2": {
+    "file": "arrive_2-5d5e927a.mp3",
+    "text": "In the hut, the receiver is on. It always is.",
+    "dur": 3.55
+  },
   "listen": {
     "file": "listen-487f03dc.mp3",
     "text": "Only static. The hiss of the stars.",
@@ -24,25 +29,70 @@
     "text": "So where is everybody?",
     "dur": 2.12
   },
+  "choose": {
+    "file": "choose-a785e0b0.mp3",
+    "text": "You could sit here and keep listening. Or you could call out.",
+    "dur": 3.97
+  },
+  "not_yet": {
+    "file": "not_yet-36e3c8be.mp3",
+    "text": "Not yet. First, hear what the receiver hears.",
+    "dur": 3.4
+  },
+  "static_again": {
+    "file": "static_again-50cdbd4d.mp3",
+    "text": "Still only static.",
+    "dur": 1.96
+  },
+  "keep": {
+    "file": "keep-56784a22.mp3",
+    "text": "So you keep listening.",
+    "dur": 2.01
+  },
+  "year_1": {
+    "file": "year_1-9434cb69.mp3",
+    "text": "A year. Only static.",
+    "dur": 2.4
+  },
+  "year_10": {
+    "file": "year_10-9c991759.mp3",
+    "text": "Ten years. Maybe they're rare. Maybe they don't last.",
+    "dur": 3.81
+  },
+  "year_40": {
+    "file": "year_40-4ddee4b6.mp3",
+    "text": "Forty years. Maybe they're quiet. Maybe we're early.",
+    "dur": 4.05
+  },
   "send_1": {
     "file": "send_1-64f2a1fa.mp3",
     "text": "Your message leaves at the speed of light.",
     "dur": 2.98
   },
   "send_2": {
-    "file": "send_2-5717a554.mp3",
-    "text": "Years pass. Nothing comes back. Maybe no one is there. Or maybe they're listening too, and staying quiet.",
-    "dur": 6.69
+    "file": "send_2-1df76a01.mp3",
+    "text": "Years pass. It has barely left the neighbourhood.",
+    "dur": 3.37
   },
-  "listen_end": {
-    "file": "listen_end-0faf887c.mp3",
-    "text": "Nights become years. Only static. Either they're rare, or they're quiet, or we're early.",
-    "dur": 5.98
+  "send_3": {
+    "file": "send_3-259cb961.mp3",
+    "text": "From the nearest star, an answer would take eight years. From most, thousands.",
+    "dur": 5.22
+  },
+  "send_4": {
+    "file": "send_4-9e27abda.mp3",
+    "text": "Nothing yet. Maybe no one heard. Or someone did, and is deciding whether to answer.",
+    "dur": 5.72
   },
   "logbook": {
-    "file": "logbook-e6fede7b.mp3",
-    "text": "The log goes back years. Every night, the same entry. Nothing.",
-    "dur": 4.6
+    "file": "logbook-02090bb6.mp3",
+    "text": "The log goes back years. Every night, the same word: nothing. Except one night, near the end. Heard something. Didn't answer.",
+    "dur": 7.94
+  },
+  "logbook_again": {
+    "file": "logbook_again-fb34a020.mp3",
+    "text": "The log goes back years. Every night, nothing. And one new line, near the end. Yours.",
+    "dur": 5.88
   },
   "tea": {
     "file": "tea-11d524d6.mp3",
@@ -50,8 +100,8 @@
     "dur": 3.71
   },
   "moon": {
-    "file": "moon-9f416291.mp3",
-    "text": "Only one other world has ever had visitors. They left footprints, and went home.",
-    "dur": 5.25
+    "file": "moon-206d69e4.mp3",
+    "text": "Only one other world has ever had footprints. Twelve people walked there, and came home.",
+    "dur": 5.62
   }
 }
