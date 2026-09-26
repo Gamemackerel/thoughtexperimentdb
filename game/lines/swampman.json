@@ -1,0 +1,24 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "The long way home, along the boardwalk through the swamp.",
+    "storm": "There's a storm coming in.",
+    "strike_1": "Lightning. It takes you apart, all of you, in an instant.",
+    "strike_2": "And by sheer chance, at the same moment, it turns the dead tree into an exact copy of you. Every atom in place. Every memory.",
+    "ask": "Is this you?",
+    "dog": "The dog sniffs you for a long time. Then, slowly, it wags its tail.",
+    "frogs": "Two frogs on the lily pad, where there used to be one. They look at each other.",
+    "home_idle": "Your friend comes down to the path, to fetch you in.",
+    "home_1": "You go in. You know where the mugs are. You know your friend takes two sugars.",
+    "home_2": "Nobody will ever know the difference. Did you recognise your friend? Or did you only seem to?",
+    "tell_1": "Your friend doesn't believe a word of it.",
+    "tell_2": "Same face, same voice, same memories. Some people say that makes you the same person. Others say the one who walked into the swamp never came out.",
+    "back_1": "You go back to the swamp, to look for yourself. There's only a scorch mark, and the black water.",
+    "back_2": "Nobody else is coming home tonight. Only you. If it is you."
+  }
+}

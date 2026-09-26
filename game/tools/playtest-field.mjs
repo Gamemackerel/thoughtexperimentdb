@@ -97,4 +97,12 @@ await run('puddle', async (t) => {
   if (alt === 'flow') { await t.walkTo(4.8, -0.64); await sleep(3); await t.walkTo(6.4, -2.2); await sleep(5); await t.shot('crescent'); await t.walkTo(0, 0); await sleep(3); await t.walkTo(-6.2, 0.6); await sleep(5); await t.shot('star'); }
   await sleep(20); await t.shot('shrinking');
 });
+await run('swampman', async (t) => {
+  await sleep(3); await t.shot('swamp'); await t.walkTo(0, 1.4); await t.until(async () => (await t.S('phase')) === 'strike', 10); await sleep(0.55); await t.shot('strike'); await sleep(1.2); await t.shot('pieces');
+  await t.until(async () => (await t.S('phase')) === 'after', 30); await sleep(1); await t.shot('you');
+  await t.walkTo(0, -4.2); await sleep(3); await t.walkTo(7.8, -4.2); await sleep(4); await t.shot('path');
+  if (alt === 'back') { await t.use('Look for yourself', 15); return; }
+  await t.walkTo(8.4, -4.8); await sleep(2); await t.shot('door');
+  await t.use(alt === 'tell' ? 'Tell them' : 'Go inside');
+});
 await b.close();

@@ -1,0 +1,72 @@
+{
+  "arrive": {
+    "file": "arrive-a0f4b049.mp3",
+    "text": "The long way home, along the boardwalk through the swamp.",
+    "dur": 3.74
+  },
+  "storm": {
+    "file": "storm-bf69175d.mp3",
+    "text": "There's a storm coming in.",
+    "dur": 2.32
+  },
+  "strike_1": {
+    "file": "strike_1-052d36de.mp3",
+    "text": "Lightning. It takes you apart, all of you, in an instant.",
+    "dur": 3.89
+  },
+  "strike_2": {
+    "file": "strike_2-33c539ec.mp3",
+    "text": "And by sheer chance, at the same moment, it turns the dead tree into an exact copy of you. Every atom in place. Every memory.",
+    "dur": 7.99
+  },
+  "ask": {
+    "file": "ask-962a34a1.mp3",
+    "text": "Is this you?",
+    "dur": 1.31
+  },
+  "dog": {
+    "file": "dog-ad5aa0fb.mp3",
+    "text": "The dog sniffs you for a long time. Then, slowly, it wags its tail.",
+    "dur": 4.78
+  },
+  "frogs": {
+    "file": "frogs-e0e8687e.mp3",
+    "text": "Two frogs on the lily pad, where there used to be one. They look at each other.",
+    "dur": 4.86
+  },
+  "home_idle": {
+    "file": "home_idle-966b55d6.mp3",
+    "text": "Your friend comes down to the path, to fetch you in.",
+    "dur": 3.53
+  },
+  "home_1": {
+    "file": "home_1-d93c9559.mp3",
+    "text": "You go in. You know where the mugs are. You know your friend takes two sugars.",
+    "dur": 4.49
+  },
+  "home_2": {
+    "file": "home_2-5dcd98fb.mp3",
+    "text": "Nobody will ever know the difference. Did you recognise your friend? Or did you only seem to?",
+    "dur": 5.96
+  },
+  "tell_1": {
+    "file": "tell_1-8630c555.mp3",
+    "text": "Your friend doesn't believe a word of it.",
+    "dur": 2.77
+  },
+  "tell_2": {
+    "file": "tell_2-3e3b50a6.mp3",
+    "text": "Same face, same voice, same memories. Some people say that makes you the same person. Others say the one who walked into the swamp never came out.",
+    "dur": 8.91
+  },
+  "back_1": {
+    "file": "back_1-894ce486.mp3",
+    "text": "You go back to the swamp, to look for yourself. There's only a scorch mark, and the black water.",
+    "dur": 5.75
+  },
+  "back_2": {
+    "file": "back_2-937f89eb.mp3",
+    "text": "Nobody else is coming home tonight. Only you. If it is you.",
+    "dur": 4.41
+  }
+}
