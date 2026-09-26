@@ -1,0 +1,52 @@
+{
+  "arrive": {
+    "file": "arrive-23b5aedc.mp3",
+    "text": "Driving through the country, on a fine afternoon.",
+    "dur": 3.55
+  },
+  "flat": {
+    "file": "flat-3a3b2cde.mp3",
+    "text": "A flat tyre. Right beside a barn.",
+    "dur": 2.98
+  },
+  "tyre": {
+    "file": "tyre-f94b4801.mp3",
+    "text": "Flat as a pancake. You'll be here a while.",
+    "dur": 3.19
+  },
+  "barn": {
+    "file": "barn-4e1ada71.mp3",
+    "text": "A barn. Red, with white trim. You can see it as plainly as anything.",
+    "dur": 4.78
+  },
+  "true": {
+    "file": "true-23fc8803.mp3",
+    "text": "And it is a barn. A real one.",
+    "dur": 2.77
+  },
+  "round": {
+    "file": "round-f669d306.mp3",
+    "text": "You walk all the way round it. Walls, a back, a roof, a silo. It's a barn.",
+    "dur": 5.3
+  },
+  "facades": {
+    "file": "facades-6ed75802.mp3",
+    "text": "But every other barn along this road is a front, propped up on sticks. From the road, you couldn't have told them apart. You just happened to look at the only real one.",
+    "dur": 9.25
+  },
+  "end": {
+    "file": "end-c7ceceed.mp3",
+    "text": "You believed it was a barn. It was. You had good reason. Did you know?",
+    "dur": 4.65
+  },
+  "facades_2": {
+    "file": "facades_2-42164c3f.mp3",
+    "text": "Every other barn along this road is only a front, propped up on sticks.",
+    "dur": 4.94
+  },
+  "end_2": {
+    "file": "end_2-e5eac68d.mp3",
+    "text": "But you went round the back. You could tell the real one from the fakes.",
+    "dur": 4.36
+  }
+}

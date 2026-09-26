@@ -1,0 +1,20 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "Driving through the country, on a fine afternoon.",
+    "flat": "A flat tyre. Right beside a barn.",
+    "tyre": "Flat as a pancake. You'll be here a while.",
+    "barn": "A barn. Red, with white trim. You can see it as plainly as anything.",
+    "true": "And it is a barn. A real one.",
+    "round": "You walk all the way round it. Walls, a back, a roof, a silo. It's a barn.",
+    "facades": "But every other barn along this road is a front, propped up on sticks. From the road, you couldn't have told them apart. You just happened to look at the only real one.",
+    "end": "You believed it was a barn. It was. You had good reason. Did you know?",
+    "facades_2": "Every other barn along this road is only a front, propped up on sticks.",
+    "end_2": "But you went round the back. You could tell the real one from the fakes."
+  }
+}

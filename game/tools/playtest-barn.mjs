@@ -52,4 +52,8 @@ await run('sheep-field', async (t) => {
   await sleep(3); await t.shot('lane'); await t.use('Lean on the gate'); await t.until(async () => (await t.S('phase')) === 'choose', 30); await t.shot('believed');
   await t.use(alt === 'lane' ? 'Walk on' : 'Climb over'); await sleep(6); await t.shot('dog'); await sleep(8); await t.shot('real');
 });
+await run('fake-barns', async (t) => {
+  await sleep(4); await t.shot('road'); await t.use('Look at the tyre'); await sleep(3);
+  await t.use(alt === 'round' ? 'Walk all the way round' : 'Look at the barn'); await sleep(alt === 'round' ? 16 : 6); await t.shot('barn'); await sleep(7.5); await t.shot('behind');
+});
 await b.close();
