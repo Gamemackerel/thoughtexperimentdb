@@ -6,15 +6,15 @@
   },
   "pronounce": {},
   "lines": {
-    "arrive": "The ship of Theseus. Its wood is getting old.",
+    "arrive": "The ship of Theseus. Its wood is old and rotting, and it has to be repaired, a part at a time.",
     "planks": "New parts are laid out on the dock. Planks, deck boards, a mast and a sail.",
-    "first": "One new plank. Still the same ship, surely.",
+    "first": "The first new parts. Still the same ship, surely.",
     "half": "More than half of it is new now.",
     "all": "Not one original part is left. Is it still the same ship?",
     "twist": "Someone has kept every old part.",
     "rebuilt": "Two ships. Which one is the ship of Theseus?",
-    "new_end": "You chose the ship that kept sailing. Its parts changed. Its story didn't.",
-    "old_end": "You chose the original wood. Every part is the same. But is the ship?",
+    "new_end": "You chose the ship that kept going. Not one part of it was there at the start. Is that enough?",
+    "old_end": "You chose the original wood. Every part that ever sailed. But was it a ship, all that time in a pile?",
     "mast": "Even the mast. The old one lies on the dock."
   }
 }

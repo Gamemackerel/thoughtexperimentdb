@@ -1,8 +1,8 @@
 {
   "arrive": {
-    "file": "arrive-f52aefdd.mp3",
-    "text": "The ship of Theseus. Its wood is getting old.",
-    "dur": 3.6
+    "file": "arrive-13e3fdb7.mp3",
+    "text": "The ship of Theseus. Its wood is old and rotting, and it has to be repaired, a part at a time.",
+    "dur": 6.27
   },
   "planks": {
     "file": "planks-daf847d9.mp3",
@@ -10,9 +10,9 @@
     "dur": 5.25
   },
   "first": {
-    "file": "first-95a82d4a.mp3",
-    "text": "One new plank. Still the same ship, surely.",
-    "dur": 3.5
+    "file": "first-b37fe100.mp3",
+    "text": "The first new parts. Still the same ship, surely.",
+    "dur": 3.76
   },
   "half": {
     "file": "half-7ebc4150.mp3",
@@ -35,14 +35,14 @@
     "dur": 3.34
   },
   "new_end": {
-    "file": "new_end-54499c28.mp3",
-    "text": "You chose the ship that kept sailing. Its parts changed. Its story didn't.",
-    "dur": 5.12
+    "file": "new_end-5185d0da.mp3",
+    "text": "You chose the ship that kept going. Not one part of it was there at the start. Is that enough?",
+    "dur": 5.96
   },
   "old_end": {
-    "file": "old_end-06b9df15.mp3",
-    "text": "You chose the original wood. Every part is the same. But is the ship?",
-    "dur": 4.83
+    "file": "old_end-61bc8fdd.mp3",
+    "text": "You chose the original wood. Every part that ever sailed. But was it a ship, all that time in a pile?",
+    "dur": 6.45
   },
   "mast": {
     "file": "mast-94a42566.mp3",

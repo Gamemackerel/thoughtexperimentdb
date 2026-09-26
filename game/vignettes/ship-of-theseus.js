@@ -71,7 +71,7 @@ export default function shipOfTheseus(ctx) {
   const rnd = seeded(33);
   for (let i = 0; i < 6; i++) { const tr = makeTree(0.9 + rnd() * 0.6, rnd); const a = 1.6 + rnd() * 3, r = 7 + rnd() * 4; tr.position.set(SHORE.x + Math.cos(a) * r, 0, Math.sin(a) * r); root.add(tr); }
   for (let i = 0; i < 4; i++) { const rk = makeRock(0.8 + rnd(), rnd); rk.position.set(SHORE.x + 4 + rnd() * 5, 0, (rnd() - 0.5) * 16); root.add(rk); }
-  const boards = mesh(new THREE.BoxGeometry(23.5, 0.28, 3.2), clay(0xb89572)); boards.position.set(14, -0.14, 0); root.add(boards);   // deck flush with the ground you walk on
+  const boards = mesh(new THREE.BoxGeometry(23.5, 0.28, 3.2), clay(0xb89572)); boards.position.set(14, -0.12, 0); root.add(boards);   // deck flush with the ground you walk on
   for (let x = 4; x <= 25; x += 3) for (const z of [-1.5, 1.5]) { const post = mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.6, 8), clay(0x6b4a33)); post.position.set(x, -0.5, z); root.add(post); }
 
   // ---- the ship, the stack of new planks, the scrap pile, and the second ship's empty berth
@@ -99,7 +99,13 @@ export default function shipOfTheseus(ctx) {
   };
   carriedShapes.mast.rotation.z = Math.PI / 2;
   for (const m of Object.values(carriedShapes)) { m.position.set(0, 2.35, 0); if (m !== carriedShapes.mast) m.rotation.y = Math.PI / 2; m.visible = false; player.obj.add(m); }
-  const carried = { set visible(v) { for (const [k, m] of Object.entries(carriedShapes)) m.visible = v && k === PARTS[S.swaps]?.kind; } };
+  carriedShapes.plank2 = carriedShapes.plank.clone(); carriedShapes.plank2.position.y = 2.55; player.obj.add(carriedShapes.plank2);
+  // you carry two parts a trip (the last trip, one)
+  const trip = () => PARTS.slice(S.swaps, S.swaps + 2);
+  const carried = { set visible(v) {
+    const kinds = trip().map((q) => q.kind), planks = kinds.filter((k) => k === 'plank').length;
+    for (const [k, m] of Object.entries(carriedShapes)) m.visible = v && (k === 'plank2' ? planks === 2 : kinds.includes(k));
+  } };
   const shipwright = makePerson({ color: palette.judge }); shipwright.position.set(12.5, 0, -1.1); shipwright.visible = false; root.add(shipwright);
 
   // a mooring bollard, and an old man fishing off the end of the dock
@@ -167,17 +173,26 @@ export default function shipOfTheseus(ctx) {
 
   const part = () => PARTS[S.swaps];
   interact.add({ pos: () => (part()?.kind === 'plank' || !part() ? STACK : PILE[part().kind]).clone().setY(0), radius: 2.2, height: 2.2,
-    prompt: () => (part()?.kind === 'plank' ? 'Take a new plank' : `Take the new ${LABEL[part()?.kind]}`),
+    prompt: () => `Take the new ${[...new Set(trip().map((q) => LABEL[q.kind] + (q.kind === 'plank' && trip().filter((r) => r.kind === 'plank').length === 2 ? 's' : '')))].join(' and ')}`,
     enabled: () => S.phase === 'work' && !S.carrying && !S.busy && S.swaps < PARTS.length,
     onUse: () => {
-      const p = part(); S.carrying = true; carried.visible = true;
-      if (p.kind === 'plank') stack[5 - PARTS.slice(0, S.swaps).filter((q) => q.kind === 'plank').length].visible = false; else newParts[p.kind].visible = false;
+      S.carrying = true; carried.visible = true;
+      let used = PARTS.slice(0, S.swaps).filter((q) => q.kind === 'plank').length;
+      for (const p of trip()) { if (p.kind === 'plank') stack[5 - used++].visible = false; else newParts[p.kind].visible = false; }
     } });
-  interact.add({ pos: REPLACE, radius: 2.6, height: 2.6, prompt: () => `Replace the old ${LABEL[part()?.kind] ?? 'plank'}`,
+  interact.add({ pos: REPLACE, radius: 2.6, height: 2.6, prompt: () => (trip().length > 1 ? 'Replace the old parts' : `Replace the old ${LABEL[part()?.kind] ?? 'plank'}`),
     enabled: () => S.phase === 'work' && S.carrying && !S.busy,
     onUse: async () => {
       S.busy = true; carried.visible = false; S.carrying = false;
-      const p = part();
+      const before = S.swaps;
+      for (const p of trip()) { await replaceOne(p); S.swaps++; }
+      S.busy = false;
+      if (before < 1) voice.say('first');
+      if (before < 5 && S.swaps >= 5) voice.say('half');
+      if (PARTS.slice(before, S.swaps).some((p) => p.kind === 'mast')) voice.say('mast');
+      if (S.swaps === PARTS.length) twist();
+    } });
+  async function replaceOne(p) {
       if (p.kind === 'plank') {
         const slot = ship1.userData.slots[p.i], at = slotWorld(ship1, p.i);
         // the old plank flies to the scrap pile...
@@ -202,25 +217,24 @@ export default function shipOfTheseus(ctx) {
         await fly(nw, player.pos.clone().add(V(0, 2.35, 0)), at, 0.9, 0);
         root.remove(nw); src.material.color.set(NEW_RIG[p.kind]); src.visible = true;
       }
-      S.swaps++; S.busy = false;
-      if (S.swaps === 1) voice.say('first');
-      if (S.swaps === 5) voice.say('half');
-      if (p.kind === 'mast') voice.say('mast');
-      if (S.swaps === PARTS.length) twist();
-    } });
-  const board = (ship, which) => ({ pos: which === 'new' ? REPLACE : GANG2, radius: 2.4, height: 2.8,
-    prompt: which === 'new' ? 'Board the ship of new parts' : 'Board the ship of old parts',
+  }
+  // each ship has its own gangplank on its own side of the dock (they appear when it's time to choose)
+  const gangs = [-1, 1].map((sd) => { const g = mesh(new THREE.BoxGeometry(1, 0.1, 2.4), clay(0x8a6443)); g.position.set(17, 0.25, sd * 2.6); g.rotation.x = sd * 0.2; g.visible = false; root.add(g); return g; });
+  const board = (ship, which) => ({ pos: V(17, 0, which === 'new' ? -1.2 : 1.2), radius: 1.2, height: 3.2, terminal: true,
+    prompt: which === 'new' ? 'Board the repaired ship' : 'Board the ship of old parts',
     enabled: () => S.phase === 'choose',
     onUse: async () => {
-      S.phase = 'sail'; S.sailing = ship; S.sailT = 0; player.enabled = false;
+      S.phase = 'boarding'; player.locked = true; player.target = V(17, 0, which === 'new' ? -1.4 : 1.4);
+      await ctx.wait(1.1);
+      S.phase = 'sail'; S.sailing = ship; S.sailT = 0; player.enabled = false; player.locked = false;
       player.obj.parent.remove(player.obj); ship.add(player.obj);
       player.pos.set(-1.5, 1.2, 0); player.obj.rotation.y = Math.PI / 2;
       await ctx.wait(1.5); await voice.say(which + '_end');
       while (S.sailT < 16) await ctx.wait(0.25);             // sail on a while: islands, the lighthouse, the gulls
       save.complete('ship-of-theseus');
       ctx.gameOver(which === 'new'
-        ? { title: 'You sailed the new ship', text: 'Every part was replaced, but it never stopped being the ship that sailed.' }
-        : { title: 'You sailed the old wood', text: 'Every original part, put back together. Whether that makes it the same ship is the question.' });
+        ? { title: 'You sailed the repaired ship', text: 'It never stopped sailing, and not one part of it was there at the start. Is that enough to make it the same ship?' }
+        : { title: 'You sailed the old wood', text: 'Every original part, back together. But it spent a while as a pile on the dock. Is that enough to make it the same ship?' });
     } });
   interact.add(board(ship1, 'new'));
   interact.add(board(ship2, 'old'));
@@ -251,7 +265,7 @@ export default function shipOfTheseus(ctx) {
     }
     ship2.userData.rig[3].scale.setScalar(1);
     await ctx.wait(1.4); await voice.say('rebuilt');
-    S.phase = 'choose';
+    S.phase = 'choose'; gangs.forEach((g) => (g.visible = true));
   }
 
   return Object.assign(level, {
