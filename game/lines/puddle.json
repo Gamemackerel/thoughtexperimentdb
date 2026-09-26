@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "Morning, after the rain. You wake up. You're a puddle.",
+    "fits": "What an interesting hole you find yourself in. It fits you rather neatly.",
+    "made": "In fact, it fits you so perfectly, it must have been made to have you in it.",
+    "sun": "The sun is coming up. It's getting warmer.",
+    "ask": "Was the hole made to fit you?",
+    "cracks": "There are cracks in the ground, running off to other holes.",
+    "other_1": "This one fits you perfectly, too.",
+    "other_2": "And so does this one.",
+    "other_3": "Every hole fits its puddle.",
+    "end_home_1": "You're sure everything will be all right. The world was made for you, after all.",
+    "end_home_2": "So it comes as rather a surprise when you're gone.",
+    "end_flow": "The sun takes you all the same. But you knew, at the end: you took the shape of the hole. Not the other way round."
+  }
+}

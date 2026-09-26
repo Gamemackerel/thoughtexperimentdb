@@ -171,7 +171,7 @@ export default function veilOfIgnorance(ctx) {
       cameo.update(dt);
     },
     camera(pl) {
-      if (S.lift > 0) return { ...frame([pl.pos.clone(), TABLE.clone(), town.position.clone().add(V(-11, 0, 0)), town.position.clone().add(V(11, 7, 0))], { min: 16, max: 60 }), stiffness: 1.2 };
+      if (S.lift > 0) return { ...frame([pl.pos.clone(), TABLE.clone(), town.position.clone().add(V(-13.5, 0, 0)), town.position.clone().add(V(14, 7, 0))], { min: 16, max: 60 }), stiffness: 1.2 };
       return { ...frame([pl.pos.clone(), TABLE.clone().add(V(-4, 0, 0)), TABLE.clone().add(V(4, 0, 0)), V(0, 3, VEIL_Z)], { min: 12, max: 30 }), stiffness: 2 };
     },
     dispose() { voice.stop(); player.locked = false; player.pos.y = 0; },

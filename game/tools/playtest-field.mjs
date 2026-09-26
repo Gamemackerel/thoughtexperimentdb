@@ -92,4 +92,9 @@ await run('veil-of-ignorance', async (t) => {
   if (alt === 'idle') { await sleep(70); return; }
   await t.use('Choose this town', 5, alt === 'equal' ? 0 : alt === 'gamble' ? 1 : 2); await sleep(8); await t.shot('lifted'); await sleep(5); await t.shot('picked'); await sleep(5); await t.shot('down');
 });
+await run('puddle', async (t) => {
+  await sleep(3); await t.shot('wake'); await t.until(async () => (await t.S('phase')) === 'sun', 40); await sleep(4); await t.shot('sun');
+  if (alt === 'flow') { await t.walkTo(4.8, -0.64); await sleep(3); await t.walkTo(6.4, -2.2); await sleep(5); await t.shot('crescent'); await t.walkTo(0, 0); await sleep(3); await t.walkTo(-6.2, 0.6); await sleep(5); await t.shot('star'); }
+  await sleep(20); await t.shot('shrinking');
+});
 await b.close();

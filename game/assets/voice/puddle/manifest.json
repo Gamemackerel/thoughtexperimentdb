@@ -1,0 +1,62 @@
+{
+  "arrive": {
+    "file": "arrive-4d879cdb.mp3",
+    "text": "Morning, after the rain. You wake up. You're a puddle.",
+    "dur": 3.71
+  },
+  "fits": {
+    "file": "fits-7934cdff.mp3",
+    "text": "What an interesting hole you find yourself in. It fits you rather neatly.",
+    "dur": 4.62
+  },
+  "made": {
+    "file": "made-1f4535dc.mp3",
+    "text": "In fact, it fits you so perfectly, it must have been made to have you in it.",
+    "dur": 4.75
+  },
+  "sun": {
+    "file": "sun-6d2df010.mp3",
+    "text": "The sun is coming up. It's getting warmer.",
+    "dur": 3.13
+  },
+  "ask": {
+    "file": "ask-d5eb30ef.mp3",
+    "text": "Was the hole made to fit you?",
+    "dur": 2.38
+  },
+  "cracks": {
+    "file": "cracks-3e69e15d.mp3",
+    "text": "There are cracks in the ground, running off to other holes.",
+    "dur": 3.74
+  },
+  "other_1": {
+    "file": "other_1-225f5f84.mp3",
+    "text": "This one fits you perfectly, too.",
+    "dur": 2.82
+  },
+  "other_2": {
+    "file": "other_2-2ccba14a.mp3",
+    "text": "And so does this one.",
+    "dur": 2.06
+  },
+  "other_3": {
+    "file": "other_3-28c23c65.mp3",
+    "text": "Every hole fits its puddle.",
+    "dur": 2.61
+  },
+  "end_home_1": {
+    "file": "end_home_1-b83aec66.mp3",
+    "text": "You're sure everything will be all right. The world was made for you, after all.",
+    "dur": 4.83
+  },
+  "end_home_2": {
+    "file": "end_home_2-81ab7442.mp3",
+    "text": "So it comes as rather a surprise when you're gone.",
+    "dur": 3.45
+  },
+  "end_flow": {
+    "file": "end_flow-d44f99a4.mp3",
+    "text": "The sun takes you all the same. But you knew, at the end: you took the shape of the hole. Not the other way round.",
+    "dur": 6.5
+  }
+}
