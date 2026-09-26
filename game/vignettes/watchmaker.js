@@ -101,7 +101,7 @@ export default function watchmaker(ctx) {
   const lit = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.6), new THREE.MeshBasicMaterial({ color: 0xffd98a })); lit.position.copy(SHOP).add(V(0.95, 1.5, 1.32)); root.add(lit);
   const shopLight = new THREE.PointLight(0xffc97a, 10, 7, 1.5); shopLight.position.copy(SHOP).add(V(0, 1.8, 2.6)); root.add(shopLight);
   const bench = makeTable({ w: 1.6, d: 0.7, h: 0.95, color: 0x6b4a33 }); bench.position.copy(SHOP).add(V(-2.4, 0, 2.4)); root.add(bench);
-  for (let i = 0; i < 4; i++) { const tiny = makeGear(0.12 + i * 0.03, 10, [0xe2b53b, 0xc9ccd1][i % 2], 0.03); tiny.position.copy(SHOP).add(V(-2.9 + i * 0.35, 1.0, 2.4)); root.add(tiny); }
+  for (let i = 0; i < 4; i++) { const tiny = makeGear(0.12 + i * 0.03, 10, [0xe2b53b, 0xc9ccd1][i % 2], 0.03); tiny.position.copy(SHOP).add(V(-2.9 + i * 0.35, 1.08, 2.4)); root.add(tiny); }
   const stool = mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.6, 12), clay(0x6b4a33)); stool.position.copy(SHOP).add(V(-2.4, 0.3, 3.2)); root.add(stool);
   for (const [x, z] of [[-9, -15], [5, -16], [-12, -8], [12, -12], [14, 4], [-15, 3]]) { const t = makeTree(1 + rnd() * 0.5, rnd); t.position.set(x, 0, z); root.add(t); }
 

@@ -1,0 +1,21 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A waiting room. You and Jones have both applied for the same job.",
+    "told": "The president has told you himself: Jones will get the job.",
+    "counted": "And you've just watched Jones count the coins in his pocket. Ten.",
+    "window": "Round green hills, in tidy rows, all the way to the sky.",
+    "concluded": "So. The man who gets the job has ten coins in his pocket.",
+    "waited": "You don't draw any conclusions. You just wait your turn.",
+    "twist": "You got the job. Not Jones.",
+    "yours": "And in your own pocket: ten coins. You never counted them.",
+    "end": "You believed it. It was true. You had good reason. But it was true of the wrong man. Did you know it?",
+    "yours_2": "Ten coins in your own pocket. You never counted them.",
+    "end_2": "It's true, now, that the man who got the job has ten coins in his pocket. You just never believed it."
+  }
+}

@@ -58,7 +58,7 @@ export default function veilOfIgnorance(ctx) {
   // ---- the table and its three model towns
   const table = makeTable({ w: 7.6, d: 1.6, h: 1, color: 0x8a7a66 }); table.position.copy(TABLE); root.add(table);
   const models = TOWNS.map((town, k) => {
-    const g = new THREE.Group(); g.position.copy(TABLE).add(V(-2.6 + k * 2.6, 1.02, 0));
+    const g = new THREE.Group(); g.position.copy(TABLE).add(V(-2.6 + k * 2.6, 1.14, 0));
     const base = mesh(new THREE.BoxGeometry(2.2, 0.06, 1.2), clay(0xa9c48e)); g.add(base);
     town.shares.forEach((s, i) => { const h = makeHome(s); h.scale.multiplyScalar(0.16); h.position.set(-0.85 + i * 0.42, 0.03, 0); g.add(h); });
     const plaque = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.34), new THREE.MeshBasicMaterial({ map: textTexture(town.shares.join('   '), { w: 320, h: 68, font: '600 34px Figtree, sans-serif', bg: '#fbf6ea' }) }));
@@ -82,7 +82,7 @@ export default function veilOfIgnorance(ctx) {
   // hops off again
   const frog = makeFrog({ scale: 0.35 }); root.add(frog);
   const big = models[1].position.clone().add(V(0.83, 0, 0));
-  const cameo = frogCameo(frog, [[5, VEIL_Z + 0.5], [4.4, -2.4], { at: [3.6, -1.6], height: 0.6 }, { at: [big.x, big.z], y: 1.45, height: 1.2 }, { face: [0, 6] },
+  const cameo = frogCameo(frog, [[5, VEIL_Z + 0.5], [4.4, -2.4], { at: [3.6, -1.6], height: 0.6 }, { at: [big.x, big.z], y: 1.55, height: 1.2 }, { face: [0, 6] },
     { wait: 2.6, act: (f, u) => (f.userData.body.rotation.z = Math.sin(u * 14) * 0.12 * Math.sin(Math.PI * u)) }, { at: [2, 0.8], y: 0, height: 1.2 }, [3.4, 1.8], [5.2, 2.6]]);
 
   // ---- state

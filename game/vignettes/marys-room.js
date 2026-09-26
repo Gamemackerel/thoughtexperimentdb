@@ -96,7 +96,7 @@ export default function marysRoom(ctx) {
   // ---- the frog, grey like everything in here, sits on the desk and watches the tomato on the screen; then it goes and
   // waits by the door (it has never seen outside either)
   const frog = makeFrog({ scale: 0.55 }); root.add(frog);
-  const top = 1.0;
+  const top = 1.11;                                                    // the desk top (makeTable: h + 0.11)
   const cameo = frogCameo(frog, [[-5.2, 1.8], [-4.6, 0.8], { at: [-4.2, DESK.z + 0.2], y: top, height: 1 }, { face: [-3.4, DESK.z - 2] },
     { wait: 3.6, act: (f, u) => (f.userData.body.rotation.x = -0.15 * Math.sin(Math.PI * u)) }, { at: [-3, 0.6], y: 0, height: 1 }, [-0.8, 0.6], [1.6, 0.5], [3.8, 0.3], [5.1, DOOR_Z],
     { face: [9, DOOR_Z] }, { wait: 2.4 }, [3.6, 1.4], [1.6, 2.2], [-0.8, 2.6]]);

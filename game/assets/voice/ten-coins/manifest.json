@@ -1,0 +1,57 @@
+{
+  "arrive": {
+    "file": "arrive-be1540a3.mp3",
+    "text": "A waiting room. You and Jones have both applied for the same job.",
+    "dur": 4.65
+  },
+  "told": {
+    "file": "told-69f91d66.mp3",
+    "text": "The president has told you himself: Jones will get the job.",
+    "dur": 4.18
+  },
+  "counted": {
+    "file": "counted-a66c4e86.mp3",
+    "text": "And you've just watched Jones count the coins in his pocket. Ten.",
+    "dur": 4.68
+  },
+  "window": {
+    "file": "window-9e9c2dcc.mp3",
+    "text": "Round green hills, in tidy rows, all the way to the sky.",
+    "dur": 4.41
+  },
+  "concluded": {
+    "file": "concluded-bbe5873e.mp3",
+    "text": "So. The man who gets the job has ten coins in his pocket.",
+    "dur": 4.1
+  },
+  "waited": {
+    "file": "waited-8656f753.mp3",
+    "text": "You don't draw any conclusions. You just wait your turn.",
+    "dur": 3.84
+  },
+  "twist": {
+    "file": "twist-17347169.mp3",
+    "text": "You got the job. Not Jones.",
+    "dur": 2.61
+  },
+  "yours": {
+    "file": "yours-47efecdb.mp3",
+    "text": "And in your own pocket: ten coins. You never counted them.",
+    "dur": 4.18
+  },
+  "end": {
+    "file": "end-56179e96.mp3",
+    "text": "You believed it. It was true. You had good reason. But it was true of the wrong man. Did you know it?",
+    "dur": 5.9
+  },
+  "yours_2": {
+    "file": "yours_2-9d5c4ee9.mp3",
+    "text": "Ten coins in your own pocket. You never counted them.",
+    "dur": 3.87
+  },
+  "end_2": {
+    "file": "end_2-e6a939de.mp3",
+    "text": "It's true, now, that the man who got the job has ten coins in his pocket. You just never believed it.",
+    "dur": 6.11
+  }
+}

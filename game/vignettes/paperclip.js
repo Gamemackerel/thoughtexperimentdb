@@ -68,7 +68,7 @@ export default function paperclip(ctx) {
   drawScreen('_');
   const monitor = mesh(new THREE.BoxGeometry(1.1, 0.7, 0.2), clay(0x2b2a33)); monitor.position.copy(DESK).add(V(0, 1.45, -0.35)); root.add(monitor);
   const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.98, 0.56), new THREE.MeshBasicMaterial({ map: screenTex })); scr.position.copy(monitor.position).add(V(0, 0, 0.11)); root.add(scr);
-  const buttons = [0xe0674f, 0xf2c14e].map((c, i) => { const b = mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.1, 16), clay(c)); b.position.copy(DESK).add(V(-0.9 + i * 1.8, 1.07, 0.2)); root.add(b); return b; });
+  const buttons = [0xe0674f, 0xf2c14e].map((c, i) => { const b = mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.1, 16), clay(c)); b.position.copy(DESK).add(V(-0.9 + i * 1.8, 1.15, 0.2)); root.add(b); return b; });
   const spool = mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.6, 20), clay(SILVER, { metalness: 0.6, roughness: 0.35 })); spool.rotation.z = Math.PI / 2; spool.position.copy(SPOOL).setY(0.5); root.add(spool);
   const tray = mesh(new THREE.BoxGeometry(1.2, 0.2, 0.8), clay(0x5d6470)); tray.position.copy(TRAY).setY(0.1); root.add(tray);
   const post = mesh(new THREE.BoxGeometry(0.3, 1.6, 0.3), clay(0x5d6470)); post.position.copy(SWITCH).setY(0.8); root.add(post);
@@ -227,7 +227,7 @@ export default function paperclip(ctx) {
         groundMat.color.set(palette.ground).lerp(sv, clamp((S.silver - 0.4) * 1.6)); groundMat.metalness = clamp(S.silver - 0.4) * 0.6;
         if (S.gone) { player.obj.scale.setScalar(Math.max(0.001, player.obj.scale.x - dt * 0.6)); if (player.obj.scale.x < 0.5 && !S.yourHeap) { S.yourHeap = heap(player.pos.clone(), 0.6); } if (S.yourHeap) S.yourHeap.scale.setScalar(Math.min(1, S.yourHeap.scale.x + dt * 0.6)); }
       }
-      buttons.forEach((b, i) => (b.position.y = DESK.y + 1.07 + (S.phase === 'ask' ? Math.max(0, Math.sin(t * 3 + i * 1.5)) * 0.03 : 0)));
+      buttons.forEach((b, i) => (b.position.y = DESK.y + 1.15 + (S.phase === 'ask' ? Math.max(0, Math.sin(t * 3 + i * 1.5)) * 0.03 : 0)));
       ctx.ui.label('made', S.made ? 1 : 0, `${S.made.toLocaleString()} paperclip${S.made === 1 ? '' : 's'}`, V(TRAY.x, 1.4, TRAY.z));
       cameo.update(dt);
     },
