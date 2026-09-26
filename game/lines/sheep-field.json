@@ -1,0 +1,20 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A lane in the country. A gate, and a field.",
+    "hills": "Round green hills, combed into rows. Not a thing out of place.",
+    "see": "In the field, grazing: a sheep.",
+    "ask": "Go and see? Or walk on?",
+    "dog": "It's a dog. Wearing a sheepskin.",
+    "real": "But over the brow of the hill, out of sight from the gate, there is a sheep in the field.",
+    "end": "You believed there was a sheep in the field. There was. But what made you believe it was a dog. Did you know?",
+    "lane_1": "You walk on, quite sure there's a sheep in the field.",
+    "lane_idle": "You walk on down the lane, sure there's a sheep in that field.",
+    "lane_2": "And there is one, behind the hill, where you couldn't see it. The one you saw was a dog."
+  }
+}

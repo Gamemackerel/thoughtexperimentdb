@@ -48,4 +48,8 @@ await run('ten-coins', async (t) => {
   await t.use(alt === 'wait' ? 'wait your turn' : 'two and two'); await t.until(async () => (await t.S('phase')) === 'pockets', 30); await sleep(1); await t.shot('office');
   await t.use('Empty your pockets'); await sleep(5); await t.shot('pockets');
 });
+await run('sheep-field', async (t) => {
+  await sleep(3); await t.shot('lane'); await t.use('Lean on the gate'); await t.until(async () => (await t.S('phase')) === 'choose', 30); await t.shot('believed');
+  await t.use(alt === 'lane' ? 'Walk on' : 'Climb over'); await sleep(6); await t.shot('dog'); await sleep(8); await t.shot('real');
+});
 await b.close();

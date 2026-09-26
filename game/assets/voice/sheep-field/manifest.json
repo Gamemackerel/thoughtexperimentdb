@@ -1,0 +1,52 @@
+{
+  "arrive": {
+    "file": "arrive-2dc3f190.mp3",
+    "text": "A lane in the country. A gate, and a field.",
+    "dur": 3.47
+  },
+  "hills": {
+    "file": "hills-33eacca8.mp3",
+    "text": "Round green hills, combed into rows. Not a thing out of place.",
+    "dur": 4.49
+  },
+  "see": {
+    "file": "see-40f7f09b.mp3",
+    "text": "In the field, grazing: a sheep.",
+    "dur": 2.85
+  },
+  "ask": {
+    "file": "ask-0d65cebd.mp3",
+    "text": "Go and see? Or walk on?",
+    "dur": 2.43
+  },
+  "dog": {
+    "file": "dog-5e66a67e.mp3",
+    "text": "It's a dog. Wearing a sheepskin.",
+    "dur": 2.82
+  },
+  "real": {
+    "file": "real-28f006e7.mp3",
+    "text": "But over the brow of the hill, out of sight from the gate, there is a sheep in the field.",
+    "dur": 5.17
+  },
+  "end": {
+    "file": "end-4aa01314.mp3",
+    "text": "You believed there was a sheep in the field. There was. But what made you believe it was a dog. Did you know?",
+    "dur": 6.19
+  },
+  "lane_1": {
+    "file": "lane_1-d8aaa170.mp3",
+    "text": "You walk on, quite sure there's a sheep in the field.",
+    "dur": 3.58
+  },
+  "lane_idle": {
+    "file": "lane_idle-9de8ace1.mp3",
+    "text": "You walk on down the lane, sure there's a sheep in that field.",
+    "dur": 3.94
+  },
+  "lane_2": {
+    "file": "lane_2-479be1db.mp3",
+    "text": "And there is one, behind the hill, where you couldn't see it. The one you saw was a dog.",
+    "dur": 5.15
+  }
+}
