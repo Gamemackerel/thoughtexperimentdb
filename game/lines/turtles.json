@@ -1,0 +1,27 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A lecture, on the shape of the world.",
+    "ladder": "There's a ladder, over the edge of the world.",
+    "turtle_1": "A turtle. A very large one.",
+    "turtle_look": "It looks up at you, slowly, and goes back to holding up the world.",
+    "ask": "So what holds the world up? And what holds that up?",
+    "turtle_2": "Another turtle. Larger.",
+    "turtle_3": "And another.",
+    "forever": "You could go on like this forever. Every turtle needs another one under it.",
+    "curve": "The stack isn't quite straight. Far below, it curves away, very slightly.",
+    "down_1": "Down, and down, and down.",
+    "down_2": "There's always another turtle. The chain never ends. But it never quite explains itself, either.",
+    "last_1": "This one stands on nothing at all. It just does.",
+    "last_2": "The chain has to stop somewhere, some say, at something that needs nothing underneath it. But why here? Why this one?",
+    "loop_1": "The turtles go round in a great ring, each on the back of the one before. The last one holds up the first.",
+    "loop_2": "There's no bottom, because there's no bottom to reach. They hold each other up.",
+    "stop_1": "You stop asking what's underneath.",
+    "stop_2": "Most people do, most of the time. The world stays up either way."
+  }
+}

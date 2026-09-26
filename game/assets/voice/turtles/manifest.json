@@ -1,0 +1,87 @@
+{
+  "arrive": {
+    "file": "arrive-d444728d.mp3",
+    "text": "A lecture, on the shape of the world.",
+    "dur": 2.82
+  },
+  "ladder": {
+    "file": "ladder-0624d672.mp3",
+    "text": "There's a ladder, over the edge of the world.",
+    "dur": 3.08
+  },
+  "turtle_1": {
+    "file": "turtle_1-11bd96fe.mp3",
+    "text": "A turtle. A very large one.",
+    "dur": 2.77
+  },
+  "turtle_look": {
+    "file": "turtle_look-58a6b9e9.mp3",
+    "text": "It looks up at you, slowly, and goes back to holding up the world.",
+    "dur": 4.26
+  },
+  "ask": {
+    "file": "ask-091f5ee1.mp3",
+    "text": "So what holds the world up? And what holds that up?",
+    "dur": 3.53
+  },
+  "turtle_2": {
+    "file": "turtle_2-66e4bb48.mp3",
+    "text": "Another turtle. Larger.",
+    "dur": 2.56
+  },
+  "turtle_3": {
+    "file": "turtle_3-476c5336.mp3",
+    "text": "And another.",
+    "dur": 1.2
+  },
+  "forever": {
+    "file": "forever-4f62e3d9.mp3",
+    "text": "You could go on like this forever. Every turtle needs another one under it.",
+    "dur": 4.65
+  },
+  "curve": {
+    "file": "curve-cd722a98.mp3",
+    "text": "The stack isn't quite straight. Far below, it curves away, very slightly.",
+    "dur": 5.04
+  },
+  "down_1": {
+    "file": "down_1-794391af.mp3",
+    "text": "Down, and down, and down.",
+    "dur": 2.56
+  },
+  "down_2": {
+    "file": "down_2-6f8f96df.mp3",
+    "text": "There's always another turtle. The chain never ends. But it never quite explains itself, either.",
+    "dur": 6.35
+  },
+  "last_1": {
+    "file": "last_1-f431ce05.mp3",
+    "text": "This one stands on nothing at all. It just does.",
+    "dur": 3.66
+  },
+  "last_2": {
+    "file": "last_2-8edcf460.mp3",
+    "text": "The chain has to stop somewhere, some say, at something that needs nothing underneath it. But why here? Why this one?",
+    "dur": 6.95
+  },
+  "loop_1": {
+    "file": "loop_1-8cc8f5b9.mp3",
+    "text": "The turtles go round in a great ring, each on the back of the one before. The last one holds up the first.",
+    "dur": 6.37
+  },
+  "loop_2": {
+    "file": "loop_2-49dae886.mp3",
+    "text": "There's no bottom, because there's no bottom to reach. They hold each other up.",
+    "dur": 4.96
+  },
+  "stop_1": {
+    "file": "stop_1-f43271cb.mp3",
+    "text": "You stop asking what's underneath.",
+    "dur": 2.69
+  },
+  "stop_2": {
+    "file": "stop_2-87671297.mp3",
+    "text": "Most people do, most of the time. The world stays up either way.",
+    "dur": 4.55
+  }
+}

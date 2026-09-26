@@ -61,4 +61,14 @@ await run('paperclip', async (t) => {
   await t.until(async () => (await t.S('stage')) >= 1, 30); await sleep(1); await t.use('Switch it off$'); await sleep(8); await t.shot('taking');
   await t.until(async () => (await t.S('stage')) >= 3, 40); await sleep(4); await t.shot('silver');
 });
+await run('turtles', async (t) => {
+  await sleep(3); await t.shot('lecture'); await t.until(async () => (await t.S('phase')) === 'world', 40); await sleep(3);
+  await t.use('Climb down over'); await sleep(6); await t.shot('turtle1');
+  if (alt === 'last') { await t.until(async () => await t.S('asked'), 20); await t.use('stands on nothing'); await sleep(8); await t.shot('last'); return; }
+  await t.use('next turtle'); await sleep(5); await t.shot('turtle2');
+  if (alt === 'loop') { await t.use('Look along the stack'); await sleep(7); await t.use('Follow the turtles'); await sleep(8); await t.shot('ring'); return; }
+  await t.use('next turtle'); await sleep(5); await t.use('next turtle'); await sleep(6); await t.shot('turtle4');
+  if (alt === 'stop') { await sleep(64); return; }
+  await t.use('Keep climbing'); await sleep(5); await t.shot('falling');
+});
 await b.close();
