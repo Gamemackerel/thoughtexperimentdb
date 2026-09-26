@@ -211,7 +211,7 @@ export default function hall(ctx) {
   const udoor = mesh(new THREE.ExtrudeGeometry(holeShape, { depth: 0.1, bevelEnabled: false }), clay(0x8c4a4a));
   const udark = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2.9), new THREE.MeshBasicMaterial({ color: 0x141318 })); udark.position.set(0, 1.47, -0.02);
   const uframe = new THREE.Group(); for (const [x, y, w, h] of [[-0.82, 1.55, 0.14, 3.2], [0.82, 1.55, 0.14, 3.2], [0, 3.1, 1.78, 0.14]]) { const b = mesh(new THREE.BoxGeometry(w, h, 0.2), cream); b.position.set(x, y, 0); uframe.add(b); }
-  const unexp = new THREE.Group(); unexp.add(udark, udoor, uframe); unexp.position.set(-7.8, 0, -4.38); unexp.rotation.y = 0;   // on the back wall, where you can see it root.add(unexp);
+  const unexp = new THREE.Group(); unexp.add(udark, udoor, uframe); unexp.position.set(-7.8, 0, -4.38); unexp.rotation.y = 0; root.add(unexp);   // on the back wall, where you can see it
 
   // ---- The Son of Man: a gentleman in a bowler hat, his face hidden by a hovering green apple
   const gent = makePerson({ color: 0x33343d }); gent.position.set(12.4, 0, 1.3); gent.rotation.y = -0.25; root.add(gent);

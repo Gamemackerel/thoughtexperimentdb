@@ -71,7 +71,7 @@ export default function shipOfTheseus(ctx) {
   const rnd = seeded(33);
   for (let i = 0; i < 6; i++) { const tr = makeTree(0.9 + rnd() * 0.6, rnd); const a = 1.6 + rnd() * 3, r = 7 + rnd() * 4; tr.position.set(SHORE.x + Math.cos(a) * r, 0, Math.sin(a) * r); root.add(tr); }
   for (let i = 0; i < 4; i++) { const rk = makeRock(0.8 + rnd(), rnd); rk.position.set(SHORE.x + 4 + rnd() * 5, 0, (rnd() - 0.5) * 16); root.add(rk); }
-  const boards = mesh(new THREE.BoxGeometry(23.5, 0.28, 3.2), clay(0xb89572)); boards.position.set(14, -0.12, 0); root.add(boards);   // deck flush with the ground you walk on
+  const boards = mesh(new THREE.BoxGeometry(23.5, 0.28, 3.2), clay(0xb89572)); boards.position.set(14, -0.07, 0); root.add(boards);   // deck just proud of the sand where they meet (flush faces flicker)
   for (let x = 4; x <= 25; x += 3) for (const z of [-1.5, 1.5]) { const post = mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.6, 8), clay(0x6b4a33)); post.position.set(x, -0.5, z); root.add(post); }
 
   // ---- the ship, the stack of new planks, the scrap pile, and the second ship's empty berth

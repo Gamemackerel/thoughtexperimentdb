@@ -159,7 +159,7 @@ export default function house(ctx) {
   const branch = mesh(new THREE.CylinderGeometry(0.06, 0.1, 2, 8), clay(palette.trunk)); branch.position.set(0.8, 2.9, 0); branch.rotation.z = -1.25;
   const clock2 = makeMeltingClock(0.55, 0.05, 3); clock2.position.set(1.2, 3.2, 0); clock2.rotation.y = 0.3;
   tree.add(trunk, branch, clock2);
-  tree.position.set(6.2, 0, 5.6); tree.rotation.y = 2.4;
+  tree.position.set(6.2, 0, 5.6); tree.rotation.y = -0.3;              // the clock hangs off towards the wall, clear of the sky door
   root.add(tree);
 
   // ---- a window in the floor, looking down into sky

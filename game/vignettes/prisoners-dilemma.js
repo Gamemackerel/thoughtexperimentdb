@@ -47,7 +47,7 @@ export default function prisonersDilemma(ctx) {
     const table = makeTable({ w: 2.2, d: 1.2, h: 1, color: 0x6b4a33 }); table.position.set(x, 0, -1.6); root.add(table);
     const ch1 = makeChair(); ch1.position.set(x, 0, -0.3); ch1.rotation.y = Math.PI; root.add(ch1);
     const ch2 = makeChair(); ch2.position.set(x, 0, -2.9); root.add(ch2);
-    const paper = mesh(new THREE.BoxGeometry(0.42, 0.01, 0.56), clay(0xfbf6ea).clone());   // its own material: it changes colour when signed paper.position.set(x - 0.5, 1.12, -1.4); root.add(paper);
+    const paper = mesh(new THREE.BoxGeometry(0.42, 0.01, 0.56), clay(0xfbf6ea).clone()); paper.position.set(x - 0.5, 1.12, -1.4); root.add(paper);   // its own material: it changes colour when signed
     const pen = mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.36, 6), clay(0x2b2a33)); pen.rotation.set(0, 0.6, Math.PI / 2); pen.position.set(x - 0.1, 1.14, -1.35); root.add(pen);
     const det = makePerson({ color: 0x33343d }); det.position.set(x, 0, -2.9); det.userData.body.position.y = -0.42; root.add(det);
     return { x, table, paper, pen, det };
@@ -56,8 +56,8 @@ export default function prisonersDilemma(ctx) {
 
   // the tally, chalked on the back wall above the glass
   const board = textTexture([''], { w: 768, h: 384, bg: '#27302c', fg: '#f6efe0', font: '40px sans-serif', align: 'left' });
-  const boardM = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.8), new THREE.MeshBasicMaterial({ map: board })); boardM.position.set(-4.9, 3.1, BACK + 0.02); root.add(boardM);
-  const bframe = mesh(new THREE.BoxGeometry(3.8, 2, 0.08), clay(0x6b4a33)); bframe.position.set(-4.9, 3.1, BACK - 0.02); root.add(bframe);
+  const boardM = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.8), new THREE.MeshBasicMaterial({ map: board })); boardM.position.set(-4.9, 3.1, BACK + 0.07); root.add(boardM);
+  const bframe = mesh(new THREE.BoxGeometry(3.8, 2, 0.08), clay(0x6b4a33)); bframe.position.set(-4.9, 3.1, BACK + 0.01); root.add(bframe);
   function drawBoard() {
     const g = board.userData.ctx; g.fillStyle = '#27302c'; g.fillRect(0, 0, 768, 384);
     g.fillStyle = '#f6efe0'; g.font = 'bold 40px sans-serif'; g.textAlign = 'left'; g.textBaseline = 'middle';

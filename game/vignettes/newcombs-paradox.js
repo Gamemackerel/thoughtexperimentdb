@@ -60,7 +60,7 @@ export default function newcomb(ctx) {
   // the ledger of everyone before you
   const ledger = textTexture(['PREVIOUS VISITORS', 'one box ...... £1,000,000', 'both ............ £1,000', 'one box ...... £1,000,000', 'one box ...... £1,000,000', 'both ............ £1,000', 'both ............ £1,000', 'one box ...... £1,000,000'],
     { w: 512, h: 512, bg: '#f6efe0', font: '28px Georgia, serif', lineH: 1.45 });
-  const ledgerM = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), new THREE.MeshBasicMaterial({ map: ledger })); ledgerM.position.set(-4.4, 2.8, BACK + 0.02); root.add(ledgerM);
+  const ledgerM = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), new THREE.MeshBasicMaterial({ map: ledger })); ledgerM.position.set(-4.4, 2.8, BACK + 0.05); root.add(ledgerM);
   const lframe = mesh(new THREE.BoxGeometry(1.7, 1.7, 0.06), clay(0xc9a54c, { metalness: 0.5 })); lframe.position.set(-4.4, 2.8, BACK - 0.02); root.add(lframe);
   // a butler, and the door out
   const butler = makePerson({ color: 0x1f1f24 }); butler.position.set(3.8, 0, -3); butler.rotation.y = -0.4; root.add(butler);
