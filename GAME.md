@@ -50,7 +50,8 @@ Each vignette is a short (3–8 minute) playable scene in five beats:
 | **4. Consequence** | The world acts out what you chose (or didn't) in full, holds a beat, then rewinds, and the controls reset. | The trolley runs down the track you left it on and knocks those people flying. Rewind: everyone is restored, and the lever snaps back to the main line. |
 | **5. Reflection** | One or two plain lines about what you did and the tension in it, with no names or theory. Then a twist that reframes the choice, and a way home. | Pulled: "You saved five. But you made the trolley kill someone who was safe." Walked away: "You didn't touch a thing. Five people were hit anyway." Then a third track appears, pointing at you, and you can try again. |
 
-**Endings.** A vignette ends with a quiet *Game over* card (`ctx.gameOver`) with *Play again* and *Back to the house*:
+**Endings.** A vignette ends with a quiet *The end* card (`ctx.gameOver`) with *Play again* and *Back to the <room>* (the room
+of the house you came from: the first room, the hall, the trolley room or the gallery):
 - after a small number of completed runs (the trolley: three), whatever you chose; the narrator names what never changed;
 - or when the player takes the most drastic option the experiment offers (the trolley: sending it onto yourself).
 After the first run, a twist opens a new, playable option (the trolley: a third track with its own lever).
@@ -64,7 +65,8 @@ The game-over card also asks two things, both optional:
   screen size, so it can be picked up on the next iteration. Read it before starting work on a vignette.
 
 **The journal** lies open on a writing desk in the first room (it glows once you've finished something). It keeps, per
-vignette: the question, your answer (editable there), the ending you reached and the date. Once you've finished a
+vignette: every ending you've reached (with the date), and every answer you've written, each with the ending it followed,
+so a change of mind shows (all editable there). A question can depend on the ending (`"questions"` in `journal.json`). Once you've finished a
 vignette, it also shows a to-do list written like a note to self: the original source, a video essay or two, and an
 encyclopedia entry (SEP where one exists), with links. Questions and to-dos live in `game/journal.json`; answers are
 saved in the browser (`localStorage`).
@@ -84,6 +86,12 @@ Every vignette also has:
   sea onto a bollard and croaks at the ship (Theseus) · hops across the square, then rewinds backwards (grandfather) ·
   presses one key on a typewriter while the monkey stares (monkeys) · looks into the dome while a frog inside looks back
   (simulation) · watches a shooting star (Fermi) · catches a fly, the only one not grazing the common (commons).
+- **The house rules** (from the September playtest; every vignette keeps all four):
+  1. Everything that looks usable shows a prompt from arrival, even if it only says "Not yet" or gives a line.
+  2. There's a visible way home from arrival (the pill at the top left, and one in the world).
+  3. Doing nothing always resolves within about a minute of the question: a passive ending, or someone nudging you.
+  4. An ending never shares a prompt spot with anything that isn't one, and never sits where you arrive: endings open
+     only once the problem has been put, and are marked `terminal` so they lose ties to smaller actions.
 - **Asides:** one to three small things to do that aren't the thought experiment: people to talk to (silent speech
   bubbles, `talk()` in `game/core/extras.js`) and things to look at (one short narrator line each, `look()`). They never
   change the story; they make the place feel lived in, and they can be funny.
@@ -275,7 +283,8 @@ tools/                  (repo root) setup.sh, Kokoro TTS (kokoro/speak.py), narr
 - **Colour roles** (never repurpose them; use `palette` in `core.js`): coral `#e0674f` the threat or doing harm · blue
   `#5b7fa6` the many · mustard `#e2a93b` the one · teal `#3f8f86` you, the agent who chooses.
 - **People** are peg figures (`makePerson`); workers wear hard hats.
-- **Type:** Iowan Old Style for titles and the notebook, Avenir Next for the UI and captions, Caveat for the journal.
+- **Type:** Newsreader (serif) for titles and the notebook, Figtree (sans) for the UI and captions, Caveat for the
+  journal; all three from Google Fonts, loaded in `game/index.html`.
 - Each room of the house is dressed after an artist (Escher and Dalí, Magritte, Picasso), in clay.
 
 ### 8.4 Voice and the narration audit
@@ -294,4 +303,9 @@ tools/                  (repo root) setup.sh, Kokoro TTS (kokoro/speak.py), narr
 - Interactables at the same floor position shadow each other (the nearest one wins, ties go to the first): give each
   its own spot.
 - Tap-to-walk steering is simple: keep walkways clear around tables and counters, and check far sides are reachable.
+- Two surfaces at the same depth flicker (z-fighting): a picture, sign or board on a wall or frame needs to stand at least
+  3–5 cm proud of it, and a deck or rug a few centimetres above the ground it sits on. Check props don't run through each
+  other (the melting-clock tree once went through the sky door).
+- Never put a `//` comment in the middle of a line of code: everything after it on the line is silently dropped (it has
+  hidden a door and two sheets of paper, and broken a whole level). Comments go at the end of the line.
 

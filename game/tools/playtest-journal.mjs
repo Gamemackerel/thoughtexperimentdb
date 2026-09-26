@@ -12,9 +12,10 @@ await p.goto('http://localhost:5173/game/?level=fermi-paradox'); await sleep(1.5
 // the quickest ending: listen, then send
 const walk = (x, z) => p.evaluate((x, z) => { const P = window.__ted.player; P.target = P.pos.clone().set(x, 0, z); }, x, z);
 const press = async () => { for (let i = 0; i < 80; i++) { if (await p.evaluate(() => document.getElementById('prompt').classList.contains('on'))) break; await sleep(0.25); } await p.keyboard.press('KeyE'); };
-await walk(-3.5, 1.7); await sleep(3); await press(); await sleep(12);
-await walk(8.5, 1.7); await sleep(4); await press();
-for (let i = 0; i < 80 && await p.evaluate(() => document.getElementById('over').hidden); i++) await sleep(0.25);
+await walk(-3.5, 1.7); await sleep(3); await press();
+for (let i = 0; i < 120 && !(await p.evaluate(() => window.__ted.level.__S.open)); i++) await sleep(0.5);
+await walk(6.6, 1.3); await sleep(4); await press();
+for (let i = 0; i < 200 && await p.evaluate(() => document.getElementById('over').hidden); i++) await sleep(0.25);
 // typing E, N, WASD in the boxes must not trigger the game
 await p.click('#answer'); await p.keyboard.type('Yes. Even if nobody hears it, saying we were here seems worth it.');
 await p.click('#feedback'); await p.keyboard.type('[automated test] the beam from the dish is hard to see');
