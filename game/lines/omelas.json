@@ -4,7 +4,9 @@
     "speed": 0.9,
     "lang": "en-gb"
   },
-  "pronounce": {},
+  "pronounce": {
+    "Omelas": "Oh-meh-lahss"
+  },
   "lines": {
     "arrive": "The Festival of Summer, in the city of Omelas.",
     "happy": "Everyone here is happy. Not foolishly, and not because they're told to be. They just are.",
@@ -14,14 +16,20 @@
     "horses": "The horses have ribbons braided into their manes. They know it's a race day.",
     "cellar": "Under one of the beautiful buildings, in the dark, a child sits alone.",
     "terms": "The city's happiness, all of it, depends on this child staying here, in the dark.",
-    "terms_2": "If it were brought up into the sunlight, and comforted, all of it would be lost. Those are the terms.",
+    "terms_2": {
+      "text": "If it were brought up into the sunlight, and comforted, all of it would be lost. Those are the terms.",
+      "speed": 0.8
+    },
     "ask": "Now you know too. What will you do?",
     "back_up": "You come back up into the sunlight. The music is still playing.",
     "dance_1": "You join the dancing.",
     "stay_idle": "The music plays on. You stay.",
     "stay_2": "Most people who see the child are shocked. In time, most of them come to accept it.",
     "walk_1": "You walk out of Omelas, alone, towards the mountains.",
-    "walk_2": "Nobody knows where they go, the ones who walk away. They seem to be sure of the way.",
+    "walk_2": {
+      "text": "Nobody knows where they go, the ones who walk away. They seem to be sure of the way.",
+      "speed": 0.8
+    },
     "free_1": "You carry the child up, into the sun.",
     "free_2": "And the music stops. The colour goes out of everything. Those were the terms.",
     "free_3": "One child is warm. And the rest of Omelas is not."

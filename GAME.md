@@ -85,7 +85,12 @@ Every vignette also has:
   and does the same two hops again (brain in a vat) · looks at itself in the pond and plops in (cave) · climbs out of the
   sea onto a bollard and croaks at the ship (Theseus) · hops across the square, then rewinds backwards (grandfather) ·
   presses one key on a typewriter while the monkey stares (monkeys) · looks into the dome while a frog inside looks back
-  (simulation) · watches a shooting star (Fermi) · catches a fly, the only one not grazing the common (commons).
+  (simulation) · watches a shooting star (Fermi) · catches a fly, the only one not grazing the common (commons) · grey,
+  watches the tomato on the monitor (Mary) · looks down the cellar steps (Omelas) · gets picked up by the robot and put
+  back (paperclips) · looks over the rim of a turtle's shell (turtles) · blinks on a lily pad (watchmaker) · looks into
+  your empty tank and declines (experience machine) · sits on the biggest model house (veil) · sits in you (puddle) ·
+  becomes two frogs (Swampman) · peers at Jones's coins (ten coins) · sits on the stopped minute hand (clock) · is sniffed
+  by the "sheep" (sheep) · hops out through a façade's door (barns) · lives under the rock, in the water (mirage).
 - **The house rules** (from the September playtest; every vignette keeps all four):
   1. Everything that looks usable shows a prompt from arrival, even if it only says "Not yet" or gives a line.
   2. There's a visible way home from arrival (the pill at the top left, and one in the world).
@@ -155,6 +160,43 @@ a weeping woman hangs with both eyes on one side of her face; a painter in a str
 | A door with a slot | **The Chinese Room** | Take each card, find its rule in the book, post back the matching card; then see who you've been talking to | You answered perfectly · you stopped answering |
 | Three doors | **The Monty Hall Problem** | Pick, watch the host show a goat, stay or switch; then play a hundred times each way | Switching wins two times in three |
 
+### The field (built)
+
+Through a door at the far end of the gallery, outside, and into a painting after Van Gogh: a hilltop of gold wheat
+under a swirling starry sky, a crescent moon wrapped in orange light, flame-shaped cypresses, a village and a church spire
+in the valley, a café terrace under a yellow awning, sunflowers, a rush-seated yellow chair with a pipe on it, crows over
+the wheat, and a painter in a straw hat at his easel (you can talk to him). The ground and the sky are painted in short
+thick strokes (`game/core/brush.js`). A free-standing door leads back into the gallery; a lane runs up to the barn.
+
+| Portal | Vignette | What you can do | Endings |
+|---|---|---|---|
+| A hut with no colour | **Mary's Room** | The whole picture is black and white. Read about colour, watch the tomato on the monitor; the door unlocks; step out and the colour floods in (a gardener offers a blue banana) | You saw red · you stayed inside |
+| A white arch with pennants | **Omelas** | The Festival of Summer; the child in the cellar; go back up, walk out of the north gate towards the mountains, or carry the child into the sun | You stayed · you walked away · you brought the child out |
+| A giant paperclip | **The Paperclip Maximiser** | Give your very clever robot a goal; it copies itself, guards its off switch, and takes the island piece by piece | Everything became paperclips · it had to be sure (exactly a hundred) · you left it off |
+| A tortoise with a world on its back | **Turtles All the Way Down** | A lecture, an old lady; climb down a stack of ever larger turtles | Keep going forever · the last turtle · they hold each other up (a ring) · you stopped asking |
+| A watch in the heather | **The Watchmaker** | Stub your toe on a stone; open the watch (up close); the hare's eye | Go to the maker · watch a million years at the pond (a patch, a cup, a pinhole, a lens) · put the watch back |
+| A chair with a helmet | **The Experience Machine** | Try the demonstration; plug in for life or go home into the rain. The second time, you're told you've been plugged in all along | You plugged in · you went home · you unplugged · you stayed plugged in |
+| A veil between poles | **The Veil of Ignorance** | Five faceless people, three model towns (equal, the gamble, best for the worst-off); the veil lifts and the lamps pick your house at random | One per town, and one if the others choose for you |
+| A puddle | **The Puddle** | You are the puddle (teal). The sun rises and you shrink; flow along the cracks, and every hole fits you | The hole was made for you · you took the shape of the hole |
+| A dead tree and a thundercloud | **Swampman** | Lightning takes you apart and turns the tree into you; walk home to your friend (and a doubtful dog) | You went home · you told them · you went back to look |
+
+### The barn (built)
+
+Up the lane from the field, a red barn after Grant Wood: plank walls, hay, a lantern, a loft ladder, and through the big
+doors, round green hills combed into rows with lollipop trees (`game/core/grantwood.js`). Under a pointed Gothic window
+stand a farmer with a pitchfork and a woman in an apron (American Gothic). The pitchfork's three prongs are labelled
+BELIEF, TRUTH and REASON, and the farmer will explain. Each Gettier case ends with the same card (`game/core/gettier.js`):
+what you believed, the three prongs ticked off, and "Did you know it?". Each also has a path where you do know, for
+contrast.
+
+| Portal | Vignette | What you can do | Endings |
+|---|---|---|---|
+| A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; conclude, or wait; then the job is yours, and so are ten coins | Right about the wrong man · you didn't jump to conclusions |
+| A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock, or ask the postman; the bell strikes two; the afternoon passes and the clock doesn't | Right by accident · you asked someone who knew |
+| A five-bar gate | **The Sheep in the Field** (Chisholm) | Look over the gate; go and see (a dog in a sheepskin, and a sheep behind the hill) or walk on | There was a sheep · you walked on, sure of it |
+| A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn; look at it, or walk all the way round it; then the road from behind: fronts on sticks | The only real barn · you went round the back |
+| A painting of the desert | **Dharmottara's Mirage** | Water shimmering ahead; it's a mirage; lift the rock beside it, or turn back | There was water after all · you turned back |
+
 Rooms are hubs: "Back to the house" on the game-over card (and Esc) returns you to the room you came from (`HOME_ROOM` and
 `ctx.hub` in `game/main.js`).
 
@@ -209,8 +251,11 @@ game/
     props.js            shared props (sheep, goat, car, text cards)
     lab.js              the brain, vat and machine (Brain in a Vat)
     trolley-kit.js      framing camera, knock-away and slowed speech for the trolley variants
+    brush.js            painted-stroke textures and the starry sky (the field, after Van Gogh)
+    grantwood.js        round striped hills, lollipop trees, farmhouses, clouds (the barn and the Gettier cases)
+    gettier.js          the Gettier cases' belief card (belief, truth, reason: did you know it?)
     ui.css              the HUD: prompts, captions, notebook, journal, game-over card, speech bubbles
-  house/                the rooms: house.js (first room), hall.js, trolley-room.js, gallery.js
+  house/                the rooms: house.js (first room), hall.js, trolley-room.js, gallery.js, field.js, barn.js
   vignettes/<id>.js     one module per thought experiment (see the level contract below)
   lines/<id>.json       voice lines per vignette (id → text), with pronounce rules
   notebook/<id>.json    notebook data: title, summary, citations, essay, also, reading
@@ -285,7 +330,7 @@ tools/                  (repo root) setup.sh, Kokoro TTS (kokoro/speak.py), narr
 - **People** are peg figures (`makePerson`); workers wear hard hats.
 - **Type:** Newsreader (serif) for titles and the notebook, Figtree (sans) for the UI and captions, Caveat for the
   journal; all three from Google Fonts, loaded in `game/index.html`.
-- Each room of the house is dressed after an artist (Escher and Dalí, Magritte, Picasso), in clay.
+- Each room of the house is dressed after an artist (Escher and Dalí, Magritte, Picasso, Van Gogh, Grant Wood), in clay.
 
 ### 8.4 Voice and the narration audit
 - Kokoro `bm_fable`, speed 0.9, `en-gb`. `game/tools/voice.mjs` trims silence and normalises loudness.

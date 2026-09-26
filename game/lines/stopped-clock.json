@@ -13,7 +13,10 @@
     "asked": "The postman looks at his watch. It's ticking.",
     "true": "And the church bell strikes two. It is two o'clock.",
     "wait": "The afternoon goes by.",
-    "stopped": "The town clock hasn't moved. It stopped at two o'clock yesterday. You happened to look at it in the one minute of the day it was right.",
+    "stopped": {
+      "text": "The town clock hasn't moved. It stopped at two o'clock yesterday. You happened to look at it in the one minute of the day it was right.",
+      "speed": 0.8
+    },
     "end": "You believed it. It was true. And you had good reason. So did you know what time it was?",
     "stopped_2": "The town clock hasn't moved. It stopped yesterday, at two. If you'd looked at that, you'd have believed exactly the same thing.",
     "asked_end": "But you asked someone whose watch was going. This time, you weren't only right."

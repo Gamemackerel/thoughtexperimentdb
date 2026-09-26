@@ -33,7 +33,7 @@ export default function mirage(ctx) {
   }
   for (const [x, z, h] of [[-50, -70, 14], [-20, -80, 10], [30, -75, 16], [60, -60, 11]]) { const m = mesh(new THREE.ConeGeometry(h * 1.6, h, 6), clay(0xd9a878, { flatShading: true })); m.position.set(x, h / 2 - 1, z); root.add(m); }
   // the mirage: a shimmer of sky lying on the sand ahead, that fades as you come near
-  const shimmerTex = canvasTexture(256, 64, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(143,181,217,0)'); gr.addColorStop(0.4, 'rgba(143,181,217,0.9)'); gr.addColorStop(0.6, 'rgba(185,210,234,0.9)'); gr.addColorStop(1, 'rgba(143,181,217,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+  const shimmerTex = canvasTexture(256, 64, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(143,181,217,0)'); gr.addColorStop(0.4, 'rgba(111,160,216,0.95)'); gr.addColorStop(0.6, 'rgba(160,196,232,0.95)'); gr.addColorStop(1, 'rgba(143,181,217,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
   const shimmer = new THREE.Mesh(new THREE.PlaneGeometry(16, 5), new THREE.MeshBasicMaterial({ map: shimmerTex, transparent: true, depthWrite: false, fog: false }));
   shimmer.rotation.x = -Math.PI / 2; shimmer.position.copy(SPOT).setY(0.06); root.add(shimmer);
   // the rock, and the water under it

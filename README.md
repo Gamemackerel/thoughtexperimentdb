@@ -1,11 +1,15 @@
 # Thought Experiment Database
 
 **An art game about thought experiments.** You walk through a surreal house and step through paintings, books, doors
-and clocks into short playable vignettes. There are four rooms. The first is after Escher and Dalí: the Trolley Problem,
+and clocks into short playable vignettes. There are six rooms. The first is after Escher and Dalí: the Trolley Problem,
 Brain in a Vat, Plato's Cave and the Ship of Theseus. The hall is after Magritte: the Grandfather Paradox, the Infinite
 Monkey Theorem, the Simulation Argument, the Fermi Paradox and the Tragedy of the Commons. The trolley room holds the
 Footbridge, the Loop and the Transplant Surgeon. The gallery is after Picasso: the Ring of Gyges, the Prisoner's Dilemma,
-Newcomb's Paradox, the Utility Monster, the Chinese Room and the Monty Hall Problem. You act, the world responds, and a
+Newcomb's Paradox, the Utility Monster, the Chinese Room and the Monty Hall Problem. Out through the gallery's far door,
+a wheat field after Van Gogh: Mary's Room, Omelas, the Paperclip Maximiser, Turtles All the Way Down, the Watchmaker, the
+Experience Machine, the Veil of Ignorance, the Puddle and Swampman. And up the lane, a barn after Grant Wood, full of
+Gettier cases: Ten Coins, the Stopped Clock, the Sheep in the Field, Barn Façade County and Dharmottara's Mirage. You act,
+the world responds, and a
 quiet narrator says a little about what you did. After each one there's a question for your journal, which also keeps
 the original sources and video essays for going further.
 
@@ -46,6 +50,6 @@ build/                     generated screenshots and caches (not committed)
 npm run play                                        # the game at http://localhost:5173/game/
 node game/tools/voice.mjs <id>                      # render a vignette's lines → game/assets/voice/<id>/
 tools/kokoro-venv/bin/python tools/audit.py <id>    # narration audit: transcript, phonemes, pauses, pace
-node game/tools/playtest-gallery.mjs [id] [alt]     # drive vignettes to their endings (also -hall, -variants, -trolley…)
+node game/tools/playtest-gallery.mjs [id] [alt]     # drive vignettes to their endings (also -hall, -field, -barn, -variants…)
 node game/tools/shot.mjs <level> <name> [x z]...    # quick screenshots → build/shot-<name>-*.png
 ```

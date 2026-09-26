@@ -1,8 +1,8 @@
 {
   "arrive": {
-    "file": "arrive-350d90c3.mp3",
+    "file": "arrive-548365f6.mp3",
     "text": "The Festival of Summer, in the city of Omelas.",
-    "dur": 3.42
+    "dur": 3.66
   },
   "happy": {
     "file": "happy-a04e8a9a.mp3",
@@ -10,9 +10,9 @@
     "dur": 5.8
   },
   "knows": {
-    "file": "knows-b681389b.mp3",
+    "file": "knows-4ae07b55.mp3",
     "text": "Everyone in Omelas knows about the door at the foot of the hall.",
-    "dur": 4.34
+    "dur": 4.52
   },
   "not_yet": {
     "file": "not_yet-849d290c.mp3",
@@ -40,9 +40,9 @@
     "dur": 5.17
   },
   "terms_2": {
-    "file": "terms_2-f12e97f3.mp3",
+    "file": "terms_2-5577d7c6.mp3",
     "text": "If it were brought up into the sunlight, and comforted, all of it would be lost. Those are the terms.",
-    "dur": 5.93
+    "dur": 6.84
   },
   "ask": {
     "file": "ask-04939062.mp3",
@@ -70,14 +70,14 @@
     "dur": 5.62
   },
   "walk_1": {
-    "file": "walk_1-8269640b.mp3",
+    "file": "walk_1-fa2f9a59.mp3",
     "text": "You walk out of Omelas, alone, towards the mountains.",
-    "dur": 3.89
+    "dur": 4.1
   },
   "walk_2": {
-    "file": "walk_2-6e72234e.mp3",
+    "file": "walk_2-884cc64b.mp3",
     "text": "Nobody knows where they go, the ones who walk away. They seem to be sure of the way.",
-    "dur": 5.36
+    "dur": 6.27
   },
   "free_1": {
     "file": "free_1-009ab627.mp3",
@@ -90,8 +90,8 @@
     "dur": 4.7
   },
   "free_3": {
-    "file": "free_3-8e0de9ed.mp3",
+    "file": "free_3-278ef597.mp3",
     "text": "One child is warm. And the rest of Omelas is not.",
-    "dur": 3.87
+    "dur": 4.1
   }
 }

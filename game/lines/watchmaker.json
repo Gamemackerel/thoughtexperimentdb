@@ -14,7 +14,10 @@
     "parts": "Springs and wheels, each one cut to fit the next. A balance swinging back and forth. All of it, for telling the time.",
     "maker": "Even if you'd never seen a watch before, you'd know: someone made this.",
     "hare": "A hare, watching you. Its eye focuses, and adjusts to the light, and keeps itself clean.",
-    "eye": "And the hare watching you from the gorse has an eye far finer than any watch.",
+    "eye": {
+      "text": "And the hare watching you from the gorse has an eye far finer than any watch.",
+      "speed": 0.8
+    },
     "ask": "So did someone make the hare, too?",
     "maker_1": "A workshop, with the lamp still lit. Whoever works here has only just stepped out.",
     "maker_2": "Something so well fitted to its purpose: it's hard to believe that nobody meant it.",
