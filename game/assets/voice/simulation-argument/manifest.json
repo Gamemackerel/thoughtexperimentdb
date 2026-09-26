@@ -29,15 +29,10 @@
     "text": "Somewhere, someone may be looking at you the same way.",
     "dur": 3.53
   },
-  "off_end": {
-    "file": "off_end-332df612.mp3",
-    "text": "You switch them off. Above you, the lights flicker.",
-    "dur": 3.47
-  },
   "run_end": {
-    "file": "run_end-25fc21d8.mp3",
-    "text": "You let them run. Maybe someone is doing the same for you.",
-    "dur": 3.84
+    "file": "run_end-34a202f7.mp3",
+    "text": "You let them run. One more world. The odds that yours is the first one just got worse.",
+    "dur": 5.85
   },
   "window": {
     "file": "window-f38d1729.mp3",
@@ -48,5 +43,30 @@
     "file": "photo-687f9e68.mp3",
     "text": "A photo of you as a child. You don't remember it being taken.",
     "dur": 4.52
+  },
+  "choose": {
+    "file": "choose-723b53ad.mp3",
+    "text": "You could switch them off. Or leave them running.",
+    "dur": 3.29
+  },
+  "off_1": {
+    "file": "off_1-c09b36b9.mp3",
+    "text": "They're gone. Every little life, in every little world, all at once. To them, it was a universe.",
+    "dur": 6.27
+  },
+  "off_2": {
+    "file": "off_2-d57e10c6.mp3",
+    "text": "And somewhere above you, someone reaches for a lever of their own.",
+    "dur": 4.23
+  },
+  "none_end": {
+    "file": "none_end-693eecb8.mp3",
+    "text": "You switch it off, and build no more. If everyone who could decided that, almost no one would ever be simulated.",
+    "dur": 6.97
+  },
+  "locked": {
+    "file": "locked-7cd54483.mp3",
+    "text": "Locked. From the outside.",
+    "dur": 2.38
   }
 }

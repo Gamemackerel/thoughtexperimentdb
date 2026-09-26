@@ -24,7 +24,7 @@ function miniWorld(depth, walkers) {
   g.add(makeIsland({ radius: 12, seed: 3 + depth, decor: false }));
   const h = makeHouse(); h.position.set(-3, 0, -3); g.add(h);
   for (let i = 0; i < 6; i++) { const t = makeTree(0.8 + r() * 0.5, r); const a = r() * 6.28, rr = 6 + r() * 4; t.position.set(Math.cos(a) * rr, 0, Math.sin(a) * rr); g.add(t); }
-  for (let i = 0; i < 3; i++) { const p = makePerson({ color: [palette.many, palette.one, palette.agent][i] }); g.add(p); walkers.push({ p, ph: i * 2.1 + depth, r: 3 + i }); }
+  for (let i = 0; i < 3; i++) { const p = makePerson({ color: [palette.many, palette.one, 0x7a5a8c][i] }); g.add(p); walkers.push({ p, ph: i * 2.1 + depth, r: 3 + i }); }
   if (depth > 0) {
     const d = makeTable({ w: 2, d: 1, h: 1 }); d.position.set(3, 0, 1); g.add(d);
     const inner = miniWorld(depth - 1, walkers); inner.scale.setScalar(0.035); inner.position.set(3.3, 1.12, 1); g.add(inner);
@@ -71,7 +71,7 @@ export default function simulationArgument(ctx) {
   }
   const door = new THREE.Group(); const dmat = clay(0xf2e6d4);
   for (const x of [-0.8, 0.8]) { const p = mesh(new THREE.BoxGeometry(0.14, 3, 0.3), dmat); p.position.set(x, 1.5, 0); door.add(p); }
-  const panel = mesh(new THREE.BoxGeometry(1.46, 2.9, 0.1), clay(palette.agent)); panel.position.y = 1.45; door.add(panel);
+  const panel = mesh(new THREE.BoxGeometry(1.46, 2.9, 0.1), clay(0x8c4a4a)); panel.position.y = 1.45; door.add(panel);
   door.position.copy(DOOR); door.rotation.y = -Math.PI / 2; room.add(door);
 
   // ---- the reveal: your study sits under a dome on a much bigger desk, and someone is looking in
@@ -82,6 +82,11 @@ export default function simulationArgument(ctx) {
   const gHead = mesh(new THREE.SphereGeometry(22, 40, 24), clay(0xf1d7bd)); giant.add(gHead);
   for (const s of [-1, 1]) { const e = mesh(new THREE.SphereGeometry(2.4, 16, 12), clay(palette.ink)); e.position.set(7 * s, 3, 20.6); giant.add(e); }
   giant.position.set(0, 26, -78); outside.add(giant);
+  // the giant has a lever of their own, and a hand
+  const bigLever = makeLever(); bigLever.scale.setScalar(9); bigLever.position.set(22, -5.6, -6); outside.add(bigLever);
+  const hand = new THREE.Group(); const palm = mesh(new THREE.SphereGeometry(4, 20, 14), clay(0xe8c9a8)); palm.scale.set(1.3, 0.7, 1); hand.add(palm);
+  for (let i = 0; i < 4; i++) { const f = mesh(new THREE.CapsuleGeometry(0.9, 3.2, 6, 10), clay(0xe8c9a8)); f.position.set(-2.4 + i * 1.6, -0.6, 4); f.rotation.x = 1.4; hand.add(f); }
+  hand.position.set(40, 30, -30); outside.add(hand);
 
   // a photo on the wall
   const photo = new THREE.Group();
@@ -91,14 +96,14 @@ export default function simulationArgument(ctx) {
   photo.position.set(-3.6, 3.1, -5.26); room.add(photo);
 
   // the frog hops up onto the desk and looks into the dome; inside, a (relatively enormous) frog comes to look back
-  const frog = makeFrog(); room.add(frog);
+  const frog = makeFrog({ scale: 0.6 }); room.add(frog);
   const mini = makeFrog({ scale: 2.4 }); world.add(mini);
   const miniCameo = frogCameo(mini, [[-1, -4], [-3.4, -1.4], [-5.8, 0.8], [-8, 2.6], { face: [-20, 11] }, { wait: 1.8 }, { face: [-1, -4] }, [-5.8, 0.8], [-3.4, -1.4], [-2.6, -3.4]]);
   const cameo = frogCameo(frog, [[6.2, 4.6], [4.8, 3], [3.2, 1.6], [1.6, 0.4], [0.2, -1], { at: [-0.4, -2.5], y: 1.31, height: 1.1 }, { face: [0.6, -3] },
     { set: () => miniCameo.start() }, { wait: 4.8, act: (f, u) => (f.userData.body.rotation.x = 0.18 * Math.sin(Math.PI * clamp(u * 1.3))) },
     { face: [-3, -1] }, { at: [-2.2, -1.2], y: 0, height: 1 }, [-3.8, 0.2], [-5.4, 1.6], [-7, 3], [-8.6, 4.4], [-10.2, 5.8]]);
 
-  const S = { phase: 'explore', looked: false, more: false, zoomT: -1, revealT: -1, extrasT: -1, off: 0 };
+  const S = { phase: 'explore', looked: false, more: false, zoomT: -1, revealT: -1, extrasT: -1, off: 0, giantT: -1, doorT: -1 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/simulation-argument.json', 'The Simulation Argument');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -111,25 +116,45 @@ export default function simulationArgument(ctx) {
     onUse: async () => { S.more = true; S.extrasT = 0; await voice.say('more'); await ctx.wait(0.6); await voice.say('ask'); await ctx.wait(0.6);
       S.phase = 'reveal'; S.revealT = 0; player.enabled = false; outside.visible = true;
       await ctx.wait(3); await voice.say('pullout'); await ctx.wait(1.5);
-      S.phase = 'choose'; S.revealT = -1; outside.visible = false; player.enabled = true; } });
-  interact.add({ pos: DESK.clone().add(V(1.4, 0, 1.2)), radius: 1.8, height: 2.2, prompt: 'Switch them off', enabled: () => S.phase === 'choose',
-    onUse: async () => { S.phase = 'off'; await ctx.wait(2.2); await voice.say('off_end'); await ctx.wait(1.4); save.complete('simulation-argument');
-      ctx.gameOver({ title: 'You switched them off', text: 'Every little world went dark at once. If your world is one of those, somebody could do the same.' }); } });
-  interact.add({ pos: DOOR.clone().add(V(-1.2, 0, 0)), radius: 2.2, height: 3, prompt: 'Leave them running', enabled: () => S.phase === 'choose',
-    onUse: async () => { S.phase = 'over'; await voice.say('run_end'); await ctx.wait(1); save.complete('simulation-argument');
-      ctx.gameOver({ title: 'You let them run', text: 'The little people carry on, never knowing. Neither, perhaps, do you.' }); } });
+      S.phase = 'choose'; S.revealT = -1; outside.visible = false; player.enabled = true;
+      await ctx.wait(0.6); await voice.say('choose'); } });
+  // switching off: before you've run more, it's the one world ("build none"); after, all of them
+  interact.add({ pos: DESK.clone().add(V(1.4, 0, 1.2)), radius: 2.4, height: 2.2, terminal: true, prompt: () => (S.more ? 'Switch them off' : 'Switch it off'),
+    enabled: () => (S.phase === 'choose' || (S.phase === 'explore' && S.looked && !S.more)),
+    onUse: async () => {
+      const none = !S.more;
+      S.phase = 'off'; player.enabled = false; await ctx.wait(2.2);
+      if (none) {
+        await voice.say('none_end'); await ctx.wait(1.4); save.complete('simulation-argument');
+        return ctx.gameOver({ title: 'You built no more', text: 'You switched off the one world you had made, and made no others. If everyone who could decides that, almost no one is ever simulated, and you are probably real.' });
+      }
+      // a pause for what you just did; then far above, someone reaches for a lever of their own; then the lights go out
+      await voice.say('off_1'); await ctx.wait(2.5);
+      S.phase = 'giant'; S.giantT = 0; outside.visible = true;
+      await ctx.wait(3); await voice.say('off_2'); await ctx.wait(3.5);
+      save.complete('simulation-argument');
+      ctx.gameOver({ title: 'You switched them off', text: 'Every little world went dark at once. If yours is one of them, someone could do the same, and just did.' });
+    } });
+  interact.add({ pos: DOOR.clone().add(V(-1.2, 0, 0)), radius: 2.2, height: 3, prompt: () => (S.phase === 'choose' ? 'Leave them running' : 'Try the door'), terminal: true,
+    enabled: () => S.phase === 'choose' || (S.phase === 'explore' && !voice.said.has('locked')),
+    onUse: async () => {
+      if (S.phase !== 'choose') { voice.say('locked'); return; }
+      S.phase = 'over'; S.doorT = 0; player.enabled = false;
+      await voice.say('run_end'); await ctx.wait(2.5); save.complete('simulation-argument');
+      ctx.gameOver({ title: 'You let them run', text: 'The little people carry on, never knowing. Neither, perhaps, do you. One more world: the odds that yours is the first one just got worse.' });
+    } });
 
   // asides: the window, the photo
-  look(ctx, { pos: V(4, 0, -4.1), radius: 1.8, height: 3.6, prompt: 'Look out of the window', lines: ['window'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
-  look(ctx, { pos: V(-3.6, 0, -4.1), radius: 1.8, height: 3.6, prompt: 'Look at the photo', lines: ['photo'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
+  look(ctx, { pos: V(4, 0, -3.5), radius: 1.6, height: 4, prompt: 'Look out of the window', lines: ['window'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
+  look(ctx, { pos: V(-3.6, 0, -3.5), radius: 1.6, height: 4, prompt: 'Look at the photo', lines: ['photo'], enabled: () => S.phase === 'explore' || S.phase === 'choose' });
 
   (async () => { await ctx.wait(1); await voice.say('arrive'); })();
 
   return Object.assign(level, {
     __frog: cameo,
     spawn: { x: 3, z: 4, rotY: Math.PI * 1.1 },
-    walkable: (x, z) => Math.hypot(x, z) < 10.5 && z > -4.6,
-    blockers: () => [{ x: DESK.x, z: DESK.z, r: 1.6 }, { x: SHELF_X, z: -1.5, r: 0.7 }],
+    walkable: (x, z) => Math.hypot(x, z) < 10.5 && z > -4.3 && x > SHELF_X + 0.5,
+    blockers: () => [{ x: DESK.x, z: DESK.z, w: 3.6, d: 1.6 }, { x: SHELF_X, z: -1.5, w: 1, d: 5.4 }, { x: DOOR.x + 0.2, z: DOOR.z, w: 0.5, d: 1.8 }],
     update(dt, t) {
       // the little people wander
       for (const w of walkers) { const a = t * 0.25 + w.ph; w.p.position.set(Math.cos(a) * w.r, 0, Math.sin(a) * w.r * 0.7); w.p.rotation.y = -a; animatePerson(w.p, t * 2, { phase: w.ph }); }
@@ -140,9 +165,17 @@ export default function simulationArgument(ctx) {
         const dark = clamp(S.offT / 1.2);
         world.visible = dark < 0.5; extras.forEach((e) => (e.visible = dark < 0.5));
         screen.material.color.set(dark > 0.5 ? 0x1a1a1a : 0x3fae8e);
-        const flick = S.offT > 1.6 ? (Math.sin(S.offT * 23) > 0.2 ? 0.25 : 1) * Math.max(0.35, 1 - (S.offT - 1.6) * 0.3) : 1;
-        stage.hemi.intensity = 1.6 * flick; stage.sun.intensity = 2.4 * flick;
       }
+      // the giant reaches for their lever; it goes over; the lights simply go out (no flicker)
+      if (S.giantT >= 0) {
+        S.giantT += dt;
+        const reach = easeInOut(clamp((S.giantT - 1.5) / 2.5));
+        hand.position.set(lerp(40, 24, reach), lerp(30, 4, reach), lerp(-30, -6, reach));
+        bigLever.userData.pivot.rotation.z = lerp(0.45, -0.45, easeInOut(clamp((S.giantT - 4) / 0.6)));
+        if (S.giantT > 4.6) ctx.ui.fade(clamp((S.giantT - 4.6) / 0.4), '#050505');
+      }
+      // leaving them running: the door opens onto the edge of the giant's desk
+      if (S.doorT >= 0) { S.doorT += dt; door.rotation.y = -Math.PI / 2 + easeInOut(clamp(S.doorT / 1.5)) * 1.3; outside.visible = S.doorT > 0.5; }
       if (S.looked && S.phase === 'explore') cameo.start();
       cameo.update(dt); miniCameo.update(dt);
     },
@@ -158,10 +191,12 @@ export default function simulationArgument(ctx) {
       if (S.phase === 'reveal') {
         S.revealT += dt;
         const k = easeInOut(clamp(S.revealT / 4));
+        giant.visible = S.revealT > 1.4 && S.revealT < 3.4;           // is someone there? now yes, now an empty desk
         return { pos: V(lerp(6, 30, k), lerp(8, 34, k), lerp(14, 70, k)), look: V(0, lerp(1, 8, k), lerp(-3, -30, k)), stiffness: 2 };
       }
+      if (S.phase === 'giant') { giant.visible = true; return { pos: V(34, 40, 75), look: V(8, 6, -24), stiffness: 1.6 }; }
       return { ...frame([pl.pos.clone(), DOME.clone().add(V(0, 0.8, 0)), V(SHELF_X, 3.5, -1.5), DOOR.clone().add(V(0, 3, 0))], { min: 12, max: 30 }), stiffness: 2.4 };
     },
-    dispose() { voice.stop(); },
+    dispose() { voice.stop(); ctx.ui.fade(0); },
   });
 }

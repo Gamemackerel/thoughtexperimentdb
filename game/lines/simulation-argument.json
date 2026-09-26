@@ -12,9 +12,13 @@
     "more": "One world can run many. And each of those can run more.",
     "ask": "If worlds like this are easy to make, how many are real? And which kind is yours?",
     "pullout": "Somewhere, someone may be looking at you the same way.",
-    "off_end": "You switch them off. Above you, the lights flicker.",
-    "run_end": "You let them run. Maybe someone is doing the same for you.",
+    "run_end": "You let them run. One more world. The odds that yours is the first one just got worse.",
     "window": "Outside, the sky. You've never actually checked how far it goes.",
-    "photo": "A photo of you as a child. You don't remember it being taken."
+    "photo": "A photo of you as a child. You don't remember it being taken.",
+    "choose": "You could switch them off. Or leave them running.",
+    "off_1": "They're gone. Every little life, in every little world, all at once. To them, it was a universe.",
+    "off_2": "And somewhere above you, someone reaches for a lever of their own.",
+    "none_end": "You switch it off, and build no more. If everyone who could decided that, almost no one would ever be simulated.",
+    "locked": "Locked. From the outside."
   }
 }

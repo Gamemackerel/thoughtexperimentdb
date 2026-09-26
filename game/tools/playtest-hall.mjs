@@ -46,7 +46,7 @@ await run('infinite-monkey', async (t) => {
 await run('simulation-argument', async (t) => {
   await t.shot('arrive'); await t.at(0.6, -1.6); await sleep(6); await t.shot('zoom');
   await sleep(4); await t.at(-1.4, -1.8); await sleep(5); await t.shot('shelves'); await sleep(4); await t.shot('reveal');
-  await sleep(4); await t.at(1.4, -1.8); await sleep(3); await t.shot('off'); await t.waitOver(20); await t.shot('end');
+  await sleep(6); await t.at(1.4, -1.8); await sleep(9); await t.shot('off'); await sleep(8); await t.shot('giant'); await t.waitOver(40); await t.shot('end');
 });
 await run('fermi-paradox', async (t) => {
   await sleep(2); await t.shot('arrive'); await t.at(-3.5, 1.7); await sleep(12); await t.shot('listened');
