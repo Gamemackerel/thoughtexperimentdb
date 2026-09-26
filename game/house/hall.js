@@ -65,7 +65,7 @@ export default function hall(ctx) {
   const rod = mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.2, 6), clay(0xc9a54c)); rod.position.y = 0.6; chand.add(rod);
   for (let i = 0; i < 5; i++) { const a = (i / 5) * Math.PI * 2; const cn = mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.3, 8), clay(0xfff6e6)); cn.position.set(Math.cos(a) * 0.6, 1.25, Math.sin(a) * 0.6); chand.add(cn); }
   chand.position.set(0, 1.5, 0); upside.add(chand);
-  upside.rotation.z = Math.PI; upside.position.set(-3.5, 9.5, -1.5);
+  upside.rotation.z = Math.PI; upside.position.set(-3.5, 7.2, -1.8);   // low enough to see from the floor
   root.add(upside);
 
   // ---- Magritte's Empire of Light: a daytime sky above a night-time street, in one window
@@ -111,7 +111,7 @@ export default function hall(ctx) {
   const easel = new THREE.Group();
   for (const [x, rz, rx] of [[-0.55, -0.08, 0.05], [0.55, 0.08, 0.05], [0, 0, -0.28]]) { const leg = mesh(new THREE.CylinderGeometry(0.04, 0.05, 5.3, 6), clay(palette.wood)); leg.position.set(x, 2.6, rx < 0 ? -0.6 : 0); leg.rotation.set(rx, 0, rz); easel.add(leg); }
   const ledge = mesh(new THREE.BoxGeometry(1.6, 0.08, 0.2), clay(palette.wood)); ledge.position.set(0, 3.5, 0.08); easel.add(ledge);
-  const hcTex = empire.clone(); hcTex.needsUpdate = true; hcTex.repeat.set(0.583, 0.466); hcTex.offset.set(0.2125, 0.172);
+  const hcTex = empire.clone(); hcTex.needsUpdate = true; hcTex.repeat.set(0.583, 0.466); hcTex.offset.set(0.275, 0.172);   // matched to the camera at the hall's west end
   const hc = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 1.3), new THREE.MeshBasicMaterial({ map: hcTex })); hc.position.set(0, 4.2, 0.14); easel.add(hc);
   const hcEdge = mesh(new THREE.BoxGeometry(1.34, 1.34, 0.05), clay(0xf6f0e2)); hcEdge.position.set(0, 4.2, 0.1); easel.add(hcEdge);
   easel.position.set(-15.6, 0, -3.34); root.add(easel);
@@ -174,10 +174,14 @@ export default function hall(ctx) {
   golMen.wrapS = golMen.wrapT = THREE.RepeatWrapping; golMen.repeat.set(1.1, 0.7);
   const GOL = V(11, 6.3, -4.46);
   const golBg = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 2.5), new THREE.MeshBasicMaterial({ map: golSky })); golBg.position.copy(GOL);
-  const golFg = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 2.5), new THREE.MeshBasicMaterial({ map: golMen, transparent: true })); golFg.position.copy(GOL).add(V(0, 0, 0.01));
+  // three layers of men at different depths (not a poster), each drifting at its own speed
+  const golLayers = [0.02, 0.22, 0.42].map((dz, i) => { const tex = golMen.clone(); tex.needsUpdate = true; tex.repeat.set([0.8, 0.55, 0.38][i], [0.5, 0.35, 0.24][i]); tex.offset.x = i * 0.37;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 2.5), new THREE.MeshBasicMaterial({ map: tex, transparent: true })); m.position.copy(GOL).add(V(0, 0, dz)); return m; });
+  const golFg = golLayers[0];
+  const golDepth = [-1, 1].map((sx) => { const side = mesh(new THREE.BoxGeometry(0.12, 2.8, 0.6), clay(0xf2e6d4)); side.position.copy(GOL).add(V(sx * 2.29, 0, 0.26)); return side; });
   const golFrame = mesh(new THREE.BoxGeometry(4.7, 2.8, 0.15), cream); golFrame.position.copy(GOL).add(V(0, 0, -0.08));
   const golBar = mesh(new THREE.BoxGeometry(0.1, 2.5, 0.06), cream); golBar.position.copy(GOL).add(V(0, 0, 0.03));
-  root.add(golFrame, golBg, golFg, golBar);
+  root.add(golFrame, golBg, ...golLayers, golBar, ...golDepth);
 
   // ---- Time Transfixed: a steam engine coming out of the fireplace, smoke going up the chimney
   const FIRE = V(14.9, 0, -4.2);
@@ -185,7 +189,7 @@ export default function hall(ctx) {
   for (const sx of [-1, 1]) { const jamb = mesh(new THREE.BoxGeometry(0.45, 1.7, 0.6), marble); jamb.position.set(sx * 0.95, 0.85, 0); fire.add(jamb); }
   const mantel = mesh(new THREE.BoxGeometry(2.7, 0.2, 0.8), marble); mantel.position.set(0, 1.8, 0.05); fire.add(mantel);
   const lintel2 = mesh(new THREE.BoxGeometry(1.5, 0.4, 0.6), marble); lintel2.position.set(0, 1.5, 0); fire.add(lintel2);
-  const hearth = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.3), new THREE.MeshBasicMaterial({ color: 0x1b1a20 })); hearth.position.set(0, 0.65, 0.05); fire.add(hearth);
+  const hearth = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.3), new THREE.MeshBasicMaterial({ color: 0x1b1a20 })); hearth.material.color.set(0x7d736a); hearth.position.set(0, 0.65, 0.05); fire.add(hearth);
   const clk = mesh(new THREE.BoxGeometry(0.5, 0.6, 0.25), clay(0x2b2a33)); clk.position.set(0, 2.2, 0); fire.add(clk);
   const clkFace = new THREE.Mesh(new THREE.CircleGeometry(0.16, 20), new THREE.MeshBasicMaterial({ color: 0xf6efe0 })); clkFace.position.set(0, 2.25, 0.13); fire.add(clkFace);
   for (const sx of [-1, 1]) { const cs = mesh(new THREE.CylinderGeometry(0.06, 0.1, 0.5, 10), clay(0xc9a54c, { metalness: 0.5 })); cs.position.set(sx * 0.95, 2.15, 0); fire.add(cs); }
@@ -196,7 +200,7 @@ export default function hall(ctx) {
   const lamp = mesh(new THREE.SphereGeometry(0.06, 10, 8), clay(0xffe9a0)); lamp.position.set(0, 0.82, 0.52); loco.add(lamp);
   const buffer = mesh(new THREE.BoxGeometry(0.6, 0.08, 0.06), clay(0x8c4a4a)); buffer.position.set(0, 0.36, 0.54); loco.add(buffer);
   for (const sx of [-1, 1]) for (const z of [-0.15, 0.25]) { const wh = mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.06, 14), black); wh.rotation.z = Math.PI / 2; wh.position.set(sx * 0.27, 0.3, z); loco.add(wh); }
-  loco.position.set(0, 0, 0.35); fire.add(loco);
+  loco.position.set(0, 0.05, 0.8); fire.add(loco);   // well out of the fireplace
   fire.position.copy(FIRE); root.add(fire);
   const puffs = Array.from({ length: 4 }, () => { const p = mesh(new THREE.SphereGeometry(0.14, 12, 8), new THREE.MeshStandardMaterial({ color: 0xf4f1ec, roughness: 1, transparent: true, depthWrite: false })); p.castShadow = false; root.add(p); return p; });
 
@@ -207,10 +211,10 @@ export default function hall(ctx) {
   const udoor = mesh(new THREE.ExtrudeGeometry(holeShape, { depth: 0.1, bevelEnabled: false }), clay(0x8c4a4a));
   const udark = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2.9), new THREE.MeshBasicMaterial({ color: 0x141318 })); udark.position.set(0, 1.47, -0.02);
   const uframe = new THREE.Group(); for (const [x, y, w, h] of [[-0.82, 1.55, 0.14, 3.2], [0.82, 1.55, 0.14, 3.2], [0, 3.1, 1.78, 0.14]]) { const b = mesh(new THREE.BoxGeometry(w, h, 0.2), cream); b.position.set(x, y, 0); uframe.add(b); }
-  const unexp = new THREE.Group(); unexp.add(udark, udoor, uframe); unexp.position.set(-HALF + 0.12, 0, -1.2); unexp.rotation.y = Math.PI / 2; root.add(unexp);
+  const unexp = new THREE.Group(); unexp.add(udark, udoor, uframe); unexp.position.set(-7.8, 0, -4.38); unexp.rotation.y = 0;   // on the back wall, where you can see it root.add(unexp);
 
   // ---- The Son of Man: a gentleman in a bowler hat, his face hidden by a hovering green apple
-  const gent = makePerson({ color: 0x33343d }); gent.position.set(14.4, 0, 1.3); gent.rotation.y = -0.25; root.add(gent);
+  const gent = makePerson({ color: 0x33343d }); gent.position.set(12.4, 0, 1.3); gent.rotation.y = -0.25; root.add(gent);
   const gHat = bowler(1.05); gHat.position.set(0, 2.02, 0); gent.userData.body.add(gHat);
   const gApple = mesh(new THREE.SphereGeometry(0.26, 18, 14), clay(0x7cc04e, { roughness: 0.45 })); root.add(gApple);
   const gLeaf = mesh(new THREE.SphereGeometry(0.07, 8, 6), clay(0x3f7a3a)); gLeaf.scale.set(1.6, 0.4, 0.8); root.add(gLeaf);
@@ -225,7 +229,7 @@ export default function hall(ctx) {
   face.position.set(0, 3.1, 0.36); clock.add(face);
   const pend = new THREE.Group(); const bob = mesh(new THREE.SphereGeometry(0.14, 12, 10), clay(0xc9a54c)); bob.position.y = -1.2; const prod = mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 6), clay(0xc9a54c)); prod.position.y = -0.6; pend.add(prod, bob);
   pend.position.set(0, 2.6, 0.37); clock.add(pend);
-  clock.position.set(-10, 0, -3.9); root.add(clock);
+  clock.position.set(-13.8, 0, -3.9); root.add(clock);   // clear of the stairs
   // typewriter on a desk
   const tdesk = makeTable({ w: 2, d: 1.1, h: 1.2, color: palette.wood }); tdesk.position.set(-5, 0, -3.5); root.add(tdesk);
   const tw = new THREE.Group(); const tbody = mesh(new THREE.BoxGeometry(0.9, 0.3, 0.6), clay(palette.ink)); tw.add(tbody);
@@ -257,7 +261,7 @@ export default function hall(ctx) {
   const ring = mesh(new THREE.TorusGeometry(0.2, 0.04, 8, 16), clay(0xc9a54c)); ring.rotation.x = Math.PI / 2; ring.position.set(-15, 0.07, 1.4); root.add(ring);
 
   const portals = [
-    { id: 'grandfather-paradox', name: 'Grandfather Paradox', pos: V(-10, 0, -2.4), labelAt: V(-10, 4.4, -3.9), prompt: 'Open the clock' },
+    { id: 'grandfather-paradox', name: 'Grandfather Paradox', pos: V(-13.8, 0, -2.4), labelAt: V(-13.8, 4.4, -3.9), prompt: 'Open the clock' },
     { id: 'infinite-monkey', name: 'Infinite Monkey Theorem', pos: V(-5, 0, -2.2), labelAt: V(-5, 2.6, -3.5), prompt: 'Sit at the typewriter' },
     { id: 'simulation-argument', name: 'Simulation Argument', pos: V(0, 0, -2.2), labelAt: V(0, 3, -3.6), prompt: 'Look into the screen' },
     { id: 'fermi-paradox', name: 'Fermi Paradox', pos: V(6.2, 0, -1.8), labelAt: V(6.2, 3, -2.8), prompt: 'Look through the telescope' },
@@ -265,21 +269,23 @@ export default function hall(ctx) {
     { id: 'gallery', name: 'Up the stairs', pos: V(-12.2, 0, -2.6), labelAt: V(-12, 2.4, -3.9), prompt: 'Climb the stairs' },
     { id: 'house', name: 'Down to the first room', pos: V(-15, 0, 1.4), labelAt: V(-15, 1.6, 1.4), prompt: 'Climb down', home: true },
   ];
+  // a soft glow on the wall behind each portal: faint to invite you in, bright once you've been through
+  const glows = portals.filter((p) => !p.home && p.id !== 'gallery').map((p) => { const g = new THREE.Mesh(new THREE.CircleGeometry(1.5, 40), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })); g.position.set(p.pos.x, 2, -4.44); root.add(g); return [g, p.id]; });
   let entering = null;
   for (const p of portals) interact.add({ pos: p.pos, radius: 2.2, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
-  const spawnAt = { 'grandfather-paradox': [-10, -1.4], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'tragedy-of-the-commons': [11.5, -1.2], gallery: [-12.2, -1.6] }[ctx.from];
-  const blockers = [{ x: LR.x - 0.6, z: LR.z, r: 0.9 }, { x: LR.x + 0.6, z: LR.z, r: 0.9 }, { x: -15.6, z: -3.4, r: 0.6 }, { x: FIRE.x, z: FIRE.z + 0.5, r: 1.1 }, { x: 14.4, z: 1.3, r: 0.5 }, { x: -10, z: -3.9, r: 0.8 }, { x: -5, z: -3.5, r: 1 }, { x: 0, z: -3.5, r: 1 }, { x: 6.2, z: -2.8, r: 0.6 }, { x: 11.5, z: -3.6, r: 0.6 }];
+  const spawnAt = { 'grandfather-paradox': [-13.4, -1.2], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'tragedy-of-the-commons': [11.5, -1.2], gallery: [-12.2, -1.6] }[ctx.from];
+  const blockers = [{ x: LR.x, z: LR.z, w: 2.4, d: 2.1 }, { x: -15.6, z: -3.4, r: 0.6 }, { x: FIRE.x, z: FIRE.z + 0.5, r: 1.1 }, { x: 12.4, z: 1.3, r: 0.5 }, { x: -13.8, z: -3.9, r: 0.8 }, { x: -5, z: -3.5, r: 1 }, { x: 0, z: -3.5, r: 1 }, { x: 6.2, z: -2.8, r: 0.6 }, { x: 11.5, z: -3.6, r: 0.6 }];
 
   return {
     root,
     ground: [ground],
-    spawn: spawnAt ? { x: spawnAt[0], z: spawnAt[1], rotY: 0 } : { x: -13.5, z: 1.4, rotY: Math.PI / 2 },
-    walkable: (x, z) => Math.abs(x) < HALF - 0.6 && z > -4.1 && z < DEPTH,
+    spawn: spawnAt ? { x: spawnAt[0], z: spawnAt[1], rotY: 0 } : { x: -12, z: 1.2, rotY: Math.PI / 2 },   // clear of the hatch
+    walkable: (x, z) => Math.abs(x) < HALF - 2.3 && z > -4.1 && z < DEPTH,   // not behind the curtains
     blockers: () => blockers,
     start() { if (ctx.from === 'house') ctx.toast('A long hall. More doors, of a sort.', 4); },
     camera(pl) {
-      const look = V(clamp(pl.pos.x, -HALF + 7, HALF - 7), 2.4, -1.6);
+      const look = V(clamp(pl.pos.x, -HALF + 5, HALF - 7), 2.4, -1.6);
       return { pos: look.clone().add(V(0, 5.5, 15)), look, stiffness: 2.4 };
     },
     update(dt, t) {
@@ -291,7 +297,7 @@ export default function hall(ctx) {
         twin.position.set(P.pos.x, 0, 2 * MIRROR.z - P.pos.z - 0.2); twin.rotation.y = P.obj.rotation.y;
         const pb = P.obj.userData.body, tb = twin.userData.body; tb.position.copy(pb.position); tb.rotation.copy(pb.rotation); tb.scale.copy(pb.scale);
       }
-      golMen.offset.y = (t * 0.015) % 1;
+      golLayers.forEach((l, i) => (l.material.map.offset.y = (t * (0.012 + i * 0.008)) % 1));
       // the train's smoke, going up the chimney it came out of
       puffs.forEach((p, k) => { const u = ((t * 0.5 + k / puffs.length) % 1); p.position.set(FIRE.x + Math.sin(k * 2.3 + t) * 0.1 * u, 1.05 + u * 1.2, FIRE.z + 0.65 - u * 0.5); p.scale.setScalar(0.6 + u * 1.6); p.material.opacity = 0.85 * (1 - u); });
       // the apple hovers in front of the gentleman's face
@@ -303,6 +309,7 @@ export default function hall(ctx) {
       walker.rotation.y = Math.PI / 2; animatePerson(walker, t * 2, { energy: 0.6 });
       walker.visible = i < 11;
       for (const fl of floaters) { fl.g.position.set(fl.x + Math.sin(t * 0.3 + fl.ph) * 0.8, fl.y + Math.sin(t * 0.7 + fl.ph) * 0.3, -2.8 + Math.cos(t * 0.4 + fl.ph) * 0.5); fl.g.rotation.y = t * 0.3 + fl.ph; }
+      glows.forEach(([g, id], i) => (g.material.opacity = save.done.has(id) ? 0.3 + 0.08 * Math.sin(t * 2 + i) : 0.07 + 0.05 * Math.sin(t * 2 + i)));
       for (const p of portals) {
         const d = Math.hypot(ctx.player.pos.x - p.pos.x, ctx.player.pos.z - p.pos.z);
         const done = save.done.has(p.id) ? ' ✓' : '';
