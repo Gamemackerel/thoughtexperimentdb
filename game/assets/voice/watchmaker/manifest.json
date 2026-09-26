@@ -1,0 +1,92 @@
+{
+  "arrive": {
+    "file": "arrive-0af6c39f.mp3",
+    "text": "Crossing a heath, on a grey morning.",
+    "dur": 2.93
+  },
+  "stub": {
+    "file": "stub-3917da0f.mp3",
+    "text": "Ouch. A stone.",
+    "dur": 1.96
+  },
+  "stone": {
+    "file": "stone-616e0b98.mp3",
+    "text": "How did it get here? For all you know, it has always been here.",
+    "dur": 4
+  },
+  "stone_look": {
+    "file": "stone_look-483cdc8c.mp3",
+    "text": "Just a stone. Nobody would ask who made it.",
+    "dur": 3.37
+  },
+  "watch": {
+    "file": "watch-0240bd34.mp3",
+    "text": "And there, in the heather: a watch.",
+    "dur": 2.85
+  },
+  "parts": {
+    "file": "parts-822f0d94.mp3",
+    "text": "Springs and wheels, each one cut to fit the next. A balance swinging back and forth. All of it, for telling the time.",
+    "dur": 7.11
+  },
+  "maker": {
+    "file": "maker-57fb434a.mp3",
+    "text": "Even if you'd never seen a watch before, you'd know: someone made this.",
+    "dur": 4.57
+  },
+  "hare": {
+    "file": "hare-70eb6219.mp3",
+    "text": "A hare, watching you. Its eye focuses, and adjusts to the light, and keeps itself clean.",
+    "dur": 5.72
+  },
+  "eye": {
+    "file": "eye-814bb956.mp3",
+    "text": "And the hare watching you from the gorse has an eye far finer than any watch.",
+    "dur": 4.73
+  },
+  "ask": {
+    "file": "ask-5f160534.mp3",
+    "text": "So did someone make the hare, too?",
+    "dur": 2.72
+  },
+  "maker_1": {
+    "file": "maker_1-962760c0.mp3",
+    "text": "A workshop, with the lamp still lit. Whoever works here has only just stepped out.",
+    "dur": 5.25
+  },
+  "maker_2": {
+    "file": "maker_2-2e9b15a9.mp3",
+    "text": "Something so well fitted to its purpose: it's hard to believe that nobody meant it.",
+    "dur": 5.41
+  },
+  "pond_1": {
+    "file": "pond_1-d2cc6c66.mp3",
+    "text": "Tiny creatures, each a little different from its parents. The ones that sense the light a little better leave a few more young.",
+    "dur": 7.05
+  },
+  "pond_2": {
+    "file": "pond_2-e0e47bcf.mp3",
+    "text": "A patch that feels the light. A cup. A deeper cup. A pinhole. A lens.",
+    "dur": 4.99
+  },
+  "pond_3": {
+    "file": "pond_3-e7b7444b.mp3",
+    "text": "Nobody meant any of it. There was just a great deal of time, and some ways of living that worked a little better than others.",
+    "dur": 7.13
+  },
+  "hume_1": {
+    "file": "hume_1-9dc8181a.mp3",
+    "text": "You've seen watches made. You've never seen a world made.",
+    "dur": 3.74
+  },
+  "walk_on": {
+    "file": "walk_on-dd8d5de6.mp3",
+    "text": "You put the watch in your pocket, and walk on.",
+    "dur": 3.08
+  },
+  "hume_2": {
+    "file": "hume_2-7f84f9a7.mp3",
+    "text": "Maybe the world is more like a plant than a watch. Or maybe it had many makers, or a clumsy one. From one watch, how could you tell?",
+    "dur": 7.5
+  }
+}

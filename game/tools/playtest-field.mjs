@@ -71,4 +71,11 @@ await run('turtles', async (t) => {
   if (alt === 'stop') { await sleep(64); return; }
   await t.use('Keep climbing'); await sleep(5); await t.shot('falling');
 });
+await run('watchmaker', async (t) => {
+  await sleep(2); await t.shot('heath'); await t.walkTo(0.6, 4.6); await sleep(3); await t.walkTo(-2.8, -0.4); await sleep(6); await t.shot('watch');
+  await t.use('Pick up the watch'); await sleep(4); await t.shot('open'); await t.until(async () => await t.S('asked'), 40); await sleep(1); await t.shot('asked');
+  if (alt === 'pond') { await t.use('Sit by the pond'); await sleep(9); await t.shot('eyes'); return; }
+  if (alt === 'back') { await t.use('Put the watch back'); return; }
+  await t.use('Follow the path'); await sleep(6); await t.shot('shop');
+});
 await b.close();
