@@ -1,0 +1,97 @@
+{
+  "arrive": {
+    "file": "arrive-350d90c3.mp3",
+    "text": "The Festival of Summer, in the city of Omelas.",
+    "dur": 3.42
+  },
+  "happy": {
+    "file": "happy-a04e8a9a.mp3",
+    "text": "Everyone here is happy. Not foolishly, and not because they're told to be. They just are.",
+    "dur": 5.8
+  },
+  "knows": {
+    "file": "knows-b681389b.mp3",
+    "text": "Everyone in Omelas knows about the door at the foot of the hall.",
+    "dur": 4.34
+  },
+  "not_yet": {
+    "file": "not_yet-849d290c.mp3",
+    "text": "The festival has only just begun.",
+    "dur": 2.98
+  },
+  "flute": {
+    "file": "flute-02207ce6.mp3",
+    "text": "A boy plays the flute, alone, for anyone who stops to listen.",
+    "dur": 4.49
+  },
+  "horses": {
+    "file": "horses-5cf6eed0.mp3",
+    "text": "The horses have ribbons braided into their manes. They know it's a race day.",
+    "dur": 4.83
+  },
+  "cellar": {
+    "file": "cellar-38120bb8.mp3",
+    "text": "Under one of the beautiful buildings, in the dark, a child sits alone.",
+    "dur": 4.7
+  },
+  "terms": {
+    "file": "terms-9141a7d6.mp3",
+    "text": "The city's happiness, all of it, depends on this child staying here, in the dark.",
+    "dur": 5.17
+  },
+  "terms_2": {
+    "file": "terms_2-f12e97f3.mp3",
+    "text": "If it were brought up into the sunlight, and comforted, all of it would be lost. Those are the terms.",
+    "dur": 5.93
+  },
+  "ask": {
+    "file": "ask-04939062.mp3",
+    "text": "Now you know too. What will you do?",
+    "dur": 2.72
+  },
+  "back_up": {
+    "file": "back_up-861e6db0.mp3",
+    "text": "You come back up into the sunlight. The music is still playing.",
+    "dur": 4.13
+  },
+  "dance_1": {
+    "file": "dance_1-b93bf052.mp3",
+    "text": "You join the dancing.",
+    "dur": 2.12
+  },
+  "stay_idle": {
+    "file": "stay_idle-374ac511.mp3",
+    "text": "The music plays on. You stay.",
+    "dur": 2.74
+  },
+  "stay_2": {
+    "file": "stay_2-0b506d80.mp3",
+    "text": "Most people who see the child are shocked. In time, most of them come to accept it.",
+    "dur": 5.62
+  },
+  "walk_1": {
+    "file": "walk_1-8269640b.mp3",
+    "text": "You walk out of Omelas, alone, towards the mountains.",
+    "dur": 3.89
+  },
+  "walk_2": {
+    "file": "walk_2-6e72234e.mp3",
+    "text": "Nobody knows where they go, the ones who walk away. They seem to be sure of the way.",
+    "dur": 5.36
+  },
+  "free_1": {
+    "file": "free_1-009ab627.mp3",
+    "text": "You carry the child up, into the sun.",
+    "dur": 3.03
+  },
+  "free_2": {
+    "file": "free_2-5ccafb31.mp3",
+    "text": "And the music stops. The colour goes out of everything. Those were the terms.",
+    "dur": 4.7
+  },
+  "free_3": {
+    "file": "free_3-8e0de9ed.mp3",
+    "text": "One child is warm. And the rest of Omelas is not.",
+    "dur": 3.87
+  }
+}

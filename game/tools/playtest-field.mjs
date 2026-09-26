@@ -45,4 +45,12 @@ await run('marys-room', async (t) => {
   if (alt === 'stay') { await t.use('Sit back down'); return; }
   await t.walkTo(8.5, 0.2); await sleep(5); await t.shot('outside'); await sleep(3); await t.use('Look at the banana'); await sleep(4); await t.shot('garden'); await t.use('Look at the tomatoes', 10);
 });
+await run('omelas', async (t) => {
+  await sleep(4); await t.shot('festival'); await t.use('Listen to the flute'); await sleep(3); await t.use('Open the cellar door', 15); await sleep(3); await t.shot('cellar');
+  await t.until(async () => await t.S('seen'), 40); await sleep(1); await t.shot('child');
+  if (alt === 'free') { await t.use('Take the child'); await sleep(6); await t.shot('drained'); return; }
+  await t.use('Go back up'); await sleep(4); await t.shot('after');
+  if (alt === 'dance') { await t.use('Join the dancing'); return; }
+  await t.walkTo(0, -12); await sleep(6); await t.walkTo(0, -19); await sleep(5); await t.shot('gate');
+});
 await b.close();
