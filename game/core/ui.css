@@ -120,3 +120,20 @@ body.carded #caption { opacity: 0; }
 #journal .ending small { font-size: 17px; color: var(--muted); font-weight: 400; }
 #journal .answer small { display: block; font: 400 17px/24px "Caveat", var(--serif); color: var(--muted); }
 body.fp #caption { bottom: auto; top: 7vh; }
+
+/* the Gettier cases' card (core/gettier.js) */
+.belief { position: absolute; right: 28px; top: 70px; width: 300px; padding: 16px 20px 14px; border-radius: 14px; background: rgba(251, 246, 234, 0.95);
+  box-shadow: 0 10px 30px rgba(60, 40, 20, 0.18); font: 500 16px/1.35 var(--sans); color: var(--ink); opacity: 0; transform: translateY(-8px); transition: opacity 0.6s, transform 0.6s; }
+.belief.on { opacity: 1; transform: none; }
+.belief .said { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.6; }
+.belief .what { font: italic 500 21px/1.25 var(--serif); margin: 4px 0 10px; }
+.belief ul { list-style: none; margin: 0; padding: 0; }
+.belief li { padding: 3px 0 3px 28px; position: relative; opacity: 0.35; transition: opacity 0.4s; }
+.belief li::before { content: ''; position: absolute; left: 0; top: 5px; width: 17px; height: 17px; border-radius: 5px; border: 2px solid var(--ink); }
+.belief li.yes, .belief li.no { opacity: 1; }
+.belief li.yes::after { content: '✓'; position: absolute; left: 3px; top: 1px; font-weight: 800; color: #3f8f86; }
+.belief li.no::after { content: '✗'; position: absolute; left: 4px; top: 1px; font-weight: 800; color: #e0674f; }
+.belief .knew { margin-top: 10px; font: 600 19px/1.2 var(--serif); opacity: 0; transition: opacity 0.8s; }
+.belief.asked .knew { opacity: 1; }
+body.overlaid .belief, body.carded .belief { opacity: 0; }
+@media (max-width: 640px) { .belief { right: 12px; top: 58px; width: 240px; font-size: 14px; } .belief .what { font-size: 17px; } }

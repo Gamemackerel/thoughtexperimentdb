@@ -1,0 +1,17 @@
+{
+  "title": "The Stopped Clock",
+  "summary": "Bertrand Russell's example, in Human Knowledge (1948): a man looks at a clock which he believes to be going, but which has in fact stopped, and he happens to look at it at a moment when it is right. He comes to believe the correct time, and he has good reason to (clocks are usually right), but he doesn't know the time. Written fifteen years before Gettier's paper, it has exactly the same shape: a belief that is true, and justified, and right by luck.",
+  "citations": [
+    "Bertrand Russell, Human Knowledge: Its Scope and Limits (Allen & Unwin, 1948)",
+    "Edmund L. Gettier, \"Is Justified True Belief Knowledge?\", Analysis 23(6) (1963): 121–123",
+    "Jonathan Jenkins Ichikawa and Matthias Steup, \"The Analysis of Knowledge,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/knowledge-analysis/"
+  ],
+  "essay": {
+    "creator": "Jennifer Nagel, Wireless Philosophy",
+    "title": "Analyzing Knowledge #1: The Gettier Problem",
+    "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+  },
+  "reading": [
+    "\"Gettier problem,\" Wikipedia: https://en.wikipedia.org/wiki/Gettier_problem"
+  ]
+}

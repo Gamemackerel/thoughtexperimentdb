@@ -389,5 +389,248 @@
         "url": "https://en.wikipedia.org/wiki/Monty_Hall_problem"
       }
     ]
+  },
+  "marys-room": {
+    "title": "Mary's Room",
+    "question": "When Mary saw red for the first time, did she learn something new? If so, what was it: a fact, or something else?",
+    "todo": [
+      {
+        "text": "read Frank Jackson, “Epiphenomenal Qualia” (1982), where Mary first appears"
+      },
+      {
+        "text": "watch TED-Ed's short film on Mary's Room",
+        "url": "https://www.youtube.com/watch?v=mGYmiQkah4o"
+      },
+      {
+        "text": "Stanford Encyclopedia: the knowledge argument, and all the replies",
+        "url": "https://plato.stanford.edu/entries/qualia-knowledge/"
+      }
+    ]
+  },
+  "omelas": {
+    "title": "Omelas",
+    "question": "Would you stay in Omelas, walk away, or bring the child out? What would the choice you didn't make say about you?",
+    "todo": [
+      {
+        "text": "read the story itself: Ursula K. Le Guin, “The Ones Who Walk Away from Omelas” (1973); it's short"
+      },
+      {
+        "text": "and the passage from William James that gave Le Guin the idea (“The Moral Philosopher and the Moral Life”, 1891)"
+      },
+      {
+        "text": "the Wikipedia article on the story, and how it has been read",
+        "url": "https://en.wikipedia.org/wiki/The_Ones_Who_Walk_Away_from_Omelas"
+      }
+    ]
+  },
+  "paperclip": {
+    "title": "The Paperclip Maximiser",
+    "question": "Could you write down a goal for a very powerful machine that couldn't go wrong this way? Try, and then look for the loophole.",
+    "todo": [
+      {
+        "text": "read Nick Bostrom's “Ethical Issues in Advanced Artificial Intelligence” (2003)",
+        "url": "https://nickbostrom.com/ethics/ai"
+      },
+      {
+        "text": "watch Robert Miles on why almost any goal leads to the same bad habits",
+        "url": "https://www.youtube.com/watch?v=ZeecOKBus3Q"
+      },
+      {
+        "text": "Wikipedia: instrumental convergence",
+        "url": "https://en.wikipedia.org/wiki/Instrumental_convergence"
+      }
+    ]
+  },
+  "turtles": {
+    "title": "Turtles All the Way Down",
+    "question": "Pick something you're sure of, and ask why, and then why again. Where does your chain stop: forever, at a bedrock, or in a circle?",
+    "todo": [
+      {
+        "text": "read the first page of Stephen Hawking's A Brief History of Time (1988), where the old lady appears"
+      },
+      {
+        "text": "Stanford Encyclopedia: infinite regress arguments",
+        "url": "https://plato.stanford.edu/entries/infinite-regress/"
+      },
+      {
+        "text": "Wikipedia, on where the saying comes from",
+        "url": "https://en.wikipedia.org/wiki/Turtles_all_the_way_down"
+      }
+    ]
+  },
+  "watchmaker": {
+    "title": "The Watchmaker",
+    "question": "Is an eye more like a watch, or more like a puddle that fits its hole? What would it take to convince you either way?",
+    "todo": [
+      {
+        "text": "read the first chapter of William Paley's Natural Theology (1802), the stone and the watch"
+      },
+      {
+        "text": "then Hume's Dialogues Concerning Natural Religion (1779), for the objections"
+      },
+      {
+        "text": "watch Crash Course Philosophy on the design argument",
+        "url": "https://www.youtube.com/watch?v=7e9v_fsZB6A"
+      },
+      {
+        "text": "Stanford Encyclopedia: teleological arguments",
+        "url": "https://plato.stanford.edu/entries/teleological-arguments/"
+      }
+    ]
+  },
+  "experience-machine": {
+    "title": "The Experience Machine",
+    "question": "If you found out tomorrow that your life so far had been in the machine, would you unplug? Is that the same answer you gave today?",
+    "todo": [
+      {
+        "text": "read Robert Nozick, Anarchy, State, and Utopia (1974), pages 42–45: the machine is only three pages"
+      },
+      {
+        "text": "watch Shelly Kagan on hedonism and the experience machine",
+        "url": "https://www.youtube.com/watch?v=HhisGOilMR4"
+      },
+      {
+        "text": "Stanford Encyclopedia: hedonism",
+        "url": "https://plato.stanford.edu/entries/hedonism/"
+      }
+    ]
+  },
+  "veil-of-ignorance": {
+    "title": "The Veil of Ignorance",
+    "question": "Which town did you choose, and would you still choose it knowing where you landed? Would you choose it for someone you love?",
+    "todo": [
+      {
+        "text": "read John Rawls, A Theory of Justice (1971), section 24, “The Veil of Ignorance”"
+      },
+      {
+        "text": "watch Thinking About Stuff on Rawls and fair laws",
+        "url": "https://www.youtube.com/watch?v=GuY79IKLO5U"
+      },
+      {
+        "text": "Stanford Encyclopedia: the original position",
+        "url": "https://plato.stanford.edu/entries/original-position/"
+      }
+    ]
+  },
+  "puddle": {
+    "title": "The Puddle",
+    "question": "Is there anything about the world that seems made for you? Could it be the other way round: that you took its shape?",
+    "todo": [
+      {
+        "text": "read the transcript of Douglas Adams's 1998 talk “Is There an Artificial God?”",
+        "url": "https://www.biotacast.org/douglasAdams.html"
+      },
+      {
+        "text": "or watch it",
+        "url": "https://www.youtube.com/watch?v=Dr3beElb2EA"
+      },
+      {
+        "text": "Stanford Encyclopedia: fine-tuning",
+        "url": "https://plato.stanford.edu/entries/fine-tuning/"
+      }
+    ]
+  },
+  "swampman": {
+    "title": "Swampman",
+    "question": "Was it you who walked home from the swamp? What makes someone you: what they're made of, what they remember, or where they came from?",
+    "todo": [
+      {
+        "text": "read Donald Davidson, “Knowing One's Own Mind” (1987), where Swampman is born"
+      },
+      {
+        "text": "Stanford Encyclopedia: teleological theories of mental content",
+        "url": "https://plato.stanford.edu/entries/content-teleological/"
+      },
+      {
+        "text": "Wikipedia: Swampman",
+        "url": "https://en.wikipedia.org/wiki/Swampman"
+      }
+    ]
+  },
+  "ten-coins": {
+    "title": "Ten Coins",
+    "question": "You believed it, it was true, and you had good reason. What was missing? Try to say it in one sentence, then look for a case that breaks your sentence.",
+    "todo": [
+      {
+        "text": "read Edmund Gettier, “Is Justified True Belief Knowledge?” (1963): all three pages"
+      },
+      {
+        "text": "watch Jennifer Nagel on the Gettier problem",
+        "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+      },
+      {
+        "text": "Stanford Encyclopedia: the analysis of knowledge",
+        "url": "https://plato.stanford.edu/entries/knowledge-analysis/"
+      }
+    ]
+  },
+  "stopped-clock": {
+    "title": "The Stopped Clock",
+    "question": "Did you know what time it was? What's the difference between being right and knowing?",
+    "todo": [
+      {
+        "text": "Bertrand Russell's Human Knowledge (1948), where the stopped clock appears"
+      },
+      {
+        "text": "watch Jennifer Nagel on the Gettier problem",
+        "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+      },
+      {
+        "text": "Stanford Encyclopedia: the analysis of knowledge",
+        "url": "https://plato.stanford.edu/entries/knowledge-analysis/"
+      }
+    ]
+  },
+  "sheep-field": {
+    "title": "The Sheep in the Field",
+    "question": "From the gate, did you know there was a sheep in the field? What would you have had to do to know it?",
+    "todo": [
+      {
+        "text": "Roderick Chisholm, Theory of Knowledge (1966)"
+      },
+      {
+        "text": "Stanford Encyclopedia: the analysis of knowledge",
+        "url": "https://plato.stanford.edu/entries/knowledge-analysis/"
+      },
+      {
+        "text": "Wikipedia: the Gettier problem",
+        "url": "https://en.wikipedia.org/wiki/Gettier_problem"
+      }
+    ]
+  },
+  "fake-barns": {
+    "title": "Barn Façade County",
+    "question": "You looked at a real barn and said it was a barn. Does it matter to what you knew that the barns around it were fake?",
+    "todo": [
+      {
+        "text": "read Alvin Goldman, “Discrimination and Perceptual Knowledge” (1976), where the barns go up"
+      },
+      {
+        "text": "Stanford Encyclopedia: the analysis of knowledge",
+        "url": "https://plato.stanford.edu/entries/knowledge-analysis/"
+      },
+      {
+        "text": "watch Jennifer Nagel on the Gettier problem",
+        "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+      }
+    ]
+  },
+  "mirage": {
+    "title": "Dharmottara's Mirage",
+    "question": "The traveller was right that there was water. Did he know it? What should he have had to see?",
+    "todo": [
+      {
+        "text": "watch Jennifer Nagel, who tells Dharmottara's case alongside Gettier's",
+        "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+      },
+      {
+        "text": "Stanford Encyclopedia: the analysis of knowledge (which begins with Dharmottara)",
+        "url": "https://plato.stanford.edu/entries/knowledge-analysis/"
+      },
+      {
+        "text": "Wikipedia: the Gettier problem",
+        "url": "https://en.wikipedia.org/wiki/Gettier_problem"
+      }
+    ]
   }
 }

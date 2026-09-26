@@ -28,13 +28,31 @@ const LEVELS = {
   'utility-monster': () => import('./vignettes/utility-monster.js'),
   'chinese-room': () => import('./vignettes/chinese-room.js'),
   'monty-hall': () => import('./vignettes/monty-hall.js'),
+  field: () => import('./house/field.js'),
+  'marys-room': () => import('./vignettes/marys-room.js'),
+  omelas: () => import('./vignettes/omelas.js'),
+  paperclip: () => import('./vignettes/paperclip.js'),
+  turtles: () => import('./vignettes/turtles.js'),
+  watchmaker: () => import('./vignettes/watchmaker.js'),
+  'experience-machine': () => import('./vignettes/experience-machine.js'),
+  'veil-of-ignorance': () => import('./vignettes/veil-of-ignorance.js'),
+  puddle: () => import('./vignettes/puddle.js'),
+  swampman: () => import('./vignettes/swampman.js'),
+  barn: () => import('./house/barn.js'),
+  'ten-coins': () => import('./vignettes/ten-coins.js'),
+  'stopped-clock': () => import('./vignettes/stopped-clock.js'),
+  'sheep-field': () => import('./vignettes/sheep-field.js'),
+  'fake-barns': () => import('./vignettes/fake-barns.js'),
+  mirage: () => import('./vignettes/mirage.js'),
 };
 // rooms of the house (hubs), and which room each vignette belongs to (where "back" goes)
-const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery']);
+const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery', 'field', 'barn']);
 const HOME_ROOM = {
   'grandfather-paradox': 'hall', 'infinite-monkey': 'hall', 'simulation-argument': 'hall', 'fermi-paradox': 'hall', 'tragedy-of-the-commons': 'hall',
   footbridge: 'trolley-room', 'loop-track': 'trolley-room', transplant: 'trolley-room',
   'ring-of-gyges': 'gallery', 'prisoners-dilemma': 'gallery', 'newcombs-paradox': 'gallery', 'utility-monster': 'gallery', 'chinese-room': 'gallery', 'monty-hall': 'gallery',
+  'marys-room': 'field', omelas: 'field', paperclip: 'field', turtles: 'field', watchmaker: 'field', 'experience-machine': 'field', 'veil-of-ignorance': 'field', puddle: 'field', swampman: 'field',
+  'ten-coins': 'barn', 'stopped-clock': 'barn', 'sheep-field': 'barn', 'fake-barns': 'barn', mirage: 'barn',
 };
 
 // ---------------------------------------------------------------- stage (full window, crisp on hi-dpi)
@@ -68,7 +86,7 @@ const journal = new Journal();
 // scripts stop where they are instead of running on into the next level (ending it, or opening its card over the house).
 let gen = 0;
 const wait = (s) => { const g = gen; return new Promise((r) => setTimeout(() => { if (g === gen) r(); }, s * 1000)); };
-const ROOM_NAME = { house: 'the first room', hall: 'the hall', 'trolley-room': 'the trolley room', gallery: 'the gallery' };
+const ROOM_NAME = { house: 'the first room', hall: 'the hall', 'trolley-room': 'the trolley room', gallery: 'the gallery', field: 'the field', barn: 'the barn' };
 const flash = document.getElementById('flash'), toastEl = document.getElementById('toast'), nb = document.getElementById('notebook');
 let toastTimer;
 const save = {

@@ -1,0 +1,17 @@
+{
+  "title": "Ten Coins",
+  "summary": "For a long time, knowing something was often taken to mean three things: you believe it, it is true, and you have good reason to believe it (\"justified true belief\", an idea traced back to Plato's Theaetetus). In a three-page paper in 1963, Edmund Gettier gave two cases where all three hold, and yet nobody would call it knowledge.\n\nIn the first, Smith and Jones have both applied for a job. Smith has strong evidence that Jones will get it (the president of the company told him so) and that Jones has ten coins in his pocket (he counted them). So he concludes: the man who will get the job has ten coins in his pocket. In fact Smith gets the job, and, without knowing it, Smith also has ten coins in his pocket. His belief was true, and justified, but true by luck. Philosophers have spent decades looking for a fourth condition that would rule out such luck (no false premises, a reliable process, safety, sensitivity); each proposal has met new counterexamples.",
+  "citations": [
+    "Edmund L. Gettier, \"Is Justified True Belief Knowledge?\", Analysis 23(6) (1963): 121–123",
+    "Plato, Theaetetus, 201c–210b",
+    "Jonathan Jenkins Ichikawa and Matthias Steup, \"The Analysis of Knowledge,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/knowledge-analysis/"
+  ],
+  "essay": {
+    "creator": "Jennifer Nagel, Wireless Philosophy",
+    "title": "Analyzing Knowledge #1: The Gettier Problem",
+    "url": "https://www.youtube.com/watch?v=5wCVhhzmSlU"
+  },
+  "reading": [
+    "\"Gettier problem,\" Wikipedia: https://en.wikipedia.org/wiki/Gettier_problem"
+  ]
+}

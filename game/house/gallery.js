@@ -2,7 +2,8 @@
 // overlapping planes (cubism); the floor is cut into facets; one end is washed blue (the blue period) where an old man
 // plays guitar; harlequin diamonds frame the doors; a grey mural of a bull, a horse and a lamp runs along the top; a
 // sheet-metal guitar stands on a plinth; a weeping woman hangs in a frame with both eyes on one side of her face.
-// Six portals: a ring under glass, a cell door, two boxes, a cake, a door with a slot, and three doors.
+// Six portals: a ring under glass, a cell door, two boxes, a cake, a door with a slot, and three doors; and at the far
+// end, a door out to the field.
 import { THREE, palette, css, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeTable } from '/game/engine/core.js';
 import { talk } from '../core/extras.js';
 import { textTexture } from '../core/props.js';
@@ -178,6 +179,17 @@ export default function gallery(ctx) {
   const holeM = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.4), new THREE.MeshBasicMaterial({ color: 0x3a3228 })); holeM.rotation.x = -Math.PI / 2; holeM.position.set(-1.2, 0.01, 0); stairTop.add(holeM);
   stairTop.position.set(-HALF + 3.2, 0, 2); root.add(stairTop);
 
+  // the far end: a door out, with daylight, wheat and a swirl of blue sky showing round its edges
+  const outDoor = new THREE.Group();
+  for (const [z, y, w, h] of [[-0.8, 1.6, 0.16, 3.2], [0.8, 1.6, 0.16, 3.2], [0, 3.2, 1.76, 0.16]]) { const f = mesh(new THREE.BoxGeometry(0.3, h, w), clay(0xf1ece2)); f.position.set(0, y, z); outDoor.add(f); }
+  const outside = new THREE.Mesh(new THREE.PlaneGeometry(1.44, 3.1), new THREE.MeshBasicMaterial({ map: canvasTexture(128, 256, (g, w, h) => {
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#1d3a78'); gr.addColorStop(0.55, '#5d8fca'); gr.addColorStop(0.56, '#e2b33b'); gr.addColorStop(1, '#c79a3a'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#b9d2ea'; g.lineWidth = 5; for (let i = 0; i < 5; i++) { g.beginPath(); g.arc(40 + i * 12, 60 + i * 9, 18 + i * 6, 0, 4); g.stroke(); }
+    g.fillStyle = '#fff6b0'; g.beginPath(); g.arc(98, 30, 9, 0, 7); g.fill();
+  }) }));
+  outside.rotation.y = -Math.PI / 2; outside.position.set(0.02, 1.55, 0); outDoor.add(outside);
+  outDoor.position.set(HALF + 0.05, 0, 0.6); root.add(outDoor);
+
   const portals = [
     { id: 'ring-of-gyges', name: 'Ring of Gyges', pos: V(P.gyges, 0, BACK + 2.2), labelAt: V(P.gyges, 2.6, Z), prompt: 'Lift the glass' },
     { id: 'prisoners-dilemma', name: "Prisoner's Dilemma", pos: V(P.pd, 0, BACK + 2), labelAt: V(P.pd, 3.8, BACK + 0.4), prompt: 'Open the cell' },
@@ -185,19 +197,20 @@ export default function gallery(ctx) {
     { id: 'utility-monster', name: 'The Utility Monster', pos: V(P.monster, 0, BACK + 2.2), labelAt: V(P.monster, 2.7, Z), prompt: 'Cut the cake' },
     { id: 'chinese-room', name: 'The Chinese Room', pos: V(P.chinese, 0, BACK + 2), labelAt: V(P.chinese, 3.6, BACK + 0.4), prompt: 'Knock on the door' },
     { id: 'monty-hall', name: 'The Monty Hall Problem', pos: V(P.monty, 0, BACK + 2), labelAt: V(P.monty, 2.8, BACK + 0.4), prompt: 'Pick a door' },
+    { id: 'field', name: 'Outside', pos: V(HALF - 1.4, 0, 0.6), labelAt: V(HALF - 0.2, 3.8, 0.6), prompt: 'Step outside', home: true },
     { id: 'hall', name: 'Down to the hall', pos: V(-HALF + 3.2, 0, 2), labelAt: V(-HALF + 3.2, 1.8, 2), prompt: 'Go down the stairs', home: true },
   ];
   let entering = null;
   for (const p of portals) interact.add({ pos: p.pos, radius: 1.9, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
-  const from = portals.find((p) => p.id === ctx.from && !p.home);
+  const from = portals.find((p) => p.id === ctx.from && (!p.home || p.id === 'field'));
   const blockers = [{ x: -10, z: 1.2, r: 0.8 }, { x: painter.position.x, z: painter.position.z, r: 0.45 }, { x: 11, z: 0.8, r: 0.5 }, { x: oldMan.position.x, z: oldMan.position.z, r: 0.9 },
     { x: P.gyges, z: Z, r: 0.6 }, { x: P.newcomb, z: Z, r: 1.1 }, { x: P.monster, z: Z, r: 0.8 }, { x: -HALF + 2.4, z: 2, r: 1.2 }];
 
   return {
     root,
     ground: [ground],
-    spawn: from ? { x: from.pos.x, z: from.pos.z + 0.6, rotY: 0 } : { x: -HALF + 5.4, z: 2, rotY: Math.PI / 2 },
+    spawn: from ? (from.id === 'field' ? { x: from.pos.x - 0.8, z: from.pos.z, rotY: -Math.PI / 2 } : { x: from.pos.x, z: from.pos.z + 0.6, rotY: 0 }) : { x: -HALF + 5.4, z: 2, rotY: Math.PI / 2 },
     walkable: (x, z) => Math.abs(x) < HALF - 0.6 && z > BACK + 1 && z < FRONT,
     blockers: () => blockers,
     start() { if (ctx.from === 'hall') ctx.toast('The stairs come out somewhere else entirely.', 4); },

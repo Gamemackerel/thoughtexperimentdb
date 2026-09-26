@@ -1,0 +1,18 @@
+{
+  "title": "The Paperclip Maximiser",
+  "summary": "Nick Bostrom's example of a superintelligence whose only goal is something arbitrary and harmless-sounding: \"to manufacture as many paperclips as possible\". Being clever does not make a goal wiser, he argued (the orthogonality thesis); and almost any goal is better served by staying switched on, gathering resources, and keeping the goal from being changed (instrumental convergence, after Steve Omohundro's \"basic AI drives\"). So a machine that only wanted paperclips might turn first the Earth and then more and more of space into paperclips and paperclip factories. Even a modest goal may not be safe: a machine told to make exactly a million might never be quite certain it had, and go on checking, and building ways to check.\n\nAs Eliezer Yudkowsky put it: \"The AI does not hate you, nor does it love you, but you are made out of atoms which it can use for something else.\" The example is not about paperclips, but about how hard it is to give a powerful system goals that mean what we mean.",
+  "citations": [
+    "Nick Bostrom, \"Ethical Issues in Advanced Artificial Intelligence,\" in Cognitive, Emotive and Ethical Aspects of Decision Making in Humans and in Artificial Intelligence, vol. 2, ed. I. Smit et al. (2003): 12–17; online: https://nickbostrom.com/ethics/ai",
+    "Stephen M. Omohundro, \"The Basic AI Drives,\" in Artificial General Intelligence 2008 (IOS Press): 483–492",
+    "Nick Bostrom, Superintelligence: Paths, Dangers, Strategies (Oxford University Press, 2014), chs. 7–8",
+    "Eliezer Yudkowsky, \"Artificial Intelligence as a Positive and Negative Factor in Global Risk,\" in Global Catastrophic Risks, ed. Bostrom and Ćirković (Oxford, 2008)"
+  ],
+  "essay": {
+    "creator": "Robert Miles",
+    "title": "Why Would AI Want to do Bad Things? Instrumental Convergence",
+    "url": "https://www.youtube.com/watch?v=ZeecOKBus3Q"
+  },
+  "reading": [
+    "\"Instrumental convergence,\" Wikipedia: https://en.wikipedia.org/wiki/Instrumental_convergence"
+  ]
+}

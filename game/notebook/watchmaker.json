@@ -1,0 +1,26 @@
+{
+  "title": "The Watchmaker",
+  "summary": "William Paley began Natural Theology (1802) on a heath. If he kicked a stone, he wrote, he might answer that for all he knew it had lain there forever. But if he found a watch, its parts shaped and fitted together to tell the time, he would conclude it had a maker, even if he had never seen a watch made. Living things, like the eye, are fitted to their purposes far more intricately than any watch; so they too must have a designer.\n\nDavid Hume had already pressed objections, in Dialogues Concerning Natural Religion (1779): we have seen watches made, but never worlds; the world is as much like an animal or a plant as a machine; and the argument cannot tell one designer from many, or a skilled one from a bungler. Charles Darwin, who admired Paley, found a way for things to be fitted to purposes without anyone intending it: small variations, and natural selection, over immense time. Richard Dawkins called it The Blind Watchmaker (1986). The design argument lives on in new forms, such as the fine-tuning of the laws of physics.",
+  "citations": [
+    "William Paley, Natural Theology; or, Evidences of the Existence and Attributes of the Deity (1802), ch. 1",
+    "David Hume, Dialogues Concerning Natural Religion (1779)",
+    "Charles Darwin, On the Origin of Species (1859), ch. 6",
+    "Richard Dawkins, The Blind Watchmaker (1986)",
+    "Del Ratzsch and Jeffrey Koperski, \"Teleological Arguments for God's Existence,\" Stanford Encyclopedia of Philosophy: https://plato.stanford.edu/entries/teleological-arguments/"
+  ],
+  "essay": {
+    "creator": "CrashCourse",
+    "title": "Intelligent Design: Crash Course Philosophy #11",
+    "url": "https://www.youtube.com/watch?v=7e9v_fsZB6A"
+  },
+  "also": [
+    {
+      "creator": "Untangle Philosophy",
+      "title": "Hume vs Paley's Watchmaker Analogy: Can Analogies Prove God?",
+      "url": "https://www.youtube.com/watch?v=texpp2JIUOE"
+    }
+  ],
+  "reading": [
+    "\"Watchmaker analogy,\" Wikipedia: https://en.wikipedia.org/wiki/Watchmaker_analogy"
+  ]
+}

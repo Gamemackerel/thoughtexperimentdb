@@ -1,0 +1,28 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A room in black and white. You have never been outside it.",
+    "scientist": "You're a scientist. You know everything there is to know about colour: the light, the eye, the brain. Every physical fact.",
+    "tomato": "A ripe tomato, on a black and white screen. You know exactly what happens in someone's brain when they see one.",
+    "books_1": "Light at about seven hundred nanometres. The long-wave cones in the eye fire, and the signal runs to the back of the brain. You know every step.",
+    "books_2": "What people say when they see it: red. Warm. Like a stop sign. You've read every word they've ever written.",
+    "board": "The whole spectrum, drawn in chalk. In shades of grey.",
+    "locked": "Locked. It always is.",
+    "desk_early": "Not yet. There's still more to read. There always is.",
+    "door": "Today, the door is unlocked.",
+    "ask": "When you step outside and see red for the first time, will you learn anything new?",
+    "nudge": "The door is still open.",
+    "outside": "Colour.",
+    "banana": "A blue banana. Someone's idea of a trick. Would all your books have told you that it's blue?",
+    "learn_1": "So that's what red is like.",
+    "learn_2": "You knew every fact about seeing red. And still, this is new. Is it a new fact? Or only a new way of knowing an old one?",
+    "stay_1": "You close the door, and go back to your books.",
+    "stay_idle": "You never went out.",
+    "stay_2": "You know everything there is to know about red. Maybe that's all there is to it. Maybe not."
+  }
+}

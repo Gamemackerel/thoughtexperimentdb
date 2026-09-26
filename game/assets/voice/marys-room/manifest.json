@@ -1,0 +1,92 @@
+{
+  "arrive": {
+    "file": "arrive-2c95cbd9.mp3",
+    "text": "A room in black and white. You have never been outside it.",
+    "dur": 3.92
+  },
+  "scientist": {
+    "file": "scientist-dc095008.mp3",
+    "text": "You're a scientist. You know everything there is to know about colour: the light, the eye, the brain. Every physical fact.",
+    "dur": 7.34
+  },
+  "tomato": {
+    "file": "tomato-061105c4.mp3",
+    "text": "A ripe tomato, on a black and white screen. You know exactly what happens in someone's brain when they see one.",
+    "dur": 6.56
+  },
+  "books_1": {
+    "file": "books_1-b1a19cc2.mp3",
+    "text": "Light at about seven hundred nanometres. The long-wave cones in the eye fire, and the signal runs to the back of the brain. You know every step.",
+    "dur": 9.09
+  },
+  "books_2": {
+    "file": "books_2-924eb153.mp3",
+    "text": "What people say when they see it: red. Warm. Like a stop sign. You've read every word they've ever written.",
+    "dur": 6.69
+  },
+  "board": {
+    "file": "board-68dd6854.mp3",
+    "text": "The whole spectrum, drawn in chalk. In shades of grey.",
+    "dur": 4
+  },
+  "locked": {
+    "file": "locked-c9f3f83c.mp3",
+    "text": "Locked. It always is.",
+    "dur": 2.32
+  },
+  "desk_early": {
+    "file": "desk_early-8dc18560.mp3",
+    "text": "Not yet. There's still more to read. There always is.",
+    "dur": 3.71
+  },
+  "door": {
+    "file": "door-98b8ff47.mp3",
+    "text": "Today, the door is unlocked.",
+    "dur": 2.53
+  },
+  "ask": {
+    "file": "ask-8f41bc67.mp3",
+    "text": "When you step outside and see red for the first time, will you learn anything new?",
+    "dur": 4.86
+  },
+  "nudge": {
+    "file": "nudge-7a674c56.mp3",
+    "text": "The door is still open.",
+    "dur": 2.22
+  },
+  "outside": {
+    "file": "outside-220f21e9.mp3",
+    "text": "Colour.",
+    "dur": 0.97
+  },
+  "banana": {
+    "file": "banana-4d4add55.mp3",
+    "text": "A blue banana. Someone's idea of a trick. Would all your books have told you that it's blue?",
+    "dur": 5.56
+  },
+  "learn_1": {
+    "file": "learn_1-81eda4e3.mp3",
+    "text": "So that's what red is like.",
+    "dur": 2.38
+  },
+  "learn_2": {
+    "file": "learn_2-ab62f2b4.mp3",
+    "text": "You knew every fact about seeing red. And still, this is new. Is it a new fact? Or only a new way of knowing an old one?",
+    "dur": 7.5
+  },
+  "stay_1": {
+    "file": "stay_1-5f752b99.mp3",
+    "text": "You close the door, and go back to your books.",
+    "dur": 3.19
+  },
+  "stay_idle": {
+    "file": "stay_idle-8d1be6c9.mp3",
+    "text": "You never went out.",
+    "dur": 1.65
+  },
+  "stay_2": {
+    "file": "stay_2-f8516df7.mp3",
+    "text": "You know everything there is to know about red. Maybe that's all there is to it. Maybe not.",
+    "dur": 5.83
+  }
+}
