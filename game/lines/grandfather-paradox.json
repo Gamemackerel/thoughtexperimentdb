@@ -9,16 +9,21 @@
     "arrive": "The past. The town where your grandparents met.",
     "see_gf": "That's your grandfather. Young, and in a hurry.",
     "see_gm": "At the station, a woman is waiting. Your grandmother.",
-    "ask": "If they never meet, you are never born. So what happens if you stop him?",
+    "ask": "If they never meet, you are never born. And then who came back to stop him?",
     "gate_fail": "A gust of wind. The gate swings open again.",
     "sign_fail": "He doesn't even look at the sign. He knows the way.",
     "block_fail": "He steps around you, and apologises.",
     "tell_fail": "He laughs. What a strange thing to say. And he walks on.",
     "met": "They meet, just as they always did.",
-    "tried_1": "Every time you tried, something ordinary got in the way. Not magic. Wind, habit, a laugh.",
-    "tried_2": "It had already happened. It was never going to un-happen.",
+    "tried_1": "Every time you tried, something ordinary got in the way. Nothing magic.",
+    "tried_2": "It had already happened. Unless, somewhere else, it didn't.",
     "watched_1": "You came all this way, and changed nothing.",
     "watched_2": "Maybe that's the only story that works.",
-    "paper": "The date on the paper is long before you were born. The headline is about the weather."
+    "paper": "The date on the paper is long before you were born. The headline is about the weather.",
+    "try": "Is it possible to stop him? See if you can.",
+    "gun_fail": "The pistol jams. It's old, and it jams.",
+    "in_a_sense": "You could have stopped him, in a sense. You just didn't.",
+    "again": "The clock turns back. He's at his door again.",
+    "again_2": "Once more."
   }
 }

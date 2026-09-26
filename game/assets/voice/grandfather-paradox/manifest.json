@@ -15,9 +15,9 @@
     "dur": 4
   },
   "ask": {
-    "file": "ask-eb0ddaa9.mp3",
-    "text": "If they never meet, you are never born. So what happens if you stop him?",
-    "dur": 4.68
+    "file": "ask-2821243c.mp3",
+    "text": "If they never meet, you are never born. And then who came back to stop him?",
+    "dur": 4.78
   },
   "gate_fail": {
     "file": "gate_fail-6dae2028.mp3",
@@ -45,14 +45,14 @@
     "dur": 2.93
   },
   "tried_1": {
-    "file": "tried_1-135da63c.mp3",
-    "text": "Every time you tried, something ordinary got in the way. Not magic. Wind, habit, a laugh.",
-    "dur": 6.11
+    "file": "tried_1-b3743673.mp3",
+    "text": "Every time you tried, something ordinary got in the way. Nothing magic.",
+    "dur": 4.83
   },
   "tried_2": {
-    "file": "tried_2-d05323aa.mp3",
-    "text": "It had already happened. It was never going to un-happen.",
-    "dur": 3.81
+    "file": "tried_2-7c454362.mp3",
+    "text": "It had already happened. Unless, somewhere else, it didn't.",
+    "dur": 3.92
   },
   "watched_1": {
     "file": "watched_1-71c64e11.mp3",
@@ -68,5 +68,30 @@
     "file": "paper-2fbf9bd9.mp3",
     "text": "The date on the paper is long before you were born. The headline is about the weather.",
     "dur": 5.22
+  },
+  "try": {
+    "file": "try-6a387e04.mp3",
+    "text": "Is it possible to stop him? See if you can.",
+    "dur": 3.5
+  },
+  "gun_fail": {
+    "file": "gun_fail-fd97f7a8.mp3",
+    "text": "The pistol jams. It's old, and it jams.",
+    "dur": 3.53
+  },
+  "in_a_sense": {
+    "file": "in_a_sense-7ba7e52c.mp3",
+    "text": "You could have stopped him, in a sense. You just didn't.",
+    "dur": 3.37
+  },
+  "again": {
+    "file": "again-2772f5be.mp3",
+    "text": "The clock turns back. He's at his door again.",
+    "dur": 3.27
+  },
+  "again_2": {
+    "file": "again_2-0a1029b8.mp3",
+    "text": "Once more.",
+    "dur": 1.23
   }
 }
