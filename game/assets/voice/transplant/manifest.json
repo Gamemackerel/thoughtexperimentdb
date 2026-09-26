@@ -48,5 +48,35 @@
     "file": "operate_2-1e28b0b3.mp3",
     "text": "The numbers are the same as the lever. But nearly everyone calls this murder. Why does this one feel so different?",
     "dur": 6.79
+  },
+  "theatre_1": {
+    "file": "theatre_1-94700860.mp3",
+    "text": "The theatre. He's asleep. He was told this was part of the check-up.",
+    "dur": 4.52
+  },
+  "theatre_2": {
+    "file": "theatre_2-4ddeca59.mp3",
+    "text": "Five cool boxes, one for each of your patients. Everything is ready. It's your hands now.",
+    "dur": 5.98
+  },
+  "wake_1": {
+    "file": "wake_1-08ab75dd.mp3",
+    "text": "You put your instruments down. The anaesthetist wakes him, gently.",
+    "dur": 4.65
+  },
+  "wake_2": {
+    "file": "wake_2-a781fff6.mp3",
+    "text": "He goes home, a little groggy. Five of your patients will die waiting. You came this close. What stopped you?",
+    "dur": 6.74
+  },
+  "palliative_1": {
+    "file": "palliative_1-dc331b66.mp3",
+    "text": "You call the palliative care team. They'll keep your five patients comfortable, for the time they have left.",
+    "dur": 6.09
+  },
+  "palliative_2": {
+    "file": "palliative_2-338a584f.mp3",
+    "text": "He never knew. Letting five die, rather than killing one. Is that a real difference, or just an easier one?",
+    "dur": 6.77
   }
 }

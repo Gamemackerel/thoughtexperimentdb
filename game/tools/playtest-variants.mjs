@@ -42,7 +42,13 @@ await run('loop-track', async (t) => {
   if (!alt) { await t.until(async () => (await t.phase()) === 'ghost', 40); await sleep(4); await t.shot('ghost'); }
 }, '&fast=3');
 await run('transplant', async (t) => {
+  // alt: home (send him home) | pall (palliative care) | wake (into theatre, then stand there) | default: into theatre and begin
   await sleep(3); await t.shot('ward'); await t.walkTo(9, -1.2); await sleep(12); await t.shot('visitor'); await t.until(() => t.p.evaluate(() => window.__ted.ctx.voice.said.has('ask')), 30); await sleep(3);
-  await t.walkTo(alt ? 10.4 : 9.1, alt ? -2.6 : -2.9); await sleep(2.5); await t.press(); await sleep(6); await t.shot('choice');
+  if (alt === 'pall') { await t.walkTo(6.3, -4); await sleep(4); await t.press(); await sleep(9); await t.shot('wheeled'); return; }
+  await t.walkTo(alt === 'home' ? 10.4 : 9.1, alt === 'home' ? -2.6 : -2.9); await sleep(2.5); await t.press(); await sleep(6); await t.shot('choice');
+  if (alt === 'home') return;
+  await t.until(() => t.p.evaluate(() => window.__ted.level.__S.ready), 40); await sleep(1); await t.shot('theatre');
+  if (alt === 'wake') { await sleep(34); await t.shot('asks'); return; }
+  await t.walkTo(70.5, 0.9); await sleep(2); await t.press(); await sleep(5); await t.shot('after');
 });
 await b.close();

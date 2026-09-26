@@ -15,6 +15,12 @@
     "letgo_1": "He walks out into the sunshine. Five of your patients will die waiting.",
     "letgo_2": "It's the same arithmetic as the lever, five lives or one. Almost nobody would operate. So what makes the lever different?",
     "operate_1": "Five patients will live. A healthy man came in for a check-up, and never went home.",
-    "operate_2": "The numbers are the same as the lever. But nearly everyone calls this murder. Why does this one feel so different?"
+    "operate_2": "The numbers are the same as the lever. But nearly everyone calls this murder. Why does this one feel so different?",
+    "theatre_1": "The theatre. He's asleep. He was told this was part of the check-up.",
+    "theatre_2": "Five cool boxes, one for each of your patients. Everything is ready. It's your hands now.",
+    "wake_1": "You put your instruments down. The anaesthetist wakes him, gently.",
+    "wake_2": "He goes home, a little groggy. Five of your patients will die waiting. You came this close. What stopped you?",
+    "palliative_1": "You call the palliative care team. They'll keep your five patients comfortable, for the time they have left.",
+    "palliative_2": "He never knew. Letting five die, rather than killing one. Is that a real difference, or just an easier one?"
   }
 }
