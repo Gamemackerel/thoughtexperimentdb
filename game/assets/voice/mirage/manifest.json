@@ -1,0 +1,52 @@
+{
+  "arrive": {
+    "file": "arrive-b94cd3c5.mp3",
+    "text": "The desert. You've been walking since dawn, and your water ran out hours ago.",
+    "dur": 4.83
+  },
+  "skin": {
+    "file": "skin-3baa0ca6.mp3",
+    "text": "Empty. Not a drop.",
+    "dur": 1.85
+  },
+  "see": {
+    "file": "see-0b4ea008.mp3",
+    "text": "Up ahead, shimmering blue: water.",
+    "dur": 3.08
+  },
+  "mirage": {
+    "file": "mirage-6d4ec9a4.mp3",
+    "text": "It was a mirage. Only hot air, bending the blue of the sky down onto the sand.",
+    "dur": 5.25
+  },
+  "ask": {
+    "file": "ask-b54fa679.mp3",
+    "text": "But there's a rock, just here.",
+    "dur": 2.56
+  },
+  "water": {
+    "file": "water-d4e11813.mp3",
+    "text": "And under the rock: water. There was water here all along.",
+    "dur": 4.05
+  },
+  "end": {
+    "file": "end-2c19cbde.mp3",
+    "text": "You believed there was water here. There was. You had every reason. But it wasn't the water that made you believe it. Did you know?",
+    "dur": 7.52
+  },
+  "back_1": {
+    "file": "back_1-b876dc64.mp3",
+    "text": "You give up on it, and turn back.",
+    "dur": 2.61
+  },
+  "back_idle": {
+    "file": "back_idle-79fdd14a.mp3",
+    "text": "You rest a while, then turn back.",
+    "dur": 2.82
+  },
+  "back_2": {
+    "file": "back_2-a39d01ad.mp3",
+    "text": "You'll never know it. But you were right. There was water here, under a rock, a step away.",
+    "dur": 5.02
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "The desert. You've been walking since dawn, and your water ran out hours ago.",
+    "skin": "Empty. Not a drop.",
+    "see": "Up ahead, shimmering blue: water.",
+    "mirage": "It was a mirage. Only hot air, bending the blue of the sky down onto the sand.",
+    "ask": "But there's a rock, just here.",
+    "water": "And under the rock: water. There was water here all along.",
+    "end": "You believed there was water here. There was. You had every reason. But it wasn't the water that made you believe it. Did you know?",
+    "back_1": "You give up on it, and turn back.",
+    "back_idle": "You rest a while, then turn back.",
+    "back_2": "You'll never know it. But you were right. There was water here, under a rock, a step away."
+  }
+}

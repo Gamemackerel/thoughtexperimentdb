@@ -56,4 +56,9 @@ await run('fake-barns', async (t) => {
   await sleep(4); await t.shot('road'); await t.use('Look at the tyre'); await sleep(3);
   await t.use(alt === 'round' ? 'Walk all the way round' : 'Look at the barn'); await sleep(alt === 'round' ? 16 : 6); await t.shot('barn'); await sleep(7.5); await t.shot('behind');
 });
+await run('mirage', async (t) => {
+  await sleep(3); await t.shot('desert'); await t.walkTo(0, 7); await sleep(4); await t.shot('shimmer');
+  await t.walkTo(-0.4, -9.4); await t.until(async () => (await t.S('phase')) === 'choose', 30); await sleep(1); await t.shot('gone');
+  await t.use(alt === 'back' ? 'turn back' : 'Lift the rock'); await sleep(5); await t.shot('water');
+});
 await b.close();
