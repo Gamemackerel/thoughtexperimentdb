@@ -18,6 +18,9 @@
     "throw_clean": "You drop the ring back into the dark. You never found out what you would have done with it.",
     "throw_took": "You drop the ring back into the dark. What you took, you keep. Nobody will ever know.",
     "keep_clean": "You keep the ring, and walk off into the hills. You haven't used it. Yet.",
-    "keep_took": "You keep the ring, and walk off into the hills. You already know what you'd do with it."
+    "keep_took": "You keep the ring, and walk off into the hills. You already know what you'd do with it.",
+    "king": "Inside, the king, counting his gold. And the queen.",
+    "crown": "His crown. He hasn't even noticed.",
+    "queen": "In Plato's story, this is where the shepherd went next. With the queen's help, he killed the king, and took the throne."
   }
 }

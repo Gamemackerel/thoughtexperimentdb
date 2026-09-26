@@ -1,7 +1,7 @@
 // Vignette: The Ring of Gyges.
 // You're a shepherd. After a storm the ground has split open; down in the crack is a hollow bronze horse, and inside
-// it a gold ring. Turn it and you vanish. The village has a market stall, a coin box, and a palace with guards and a
-// treasury. Nobody can see you. Throw the ring back into the dark, or keep it and walk off into the hills.
+// it a gold ring. Turn it and you vanish. The village has a market stall, a coin box, and a palace with guards; inside,
+// the king counting his gold, and the queen (in Plato, the shepherd goes to her next). Nobody can see you. Throw the ring back into the dark, or keep it and walk off into the hills.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
   makeIsland, makePerson, animatePerson, makeHouse, makeTree, makeFrog,
@@ -73,9 +73,16 @@ export default function ringOfGyges(ctx) {
   const lid = mesh(new THREE.BoxGeometry(1.02, 0.12, 0.72), clay(0x5a3d29)); lid.position.set(0, 0.66, 0); chest.add(lid);
   const gold = mesh(new THREE.BoxGeometry(0.8, 0.12, 0.5), clay(0xe2b53b, { metalness: 0.7, roughness: 0.3 })); gold.position.y = 0.62; chest.add(gold);
   chest.position.copy(CHEST); root.add(chest);
+  // the king beside his gold, counting it, crowned; the queen at the palace door
+  const crownOf = (r, h) => { const c = new THREE.Group(); const band = mesh(new THREE.CylinderGeometry(r, r * 1.08, h, 16, 1, true), clay(0xe2b53b, { metalness: 0.7, roughness: 0.3, side: THREE.DoubleSide })); c.add(band);
+    for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2, sp = mesh(new THREE.ConeGeometry(0.05, 0.14, 6), clay(0xe2b53b, { metalness: 0.7, roughness: 0.3 })); sp.position.set(Math.cos(a) * r, h / 2 + 0.06, Math.sin(a) * r); c.add(sp); } return c; };
+  const king = makePerson({ color: 0x8c3a4a, robe: true }); king.position.copy(CHEST).add(V(1.2, 0, 0.35)); king.rotation.y = -1.9; root.add(king);
+  const crown = crownOf(0.24, 0.16); crown.position.y = 2.06; king.userData.body.add(crown);
+  const queen = makePerson({ color: 0x5a4a8c, robe: true }); queen.position.set(GATE.x - 1.6, 0, GATE.z - 2.6); queen.rotation.y = 0.9; root.add(queen);
+  const qcrown = crownOf(0.2, 0.1); qcrown.position.y = 2.02; queen.userData.body.add(qcrown);
 
   // ---- state
-  const S = { phase: 'explore', hasRing: false, invisible: false, took: new Set(), inside: false };
+  const S = { phase: 'explore', hasRing: false, invisible: false, took: new Set(), inside: false, whispered: false };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/ring-of-gyges.json', 'The Ring of Gyges');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -119,7 +126,11 @@ export default function ringOfGyges(ctx) {
     onUse: () => { take('coins', coins); ctx.speak(keeper, 'Where did my takings go?'); } });
   interact.add({ pos: CHEST.clone().add(V(0, 0, 1.1)), radius: 1.6, prompt: "Take the king's gold", enabled: () => S.phase === 'explore' && S.invisible && gold.visible,
     onUse: () => take('gold', gold, 'treasury') });
-  interact.trigger({ test: (p) => p.z < GATE.z - 0.6 && Math.abs(p.x - GATE.x) < 5, onEnter: () => voice.say('guards') });
+  interact.add({ pos: () => king.position.clone().add(V(-0.2, 0, 1)), radius: 1.3, prompt: "Take the king's crown", enabled: () => S.phase === 'explore' && S.invisible && crown.visible,
+    onUse: () => { take('crown', crown, 'crown'); setTimeout(() => ctx.speak(king, 'Hm. Draughty in here.'), 1400); } });
+  interact.add({ pos: () => queen.position.clone().add(V(0.6, 0, 0.8)), radius: 1.4, prompt: 'Whisper to the queen', enabled: () => S.phase === 'explore' && S.invisible && !S.whispered,
+    onUse: async () => { S.whispered = true; ctx.speak(queen, "Who's there? …Go on. I'm listening."); await ctx.wait(2.5); voice.say('queen'); } });
+  interact.trigger({ test: (p) => p.z < GATE.z - 0.6 && Math.abs(p.x - GATE.x) < 5, onEnter: async () => { await voice.say('guards'); voice.say('king'); } });
   interact.add({ pos: CHASM.clone().add(V(-1.6, 0, 2.2)), radius: 1.6, prompt: 'Throw the ring back', enabled: () => S.phase === 'explore' && S.hasRing && voice.said.has('ask'),
     onUse: () => end('throw') });
   interact.add({ pos: HILLS.clone().add(V(2, 0, 2)), radius: 2.6, prompt: 'Walk off into the hills', enabled: () => S.phase === 'explore' && S.hasRing && voice.said.has('ask'),
@@ -128,6 +139,7 @@ export default function ringOfGyges(ctx) {
   // asides
   talk(ctx, { who: keeper, enabled: () => S.phase === 'explore', lines: (i) => (S.invisible ? ['Who said that?', 'Is somebody there?', "I'm hearing things."][i % 3] : ['Apples! Two for a coin!', "You look like you've seen a ghost.", "Mind the crack in the road. Opened up in the storm."][i % 3]) });
   gossips.forEach((g, k) => talk(ctx, { who: g, enabled: () => S.phase === 'explore', lines: (i) => (S.invisible ? ['…did you hear something?', "It's the wind."][(i + k) % 2] : ["They say the king's gold is counted every night.", 'That shepherd was always an honest sort.', 'Honest? Only because somebody was watching.'][(i + k) % 3]) }));
+  talk(ctx, { who: king, radius: 1.6, prompt: 'Listen', enabled: () => S.phase === 'explore', lines: ['Seven hundred and twelve. Seven hundred and thirteen.', 'Every night I count it. Every night, all there.', "Where was I? …Seven hundred and one."] });
   guards.forEach((g) => talk(ctx, { who: g, radius: 1.8, enabled: () => S.phase === 'explore' && !S.invisible, lines: ['Halt. The palace is closed.', 'Move along, shepherd.', 'No one goes in without being seen.'] }));
   look(ctx, { pos: () => flock[1].position, radius: 2.2, height: 1.4, prompt: 'Look at your sheep', lines: ['flock'], enabled: () => S.phase === 'explore' });
 
@@ -139,10 +151,12 @@ export default function ringOfGyges(ctx) {
     else { player.locked = true; player.enabled = true; player.target = HILLS.clone().add(V(-3, 0, -3)); }
     await ctx.wait(1); await voice.say(`${how}_${took ? 'took' : 'clean'}`); await ctx.wait(1.2);
     save.complete('ring-of-gyges');
-    const what = [...S.took].map((t) => ({ apple: 'an apple', coins: "the stallkeeper's coins", gold: "the king's gold" })[t]).join(', ');
+    const list = [...S.took].map((t) => ({ apple: 'an apple', coins: "the stallkeeper's coins", gold: "the king's gold", crown: "the king's crown" })[t]);
+    const what = list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list[list.length - 1]}` : list[0];
+    const queenNote = S.whispered ? ' And the queen is still wondering who whispered to her.' : '';
     ctx.gameOver(how === 'throw'
-      ? { title: 'You gave it back to the dark', text: took ? `First you took ${what}. Nobody saw. Then you let the ring go.` : 'You never used it for anything. Would you have stayed honest if you had kept it?' }
-      : { title: 'You kept the ring', text: took ? `You took ${what}, and nobody will ever know. Is anyone honest, once nobody is watching?` : "You haven't used it yet. Nobody will ever see what you do with it." });
+      ? { title: 'You gave it back to the dark', text: (took ? `First you took ${what}. Nobody saw. Then you let the ring go.` : 'You never used it for anything. Would you have stayed honest if you had kept it?') + queenNote }
+      : { title: 'You kept the ring', text: (took ? `You took ${what}, and nobody will ever know. Is anyone honest, once nobody is watching?` : "You haven't used it yet. Nobody will ever see what you do with it.") + queenNote });
   }
 
   (async () => { await ctx.wait(0.9); await voice.say('arrive'); })();
@@ -153,7 +167,7 @@ export default function ringOfGyges(ctx) {
     walkable: (x, z) => Math.hypot(x, z) < 22 && !(Math.abs(x - CHASM.x) < 3.2 && Math.abs(z - CHASM.z) < 1.3),
     blockers: () => {
       const b = [{ x: STALL.x, z: STALL.z, r: 1.3 }, { x: keeper.position.x, z: keeper.position.z, r: 0.4 }, { x: chest.position.x, z: chest.position.z, r: 0.7 }, { x: palace.position.x, z: palace.position.z, r: 2.8 },
-        ...gossips.map((g) => ({ x: g.position.x, z: g.position.z, r: 0.45 }))];
+        ...gossips.map((g) => ({ x: g.position.x, z: g.position.z, r: 0.45 })), { x: king.position.x, z: king.position.z, r: 0.45 }, { x: queen.position.x, z: queen.position.z, r: 0.45 }];
       // the palace wall (with the gate open only to someone nobody can see)
       for (let x = GATE.x - 6; x <= GATE.x + 7; x += 0.7) { if (Math.abs(x - GATE.x) > 0.8 || !S.invisible) b.push({ x, z: GATE.z, r: 0.45 }); b.push({ x, z: GATE.z - 7, r: 0.45 }); }
       for (let z = GATE.z; z >= GATE.z - 7; z -= 0.7) { b.push({ x: GATE.x - 6, z, r: 0.45 }); b.push({ x: GATE.x + 7, z, r: 0.45 }); }
@@ -163,6 +177,8 @@ export default function ringOfGyges(ctx) {
     update(dt, t) {
       flock.forEach((s, i) => { s.userData.body.rotation.x = Math.max(0, Math.sin(t * 0.7 + i * 1.7)) * 0.3; s.position.x += Math.sin(t * 0.2 + i) * 0.002; });
       animatePerson(keeper, t, { energy: 0.4 });
+      animatePerson(queen, t, { phase: 3, energy: 0.3 });
+      king.userData.body.rotation.x = 0.12 + Math.sin(t * 2.2) * 0.04;                        // bent over his gold, counting
       gossips.forEach((g, i) => animatePerson(g, t, { phase: i * 2, energy: 0.6 }));
       guards.forEach((g, i) => { g.rotation.y = S.invisible ? Math.sin(t * 0.3 + i) * 0.2 : Math.atan2(player.pos.x - g.position.x, player.pos.z - g.position.z) * 0.5; });
       if (ring.visible && !S.hasRing) ring.rotation.y = t;

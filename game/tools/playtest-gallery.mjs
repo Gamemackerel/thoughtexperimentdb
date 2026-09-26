@@ -42,7 +42,7 @@ await run('gallery', async (t) => { await sleep(2); await t.shot('arrive'); awai
 await run('ring-of-gyges', async (t) => {
   await sleep(2); await t.shot('arrive'); await t.walkTo(-7, 1); await sleep(5); await t.until(() => t.p.evaluate(() => window.__ted.ctx.voice.said.has('horse')), 10); await sleep(4);
   await t.use('Reach into'); await sleep(3); await t.p.keyboard.press('KeyR'); await sleep(2); await t.shot('invisible');
-  if (!alt) { await t.use('Take an apple'); await sleep(2); await t.use('Take the coins'); await sleep(2); await t.shot('took'); await t.walkTo(11.5, -5); await sleep(5); await t.use("king's gold"); await sleep(2); await t.shot('gold'); }
+  if (!alt) { await t.use('Take an apple'); await sleep(2); await t.use('Take the coins'); await sleep(2); await t.shot('took'); await t.walkTo(11.5, -1.2); await sleep(5); await t.walkTo(11.5, -4.4); await sleep(3); await t.walkTo(15.8, -4.4); await sleep(3); await t.use("king's gold"); await sleep(2); await t.shot('gold'); await t.use("king's crown"); await sleep(3); await t.shot('crown'); await t.walkTo(11.2, -4.4); await sleep(3); await t.use('Whisper'); await sleep(1.5); await t.shot('queen'); await t.walkTo(11.5, -4.4); await sleep(3); await t.walkTo(11.5, -1.2); await sleep(4); }
   await sleep(4); await t.use(alt ? 'into the hills' : 'Throw the ring', 20);
 });
 await run('prisoners-dilemma', async (t) => {

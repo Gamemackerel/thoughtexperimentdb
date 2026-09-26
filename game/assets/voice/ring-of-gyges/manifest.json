@@ -63,5 +63,20 @@
     "file": "keep_took-1c5fcc65.mp3",
     "text": "You keep the ring, and walk off into the hills. You already know what you'd do with it.",
     "dur": 4.94
+  },
+  "king": {
+    "file": "king-da78231a.mp3",
+    "text": "Inside, the king, counting his gold. And the queen.",
+    "dur": 3.84
+  },
+  "crown": {
+    "file": "crown-7176d6f9.mp3",
+    "text": "His crown. He hasn't even noticed.",
+    "dur": 2.82
+  },
+  "queen": {
+    "file": "queen-86b19bbb.mp3",
+    "text": "In Plato's story, this is where the shepherd went next. With the queen's help, he killed the king, and took the throne.",
+    "dur": 6.9
   }
 }
