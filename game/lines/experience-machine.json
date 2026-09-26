@@ -1,0 +1,32 @@
+{
+  "voice": {
+    "name": "bm_fable",
+    "speed": 0.9,
+    "lang": "en-gb"
+  },
+  "pronounce": {},
+  "lines": {
+    "arrive": "A clinic. Very clean, very quiet, and very expensive.",
+    "pitch": "Plug in, and you can have any life you like. Write the great novel. Fall in love. Climb the mountain. Be adored. All of it will feel completely real.",
+    "forever": "Once you're in, you won't know it's a machine. Not ever. Not for the rest of your life.",
+    "ask": "Will you plug in?",
+    "tanks": "People, floating, smiling a little. Somewhere, they're having the best day of their lives.",
+    "brochure": "A brochure. Every picture in it is of someone laughing.",
+    "demo": "For a minute, you're on a stage, and everyone is cheering. It feels completely real.",
+    "demo_2": "And then you're back. It was wonderful. It was also nothing at all.",
+    "plug_1": "It's perfect. Everything you ever wanted, just the way you wanted it.",
+    "plug_2": "And you'll never know it isn't real. Does it matter, if you never know?",
+    "idle": "You don't decide. The technician shows you out, into the rain.",
+    "home_1": "Outside, it's raining. Your friend is waiting at the bus stop, and waves.",
+    "home_2": "Nothing out here was made for you. But it's real, and you're really in it. Is that worth more than feeling good?",
+    "twist": "Actually, there's something we should have told you. You've been in one of our machines all along. This is it. All of it.",
+    "twist_ask": "Would you like to unplug?",
+    "air": "The door opens onto a street you know very well. Is it really there?",
+    "unplug_0": "You pull the plug.",
+    "unplug_1": "You wake up, cold, in a tank, in a grey room full of tanks.",
+    "unplug_2": "Everything you knew was made for you. This isn't. It's real. Was it worth it?",
+    "stay_1": "You sit back down. Nothing changes. Nothing at all.",
+    "stay_idle": "You don't pull the plug. Nothing changes.",
+    "stay_2": "When people are told their life was a machine all along, most of them choose to keep it."
+  }
+}

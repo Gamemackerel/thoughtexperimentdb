@@ -78,4 +78,12 @@ await run('watchmaker', async (t) => {
   if (alt === 'back') { await t.use('Put the watch back'); return; }
   await t.use('Follow the path'); await sleep(6); await t.shot('shop');
 });
+await run('experience-machine', async (t) => {
+  if (alt === 'replay') { await t.p.evaluate(() => { localStorage.setItem('ted.done', JSON.stringify(['experience-machine'])); }); await t.p.reload(); await sleep(1.5); await t.p.click('#begin'); await sleep(2); }
+  await sleep(3); await t.shot('clinic'); await t.until(async () => (await t.S('phase')) === 'choose', 60); await t.shot('choose');
+  await t.use('Try the demonstration'); await sleep(3); await t.shot('dream'); await t.until(async () => await t.S('demoDone'), 20); await sleep(1);
+  if (alt === 'replay') { await t.use('Pull the plug'); await sleep(5); await t.shot('real'); return; }
+  if (alt === 'home') { await t.use('Go home'); await sleep(5); await t.shot('street'); return; }
+  await t.use('Climb into the tank'); await sleep(7); await t.shot('tank');
+});
 await b.close();
