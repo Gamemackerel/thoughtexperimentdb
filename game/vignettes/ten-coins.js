@@ -17,6 +17,7 @@ const HALF = 7, BACK = -4, FRONT = 2.8;
 const TABLE = V(0.4, 0, -1.2);
 const PDOOR = V(4.6, 0, BACK);
 const OFFICE = V(60, 0, 0);
+const PSPOT = V(2.6, 0, 0.2);             // where the president comes out to, to speak to you
 const IDLE_LIMIT = 60;
 
 function makeChair(color = 0x6b4a33) {
@@ -83,10 +84,13 @@ export default function tenCoins(ctx) {
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(160, 30), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; gp.position.x = 30; root.add(gp); level.ground.push(gp);
   let card = null;
 
+  // the president steps out of his office into the room to say something, and goes back in
+  async function presidentOut() { president.position.copy(PDOOR).add(V(0, 0, 0.6)); president.visible = true; S.presTo = PSPOT.clone(); for (let i = 0; i < 40 && S.presTo; i++) await ctx.wait(0.1); }
+  async function presidentIn() { S.presTo = PDOOR.clone().add(V(0, 0, 0.6)); for (let i = 0; i < 40 && S.presTo; i++) await ctx.wait(0.1); president.visible = false; }
   async function calledIn() {
     S.phase = 'called'; player.enabled = false;
-    president.visible = true; ctx.speak(president, 'Smith? Would you come in, please?'); await ctx.wait(2.2);
-    await ctx.flash(true); S.where = 'office'; player.place(OFFICE.x, OFFICE.z + 0.6, Math.PI); president.position.copy(OFFICE).add(V(0.4, 0, -2.4)); president.rotation.y = 0; await ctx.flash(false);
+    await presidentOut(); ctx.speak(president, 'Smith? Would you come in, please?'); await ctx.wait(2.4);
+    await ctx.flash(true); S.where = 'office'; player.place(OFFICE.x - 0.9, OFFICE.z + 0.6, Math.PI); president.position.copy(OFFICE).add(V(0.4, 0, -2.4)); president.rotation.y = 0; await ctx.flash(false);
     ctx.speak(president, 'Congratulations. The job is yours!'); await ctx.wait(1.8);
     await voice.say('twist', { urgent: true }); S.phase = 'pockets'; player.enabled = true;
   }
@@ -121,7 +125,7 @@ export default function tenCoins(ctx) {
 
   (async () => {
     await ctx.wait(1); await voice.say('arrive'); await ctx.wait(0.6);
-    president.visible = true; ctx.speak(president, 'Between you and me: Jones is getting the job.', { secs: 3.4 }); await ctx.wait(3.6); president.visible = false;
+    await presidentOut(); ctx.speak(president, 'Between you and me: Jones is getting the job.', { secs: 3.6 }); await ctx.wait(3.8); presidentIn();
     await voice.say('told'); await ctx.wait(0.4);
     ctx.speak(jones, 'Bus fare…', { offset: [0, 2.3, 0] });
     for (let i = 0; i < 10; i++) { jonesCoins[i].visible = true; await ctx.wait(0.22); }
@@ -135,7 +139,8 @@ export default function tenCoins(ctx) {
     walkable: (x, z) => (S.where === 'office' ? Math.abs(x - OFFICE.x) < 4.4 && z > OFFICE.z - 0.6 && z < OFFICE.z + 3 : Math.abs(x) < HALF - 0.4 && z > BACK + 0.5 && z < FRONT),
     blockers: () => (S.where === 'office' ? [] : [{ x: TABLE.x, z: TABLE.z, w: 1.7, d: 0.9 }, { x: jonesChair.position.x, z: jonesChair.position.z, r: 0.5 }, { x: myChair.position.x, z: myChair.position.z, r: 0.45 }, { x: -6, z: -3.4, r: 0.5 }]),
     update(dt, t) {
-      animatePerson(jones, t, { energy: 0.2 }); animatePerson(president, t, { energy: 0.2 });
+      animatePerson(jones, t, { energy: 0.2 }); animatePerson(president, t, { energy: S.presTo ? 1 : 0.2 });
+      if (S.presTo) { const d = S.presTo.clone().sub(president.position).setY(0); if (d.length() < 0.1) { S.presTo = null; president.rotation.y = Math.atan2(player.pos.x - president.position.x, player.pos.z - president.position.z); } else { president.position.addScaledVector(d.normalize(), Math.min(d.length(), dt * 2)); president.rotation.y = Math.atan2(d.x, d.z); } }
       if (S.phase === 'choose') {
         S.idle = player.vel.lengthSq() > 0.01 ? 0 : S.idle + dt;
         if (S.idle > IDLE_LIMIT) conclude(false);
@@ -143,7 +148,7 @@ export default function tenCoins(ctx) {
       cameo.update(dt);
     },
     camera(pl) {
-      if (S.where === 'office') return { pos: OFFICE.clone().add(V(0.6, 4.4, 8)), look: OFFICE.clone().add(V(0, 1, -1)), stiffness: 3 };
+      if (S.where === 'office') return { pos: OFFICE.clone().add(V(4.6, 3.8, 5.4)), look: OFFICE.clone().add(V(-0.4, 1.1, -1.2)), stiffness: 3 };   // from the side, so you're not in the way
       const look = V(clamp(pl.pos.x, -2, 2), 1.4, -1);
       return { pos: look.clone().add(V(0, 4.8, 10)), look, stiffness: 2.2 };
     },

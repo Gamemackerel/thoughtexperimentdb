@@ -6,8 +6,8 @@
   },
   "pronounce": {},
   "lines": {
-    "arrive": "A lecture, on the shape of the world.",
-    "ladder": "There's a ladder, over the edge of the world.",
+    "arrive": "A flat world. Yours. The sea runs round the edge of it, and pours off into the dark.",
+    "ladder": "There's a ladder, hooked over the edge of the world.",
     "turtle_1": "A turtle. A very large one.",
     "turtle_look": "It looks up at you, slowly, and goes back to holding up the world.",
     "ask": "So what holds the world up? And what holds that up?",
@@ -22,6 +22,9 @@
     "loop_1": "The turtles go round in a great ring, each on the back of the one before. The last one holds up the first.",
     "loop_2": "There's no bottom, because there's no bottom to reach. They hold each other up.",
     "stop_1": "You stop asking what's underneath.",
-    "stop_2": "Most people do, most of the time. The world stays up either way."
+    "stop_2": "Most people do, most of the time. The world stays up either way.",
+    "wonder": "You've always wondered. Something must be holding it up.",
+    "wonder_2": "You sit and look at the stars, and wonder what's underneath you. Something is. Something must be.",
+    "edge": "Far below, something enormous and green, moving very, very slowly."
   }
 }

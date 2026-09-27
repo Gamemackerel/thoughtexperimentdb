@@ -44,7 +44,7 @@ await run('stopped-clock', async (t) => {
   await t.use(alt === 'postman' ? 'Ask the postman' : 'Look up at the clock'); await sleep(5); await t.shot('believed'); await sleep(8); await t.shot('lapse');
 });
 await run('ten-coins', async (t) => {
-  await sleep(3); await t.shot('room'); await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.shot('coins');
+  await sleep(7.5); await t.shot('president'); await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.shot('coins');
   await t.use(alt === 'wait' ? 'wait your turn' : 'two and two'); await t.until(async () => (await t.S('phase')) === 'pockets', 30); await sleep(1); await t.shot('office');
   await t.use('Empty your pockets'); await sleep(5); await t.shot('pockets');
 });

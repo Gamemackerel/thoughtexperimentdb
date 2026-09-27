@@ -12,7 +12,7 @@
     "ask": "Go and see? Or walk on?",
     "dog": "It's a dog. Wearing a sheepskin.",
     "real": "But over the brow of the hill, out of sight from the gate, there is a sheep in the field.",
-    "end": "You believed there was a sheep in the field. There was. But what made you believe it was a dog. Did you know?",
+    "end": "You believed there was a sheep in the field, and there was. But the one you were looking at was a dog. Did you know there was a sheep?",
     "lane_1": "You walk on, quite sure there's a sheep in the field.",
     "lane_idle": "You walk on down the lane, sure there's a sheep in that field.",
     "lane_2": "And there is one, behind the hill, where you couldn't see it. The one you saw was a dog."
