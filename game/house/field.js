@@ -189,8 +189,15 @@ export default function field(ctx) {
   const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.12, 5, 5), new THREE.MeshBasicMaterial({ color: 0xfff6c0 })); bolt.position.copy(bog.position).add(V(0.2, 3.1, 0)); bolt.scale.y = 0.75; bolt.rotation.z = 0.15; bolt.visible = false; root.add(bolt);
   // the barn, up the lane: red, white trim, a round-topped roof
   const barn = new THREE.Group();
-  const bbody = mesh(new THREE.BoxGeometry(6, 4, 7), clay(0xa8322a)); bbody.position.y = 2; barn.add(bbody);
-  const broof = mesh(new THREE.CylinderGeometry(3.2, 3.2, 7.2, 20, 1, false, 0, Math.PI), clay(0x5a5a62)); broof.rotation.set(Math.PI / 2, 0, Math.PI / 2); broof.position.y = 4; barn.add(broof);
+  // red walls with a gambrel gable (the classic barn shape), and a grey roof in four slabs along its outline
+  const GAMBREL = [[-3, 0], [3, 0], [3, 3.6], [2.1, 5.1], [0, 5.9], [-2.1, 5.1], [-3, 3.6]];
+  const gShape = new THREE.Shape(GAMBREL.map(([x, y]) => new THREE.Vector2(x, y)));
+  const bbody = mesh(new THREE.ExtrudeGeometry(gShape, { depth: 7, bevelEnabled: false }), clay(0xa8322a)); bbody.position.z = -3.5; barn.add(bbody);
+  for (let i = 2; i < GAMBREL.length - 1; i++) {
+    const [x1, y1] = GAMBREL[i], [x2, y2] = GAMBREL[i + 1] ?? GAMBREL[0], len = Math.hypot(x2 - x1, y2 - y1);
+    const slab = mesh(new THREE.BoxGeometry(len + 0.25, 0.2, 7.4), clay(0x5a5a62));
+    slab.position.set((x1 + x2) / 2, (y1 + y2) / 2 + 0.08, 0); slab.rotation.z = Math.atan2(y2 - y1, x2 - x1); barn.add(slab);
+  }
   const bdoor = mesh(new THREE.BoxGeometry(2.4, 2.8, 0.1), clay(0x8a2a24)); bdoor.position.set(0, 1.4, 3.52); barn.add(bdoor);
   for (const [a, b] of [[0.9, 1], [-0.9, 1]]) { const x = mesh(new THREE.BoxGeometry(0.12, 3.3, 0.04), clay(0xf6f1e7)); x.position.set(0, 1.4, 3.58); x.rotation.z = a; barn.add(x); }
   const loft = mesh(new THREE.BoxGeometry(1.1, 1.2, 0.1), clay(0xf6f1e7)); loft.position.set(0, 4.6, 3.55); barn.add(loft);
