@@ -1,9 +1,11 @@
 // Automated playtest of the Ship of Theseus's voyage and the museum (needs `npm run play`):
 //   node game/tools/playtest-voyage.mjs [plain]
 // Boards the repaired ship, presses S at "sail forth", sails (and tacks), lands at the lighthouse, wins the fight, takes
-// the chest from the cellar, visits North Sentinel (leaves the sweets), the frogs and the palm island, tacks upwind to
-// the house island, goes through the sky door, and checks the museum shows the chest. `plain`: don't press S, and check
-// the end card still comes. Screenshots to build/playtest-voyage-*.png.
+// the chest from the cellar, visits North Sentinel (leaves the sweets), the frogs and the palm island, ties up at the
+// harbour again (talks to the fisherman, boards), checks unvisited islands are "?", tacks upwind to the house island,
+// goes in at the palace's front door, checks the end card comes (and the chest is saved), goes back to the first room
+// from the card and checks the museum shows the chest. `plain`: don't press S, and check the end card still comes.
+// Screenshots to build/playtest-voyage-*.png.
 import puppeteer from 'puppeteer';
 
 const b = await puppeteer.launch({ headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
@@ -131,15 +133,31 @@ try {
     await shot('frogs'); await use('Board the ship', 12);
     await p.evaluate(() => window.__ted.level.__V.teleport('palm')); await sleep(2.5); await p.keyboard.press('KeyE'); await sleep(2.5);
     await use('Read the note'); await sleep(0.5); await shot('palm-bottle'); await use('Board the ship', 12);
+    // back to the harbour you set out from: tie up, walk the dock, talk to the fisherman, board again
+    await p.evaluate(() => window.__ted.level.__V.teleport('harbour')); await sleep(2.5); await shot('harbour-approach');
+    await p.keyboard.press('KeyE'); await sleep(2.5);
+    check((await VS('mode')) === 'land' && (await VS('at')) === 'harbour', 'tied up at the harbour');
+    await p.evaluate(() => { const P = window.__ted.player; P.target = P.pos.clone().set(23.2, 0, 0.6); }); await sleep(4);
+    await use('Talk', 4); await sleep(1); await shot('harbour-fisherman');
+    await use('Board the ship', 15); await sleep(1); check((await VS('mode')) === 'sail', 'boarded again at the harbour');
+    // island names: only the ones you've landed on (the house's isn't known yet)
+    const names = await p.evaluate(() => [...document.querySelectorAll('.label')].map((l) => l.textContent));
+    check(!names.includes('The house') && names.includes('?'), 'unvisited islands are labelled "?"');
     // home: upwind, so tack all the way
-    const home = await sailTo('house', 150);
+    const home = await sailTo('house', 240);                            // (from the harbour: a long beat upwind)
     check(home, 'tacked upwind to the house island');
     if (!home) { await p.evaluate(() => window.__ted.level.__V.teleport('house')); await sleep(2.5); }
+    await shot('house-from-sea');
     await p.keyboard.press('KeyE'); await sleep(2.5); await shot('house-island');
-    await use('Open the sky door');
-    await until(async () => (await lvl()) === 'house', 10); await sleep(2);
-    check((await lvl()) === 'house', 'the sky door leads home');
+    check(await p.evaluate(() => window.__ted.level.__V.S.visited.includes('house')), 'the house island is named once you land');
+    await use('Go in at the front door', 12); await sleep(2.5); await shot('house-door');
+    const card = await until(() => p.evaluate(() => !document.getElementById('over').hidden), 15);
+    check(card, 'going in at the front door ends on the card: ' + (await p.evaluate(() => document.querySelector('#over h1').textContent)));
     check(await p.evaluate(() => JSON.parse(localStorage.getItem('ted.items') || '[]').includes('chest-of-gold')), 'the chest is saved for the museum');
+    await shot('home-card');
+    await p.click('#over [data-act="home"]');
+    await until(async () => (await lvl()) === 'house', 10); await sleep(2);
+    check((await lvl()) === 'house', '"Back to the first room" from the card');
     await shot('home');
     await sleep(1); await use('Go into the museum', 12);
     await until(async () => (await lvl()) === 'museum', 10); await sleep(2.5);

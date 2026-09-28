@@ -55,9 +55,9 @@
     "dur": 5.22
   },
   "keep_clean": {
-    "file": "keep_clean-ed41f481.mp3",
-    "text": "You keep the ring, and walk off into the hills. You haven't used it. Yet.",
-    "dur": 4.75
+    "file": "keep_clean-e22d02af.mp3",
+    "text": "You keep the ring, and walk off into the hills, where nobody knows you. You haven't used it. Yet.",
+    "dur": 6.82
   },
   "keep_took": {
     "file": "keep_took-1c5fcc65.mp3",
@@ -75,8 +75,63 @@
     "dur": 2.82
   },
   "queen": {
-    "file": "queen-86b19bbb.mp3",
-    "text": "In Plato's story, this is where the shepherd went next. With the queen's help, he killed the king, and took the throne.",
-    "dur": 6.9
+    "file": "queen-652607ff.mp3",
+    "text": "In the old story, this is where the shepherd went next. With the queen's help, he did away with the king, and took the throne.",
+    "dur": 8.23
+  },
+  "options": {
+    "file": "options-fe02c8ba.mp3",
+    "text": "You could throw it back into the crack, and go on as before. Or keep it, and take whatever you like.",
+    "dur": 6.61
+  },
+  "options2": {
+    "file": "options2-8d790b91.mp3",
+    "text": "Or keep it, and go back to your sheep. Just in case.",
+    "dur": 4.36
+  },
+  "crown_hint": {
+    "file": "crown_hint-4d2c6e15.mp3",
+    "text": "Without it, would anyone know he was the king?",
+    "dur": 3.76
+  },
+  "seen": {
+    "file": "seen-8d015381.mp3",
+    "text": "They can see you now.",
+    "dur": 1.93
+  },
+  "thrown": {
+    "file": "thrown-789d6ff8.mp3",
+    "text": "They throw you out of the gate. Nobody noticed the ring.",
+    "dur": 4.49
+  },
+  "wear": {
+    "file": "wear-b395a734.mp3",
+    "text": "You put on the crown, and let them see you.",
+    "dur": 3.55
+  },
+  "seized": {
+    "file": "seized-4aae3913.mp3",
+    "text": "The guards see a crown, and a man without one. They take him away.",
+    "dur": 4.96
+  },
+  "queen_side": {
+    "file": "queen_side-8509b8f0.mp3",
+    "text": "The queen comes to stand at your side.",
+    "dur": 2.93
+  },
+  "king_end": {
+    "file": "king_end-c49a311b.mp3",
+    "text": "You're the king now. Nobody will ever know how.",
+    "dur": 3.37
+  },
+  "flock_clean": {
+    "file": "flock_clean-53533529.mp3",
+    "text": "You keep the ring, and go back to your sheep. You'll never use it. Unless you have to.",
+    "dur": 5.9
+  },
+  "flock_took": {
+    "file": "flock_took-b721218a.mp3",
+    "text": "You go back to your sheep, with the ring in your pocket. And what you took.",
+    "dur": 5.04
   }
 }

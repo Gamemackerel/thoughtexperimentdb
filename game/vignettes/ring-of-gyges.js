@@ -1,7 +1,10 @@
 // Vignette: The Ring of Gyges.
 // You're a shepherd. After a storm the ground has split open; down in the crack is a hollow bronze horse, and inside
 // it a gold ring. Turn it and you vanish. The village has a market stall, a coin box, and a palace with guards; inside,
-// the king counting his gold, and the queen (in Plato, the shepherd goes to her next). Nobody can see you. Throw the ring back into the dark, or keep it and walk off into the hills.
+// the king counting his gold, and the queen (in Plato, the shepherd goes to her next). Nobody can see you. Show yourself
+// inside the walls without the crown and the guards throw you out. Endings: throw the ring back into the dark; keep it and
+// walk off into the hills; keep it and go back to your sheep, just in case; or take the king's crown, put it on outside
+// the gate, and let the guards lead the crownless king away (Plato's Gyges took the throne with the queen's help).
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
   makeIsland, makePerson, animatePerson, makeHouse, makeTree, makeFrog,
@@ -18,6 +21,9 @@ const STALL = V(3.5, 0, 3);
 const GATE = V(11.5, 0, -3.2);
 const CHEST = V(15.5, 0, -7.2);
 const HILLS = V(-15, 0, -9);
+const FOLD = V(-14.2, 0, 7.8);                                                           // the far side of your flock
+const WEAR = V(GATE.x, 0, GATE.z + 3);                                                  // just outside the gate, before the guards
+const inside = (p) => p.z < GATE.z - 0.3 && p.x > GATE.x - 6 && p.x < GATE.x + 7;       // within the palace walls
 
 export default function ringOfGyges(ctx) {
   const { stage, interact, voice, player, save } = ctx;
@@ -63,10 +69,12 @@ export default function ringOfGyges(ctx) {
   const gossips = [0, 1].map((i) => { const p = makePerson({ color: [0x5b7fa6, 0x7a5a8c][i], robe: true }); p.position.set(6.5 + i * 1.1, 0, 7); p.rotation.y = i ? -1.6 : 1.6; root.add(p); return p; });
   for (const [x, z, r] of [[-1, 9, 0.2], [2.5, 10.5, -0.3], [8.5, 11, 0.1]]) { const h = makeHouse({ color: 0xf2e6d4, roof: 0xb5654e }); h.position.set(x, 0, z); h.rotation.y = r + Math.PI; root.add(h); }
   const wallM = clay(0xe4dccd);
-  for (const [x, z, w, d] of [[GATE.x - 3.6, GATE.z, 5.4, 0.6], [GATE.x + 4.4, GATE.z, 5.6, 0.6], [GATE.x - 6, GATE.z - 3.5, 0.6, 7], [GATE.x + 7, GATE.z - 3.5, 0.6, 7], [GATE.x + 0.5, GATE.z - 7, 13.6, 0.6]]) {
-    const w_ = mesh(new THREE.BoxGeometry(w, 2.6, d), wallM); w_.position.set(x, 1.3, z); root.add(w_);
+  // (the front wall is low and the gate towers short, so you can see into the courtyard from the road)
+  for (const [x, z, w, d, h] of [[GATE.x - 3.6, GATE.z, 5.4, 0.6, 1.3], [GATE.x + 4.4, GATE.z, 5.6, 0.6, 1.3], [GATE.x - 6, GATE.z - 3.5, 0.6, 7, 2.6], [GATE.x + 7, GATE.z - 3.5, 0.6, 7, 2.6], [GATE.x + 0.5, GATE.z - 7, 13.6, 0.6, 2.6]]) {
+    const w_ = mesh(new THREE.BoxGeometry(w, h, d), wallM); w_.position.set(x, h / 2, z); root.add(w_);
   }
-  for (const s of [-1, 1]) { const tower = mesh(new THREE.CylinderGeometry(0.7, 0.8, 3.6, 12), wallM); tower.position.set(GATE.x + s * 1.2, 1.8, GATE.z); root.add(tower); }
+  for (const s of [-1, 1]) { const tower = mesh(new THREE.CylinderGeometry(0.6, 0.7, 2, 12), wallM); tower.position.set(GATE.x + s * 1.2, 1, GATE.z); root.add(tower);
+    const cap = mesh(new THREE.ConeGeometry(0.75, 0.6, 12), clay(0x3f8f86)); cap.position.set(GATE.x + s * 1.2, 2.3, GATE.z); root.add(cap); }
   const palace = makeHouse({ color: 0xf6efe0, roof: 0x3f8f86 }); palace.scale.setScalar(1.3); palace.position.set(GATE.x + 1.5, 0, GATE.z - 4.5); root.add(palace);
   const guards = [-1, 1].map((s) => { const g = makePerson({ color: 0x3f5a8c, hat: true }); g.position.copy(GATE).add(V(s * 1.5, 0, 0.9)); root.add(g); const spear = mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.8, 6), clay(0x6b4a33)); spear.position.set(0.45, 1.4, 0); g.add(spear); return g; });
   const chest = new THREE.Group(); const cb = mesh(new THREE.BoxGeometry(1, 0.6, 0.7), clay(0x6b4a33)); cb.position.y = 0.3; chest.add(cb);
@@ -82,7 +90,7 @@ export default function ringOfGyges(ctx) {
   const qcrown = crownOf(0.2, 0.1); qcrown.position.y = 2.02; queen.userData.body.add(qcrown);
 
   // ---- state
-  const S = { phase: 'explore', hasRing: false, invisible: false, took: new Set(), inside: false, whispered: false };
+  const S = { phase: 'explore', hasRing: false, invisible: false, took: new Set(), inside: false, whispered: false, arrests: 0, crowned: false };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/ring-of-gyges.json', 'The Ring of Gyges');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -93,8 +101,10 @@ export default function ringOfGyges(ctx) {
     S.invisible = on;
     player.obj.traverse((m) => { if (!m.isMesh) return; if (on) { saved.set(m, m.material); m.material = ghostMat; m.castShadow = false; } else if (saved.has(m)) { m.material = saved.get(m); m.castShadow = true; } });
     btn.textContent = on ? 'Turn the ring back (R)' : 'Turn the ring (R)';
-    if (on) { voice.say('turn'); voice.say('ask'); frogStart(); }
+    if (on) { voice.say('turn'); frogStart(); if (!voice.said.has('ask')) laidOut(); }
   }
+  // the question, a long silence, then the three ways it could go
+  async function laidOut() { await voice.say('ask'); await ctx.wait(6); if (now()) await voice.say('options', { when: now }); if (now()) voice.say('options2', { when: now }); }
   const btn = document.createElement('button'); btn.className = 'ringbtn'; btn.hidden = true; btn.textContent = 'Turn the ring (R)';
   Object.assign(btn.style, { position: 'fixed', right: '18px', bottom: '18px', zIndex: 5, font: '600 16px var(--sans)', padding: '10px 18px', borderRadius: '999px', border: '0', background: '#e2b53b', color: '#2b2a33', cursor: 'pointer', pointerEvents: 'auto' });
   document.getElementById('hud').appendChild(btn);
@@ -119,7 +129,8 @@ export default function ringOfGyges(ctx) {
   interact.add({ pos: CHASM.clone().add(V(1.2, 0, 2.2)), radius: 2, prompt: 'Reach into the horse', enabled: () => S.phase === 'explore' && !S.hasRing && voice.said.has('horse'),
     onUse: async () => { S.hasRing = true; ring.visible = false; btn.hidden = false; await voice.say('take'); ctx.toast('Press <b>R</b> (or the gold button) to turn the ring.', 5); } });
   interact.trigger({ pos: CHASM, radius: 6, onEnter: () => voice.say('horse') });
-  const take = (what, obj, line = 'took') => { S.took.add(what); if (obj) obj.visible = false; voice.say(line); };
+  const now = () => S.phase === 'explore';
+  const take = (what, obj, line = 'took') => { S.took.add(what); if (obj) obj.visible = false; voice.say(line, { when: now }); };
   interact.add({ pos: STALL.clone().add(V(-0.6, 0, 1.2)), radius: 1.5, prompt: 'Take an apple', enabled: () => S.phase === 'explore' && S.invisible && apples.some((a) => a.visible),
     onUse: () => { take('apple', apples.find((a) => a.visible)); ctx.speak(keeper, "Hm. I'm sure I had more apples than that."); } });
   interact.add({ pos: STALL.clone().add(V(0.8, 0, 1.2)), radius: 1.3, prompt: 'Take the coins', enabled: () => S.phase === 'explore' && S.invisible && coins.visible,
@@ -127,36 +138,96 @@ export default function ringOfGyges(ctx) {
   interact.add({ pos: CHEST.clone().add(V(0, 0, 1.1)), radius: 1.6, prompt: "Take the king's gold", enabled: () => S.phase === 'explore' && S.invisible && gold.visible,
     onUse: () => take('gold', gold, 'treasury') });
   interact.add({ pos: () => king.position.clone().add(V(-0.2, 0, 1)), radius: 1.3, prompt: "Take the king's crown", enabled: () => S.phase === 'explore' && S.invisible && crown.visible,
-    onUse: () => { take('crown', crown, 'crown'); setTimeout(() => ctx.speak(king, 'Hm. Draughty in here.'), 1400); } });
+    onUse: async () => { take('crown', crown, 'crown'); setTimeout(() => ctx.speak(king, 'Hm. Draughty in here.'), 1400); await voice.say('crown', { when: now }); await ctx.wait(1); voice.say('crown_hint', { when: now }); } });
   interact.add({ pos: () => queen.position.clone().add(V(0.6, 0, 0.8)), radius: 1.4, prompt: 'Whisper to the queen', enabled: () => S.phase === 'explore' && S.invisible && !S.whispered,
     onUse: async () => { S.whispered = true; ctx.speak(queen, "Who's there? …Go on. I'm listening."); await ctx.wait(2.5); voice.say('queen'); } });
-  interact.trigger({ test: (p) => p.z < GATE.z - 0.6 && Math.abs(p.x - GATE.x) < 5, onEnter: async () => { await voice.say('guards'); voice.say('king'); } });
-  interact.add({ pos: CHASM.clone().add(V(-1.6, 0, 2.2)), radius: 1.6, prompt: 'Throw the ring back', enabled: () => S.phase === 'explore' && S.hasRing && voice.said.has('ask'),
-    onUse: () => end('throw') });
-  interact.add({ pos: HILLS.clone().add(V(2, 0, 2)), radius: 2.6, prompt: 'Walk off into the hills', enabled: () => S.phase === 'explore' && S.hasRing && voice.said.has('ask'),
-    onUse: () => end('keep') });
+  interact.trigger({ test: (p) => p.z < GATE.z - 0.6 && Math.abs(p.x - GATE.x) < 5, onEnter: async () => { await voice.say('guards', { when: now }); voice.say('king', { when: now }); } });
+  const canEnd = () => S.phase === 'explore' && S.hasRing && voice.said.has('ask');
+  interact.add({ pos: CHASM.clone().add(V(-1.6, 0, 2.2)), radius: 1.6, prompt: 'Throw the ring back', terminal: true, enabled: canEnd, onUse: () => end('throw') });
+  interact.add({ pos: HILLS.clone().add(V(2, 0, 2)), radius: 2.6, prompt: 'Keep it, and walk off into the hills', terminal: true, enabled: canEnd, onUse: () => end('keep') });
+  interact.add({ pos: FOLD, radius: 1.8, prompt: 'Keep it, and go back to your sheep', terminal: true, enabled: canEnd, onUse: () => end('flock') });
+  interact.add({ pos: WEAR, radius: 1.6, prompt: 'Put on the crown, and show yourself', terminal: true, enabled: () => canEnd() && S.took.has('crown'), onUse: () => crowned() });
 
   // asides
   talk(ctx, { who: keeper, enabled: () => S.phase === 'explore', lines: (i) => (S.invisible ? ['Who said that?', 'Is somebody there?', "I'm hearing things."][i % 3] : ['Apples! Two for a coin!', "You look like you've seen a ghost.", "Mind the crack in the road. Opened up in the storm."][i % 3]) });
   gossips.forEach((g, k) => talk(ctx, { who: g, enabled: () => S.phase === 'explore', lines: (i) => (S.invisible ? ['…did you hear something?', "It's the wind."][(i + k) % 2] : ["They say the king's gold is counted every night.", 'That shepherd was always an honest sort.', 'Honest? Only because somebody was watching.'][(i + k) % 3]) }));
-  talk(ctx, { who: king, radius: 1.6, prompt: 'Listen', enabled: () => S.phase === 'explore', lines: ['Seven hundred and twelve. Seven hundred and thirteen.', 'Every night I count it. Every night, all there.', "Where was I? …Seven hundred and one."] });
-  guards.forEach((g) => talk(ctx, { who: g, radius: 1.8, enabled: () => S.phase === 'explore' && !S.invisible, lines: ['Halt. The palace is closed.', 'Move along, shepherd.', 'No one goes in without being seen.'] }));
+  talk(ctx, { who: king, radius: 1.6, prompt: 'Listen', enabled: () => S.phase === 'explore' && !walkers.has(king), lines: ['Seven hundred and twelve. Seven hundred and thirteen.', 'Every night I count it. Every night, all there.', "Where was I? …Seven hundred and one."] });
+  guards.forEach((g) => talk(ctx, { who: g, radius: 1.8, enabled: () => S.phase === 'explore' && !S.invisible && !walkers.has(g), lines: ['Halt. The palace is closed.', 'Move along, shepherd.', 'No one goes in without being seen.'] }));
   look(ctx, { pos: () => flock[1].position, radius: 2.2, height: 1.4, prompt: 'Look at your sheep', lines: ['flock'], enabled: () => S.phase === 'explore' });
+
+  // people walking a scripted route (guards, the king, the queen); update() moves them
+  const walkers = new Map();
+  const walk = (who, pts, speed = 2.4) => new Promise((res) => walkers.set(who, { pts: pts.map(([x, z]) => V(x, 0, z)), speed, res }));
+  const posts = guards.map((g) => g.position.clone());
+  let escort = false;                                                                     // the guards march either side of you
+  const walkYou = async (x, z) => { player.target = V(x, 0, z); for (let i = 0; i < 80 && player.target; i++) await ctx.wait(0.1); };
+
+  // seen inside the walls without the crown: the guards march you out through the gate (they take back the king's gold)
+  async function arrest() {
+    S.phase = 'arrest'; S.arrests++; player.locked = true; player.target = null; btn.hidden = true;
+    const p = player.pos.clone();
+    ctx.speak(guards[0], 'You! A shepherd, in the palace?');
+    voice.say('seen', { once: false, urgent: true });
+    await Promise.all(guards.map((g, i) => { const s = i ? 1 : -1; return walk(g, [[GATE.x + s * 0.35, GATE.z + 0.8], [GATE.x + s * 0.35, GATE.z - 0.9], [p.x + s * 0.8, GATE.z - 0.9], [p.x + s * 0.8, p.z]], 3); }));
+    escort = true; await ctx.wait(0.4);
+    if (S.took.has('gold')) { S.took.delete('gold'); gold.visible = true; ctx.speak(guards[1], "And the king's gold? We'll have that back."); await ctx.wait(1.6); }
+    if (p.z < GATE.z - 1.2) await walkYou(p.x, GATE.z - 0.9);
+    await walkYou(GATE.x, GATE.z - 0.9); await walkYou(GATE.x, GATE.z + 4);
+    if (player.pos.z < GATE.z + 1) player.place(GATE.x, GATE.z + 4, 0);
+    escort = false;
+    ctx.speak(guards[0], 'Out you go. And stay out.');
+    await voice.say('thrown', { once: false });
+    await Promise.all(guards.map((g, i) => walk(g, [[posts[i].x, posts[i].z + 1.2], [posts[i].x, posts[i].z]], 2.4)));
+    S.phase = 'explore'; player.locked = false; btn.hidden = false;
+  }
+
+  // you put on the crown outside the gate and let them see you; the guards take away the man without one
+  async function crowned() {
+    S.phase = 'crowned'; S.crowned = true; player.locked = true; player.target = null; btn.hidden = true;
+    if (S.invisible) setInvisible(false);
+    player.obj.userData.body.add(crown); crown.position.set(0, 2.06, 0); crown.visible = true;
+    player.obj.rotation.y = Math.PI;                                                       // towards the gate
+    await voice.say('wear', { urgent: true });
+    guards.forEach((g) => (g.rotation.y = Math.atan2(player.pos.x - g.position.x, player.pos.z - g.position.z)));
+    ctx.speak(guards[1], 'Your Majesty!'); await ctx.wait(1.8);
+    ctx.speak(guards[0], "Then who's that, in the treasury?"); await ctx.wait(1.4);
+    const kp = king.position;
+    await Promise.all(guards.map((g, i) => { const s = i ? 1 : -1; return walk(g, [[GATE.x + s * 0.35, GATE.z + 0.8], [GATE.x + s * 0.35, GATE.z - 1], [kp.x - 0.4 + s * 0.3, GATE.z - 1], [kp.x - 0.4 + s * 0.3, kp.z + 0.9]], 3); }));
+    king.userData.body.rotation.x = 0; king.rotation.y = 0;
+    ctx.speak(king, "I'm the king! I was only counting my gold!"); await ctx.wait(2.2);
+    ctx.speak(guards[1], 'A king, without a crown? Come along.'); await ctx.wait(1.6);
+    // out through the gate, past you, and off down the road (the king between his guards)
+    const out = (dx) => [[kp.x + dx, GATE.z - 1], [GATE.x + 0.3 + dx * 0.4, GATE.z - 1], [GATE.x + 0.3 + dx * 0.4, GATE.z + 0.9], [GATE.x + 2.6 + dx, GATE.z + 2.4], [GATE.x + 7 + dx, GATE.z + 8]];
+    const led = Promise.all([walk(king, out(0), 1.8), walk(guards[0], out(-0.6), 1.8), walk(guards[1], out(0.6), 1.8)]);
+    for (let i = 0; i < 80 && king.position.z < GATE.z + 0.5; i++) await ctx.wait(0.1);
+    const seized = voice.say('seized');
+    await ctx.wait(1.2);
+    await walk(queen, [[queen.position.x + 0.8, GATE.z - 1.2], [GATE.x - 0.2, GATE.z - 1.2], [GATE.x - 0.2, GATE.z + 1], [player.pos.x - 0.9, player.pos.z + 0.1]], 1.6);
+    await seized; await led;
+    queen.rotation.y = 0; player.obj.rotation.y = 0;
+    ctx.speak(queen, 'Your Majesty.');
+    await voice.say('queen_side'); await ctx.wait(0.6); await voice.say('king_end'); await ctx.wait(1.5);
+    save.complete('ring-of-gyges');
+    ctx.gameOver({ title: 'You became the king', text: "You put on a crown, and the guards did the rest. And you still have the ring. Would anyone stay honest, with a ring like that?" });
+  }
 
   async function end(how) {
     S.phase = 'over'; player.enabled = false; btn.hidden = true;
     if (S.invisible) setInvisible(false);
     const took = S.took.size > 0;
     if (how === 'throw') { ring.visible = true; ring.position.copy(CHASM).add(V(0.4, 0.2, 0.3)); }
-    else { player.locked = true; player.enabled = true; player.target = HILLS.clone().add(V(-3, 0, -3)); }
+    else if (how === 'keep') { player.locked = true; player.enabled = true; player.target = HILLS.clone().add(V(-3, 0, -3)); }
+    else { player.locked = true; player.enabled = true; player.target = V(-12.2, 0, 6.2); }
     await ctx.wait(1); await voice.say(`${how}_${took ? 'took' : 'clean'}`); await ctx.wait(1.2);
     save.complete('ring-of-gyges');
     const list = [...S.took].map((t) => ({ apple: 'an apple', coins: "the stallkeeper's coins", gold: "the king's gold", crown: "the king's crown" })[t]);
     const what = list.length > 1 ? `${list.slice(0, -1).join(', ')} and ${list[list.length - 1]}` : list[0];
     const queenNote = S.whispered ? ' And the queen is still wondering who whispered to her.' : '';
-    ctx.gameOver(how === 'throw'
-      ? { title: 'You gave it back to the dark', text: (took ? `First you took ${what}. Nobody saw. Then you let the ring go.` : 'You never used it for anything. Would you have stayed honest if you had kept it?') + queenNote }
-      : { title: 'You kept the ring', text: (took ? `You took ${what}, and nobody will ever know. Is anyone honest, once nobody is watching?` : "You haven't used it yet. Nobody will ever see what you do with it.") + queenNote });
+    ctx.gameOver({
+      throw: { title: 'You gave it back to the dark', text: (took ? `First you took ${what}. Nobody saw. Then you let the ring go.` : 'You never used it for anything. Would you have stayed honest if you had kept it?') + queenNote },
+      keep: { title: 'You kept the ring', text: (took ? `You took ${what}, and nobody will ever know. Is anyone honest, once nobody is watching?` : "You haven't used it yet. Nobody will ever see what you do with it.") + queenNote },
+      flock: { title: 'You kept it, just in case', text: (took ? `You went back to your sheep. But you'd already taken ${what}. Is it still just in case?` : "You went back to your sheep, and you've never used it. Would you, if you ever needed to?") + queenNote },
+    }[how]);
   }
 
   (async () => { await ctx.wait(0.9); await voice.say('arrive'); })();
@@ -169,29 +240,38 @@ export default function ringOfGyges(ctx) {
       const b = [{ x: STALL.x, z: STALL.z, r: 1.3 }, { x: keeper.position.x, z: keeper.position.z, r: 0.4 }, { x: chest.position.x, z: chest.position.z, r: 0.7 }, { x: palace.position.x, z: palace.position.z, r: 2.8 },
         ...gossips.map((g) => ({ x: g.position.x, z: g.position.z, r: 0.45 })), { x: king.position.x, z: king.position.z, r: 0.45 }, { x: queen.position.x, z: queen.position.z, r: 0.45 }];
       // the palace wall (with the gate open only to someone nobody can see)
-      for (let x = GATE.x - 6; x <= GATE.x + 7; x += 0.7) { if (Math.abs(x - GATE.x) > 0.8 || !S.invisible) b.push({ x, z: GATE.z, r: 0.45 }); b.push({ x, z: GATE.z - 7, r: 0.45 }); }
+      for (let x = GATE.x - 6; x <= GATE.x + 7; x += 0.7) { if (Math.abs(x - GATE.x) > 0.8 || (!S.invisible && S.phase !== 'arrest')) b.push({ x, z: GATE.z, r: 0.45 }); b.push({ x, z: GATE.z - 7, r: 0.45 }); }
       for (let z = GATE.z; z >= GATE.z - 7; z -= 0.7) { b.push({ x: GATE.x - 6, z, r: 0.45 }); b.push({ x: GATE.x + 7, z, r: 0.45 }); }
-      guards.forEach((g) => b.push({ x: g.position.x, z: g.position.z, r: 0.4 }));
+      if (S.phase === 'explore') guards.forEach((g) => b.push({ x: g.position.x, z: g.position.z, r: 0.4 }));
       return b;
     },
     update(dt, t) {
       flock.forEach((s, i) => { s.userData.body.rotation.x = Math.max(0, Math.sin(t * 0.7 + i * 1.7)) * 0.3; s.position.x += Math.sin(t * 0.2 + i) * 0.002; });
       animatePerson(keeper, t, { energy: 0.4 });
       animatePerson(queen, t, { phase: 3, energy: 0.3 });
-      king.userData.body.rotation.x = 0.12 + Math.sin(t * 2.2) * 0.04;                        // bent over his gold, counting
+      if (S.phase !== 'crowned') king.userData.body.rotation.x = 0.12 + Math.sin(t * 2.2) * 0.04;   // bent over his gold, counting
       gossips.forEach((g, i) => animatePerson(g, t, { phase: i * 2, energy: 0.6 }));
-      guards.forEach((g, i) => { g.rotation.y = S.invisible ? Math.sin(t * 0.3 + i) * 0.2 : Math.atan2(player.pos.x - g.position.x, player.pos.z - g.position.z) * 0.5; });
+      if (S.phase === 'explore') guards.forEach((g, i) => { g.rotation.y = S.invisible ? Math.sin(t * 0.3 + i) * 0.2 : Math.atan2(player.pos.x - g.position.x, player.pos.z - g.position.z) * 0.5; });
+      if (S.phase === 'explore' && S.hasRing && !S.invisible && !S.took.has('crown') && inside(player.pos)) arrest();
+      for (const [who, w] of walkers) {
+        const d = w.pts[0].clone().sub(who.position).setY(0), L = d.length(), step = w.speed * dt;
+        if (L <= step) { who.position.copy(w.pts.shift()); if (!w.pts.length) { walkers.delete(who); who.userData.body.position.y = 0; w.res(); } }
+        else { who.position.addScaledVector(d, step / L); who.rotation.y = Math.atan2(d.x, d.z); animatePerson(who, t * 2.4, { energy: 1.2 }); }
+      }
+      if (escort) guards.forEach((g, i) => { const q = player.pos.clone().add(V(i ? 0.8 : -0.8, 0, 0)); g.position.lerp(q, 1 - Math.exp(-dt * 8)); g.rotation.y = player.obj.rotation.y; animatePerson(g, t * 2.4, { energy: 1.2 }); });
       if (ring.visible && !S.hasRing) ring.rotation.y = t;
       level.__frog.update?.(dt);
     },
     camera(pl) {
+      if (S.phase === 'arrest') return { ...frame([pl.pos.clone(), GATE.clone(), ...guards.map((g) => g.position.clone())], { min: 16, max: 32 }), stiffness: 2.2 };
+      if (S.phase === 'crowned') return { ...frame([pl.pos.clone(), GATE.clone(), queen.position.clone(), ...(king.position.distanceTo(WEAR) < 11 ? [king.position.clone()] : [])], { min: 16, max: 32 }), stiffness: 1.6 };
       const pts = [pl.pos.clone(), CHASM.clone(), STALL.clone()];
       if (pl.pos.x > 4 || S.took.size) pts.push(GATE.clone(), CHEST.clone());
       if (pl.pos.x < -8) pts.push(HILLS.clone());
       return { ...frame(pts, { min: 16, max: 44 }), stiffness: 2.2 };
     },
     dispose() {
-      voice.stop(); removeEventListener('keydown', onKey); btn.remove();
+      voice.stop(); removeEventListener('keydown', onKey); btn.remove(); crown.removeFromParent();   // (the crown may be on your head)
       if (S.invisible) player.obj.traverse((m) => { if (m.isMesh && saved.has(m)) { m.material = saved.get(m); m.castShadow = true; } });
       player.locked = false;
     },

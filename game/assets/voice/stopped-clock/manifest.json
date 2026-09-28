@@ -24,10 +24,15 @@
     "text": "Just time to make your train, if you hurry.",
     "dur": 3.19
   },
+  "station": {
+    "file": "station-fcc1c3aa.mp3",
+    "text": "About fifteen minutes after you started hurrying, you reach the station.",
+    "dur": 4.57
+  },
   "true": {
-    "file": "true-afb70b65.mp3",
-    "text": "And the station clock says a quarter past, on the dot. You made it.",
-    "dur": 4.49
+    "file": "true-6806c074.mp3",
+    "text": "And the station clock says a quarter past two, on the dot. You made it.",
+    "dur": 4.73
   },
   "night": {
     "file": "night-c52dddfa.mp3",

@@ -11,7 +11,8 @@
     "bench": "A bench in the sun. The whole town seems to be having a nap.",
     "reads": "The town clock says two o'clock. It has always kept good time.",
     "go": "Just time to make your train, if you hurry.",
-    "true": "And the station clock says a quarter past, on the dot. You made it.",
+    "station": "About fifteen minutes after you started hurrying, you reach the station.",
+    "true": "And the station clock says a quarter past two, on the dot. You made it.",
     "night": "The evening comes. Then the night. Then the morning.",
     "stopped": {
       "text": "The town clock never moved. It had stopped at two, the day before. You happened to look at it in one of the two minutes a day it's right.",

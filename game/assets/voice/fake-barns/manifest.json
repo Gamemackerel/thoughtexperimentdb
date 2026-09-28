@@ -19,10 +19,10 @@
     "text": "A barn. Red, with white trim. You can see it as plainly as anything.",
     "dur": 4.78
   },
-  "round": {
-    "file": "round-f669d306.mp3",
-    "text": "You walk all the way round it. Walls, a back, a roof, a silo. It's a barn.",
-    "dur": 5.3
+  "same": {
+    "file": "same-8f4dc74d.mp3",
+    "text": "And it looks exactly the same as every other barn along this road.",
+    "dur": 4.41
   },
   "storm": {
     "file": "storm-70a27938.mp3",
@@ -43,15 +43,5 @@
     "file": "end-609059a2.mp3",
     "text": "You believed it was a barn. It was. You had good reason, and it kept you dry. Did you know?",
     "dur": 5.72
-  },
-  "facades_2": {
-    "file": "facades_2-42164c3f.mp3",
-    "text": "Every other barn along this road is only a front, propped up on sticks.",
-    "dur": 4.94
-  },
-  "end_2": {
-    "file": "end_2-e5eac68d.mp3",
-    "text": "But you went round the back. You could tell the real one from the fakes.",
-    "dur": 4.36
   }
 }

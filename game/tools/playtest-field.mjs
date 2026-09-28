@@ -104,6 +104,7 @@ await run('puddle', async (t) => {
 });
 await run('swampman', async (t) => {
   await sleep(3); await t.shot('swamp'); await t.walkTo(0, 1.4); await t.until(async () => (await t.S('phase')) === 'strike', 10); await sleep(0.6); await t.shot('strike'); await sleep(1.2); await t.shot('pieces');
+  await t.until(async () => (await t.S('strikeStage')) === 2, 15); await t.shot('bolt2');
   await t.until(async () => (await t.S('fMode')) === 'rise', 30); await sleep(1); await t.shot('rise');
   await t.until(async () => (await t.S('phase')) === 'after', 30); await sleep(1); await t.shot('copy');
   if (alt === 'idle') { await sleep(75); return; }

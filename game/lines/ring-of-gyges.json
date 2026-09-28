@@ -17,10 +17,51 @@
     "flock": "Your sheep. If you vanished, they'd just carry on eating.",
     "throw_clean": "You drop the ring back into the dark. You never found out what you would have done with it.",
     "throw_took": "You drop the ring back into the dark. What you took, you keep. Nobody will ever know.",
-    "keep_clean": "You keep the ring, and walk off into the hills. You haven't used it. Yet.",
+    "keep_clean": {
+      "text": "You keep the ring, and walk off into the hills, where nobody knows you. You haven't used it. Yet.",
+      "speed": 0.8
+    },
     "keep_took": "You keep the ring, and walk off into the hills. You already know what you'd do with it.",
     "king": "Inside, the king, counting his gold. And the queen.",
     "crown": "His crown. He hasn't even noticed.",
-    "queen": "In Plato's story, this is where the shepherd went next. With the queen's help, he killed the king, and took the throne."
+    "queen": {
+      "text": "In the old story, this is where the shepherd went next. With the queen's help, he did away with the king, and took the throne.",
+      "speed": 0.8
+    },
+    "options": {
+      "text": "You could throw it back into the crack, and go on as before. Or keep it, and take whatever you like.",
+      "speed": 0.8
+    },
+    "options2": {
+      "text": "Or keep it, and go back to your sheep. Just in case.",
+      "speed": 0.8
+    },
+    "crown_hint": {
+      "text": "Without it, would anyone know he was the king?",
+      "speed": 0.8
+    },
+    "seen": "They can see you now.",
+    "thrown": {
+      "text": "They throw you out of the gate. Nobody noticed the ring.",
+      "speed": 0.8
+    },
+    "wear": {
+      "text": "You put on the crown, and let them see you.",
+      "speed": 0.8
+    },
+    "seized": {
+      "text": "The guards see a crown, and a man without one. They take him away.",
+      "speed": 0.8
+    },
+    "queen_side": "The queen comes to stand at your side.",
+    "king_end": "You're the king now. Nobody will ever know how.",
+    "flock_clean": {
+      "text": "You keep the ring, and go back to your sheep. You'll never use it. Unless you have to.",
+      "speed": 0.8
+    },
+    "flock_took": {
+      "text": "You go back to your sheep, with the ring in your pocket. And what you took.",
+      "speed": 0.8
+    }
   }
 }

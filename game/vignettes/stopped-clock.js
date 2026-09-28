@@ -1,7 +1,7 @@
 // Vignette: The Stopped Clock (a Gettier case, from Russell).
 // A small town on a still afternoon (Grant Wood's country, round hills behind), and you've a train to catch at a
 // quarter past two. Look up at the town clock: two o'clock. It has always kept good time. So you hurry to the station,
-// and make the train, with the station clock at a quarter past on the dot. Then an evening, a night and a morning go by
+// and make the train: about fifteen minutes later, the clock over the station door says a quarter past on the dot. Then an evening, a night and a morning go by
 // over the square, and the town clock's hands never move: it had stopped at two, and you looked at it in one of the two
 // minutes a day it's right. (One path; the act is catching the train.)
 import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeFrog, makeHouse, makeBench } from '/game/engine/core.js';
@@ -19,6 +19,8 @@ const FACE_Y = 6.4;
 const CHURCH = V(9, 0, -9);
 const SIGN = V(9.2, 0, 5.2);              // the way to the station
 const STATION = V(90, 0, 0);              // somewhere else entirely: you get there by a cut
+const LANE_Z = 5.6;                       // the lane out of the square, towards the station
+const HOUSES = [[-9, -6, 0.3], [-11.5, 0.6, -0.2], [11.5, 1.2, 0.4]];
 const IDLE_LIMIT = 60, GO_LIMIT = 30;
 const DAY = 16;                           // seconds for the evening, the night and the morning
 
@@ -93,8 +95,9 @@ export default function stoppedClock(ctx) {
   const cwin = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 1.2), glow); cwin.position.set(0, 1.8, 3.03); church.add(cwin);
   const cspire = mesh(new THREE.ConeGeometry(0.9, 2.2, 4), clay(0x5a5a62)); cspire.position.set(0, 6.9, 2.4); cspire.rotation.y = Math.PI / 4; church.add(cspire);
   church.position.copy(CHURCH); church.rotation.y = -0.4; root.add(church);
-  for (const [x, z, r] of [[-9, -6, 0.3], [-11, 1, -0.2], [11, 2, 0.4]]) { const h = makeHouse({ color: 0xf6f1e7, roof: 0x5a5a62 }); h.position.set(x, 0, z); h.rotation.y = r; root.add(h); const w = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.56), glow); w.position.set(0.95, 1.5, 1.36); h.add(w); }
-  for (const [x, z] of [[-5, -3], [5, -3], [-6.5, 4], [6.5, 4]]) { const t = makeLollipop(0.9); t.position.set(x, 0, z); root.add(t); }
+  for (const [x, z, r] of HOUSES) { const h = makeHouse({ color: 0xf6f1e7, roof: 0x5a5a62 }); h.position.set(x, 0, z); h.rotation.y = r; root.add(h); const w = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.56), glow); w.position.set(0.95, 1.5, 1.36); h.add(w); }
+  const TREES = [[-5, -3], [5, -3], [-12.5, -3.4], [13, -2.4]];   // (none in front of the square, where they'd hide you)
+  for (const [x, z] of TREES) { const t = makeLollipop(0.9); t.position.set(x, 0, z); root.add(t); }
   const bench = makeBench(); bench.position.set(-3.4, 0, 2.6); root.add(bench);
   const board = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.9), new THREE.MeshBasicMaterial({ map: canvasTexture(256, 192, (g) => { g.fillStyle = '#fbf6ea'; g.fillRect(0, 0, 256, 192); g.fillStyle = '#2b2a33'; g.font = '22px Newsreader, serif'; ['Market day, Saturday', 'Choir, Thursday at 7', 'LOST: one cat (grey)', 'Clock repairs, enquire', 'within'].forEach((l, i) => g.fillText(l, 16, 34 + i * 34)); }) }));
   board.position.set(3.6, 1.6, -3.8); root.add(board);
@@ -105,6 +108,7 @@ export default function stoppedClock(ctx) {
   const sboard = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.42), new THREE.MeshBasicMaterial({ map: textTexture('STATION  \u2192', { w: 360, h: 100, font: 'bold 44px Newsreader, serif' }) })); sboard.position.set(0.5, 1.7, 0.08); sign.add(sboard);
   const sback = mesh(new THREE.BoxGeometry(1.56, 0.48, 0.06), clay(palette.wood)); sback.position.set(0.5, 1.7, 0.02); sign.add(sback);
   sign.position.copy(SIGN).add(V(0.4, 0, -0.6)); root.add(sign);
+  const lane = mesh(new THREE.BoxGeometry(16, 0.4, 2.4), clay(0xd8ccb4)); lane.position.set(22.6, -0.21, LANE_Z); lane.receiveShadow = true; root.add(lane);   // (off the square and away)
   // the postman, on his round
   const postman = makePerson({ color: 0x3f5a8c, hat: true }); postman.position.set(4.6, 0, 1.6); root.add(postman);
   const bag = mesh(new THREE.BoxGeometry(0.4, 0.45, 0.2), clay(0x8a6a4a)); bag.position.set(-0.38, 0.9, 0); postman.userData.body.add(bag);
@@ -119,20 +123,30 @@ export default function stoppedClock(ctx) {
   const ARC = V(-1, -1, -40), ARC_R = 14;
   const onArc = (m, a) => { m.position.set(ARC.x + Math.cos(a) * ARC_R, ARC.y + Math.sin(a) * ARC_R, ARC.z); m.visible = m.position.y > -1; };
 
-  // ---- the station, somewhere else: a platform, a train, a guard, and a clock that goes
+  // ---- the station, somewhere else: a forecourt, a station house with an archway through to the platform and a clock
+  // over it, a train, a guard
   const station = new THREE.Group(); station.position.copy(STATION); root.add(station);
-  const sfield = mesh(new THREE.BoxGeometry(40, 0.4, 24), clay(0x9aba72)); sfield.position.set(0, -0.21, -2); station.add(sfield);
-  const platform = mesh(new THREE.BoxGeometry(22, 0.42, 3.6), clay(0xe6dcc8)); platform.position.set(0, -0.19, 0.6); station.add(platform);
+  const sfield = mesh(new THREE.BoxGeometry(40, 0.4, 28), clay(0x9aba72)); sfield.position.set(0, -0.21, 1); station.add(sfield);
+  const platform = mesh(new THREE.BoxGeometry(22, 0.42, 5.8), clay(0xe6dcc8)); platform.position.set(0, -0.19, 1.7); station.add(platform);
+  const forecourt = mesh(new THREE.BoxGeometry(12, 0.42, 5.2), clay(0xd8ccb4)); forecourt.position.set(0, -0.19, 10); station.add(forecourt);
   for (const z of [-1.8, -3]) { const r = mesh(new THREE.BoxGeometry(40, 0.1, 0.1), clay(palette.rail)); r.position.set(0, 0.05, z); station.add(r); }
   for (let x = -19; x < 20; x += 1.2) { const t = mesh(new THREE.BoxGeometry(0.3, 0.06, 1.8), clay(palette.tie)); t.position.set(x, 0.01, -2.4); station.add(t); }
   const train = makeTrain(); train.position.set(0, 0, -2.4); station.add(train);
-  const shed = makeHouse({ color: 0xf6f1e7, roof: 0x5a5a62 }); shed.position.set(-7, 0, 4.4); station.add(shed);
-  const cpost = mesh(new THREE.CylinderGeometry(0.08, 0.1, 2.8, 8), clay(palette.ink)); cpost.position.set(-1.6, 1.4, 1.6); station.add(cpost);
-  const sclock = makeClockFace(0.5, true); sclock.face.position.set(-1.6, 3.1, 1.66); station.add(sclock.face);
-  const scase = mesh(new THREE.CylinderGeometry(0.56, 0.56, 0.08, 24), clay(palette.ink)); scase.rotation.x = Math.PI / 2; scase.position.set(-1.6, 3.1, 1.6); station.add(scase);
-  setTime(sclock, 2, 14.2);
-  const guard = makePerson({ color: palette.ink, hat: true }); guard.position.set(2.6, 0, 0.6); guard.rotation.y = -1; station.add(guard);
-  for (const x of [-12, 11]) { const t = makeLollipop(1); t.position.set(x, 0, 3); station.add(t); }
+  const cream = clay(0xf6f1e7), slate = clay(0x5a5a62), brick = clay(0xa8322a);
+  for (const x of [-2.6, 2.6]) { const w = mesh(new THREE.BoxGeometry(3.4, 4.2, 3), cream); w.position.set(x, 2.1, 5.9); station.add(w); }   // the station house, either side of the arch
+  const lintel = mesh(new THREE.BoxGeometry(1.8, 1.4, 3), cream); lintel.position.set(0, 3.5, 5.9); station.add(lintel);
+  const sroof = mesh(new THREE.BoxGeometry(9.2, 0.3, 3.6), slate); sroof.position.set(0, 4.35, 5.9); station.add(sroof);
+  const parapet = mesh(new THREE.BoxGeometry(4.4, 1, 0.3), cream); parapet.position.set(0, 5, 7.25); station.add(parapet);
+  const sname = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.7), new THREE.MeshBasicMaterial({ map: textTexture('STATION', { w: 512, h: 100, font: 'bold 64px Newsreader, serif' }) })); sname.position.set(0, 5, 7.44); station.add(sname);
+  for (const x of [-0.95, 0.95]) { const j = mesh(new THREE.BoxGeometry(0.16, 2.8, 0.16), brick); j.position.set(x, 1.4, 7.44); station.add(j); }   // (red trim round the arch)
+  const jtop = mesh(new THREE.BoxGeometry(2.06, 0.16, 0.16), brick); jtop.position.set(0, 2.84, 7.44); station.add(jtop);
+  for (const x of [-2.6, 2.6]) { const w = mesh(new THREE.BoxGeometry(1, 1.3, 0.06), clay(0x5b6f86)); w.position.set(x, 2, 7.43); station.add(w); }
+  const sclock = makeClockFace(0.56, true); sclock.face.position.set(0, 3.52, 7.52); station.add(sclock.face);   // over the arch
+  const scase = mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.1, 24), clay(palette.ink)); scase.rotation.x = Math.PI / 2; scase.position.set(0, 3.52, 7.44); station.add(scase);
+  setTime(sclock, 2, 15);                                                           // a quarter past two, on the dot
+  const guard = makePerson({ color: palette.ink, hat: true }); guard.position.set(-3, 0, 0.9); guard.rotation.y = Math.PI / 2; station.add(guard);
+  for (const x of [-12, 12]) { const t = makeLollipop(1); t.position.set(x, 0, 6); station.add(t); }
+  const shed = makeHouse({ color: 0xf6f1e7, roof: 0x5a5a62 }); shed.position.set(-9, 0, 9); shed.rotation.y = 0.5; station.add(shed);
   const sc = makeCountry({ seed: 71, depth: -14 }); sc.position.z = -4; station.add(sc);
 
   // ---- the frog: while the afternoon passes, it's up on the clock, sitting on the minute hand, which doesn't move
@@ -141,7 +155,7 @@ export default function stoppedClock(ctx) {
   const cameo = frogCameo(frog, [{ at: [onHand.x, onHand.z], y: onHand.y }, { face: [0, 10] }, { wait: 7, act: (f, u) => (f.userData.body.rotation.z = Math.sin(u * 50) * 0.05) }, { at: [onHand.x + 0.9, onHand.z], y: FACE_Y - 1.4, height: 0.5 }, { warp: [30, 30], y: 0 }]);
 
   // ---- state
-  const S = { phase: 'walk', idle: 0, lapse: -1, where: 'square', depart: -1 };
+  const S = { phase: 'walk', idle: 0, lapse: -1, where: 'square', cam: 'square', depart: -1 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/stopped-clock.json', 'The Stopped Clock');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(240, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; gp.position.x = 40; root.add(gp); level.ground.push(gp);
@@ -159,12 +173,17 @@ export default function stoppedClock(ctx) {
   // acting on it: you run for the quarter past two, and make it
   async function hurry() {
     if (S.phase !== 'go') return;
-    S.phase = 'run'; player.locked = true; player.target = SIGN.clone().add(V(3.4, 0, 1));
-    await ctx.wait(1.6); await ctx.flash(true);
-    S.where = 'station'; player.locked = false; player.enabled = false; player.place(STATION.x - 4.2, STATION.z + 0.9, Math.PI / 2); await ctx.flash(false);
-    ctx.speak(guard, 'Quarter past two! All aboard!', { offset: [0, 2.3, 0] }); await ctx.wait(1.4);
-    await voice.say('true', { urgent: true }); card.tick(1);
-    player.enabled = true; player.locked = true; player.target = STATION.clone().add(V(-0.6, 0, -0.9)); await ctx.wait(1.6);
+    S.phase = 'run'; player.locked = true;
+    const go = async (p, n = 30) => { player.target = p; for (let i = 0; i < n && player.target; i++) await ctx.wait(0.1); };
+    await go(V(13.4, 0, LANE_Z)); await go(V(21, 0, LANE_Z), 14); await ctx.flash(true);   // (out of the square, down the lane)
+    // about fifteen minutes later: the station, from the forecourt, and the clock over the door
+    S.where = 'station'; player.place(STATION.x + 1.2, STATION.z + 12, Math.PI); S.secT = 0; await ctx.flash(false);
+    await go(STATION.clone().add(V(0.3, 0, 9.4)), 20); player.locked = false; player.enabled = false;
+    await voice.say('station', { urgent: true }); await voice.say('true'); card.tick(1);
+    // through the arch, onto the platform, and aboard
+    player.enabled = true; player.locked = true; await go(STATION.clone().add(V(0, 0, 4.6)), 30); S.cam = 'platform';
+    ctx.speak(guard, 'All aboard!', { offset: [0, 2.3, 0] });
+    await go(STATION.clone().add(V(0, 0, 1)), 30); await go(STATION.clone().add(V(-0.6, 0, -0.9)), 20);
     player.obj.visible = false; player.locked = false; player.enabled = false; await ctx.wait(0.4); S.depart = 0; await ctx.wait(3.2);
     // then the rest of the day, the night, and the next morning go by in the square
     await ctx.flash(true); S.where = 'square'; S.lapse = 0; cameo.start(); await ctx.flash(false);
@@ -185,17 +204,20 @@ export default function stoppedClock(ctx) {
   return Object.assign(level, {
     __frog: cameo,
     spawn: { x: 0, z: 5.6, rotY: Math.PI },
-    walkable: (x, z) => (S.where === 'station' ? Math.abs(x - STATION.x) < 10 && z > STATION.z - 1.2 && z < STATION.z + 2.2 : Math.abs(x) < 13 && z > -3.6 && z < 7.4),
+    walkable: (x, z) => {
+      if (S.where === 'station') { const sx = x - STATION.x, sz = z - STATION.z; return (Math.abs(sx) < 10 && sz > -1.2 && sz < 4.5) || (Math.abs(sx) < 0.8 && sz < 7.6) || (Math.abs(sx) < 5.8 && sz > 7.4 && sz < 12.6); }   // platform, arch, forecourt
+      return (Math.abs(x) < 13 && z > -3.6 && z < 7.4) || (S.phase === 'run' && x < 30 && Math.abs(z - LANE_Z) < 1.1);
+    },
     blockers: () => S.where === 'station' ? [] : [{ x: -3.4, z: 2.6, w: 2, d: 0.8 }, { x: 3.6, z: -3.85, w: 1.4, d: 0.3 }, { x: postman.position.x, z: postman.position.z, r: 0.4 }, { x: SIGN.x + 0.4, z: SIGN.z - 0.6, r: 0.2 },
-      ...[[-5, -3], [5, -3], [-6.5, 4], [6.5, 4]].map(([x, z]) => ({ x, z, r: 0.35 }))],
+      ...TREES.map(([x, z]) => ({ x, z, r: 0.35 })), ...HOUSES.map(([x, z]) => ({ x, z, r: 1.9 }))],
     update(dt, t) {
       // the postman strolls back and forth along his round (and stops to talk)
       const tp = t - (S.pauseT ?? 0);
       if (interact.current !== chat && S.where === 'square') { postman.position.x = 4.6 + Math.sin(tp * 0.25) * 2.4; postman.rotation.y = Math.cos(tp * 0.25) > 0 ? Math.PI / 2 : -Math.PI / 2; animatePerson(postman, tp * 2, { energy: 0.8 }); }
       else S.pauseT = (S.pauseT ?? 0) + dt;
       animatePerson(guard, t, { energy: 0.3 });
-      // the station clock goes: its second hand sweeps round, and on the quarter hour the minute hand clicks on
-      if (sclock.sec) { sclock.sec.rotation.z = -((t * 1) % 60) / 60 * Math.PI * 2; if (S.depart >= 0) setTime(sclock, 2, 15); }
+      // the station clock goes: its second hand sweeps round from the top, from the moment you get there
+      if (S.secT !== undefined) { S.secT += dt; sclock.sec.rotation.z = -(S.secT % 60) / 60 * Math.PI * 2; }
       if (S.depart >= 0) { S.depart += dt; train.position.x = 0.9 * S.depart * S.depart; }
       // the evening, the night and the morning: the sky, the light, the sun going down, the moon and stars, the lit
       // windows, the sun coming up again; and all the while, the town clock's hands stay exactly where they are
@@ -219,11 +241,16 @@ export default function stoppedClock(ctx) {
       cameo.update(dt);
     },
     camera(pl) {
-      if (S.lapse !== -1) { const f = face.position; return { pos: f.clone().add(V(2.4, -3.4, 13)), look: f.clone().add(V(0, 0.4, -4)), stiffness: 60 }; }   // the tower against the sky (a cut)
-      if (S.where === 'station') return { pos: STATION.clone().add(V(-0.4, 4, 14)), look: STATION.clone().add(V(-0.4, 1.9, -1.4)), stiffness: 60 };
-      if (S.lookUp) { const f = face.position; return { pos: f.clone().add(V(2, -2.6, 9)), look: f.clone().add(V(0, -1.2, 0)), stiffness: 2 }; }
-      const look = V(pl.pos.x * 0.6, 2.4, -2);
-      return { pos: look.clone().add(V(0, 5, 14)), look, stiffness: 2 };
+      // (every shot stands back and up, in front of things: nothing stands between the camera and you or the clock)
+      if (S.lapse !== -1) return { pos: V(3.2, 5.2, 14), look: V(0, 4.6, -3), stiffness: 60 };   // the whole square, and the tower, through the night (a cut)
+      if (S.where === 'station') {
+        if (S.cam === 'platform') return { pos: STATION.clone().add(V(10, 6.5, 1.4)), look: STATION.clone().add(V(-1.4, 1, 0.2)), stiffness: 60 };   // along the platform: you, the guard, the train
+        return { pos: STATION.clone().add(V(2.8, 3.9, 19.5)), look: STATION.clone().add(V(0, 2.7, 6.4)), stiffness: 60 };   // the forecourt: you, the arch, the clock over it
+      }
+      if (S.lookUp) return { pos: V(-2.6, 2.8, 6.5), look: V(0.2, 3.6, -3.5), stiffness: 2 };   // up at the clock, over your shoulder
+      if (S.phase === 'run') return { pos: pl.pos.clone().add(V(-4, 5.5, 12)), look: pl.pos.clone().add(V(2.5, 1, -1)), stiffness: 2 };
+      const x = pl.pos.x * 0.35;
+      return { pos: V(x, 11, 23), look: V(x, 3, 3.5), stiffness: 2 };
     },
     dispose() { voice.stop(); player.obj.visible = true; player.locked = false; },
   });

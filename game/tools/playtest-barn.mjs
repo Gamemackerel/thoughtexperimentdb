@@ -44,7 +44,9 @@ await run('stopped-clock', async (t) => {
   await t.use('Look up at the clock'); await sleep(5); await t.shot('believed');
   await t.until(async () => (await t.S('phase')) === 'go', 30);
   if (alt !== 'idle') await t.use('Hurry to the station');   // (alt idle: stand there until you set off anyway)
-  await t.until(async () => (await t.S('where')) === 'station', 45); await sleep(2.5); await t.shot('station'); await sleep(4); await t.shot('train');
+  await sleep(1.2); await t.shot('run');
+  await t.until(async () => (await t.S('where')) === 'station', 45); await sleep(1); await t.shot('forecourt'); await sleep(4); await t.shot('station');
+  await t.until(async () => (await t.S('cam')) === 'platform', 30); await sleep(0.8); await t.shot('platform'); await sleep(1.2); await t.shot('aboard'); await sleep(3); await t.shot('train');
   await t.until(async () => (await t.S('lapse')) > 0, 30); for (const s of [1.2, 3.5, 4, 5]) { await sleep(s); await t.shot('night'); }
 });
 await run('ten-coins', async (t) => {
@@ -62,7 +64,10 @@ await run('sheep-field', async (t) => {
 });
 await run('fake-barns', async (t) => {
   await sleep(4); await t.shot('road'); await t.use('Look at the tyre'); await sleep(3);
-  await t.use(alt === 'round' ? 'Walk all the way round' : 'Look at the barn'); await sleep(alt === 'round' ? 16 : 4); await t.shot('barn');
+  await t.walkTo(-9, -3); await sleep(4); await t.shot('row-west'); await t.walkTo(9, -3); await sleep(6); await t.shot('row-east'); await t.walkTo(2.8, 4); await sleep(5);   // (from the road, every barn looks the same)
+  if (alt === 'idle') await t.until(async () => (await t.S('phase')) !== 'road', 50);   // (alt idle: stand there until you look anyway, then stand in the rain)
+  else await t.use('Look at the barn');
+  await sleep(4); await t.shot('barn'); await sleep(3); await t.shot('row');
   await t.until(async () => (await t.S('phase')) === 'storm', 40); await sleep(1); await t.shot('storm');
   if (alt !== 'idle') await t.use('Run into the barn');   // (alt idle: stand in the rain until you run for it anyway)
   await t.until(async () => (await t.S('cam')) === 'inside', 45); await sleep(1.5); await t.shot('inside');

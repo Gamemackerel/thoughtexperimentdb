@@ -117,17 +117,19 @@ step sits exactly in front of its bottom step: it always reads as a closed loop,
 ### The voyage (Ship of Theseus, optional)
 
 As your chosen ship sails off, just before the end card, a toast offers "Press S to sail forth" for about a second and a
-half (tap it on touch). Take it and there's no card (the vignette still counts as finished): you sail the ship yourself
-(`game/vignettes/voyage.js`). One steady wind; ←/→ steer, ↑ trims the sail, ↓ eases it. Nothing sails within 40° of the
-wind, so to go upwind you tack; the sail swings across. Every island has a landing (E to go ashore, E at the pier to board).
+half (tap it on touch). Take it and there's no card yet (the vignette still counts as finished): you sail the ship
+yourself (`game/vignettes/voyage.js`). One steady wind; ←/→ steer, ↑ trims the sail, ↓ eases it. Nothing sails within 40°
+of the wind, so to go upwind you tack; the sail swings across. Every island has a landing (E to go ashore, E at the pier to
+board). An island's label reads "?" until you've landed there.
 
 | Island | What's there |
 |---|---|
+| The harbour | Where you set out. Tie up at your old berth, walk the shore and dock, talk to the fisherman (and the shipwright), board again |
 | The lighthouse | Its watcher (the Utility Monster's model, `game/core/monster.js`) talks, then fights: three hearts each; step aside when he crouches, strike (E) while he's dizzy. Lose, and you wake on your ship at the pier. Win, and the cellar opens on a chest of gold to carry to the ship |
 | North Sentinel Island | People in the treeline raise their bows and warn you off; you can't leave the beach. Leave a bag of sweets at the waterline; a short note says why they're left alone (they have always refused contact, and outsiders' illnesses are dangerous to them); you go |
 | Frogs | A pond and a crowd of hopping, croaking frogs |
 | Two small islands | A palm, a rock, a message in a bottle |
-| The house | The first room's sky door on a checkered floor, upwind. Go through it to go home; if the chest is on board, it goes to the museum |
+| The house | Upwind. The house itself, after Howl's moving castle (`voyage-palace.js`): a teetering art palace crouched on chicken legs, every wing a different artist of the house's rooms (a Grant Wood barn, a cubist wing, a sky-painted Magritte wing with a bowler hat and an apple, a Dalí clock melting off a balcony, a Van Gogh swirl turret, an Escher stair walked upside down and up the wall), smoke from its chimneys, creaking. Go in at the front door (the sky door, up its drawbridge): it stands up on its legs, and the end card, **You sailed home**. If the chest is on board, it goes to the museum first |
 
 ### The museum (built)
 
@@ -176,7 +178,7 @@ a weeping woman hangs with both eyes on one side of her face; a painter in a str
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| A ring under glass | **The Ring of Gyges** | Find the ring in the bronze horse; turn it (R) to vanish; take apples, coins or the king's gold; walk past the guards | Throw it back into the dark · keep it and walk into the hills |
+| A ring under glass | **The Ring of Gyges** | Find the ring in the bronze horse; turn it (R) to vanish; take apples, coins, the king's gold or his crown; whisper to the queen. Show yourself inside the walls without the crown and the guards throw you out (and take back the gold). Wear the crown outside the gate and the guards lead the crownless king away | Throw it back into the dark · keep it and walk into the hills · keep it and go back to your sheep, just in case · you became the king |
 | A cell door (closed for now) | **The Prisoner's Dilemma** | Sign the statement or say nothing, three times; your partner plays tit for tat | You kept quiet · you talked every time · it depended on last time |
 | Two boxes | **Newcomb's Paradox** | The boxes were filled yesterday and the ledger has no exceptions; take the closed box or both. Take only the closed box and you come back tomorrow to two glass boxes, the million in plain sight | You took both boxes · you took one box, twice · you took both, with the million in plain sight |
 | A cake | **The Utility Monster** | Carry eight slices to six villagers or the monster; a meter adds up happiness | You fed the monster · you shared the cake · your own way |
@@ -210,15 +212,15 @@ doors, round green hills combed into rows with lollipop trees (`game/core/grantw
 stand a farmer with a pitchfork and a woman in an apron (American Gothic). The pitchfork's three prongs are labelled
 BELIEF, TRUTH and REASON, and the farmer will explain. Each Gettier case ends with the same card (`game/core/gettier.js`):
 what you believed, the three prongs ticked off, and "Did you know it?". In each, you act on the belief (a bet, a train,
-a gate, shelter from a storm, a thirsty camel), and luck carries you. Each but the clock also has a path where you do
-know, for contrast.
+a gate, shelter from a storm, a thirsty camel), and luck carries you. Ten Coins, the sheep and the mirage also have a path
+where you do know, for contrast.
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
 | A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; conclude and bet Jones a shilling on it, or wait; the job is yours, and so are ten coins; you win the bet on your own coins | Right about the wrong man · you didn't jump to conclusions |
-| A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock (two o'clock); hurry for the quarter-past-two train and make it; then an evening, a night and a morning pass over the square, and the clock's hands never move | Right by accident |
+| A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock (two o'clock); hurry out of the square for the quarter-past-two train; about fifteen minutes later, the clock over the station arch says a quarter past, on the dot; board it; then an evening, a night and a morning pass over the square, and the town clock's hands never move | Right by accident |
 | A five-bar gate | **The Sheep in the Field** (Chisholm) | Look in through the open gate; shut it to keep the sheep in; go and see (a dog in a sheepskin, and a sheep behind the hill, kept in by your gate) or walk on | There was a sheep · you walked on, sure of it |
-| A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn, a storm coming; look at it, or walk all the way round it; the rain comes and you run inside, dry; then the road from behind: fronts on sticks, rain pouring through | The only real barn · you went round the back |
+| A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn in a row of barns that all look exactly alike, a storm coming; look at it (or stand there and you will); the rain comes and you run inside, dry; then the road from behind: fronts on sticks, rain pouring through, and only yours whole | The only real barn |
 | A painting of the desert | **Dharmottara's Mirage** | Water shimmering ahead; lead your thirsty camel to it; it's a mirage; lift the rock beside it (the camel drinks), or turn back | There was water after all · you turned back |
 
 Rooms are hubs: "Back to the house" on the game-over card (and Esc) returns you to the room you came from (`HOME_ROOM` and

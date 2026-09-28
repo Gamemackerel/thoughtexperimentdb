@@ -10,12 +10,10 @@
     "flat": "And a flat tyre. Right beside a barn.",
     "tyre": "Flat as a pancake. You'll be here a while.",
     "barn": "A barn. Red, with white trim. You can see it as plainly as anything.",
-    "round": "You walk all the way round it. Walls, a back, a roof, a silo. It's a barn.",
+    "same": "And it looks exactly the same as every other barn along this road.",
     "storm": "Here comes the rain.",
     "dry": "Inside, it's dry. It really is a barn.",
     "facades": "But every other barn along this road is a front, propped up on sticks. From the road, you couldn't have told them apart. You just happened to run into the only real one.",
-    "end": "You believed it was a barn. It was. You had good reason, and it kept you dry. Did you know?",
-    "facades_2": "Every other barn along this road is only a front, propped up on sticks.",
-    "end_2": "But you went round the back. You could tell the real one from the fakes."
+    "end": "You believed it was a barn. It was. You had good reason, and it kept you dry. Did you know?"
   }
 }

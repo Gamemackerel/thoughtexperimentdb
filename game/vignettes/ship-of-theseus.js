@@ -266,17 +266,23 @@ export default function shipOfTheseus(ctx) {
   function beginVoyage(ship) {
     S.phase = 'voyage';
     voyage.isles.forEach((isle) => (isle.visible = false));     // the real islands take over
-    vy = startVoyage(ctx, { root, ship, sea, ground: level.ground });
+    const berth = ship === ship1 ? SHIP1 : SHIP2, other = ship === ship1 ? SHIP2 : SHIP1;
+    vy = startVoyage(ctx, { root, ship, sea, ground: level.ground, harbour: { c: SHORE, r: 14, berth, land: V(17, 0, Math.sign(berth.z) * 1.0),
+      walkable: walkHome, blockers: blockHome, avoid: [[0, 0, 26, 0, 3.4], [10, other.z, 22, other.z, 2.8]] } });
     level.__V = vy;
   }
+  // the shore and the dock (also where you can walk if you tie up here again on the voyage)
+  const walkHome = (x, z) => Math.hypot(x - SHORE.x, z - SHORE.z) < 12.5 || (x > 2 && x < 25.4 && Math.abs(z) < 1.45);
+  const blockHome = () => [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }, { x: BOLLARD.x, z: BOLLARD.z, r: 0.3 }, { x: 24.4, z: 1.2, r: 0.45 }];
   interact.add(board(ship1, 'new'));
   interact.add(board(ship2, 'old'));
   interact.trigger({ pos: STACK, radius: 5, onEnter: () => voice.say('planks') });
 
   // asides: the fisherman, and the shipwright once he turns up
-  talk(ctx, { who: fisher, offset: [0, 2.7, 0], radius: 2.2, enabled: () => !S.sailing, lines: [
+  const onDock = () => !S.sailing || (vy?.S.mode === 'land' && vy.S.at === 'harbour');     // (or back from the voyage)
+  talk(ctx, { who: fisher, offset: [0, 2.7, 0], radius: 2.2, enabled: onDock, lines: [
     'Forty years I have fished off this dock.', 'Mind you, they have replaced every board of it since.', "This was my grandad's rod. New line, new reel, new handle.", 'Still his rod, though.', 'No bites. There never are.'] });
-  talk(ctx, { who: shipwright, enabled: () => shipwright.visible && !S.sailing, lines: ['Seemed a shame to burn them. So I used every one.', 'Good wood, this. Just old.', 'Which one would you sail?'] });
+  talk(ctx, { who: shipwright, enabled: () => shipwright.visible && onDock(), lines: ['Seemed a shame to burn them. So I used every one.', 'Good wood, this. Just old.', 'Which one would you sail?'] });
 
   async function twist() {
     S.phase = 'rebuild';
@@ -305,8 +311,8 @@ export default function shipOfTheseus(ctx) {
     __frog: cameo,
     spawn: { x: -4, z: 2, rotY: Math.PI / 2 },
     start() { setTimeout(() => voice.say('arrive'), 900); },
-    walkable: (x, z) => vy ? vy.walkable(x, z) : Math.hypot(x - SHORE.x, z - SHORE.z) < 12.5 || (x > 2 && x < 25.4 && Math.abs(z) < 1.45),
-    blockers: () => vy ? vy.blockers() : [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }, { x: BOLLARD.x, z: BOLLARD.z, r: 0.3 }, { x: 24.4, z: 1.2, r: 0.45 }],
+    walkable: (x, z) => vy ? vy.walkable(x, z) : walkHome(x, z),
+    blockers: () => vy ? vy.blockers() : blockHome(),
 
     update(dt, t) {
       if (vy) { vy.update(dt, t); voyage.update(S.sailing.position, dt, t, 1); cameo.update(dt); lineMesh.position.y = 1.1 + Math.sin(t * 1.3) * 0.04; return; }

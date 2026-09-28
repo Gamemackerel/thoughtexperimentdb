@@ -5,12 +5,17 @@
 //     cellar opens on a chest of gold you can carry back to the ship;
 //   North Sentinel Island: people in the treeline warn you off; you may leave a bag of sweets at the waterline, then go;
 //   an island of frogs; two nearly empty islands (a palm, a rock, a bottle);
-//   an island with the first room's sky door on it: go through, and you're home (with the chest, if it's on board: it
-//     goes to the museum).
-// startVoyage(ctx, { root, ship, sea, ground }) → { S, update, camera, walkable, blockers, dispose, teleport, isles }
+//   the house's island, upwind: the house itself, a teetering art palace on chicken legs (voyage-palace.js). Go in at
+//     its front door (the first room's sky door) and you're home: the end card (the chest, if it's on board, goes to
+//     the museum first).
+// You can also tie up again at the harbour you set out from, and walk about the dock. An island's name only shows once
+// you've landed there.
+// startVoyage(ctx, { root, ship, sea, ground, harbour }) → { S, update, camera, walkable, blockers, dispose, teleport, isles }
 import { THREE, palette, css, clamp, lerp, easeInOut, easeOut, seeded, clay, mesh, makeIsland, makeTree, makeRock, makePerson, animatePerson, makeFrog } from '/game/engine/core.js';
 import { frogExtras, frogCroak } from '../core/frog.js';
 import { makeMonster } from '../core/monster.js';
+import { makePalace } from './voyage-palace.js';
+import { makeLollipop } from '../core/grantwood.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const WIND = V(0, 0, -1);                        // the way the wind blows (it comes from +z)
@@ -56,19 +61,6 @@ function makePalm(s = 1, lean = 0.3) {
   return g;
 }
 
-// The first room's sky door (a small copy): a cream frame, and a panel painted with sky
-function makeSkyDoor() {
-  const g = new THREE.Group(), frameMat = clay(0xf2e6d4);
-  for (const [x, y, w, h] of [[-0.78, 1.55, 0.14, 3.2], [0.78, 1.55, 0.14, 3.2], [0, 3.1, 1.7, 0.14]]) { const f = mesh(new THREE.BoxGeometry(w, h, 0.3), frameMat); f.position.set(x, y, 0); g.add(f); }
-  const c = document.createElement('canvas'); c.width = 128; c.height = 256; const q = c.getContext('2d');
-  const gr = q.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#8fb3d9'); gr.addColorStop(1, '#dfe9f2'); q.fillStyle = gr; q.fillRect(0, 0, 128, 256);
-  q.fillStyle = '#ffffff'; for (const [x, y, s] of [[40, 70, 22], [70, 60, 28], [95, 74, 20], [30, 170, 16], [58, 164, 22]]) { q.beginPath(); q.arc(x, y, s, 0, 7); q.fill(); }
-  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-  const door = mesh(new THREE.BoxGeometry(1.36, 2.92, 0.12), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8 })); door.position.y = 1.5; g.add(door);
-  const knob = mesh(new THREE.SphereGeometry(0.08, 12, 8), clay(0xc9a54c, { metalness: 0.5 })); knob.position.set(0.52, 1.45, 0.1); g.add(knob);
-  return g;
-}
-
 // A plain sword, held in the right hand (the pivot is the grip; the blade points up)
 function makeSword() {
   const pivot = new THREE.Group(), steel = clay(0xd8dde2, { metalness: 0.6, roughness: 0.3 });
@@ -90,13 +82,22 @@ function croak(ac, vol) {
   o.connect(f).connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.32);
 }
 
-export function startVoyage(ctx, { root, ship, sea, ground }) {
+// a wooden creak: a slow stick-slip buzz through a narrow band (the house, shifting its weight)
+function creak(ac, vol) {
+  const t = ac.currentTime, o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain(), d = 0.7 + Math.random() * 0.5;
+  o.type = 'sawtooth'; o.frequency.setValueAtTime(30 + Math.random() * 10, t); o.frequency.linearRampToValueAtTime(58, t + d * 0.6); o.frequency.linearRampToValueAtTime(36, t + d);
+  f.type = 'bandpass'; f.frequency.value = 520 + Math.random() * 300; f.Q.value = 5;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.12); g.gain.linearRampToValueAtTime(vol * 0.6, t + d * 0.7); g.gain.linearRampToValueAtTime(0, t + d);
+  o.connect(f).connect(g).connect(ac.destination); o.start(t); o.stop(t + d + 0.05);
+}
+
+export function startVoyage(ctx, { root, ship, sea, ground, harbour }) {
   const { stage, player, interact, save } = ctx;
   const O = V(ship.position.x, 0, ship.position.z);           // the sea is laid out around where you set off
   const W = new THREE.Group(); root.add(W);
   const S = {
     mode: 'sail', at: null, h: ship.rotation.y, v: 4.5, trim: 0.75, side: 0, flips: 0, x: O.x, z: O.z, a: 90,
-    chest: null, fight: 'idle', hp: 3, khp: 3, k: 'idle', sweets: false, visited: [],
+    chest: null, fight: 'idle', hp: 3, khp: 3, k: 'idle', sweets: false, visited: ['harbour'], homeT: -1,
   };
   let cutNext = false, dockT = 0, dockFrom = null, carryOn = null;
   const disposers = [];
@@ -134,7 +135,6 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
 
   // ---- islands
   const isles = [];
-  const HOME_SHORE = { c: V(-10, 0, 0), r: 14 };                // the harbour you left (never sail through it)
   function addIsle(def) {
     const c = O.clone().add(V(def.at[0], 0, def.at[1]));
     const out = O.clone().sub(c).setY(0).normalize();
@@ -159,6 +159,14 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
     }
     isles.push(isle); return isle;
   }
+  // the harbour you set out from: tie up at your old berth, walk about the dock, board again. The dock and the other
+  // ship keep you off (capsules: [x1, z1, x2, z2, r])
+  {
+    const out = V(0, 0, Math.sign(harbour.berth.z) || -1);
+    isles.push({ id: 'harbour', name: 'The harbour', harbour: true, c: harbour.c.clone(), r: harbour.r, out, side: V(out.z, 0, -out.x),
+      moor: harbour.berth.clone().setY(0), moorH: 0, land: harbour.land.clone(), walk: harbour.walkable, block: harbour.blockers, top: harbour.c.clone().setY(6), cam: [13, -3, 13, -2, 1.2] });
+  }
+  const AVOID = harbour.avoid;
   const at = (isle, f, s) => isle.c.clone().addScaledVector(isle.out, f).addScaledVector(isle.side, s);   // a spot on an island: f towards the landing, s across
 
   // the lighthouse (and its watcher)
@@ -252,18 +260,17 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
   const E2 = addIsle({ id: 'rock', name: 'A small island', at: [-26, 58], r: 4.2, seed: 17, color: 0xe4d8bb });
   { const rr = seeded(6); const rk = makeRock(2.2, rr); rk.position.copy(at(E2, -0.8, 0)); W.add(rk); const p = makePalm(1, 0.35); p.position.copy(at(E2, 0.6, 1.6)); p.rotation.y = 2; W.add(p); }
 
-  // the island with the house's sky door on it (upwind: you'll have to tack to get home)
-  const HO = addIsle({ id: 'house', name: 'The house', at: [58, 104], r: 7, seed: 9, color: 0xe9dcc3 });
-  const HOUSE_DOOR = at(HO, -0.5, 0);
+  // the house's island (upwind: you'll have to tack to get home), and the house: a palace on chicken legs, facing the pier
+  const HO = addIsle({ id: 'house', name: 'The house', at: [58, 104], r: 12, seed: 9, color: 0xe4d6b4, top: 19, cam: [20, -6, 12, -4, 5] });
+  const PAL_AT = -4, palace = makePalace(WIND); palace.g.position.copy(at(HO, PAL_AT, 0)); palace.g.rotation.y = Math.atan2(HO.out.x, HO.out.z); W.add(palace.g);
+  const PAL = palace.g.position, palYaw = palace.g.rotation.y;
+  const palLocal = (p) => { const d = V(p.x - PAL.x, 0, p.z - PAL.z); return { x: d.dot(HO.side), z: d.dot(HO.out) }; };
+  const palWorld = (x, z) => PAL.clone().addScaledVector(HO.side, x).addScaledVector(HO.out, z);
   {
-    const tiles = [new THREE.InstancedMesh(new THREE.BoxGeometry(0.99, 0.08, 0.99), clay(0xf2e9d8), 18), new THREE.InstancedMesh(new THREE.BoxGeometry(0.99, 0.08, 0.99), clay(0x4a4e5a), 18)];
-    const board = new THREE.Group(), counts = [0, 0];
-    for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) { const k = (i + j) % 2; m4.makeTranslation(-2.5 + i, 0.03, -2.5 + j); tiles[k].setMatrixAt(counts[k]++, m4); }
-    tiles.forEach((t) => { t.receiveShadow = true; board.add(t); });
-    board.position.copy(HO.c); board.rotation.y = HO.psi; W.add(board);
-    const door = makeSkyDoor(); door.position.copy(HOUSE_DOOR); door.rotation.y = Math.atan2(HO.out.x, HO.out.z); W.add(door);
-    const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 3.7), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0.25, depthWrite: false, blending: THREE.AdditiveBlending }));
-    glow.position.copy(HOUSE_DOOR).addScaledVector(HO.out, -0.3).setY(1.55); glow.rotation.y = door.rotation.y; W.add(glow);
+    const rr = seeded(19), stone = clay(0xcfc4ad);
+    for (let f = palace.rampFoot + 1; f < HO.r - 1.6 - PAL_AT; f += 1.25) { const st = mesh(new THREE.CylinderGeometry(0.45 + rr() * 0.15, 0.5, 0.08, 9), stone); st.position.copy(palWorld((rr() - 0.5) * 0.5, f)).setY(0.02); st.castShadow = false; W.add(st); }
+    for (const [x, z, s] of [[-7.5, 5.5, 1], [7.8, 4.2, 0.8], [-8.4, -4, 1.2], [8.6, -5.2, 0.9]]) { const t = makeLollipop(s, [0x4f7a3a, 0x5d8a45, 0x3f6a35][Math.round(s * 10) % 3]); t.position.copy(palWorld(x, z)); W.add(t); }
+    for (const [x, z] of [[-4.5, 8], [5, 7.5]]) { const rk = makeRock(0.9, rr); rk.position.copy(palWorld(x, z)); W.add(rk); }
   }
 
   // ---- the cellar under the lighthouse (built off to one side of the world; you get there through the doors)
@@ -325,7 +332,7 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
     if (i.id === 'sentinel') sentinels.forEach((s) => (s.lower = true));
   }
   for (const i of isles) {
-    interact.add({ pos: () => i.moor, radius: 9, height: 3, prompt: i.beach ? 'Wade ashore' : 'Go ashore', enabled: () => S.mode === 'sail', onUse: () => goAshore(i) });
+    interact.add({ pos: () => i.moor, radius: 9, height: 3, prompt: i.harbour ? 'Tie up at the dock' : i.beach ? 'Wade ashore' : 'Go ashore', enabled: () => S.mode === 'sail', onUse: () => goAshore(i) });
     interact.add({ pos: () => i.land.clone().addScaledVector(i.out, i.beach ? 0.6 : 0.3), radius: 1.5, height: 2.4, prompt: i.beach ? 'Wade back to the ship' : 'Board the ship',
       enabled: () => S.mode === 'land' && S.at === i.id && S.fight !== 'on' && S.fight !== 'down' && !S.leaving, onUse: board });
   }
@@ -413,13 +420,33 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
       await ctx.wait(2); player.locked = false; S.leaving = false; board();
     } });
 
-  // ---- the house door, and the bottle's note
-  interact.add({ pos: HOUSE_DOOR.clone().addScaledVector(HO.out, 1.3), radius: 1.7, height: 3.4, prompt: 'Open the sky door', enabled: () => S.mode === 'land' && S.at === 'house',
-    onUse: async () => {
-      player.enabled = false;
-      if (S.chest) { save.keep('chest-of-gold'); ctx.toast('The chest of gold will be waiting in the museum.', 3); await ctx.wait(1.8); }
-      ctx.goto('house');
+  // ---- home: in at the palace's front door; it shuts, the drawbridge comes up, the house stands up on its legs; the card
+  interact.add({ pos: () => palWorld(0, palace.rampFoot + 0.8), radius: 1.8, height: 2.6, prompt: 'Go in at the front door', terminal: true,
+    enabled: () => S.mode === 'land' && S.at === 'house',
+    onUse: () => {
+      S.mode = 'home'; S.homeT = 0; S.inside = -1; player.enabled = false; player.target = null;
+      if (S.chest) { save.keep('chest-of-gold'); ctx.toast('The chest of gold will be waiting in the museum.', 4); }
     } });
+  function updateHome(dt) {
+    const T = (S.homeT += dt);
+    if (S.inside < 0) {
+      palace.door = easeInOut(T / 1.1);
+      if (T > 0.5 && !player.enabled) { player.enabled = true; player.locked = true; player.target = palWorld(0, 1.9); }
+      const q = palLocal(player.pos), ry = palace.rampY(q.z); player.pos.y = ry > 0 ? ry + palace.g.children[0].position.y : 0;   // (up the drawbridge)
+      if (T > 0.5 && (q.z < 2.3 || T > 9)) { S.inside = T; player.obj.visible = false; player.enabled = false; player.locked = false; player.target = null; }
+      return;
+    }
+    const k = T - S.inside;
+    palace.door = 1 - easeInOut(k / 0.9);
+    palace.ramp = 1 - easeInOut((k - 0.8) / 1.4);
+    palace.lift = easeInOut((k - 1.8) / 2);
+    palace.burst = clamp((k - 1.8) / 0.5) * clamp(1 - (k - 3.8) / 2);
+    if (k > 1.8 && !S.stood) { S.stood = true; const a = audio(); if (a) { creak(a, 0.12); setTimeout(() => creak(a, 0.09), 700); } }
+    if (k > 5 && !S.over) {
+      S.over = true;
+      ctx.gameOver({ title: 'You sailed home', text: 'You sailed it out and back again, and the sea wore at it all the way. Is it still the same ship you set out in?' });
+    }
+  }
   interact.add({ pos: BOTTLE.clone(), radius: 1.4, height: 1, prompt: 'Read the note in the bottle', aside: true, enabled: () => S.mode === 'land' && S.at === 'palm',
     onUse: () => ctx.toast('<i>Having a lovely time. Nobody here but me. Wish you were here.</i>', 4) });
 
@@ -442,9 +469,14 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
     pos.addScaledVector(f, S.v * dt);
     if (S.a < 40) pos.addScaledVector(WIND, 0.6 * dt);                        // in irons: blown slowly backwards
     // islands (and the harbour you left) push you off
-    for (const c of [...isles.map((i) => ({ c: i.c, r: i.r + 3.2 })), { c: HOME_SHORE.c, r: HOME_SHORE.r + 3.2 }]) {
+    for (const c of isles.map((i) => ({ c: i.c, r: i.r + 3.2 }))) {
       const d = V(pos.x - c.c.x, 0, pos.z - c.c.z), l = d.length();
       if (l < c.r) { pos.x = c.c.x + (d.x / l) * c.r; pos.z = c.c.z + (d.z / l) * c.r; S.v *= 0.5; }
+    }
+    for (const [x1, z1, x2, z2, r] of AVOID) {                                // the dock, and the other ship
+      const ex = x2 - x1, ez = z2 - z1, k = clamp(((pos.x - x1) * ex + (pos.z - z1) * ez) / (ex * ex + ez * ez));
+      const cx = x1 + ex * k, cz = z1 + ez * k, dx = pos.x - cx, dz = pos.z - cz, l = Math.hypot(dx, dz);
+      if (l < r) { pos.x = cx + (dx / (l || 1)) * r; pos.z = cz + (dz / (l || 1)) * r; S.v *= 0.5; }
     }
     const fromO = V(pos.x - O.x, 0, pos.z - O.z);
     if (fromO.length() > 230) { fromO.setLength(230); pos.x = O.x + fromO.x; pos.z = O.z + fromO.z; }
@@ -599,16 +631,18 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
   function labels() {
     const from = ship.position, sailing = S.mode === 'sail' || S.mode === 'docking';
     for (const i of isles) {
-      const d = from.distanceTo(i.c), top = i.c.clone().setY(i.id === 'lighthouse' ? 13 : 6), v = top.clone().project(stage.camera);
+      const top = i.top?.isVector3 ? i.top : i.c.clone().setY(i.top ?? (i.id === 'lighthouse' ? 13 : 6)), d = from.distanceTo(i.c), v = top.clone().project(stage.camera);
       const onScreen = v.z < 1 && Math.abs(v.x) < 0.92 && Math.abs(v.y) < 0.95;   // (labels otherwise cling to the frame's edge, pointing the wrong way)
       const o = !sailing || !onScreen ? 0 : clamp((110 - d) / 20) * clamp((d - i.r - 8) / 6);
-      ctx.ui.label('isle-' + i.id, o, `<span class="dot" style="background:${css(i.id === 'house' ? palette.agent : palette.rail)}"></span>${i.name}`, top);
+      const known = S.visited.includes(i.id);                                  // (a name only once you've landed there)
+      ctx.ui.label('isle-' + i.id, o, `<span class="dot" style="background:${css(known && i.id === 'house' ? palette.agent : palette.rail)}"></span>${known ? i.name : '?'}`, top);
     }
   }
   function walkable(x, z) {
-    if (S.mode === 'sail' || S.mode === 'docking') return true;
+    if (S.mode === 'sail' || S.mode === 'docking' || S.mode === 'home') return true;
     if (S.mode === 'cellar') return Math.abs(x - CEL.x) < 3.5 && z - CEL.z > -2.5 && z - CEL.z < 2.7 && !(x - CEL.x > 2.1 && z - CEL.z < 0.7);
     const i = isle(); if (!i) return true;
+    if (i.walk) return i.walk(x, z);
     const dx = x - i.c.x, dz = z - i.c.z;
     if (i.beach) return Math.hypot(x - i.land.x, z - i.land.z) < 3.2 && Math.hypot(dx, dz) < i.r - 0.3;
     if (Math.hypot(dx, dz) < i.r - 0.9) return true;
@@ -616,6 +650,7 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
     return f > i.r - 2 && f < i.r + 6.8 && Math.abs(s) < 0.62;
   }
 
+  let creakT = 3;
   const api = {
     S, isles, O, K,
     walkable,
@@ -625,11 +660,15 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
       if (S.at === 'lighthouse') return [{ x: TOWER.x, z: TOWER.z, r: 1.7 }, ...(S.fight === 'on' && S.k === 'lunge' ? [] : [{ x: K.p.x, z: K.p.z, r: S.fight === 'won' ? 1.6 : 1.1 }]), { x: CELLAR_DOOR.x, z: CELLAR_DOOR.z, r: 0.9 }];
       if (S.at === 'palm') return [{ x: at(E1, 0.2, -2.2).x, z: at(E1, 0.2, -2.2).z, r: 0.9 }];
       if (S.at === 'rock') return [{ x: at(E2, -0.8, 0).x, z: at(E2, -0.8, 0).z, r: 1.4 }];
-      if (S.at === 'house') return [{ x: HOUSE_DOOR.x, z: HOUSE_DOOR.z, w: 1.8, d: 0.4, rot: Math.atan2(HO.out.x, HO.out.z) }];
+      if (S.at === 'harbour') return isle().block();
+      if (S.at === 'house') {
+        const body = palWorld(0, -0.3), ramp = palWorld(0, 5.6);                 // (a box's rot turns the other way to rotation.y)
+        return [{ x: body.x, z: body.z, w: 14, d: 7.4, rot: -palYaw }, { x: ramp.x, z: ramp.z, w: 1.8, d: 6, rot: -palYaw }];
+      }
       return [];
     },
     // for tests: put the ship just off an island's landing, pointing at it
-    teleport(id) { const i = isles.find((q) => q.id === id); const p = i.moor.clone().addScaledVector(i.out, 12); ship.position.set(p.x, -0.25, p.z); S.h = yawOf(i.out.clone().negate()); S.v = 2; S.mode = 'sail'; cutNext = true; },
+    teleport(id) { const i = isles.find((q) => q.id === id); const p = i.moor.clone().addScaledVector(i.out, 4.5); ship.position.set(p.x, -0.25, p.z); S.h = yawOf(i.out.clone().negate()); S.v = 2; S.mode = 'sail'; cutNext = true; },
     update(dt, t) {
       if (S.mode === 'sail') sailPhysics(dt, t);
       if (S.mode === 'docking') {
@@ -641,6 +680,9 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
       if (S.mode === 'sail' || S.mode === 'docking') onDeck();
       S.x = +ship.position.x.toFixed(1); S.z = +ship.position.z.toFixed(1);
       sea.position.x = ship.position.x; sea.position.z = ship.position.z;
+      if (S.mode === 'home') updateHome(dt);
+      palace.update(dt, t);
+      if ((creakT -= dt) < 0) { creakT = 5 + Math.random() * 6; const near = Math.min(player.pos.distanceTo(PAL), ship.position.distanceTo(PAL)); const a = near < 45 && audio(); if (a) creak(a, 0.06 * clamp(1 - near / 45)); }
       updateSpray(dt); updateKeeper(dt, t); updateSentinels(dt, t); updateFrogs(dt, t); labels();
       plane.position.set(player.pos.x, 0, player.pos.z);
       // the wind dial: which way the wind blows, as seen from the camera
@@ -652,9 +694,10 @@ export function startVoyage(ctx, { root, ship, sea, ground }) {
     camera(pl) {
       const cut = cutNext; cutNext = false;
       if (S.mode === 'cellar') return { pos: CEL.clone().add(V((pl.pos.x - CEL.x) * 0.3, 7.5, 9.5)), look: CEL.clone().add(V((pl.pos.x - CEL.x) * 0.3, 0.6, -0.6)), cut, stiffness: 3 };
+      if (S.mode === 'home') return { pos: PAL.clone().addScaledVector(HO.out, 25).addScaledVector(HO.side, -10).add(V(0, 8, 0)), look: PAL.clone().add(V(0, 7, 0)), cut, stiffness: 0.9 };
       if (S.mode === 'land') {
-        const i = isle(), p = pl.pos.clone();
-        return { pos: p.clone().addScaledVector(i.out, i.beach ? 10 : 12).addScaledVector(i.side, i.beach ? -4 : -4).add(V(0, i.beach ? 8 : 9.5, 0)), look: p.clone().addScaledVector(i.out, -2).add(V(0, 1.2, 0)), cut, stiffness: 2.4 };
+        const i = isle(), p = pl.pos.clone(), [back, side, up, ahead, lookUp] = i.cam ?? [i.beach ? 10 : 12, -4, i.beach ? 8 : 9.5, -2, 1.2];
+        return { pos: p.clone().addScaledVector(i.out, back).addScaledVector(i.side, side).add(V(0, up, 0)), look: p.clone().addScaledVector(i.out, ahead).add(V(0, lookUp, 0)), cut, stiffness: 2.4 };
       }
       const f = fwd(), c = ship.position.clone();
       return { pos: c.clone().addScaledVector(f, -20).add(V(0, 9.5, 0)), look: c.clone().addScaledVector(f, 9).add(V(0, 1.5, 0)), cut, stiffness: 1.5 };
