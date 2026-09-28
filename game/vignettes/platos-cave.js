@@ -132,7 +132,7 @@ export default function platosCave(ctx) {
     { warp: [-1.4, -8.6], y: -0.42 }, { wait: 3, act: (f, u, t) => { f.position.y = -0.42 + Math.sin(t * 3) * 0.03; rippleAt(Math.min(1, u * 1.6)); } }]);
 
   // ================================================================ state + interactions
-  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, told: false, turned: false, facingWall: 0, dazzle: 0, sawPond: false };
+  const S = { phase: 'chained', pt: 0, where: 'cave', eyes: 0, told: false, turned: false, facingWall: 0, dazzle: 0, sawPond: false, walked: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/platos-cave.json', "Plato's Cave");
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(800, 200), new THREE.MeshBasicMaterial({ visible: false }));
@@ -167,14 +167,21 @@ export default function platosCave(ctx) {
   ];
   const BACK = ['Your eyes look strange.', "Out? There's no out.", "Sit down, you're in front of the tree.", 'Colours? What are colours?'];
   const inView = (p) => { const d = p.position.clone().sub(player.pos).setY(0).normalize(), v = player.viewDir().setY(0).normalize(); return !player.firstPerson || d.dot(v) > 0.45; };
-  prisoners.forEach((p, k) => talk(ctx, { who: p, radius: 3.2, offset: [0, 2.7, 0], enabled: () => S.where === 'cave' && S.phase !== 'over' && S.phase !== 'transit' && inView(p),
+  const canSit = () => S.phase === 'free' && S.where === 'cave' && !S.returned && S.walked > 12;
+  prisoners.forEach((p, k) => talk(ctx, { who: p, radius: 3.2, offset: [0, 2.7, 0], enabled: () => S.where === 'cave' && S.phase !== 'over' && S.phase !== 'transit' && inView(p) && !(canSit() && player.pos.distanceTo(SEAT) < 2),   // by your old seat, sitting down wins
     lines: (i) => (S.returned ? BACK[(k + i) % BACK.length] : CHAT[k][i % CHAT[k].length]) }));
   look(ctx, { pos: POND.clone().add(V(-2.4, 0, 2.6)), radius: 2.6, height: 1.5, prompt: 'Look in the pond', lines: ['reflection'], enabled: () => S.where === 'out' && S.phase === 'free' });
   look(ctx, { pos: () => horse.getWorldPosition(V()).add(V(-1.4, 0, 1.6)), radius: 2.4, height: 3, prompt: 'Look at the horse', lines: ['horse'], enabled: () => S.where === 'out' && S.phase === 'free' });
 
-  interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', terminal: true, enabled: () => S.phase === 'free' && S.where === 'cave' && !S.returned && (S.turned || player.pos.distanceTo(SEAT) > 1.5),
+  // the one tending the fire: one of the people who carry the shapes. They never speak.
+  const keeper = makePerson({ color: 0x5a4a5e }); keeper.position.copy(FIRE).add(V(2.1, 0, 1.3)); keeper.rotation.y = Math.atan2(-2.1, -1.3); cave.add(keeper);
+  talk(ctx, { who: keeper, radius: 2.6, offset: [0, 2.25, 0], enabled: () => S.where === 'cave' && S.phase === 'free',
+    lines: () => { voice.say('silent'); return '…'; } });
+
+  // sitting back down: only once you've walked about the cave a little (never straight away), and never after the sun
+  interact.add({ pos: SEAT, radius: 2, height: 1.8, prompt: 'Sit back down', terminal: true, enabled: canSit,
     onUse: () => { player.place(SEAT.x, SEAT.z, Math.PI); player.sit(true); player.pitch = 0.3; ending('watch_end', 'You kept watching', 'The shadows were all you knew. It is hard to leave what you know.'); } });
-  interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit under the tree', terminal: true, enabled: () => S.phase === 'free' && S.where === 'out' && S.saidChoose,
+  interact.add({ pos: TREE, radius: 3.2, height: 2.5, prompt: 'Sit down by the tree, and never go back', terminal: true, enabled: () => S.phase === 'free' && S.where === 'out' && S.saidChoose,
     onUse: () => { player.place(TREE.x + 0.6, TREE.z + 2.4, Math.PI); player.sit(true); S.stayed = true; ending('stay_end', 'You stayed in the light', 'The others are still down there, watching the wall. You are the only one who knows the way.'); } });
   interact.add({ pos: ARCH.clone().add(V(3, 0, 0)), radius: 2.8, height: 2.5, prompt: 'Go back down', enabled: () => S.phase === 'free' && S.where === 'out',
     onUse: async () => {
@@ -185,7 +192,8 @@ export default function platosCave(ctx) {
       await ctx.flash(false); player.enabled = true; S.phase = 'free';
       await ctx.wait(0.5); voice.say('back_dark');
     } });
-  interact.add({ pos: V(0, 0, SEAT.z + 1.6), radius: 3.6, height: 2.4, prompt: 'Tell them', terminal: true, enabled: () => S.phase === 'free' && S.returned && !S.told,
+  // telling them: stand in front of the row, between them and the wall (not where you used to sit)
+  interact.add({ pos: V(0, 0, SEAT.z - 2.6), radius: 2.6, height: 2.4, prompt: 'Tell them', terminal: true, enabled: () => S.phase === 'free' && S.returned && !S.told,
     onUse: async () => { S.told = true; S.tellT = 0; ending('tell', 'You went back', 'You saw the sun, and came back to say so. They would rather keep the shadows.'); } });
 
   // chained: the scene plays; then someone comes, frees you and pulls you to your feet (you don't choose to go)
@@ -201,12 +209,12 @@ export default function platosCave(ctx) {
   return Object.assign(level, {
     __frog: cameo,
     spawn: { x: SEAT.x, z: SEAT.z, rotY: Math.PI },
-    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 1, Math.PI + 1]; },   // chained: you can turn your head to your neighbours, never behind you
+    start() { player.sit(true); player.firstPerson = true; player.obj.visible = false; player.pitch = 0.3; player.yawLimit = [Math.PI - 0.76, Math.PI + 0.76]; },   // chained: you can barely turn your head, just enough to glimpse the edge of a neighbour
     walkable: (x, z) => (S.where === 'cave'
       ? (Math.abs(x) < 15.5 && z > WALL_Z + 2.4 && z < 10.5) || Math.hypot(x - MOUTH.x, z - MOUTH.z) < 3.5
       : Math.hypot(x - OUT.x, z - OUT.z) < 22 && Math.hypot(x - POND.x, z - POND.z) > 3.2),
     blockers: () => S.where === 'cave'
-      ? [...prisoners.map((p) => ({ x: p.position.x, z: p.position.z, r: 0.6 })), { x: FIRE.x, z: FIRE.z, r: 1.4 }, { x: 0, z: 2.6, w: 18.4, d: 0.8 }, ...carriers.map((c) => ({ x: c.p.position.x, z: 3.4, r: 0.45 }))]
+      ? [...prisoners.map((p) => ({ x: p.position.x, z: p.position.z, r: 0.6 })), { x: FIRE.x, z: FIRE.z, r: 1.4 }, { x: keeper.position.x, z: keeper.position.z, r: 0.5 }, { x: 0, z: 2.6, w: 18.4, d: 0.8 }, ...carriers.map((c) => ({ x: c.p.position.x, z: 3.4, r: 0.45 }))]
       : [{ x: TREE.x, z: TREE.z, r: 0.8 }, { x: ARCH.x - 3, z: ARCH.z, r: 5.3 }, { x: horse.position.x + OUT.x, z: horse.position.z + OUT.z, r: 1.3 }, { x: jar.position.x + OUT.x, z: jar.position.z + OUT.z, r: 0.5 }],
 
     update(dt, t) {
@@ -223,6 +231,7 @@ export default function platosCave(ctx) {
       fireLight.intensity = 80 + Math.sin(t * 11) * 12 + Math.sin(t * 27) * 6;
 
       // prisoners: still, watching; when you come back to tell them, they turn on you
+      animatePerson(keeper, t, { energy: 0.25 });
       prisoners.forEach((p, i) => {
         p.userData.body.position.y = -0.42;
         if (S.told) { p.rotation.y = lerp(p.rotation.y, Math.atan2(player.pos.x - p.position.x, player.pos.z - p.position.z), 0.05); p.userData.body.rotation.z = Math.sin(t * 9 + i) * 0.08; }
@@ -234,6 +243,7 @@ export default function platosCave(ctx) {
       // discovery lines: by what you turn to face, not where you stand
       if (S.phase === 'free' && S.where === 'cave' && !S.returned) {
         const v = player.viewDir();
+        if (S.lastPos) S.walked += Math.min(1, player.pos.distanceTo(S.lastPos)); S.lastPos = player.pos.clone();   // how far you've walked since the chains fell
         if (!S.turned && v.z > 0.35) { S.turned = true; voice.say('turn', { urgent: true }); S.assist = 1.6; }
         // still facing the wall: the firelight flickers on it, and your own shadow appears among the shapes
         S.facingWall = !S.turned && v.z < -0.3 ? S.facingWall + dt : 0;
@@ -253,7 +263,8 @@ export default function platosCave(ctx) {
             await voice.say('outside_1');
             // the sun only once you've looked at things (the pond first), or after a while
             for (let i = 0; i < 100 && !voice.said.has('reflection') && !voice.said.has('horse'); i++) await ctx.wait(0.25);
-            await ctx.wait(1); await voice.say('outside_2'); await ctx.wait(1.5); await voice.say('choose'); S.saidChoose = true;
+            const outside = { when: () => S.where === 'out' };   // not if you've already gone back down
+            await ctx.wait(1); await voice.say('outside_2', outside); await ctx.wait(1.5); await voice.say('choose', outside); S.saidChoose = true;
           })();
         }
       }

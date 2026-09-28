@@ -12,7 +12,7 @@
     "turn": "Behind you, a fire. People carrying cutouts. The shadows were only this.",
     "climb": "A path leads up, towards a light.",
     "bright": "It's too bright to look at.",
-    "choose": "You could stay up here. Or go back down, and tell them.",
+    "choose": "You could sit down here by the tree, in the sun, and never go back. Or go back down, and tell the others about the shapes and colours you've seen.",
     "back_dark": "Down here, you can barely see anymore.",
     "tell": "They laugh. The climb has ruined your eyes, they say. Nobody else will go.",
     "stay_end": "You stay in the light. The others are still down there, and you're the only one who knows the way.",
@@ -22,6 +22,7 @@
     "hurts": "It hurts to look. The wall was easier.",
     "outside_1": "Outside. It's too bright. You can't make anything out yet.",
     "outside_2": "The real things. And the sun that lights them all.",
-    "horse": "It's much bigger than its shadow."
+    "horse": "It's much bigger than its shadow.",
+    "silent": "They never speak, the ones who carry the shapes."
   }
 }
