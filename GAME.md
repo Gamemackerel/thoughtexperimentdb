@@ -180,7 +180,7 @@ a weeping woman hangs with both eyes on one side of her face; a painter in a str
 | A cell door (closed for now) | **The Prisoner's Dilemma** | Sign the statement or say nothing, three times; your partner plays tit for tat | You kept quiet · you talked every time · it depended on last time |
 | Two boxes | **Newcomb's Paradox** | The boxes were filled yesterday and the ledger has no exceptions; take the closed box or both. Take only the closed box and you come back tomorrow to two glass boxes, the million in plain sight | You took both boxes · you took one box, twice · you took both, with the million in plain sight |
 | A cake | **The Utility Monster** | Carry eight slices to six villagers or the monster; a meter adds up happiness | You fed the monster · you shared the cake · your own way |
-| A door with a slot | **The Chinese Room** | Take each card, find its rule in the book, post back the matching card; then see who you've been talking to | You answered perfectly · you stopped answering |
+| A door with a slot | **The Chinese Room** | Take a card from the IN tray, look it up in the big red RULEBOOK on the lectern, pick the matching card from the pigeonholes and post it through the OUT slot, one card at a time; after three, the view rises outside to show whose questions you've been answering | You answered perfectly · you stopped answering |
 | Three doors | **The Monty Hall Problem** | Pick, watch the host show a goat, stay or switch; then play a hundred times each way | Switching wins two times in three |
 
 ### The field (built)

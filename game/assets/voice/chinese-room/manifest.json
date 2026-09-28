@@ -15,9 +15,9 @@
     "dur": 1.36
   },
   "ask": {
-    "file": "ask-56a30fa5.mp3",
-    "text": "There's a rulebook. You don't need to understand the marks. Only to match them.",
-    "dur": 4.88
+    "file": "ask-a2ad6f2e.mp3",
+    "text": "There's a rulebook. You don't need to understand the marks. Only to match them, and post the answer out.",
+    "dur": 6.19
   },
   "book": {
     "file": "book-c894b2be.mp3",
@@ -50,9 +50,9 @@
     "dur": 5.09
   },
   "end": {
-    "file": "end-4630fd26.mp3",
-    "text": "If following the rules isn't understanding, what is? And is a computer, following its rules, any different from you?",
-    "dur": 7.11
+    "file": "end-f50fc41d.mp3",
+    "text": "So did the room understand Chinese? Did you? What does it mean to understand a language?",
+    "dur": 6.09
   },
   "stop_end": {
     "file": "stop_end-3174a597.mp3",

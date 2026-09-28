@@ -352,7 +352,7 @@
   },
   "chinese-room": {
     "title": "The Chinese Room",
-    "question": "You answered perfectly and understood nothing. What would it take for the room, or a computer, to really understand? How would you ever tell?",
+    "question": "Did the room understand Chinese? Did you? What do you think it means to understand a language, and why?",
     "todo": [
       {
         "text": "read John Searle, “Minds, Brains, and Programs” (1980), and the replies printed alongside it"
