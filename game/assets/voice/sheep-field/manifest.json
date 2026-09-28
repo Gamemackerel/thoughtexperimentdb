@@ -14,6 +14,16 @@
     "text": "In the field, grazing: a sheep.",
     "dur": 2.85
   },
+  "open": {
+    "file": "open-eb6076bd.mp3",
+    "text": "And the gate's standing open.",
+    "dur": 2.56
+  },
+  "shut": {
+    "file": "shut-34b19812.mp3",
+    "text": "You shut it, to keep the sheep in.",
+    "dur": 2.69
+  },
   "ask": {
     "file": "ask-0d65cebd.mp3",
     "text": "Go and see? Or walk on?",
@@ -25,9 +35,9 @@
     "dur": 2.82
   },
   "real": {
-    "file": "real-28f006e7.mp3",
-    "text": "But over the brow of the hill, out of sight from the gate, there is a sheep in the field.",
-    "dur": 5.17
+    "file": "real-f4c035fa.mp3",
+    "text": "But over the brow of the hill, out of sight from the gate, there is a sheep in the field. The gate you shut is keeping it in.",
+    "dur": 7.11
   },
   "end": {
     "file": "end-8ae60116.mp3",
@@ -45,8 +55,8 @@
     "dur": 3.94
   },
   "lane_2": {
-    "file": "lane_2-479be1db.mp3",
-    "text": "And there is one, behind the hill, where you couldn't see it. The one you saw was a dog.",
-    "dur": 5.15
+    "file": "lane_2-2d7d52b8.mp3",
+    "text": "And there is one, behind the hill, where you couldn't see it. The gate you shut is keeping it in. The one you saw was a dog.",
+    "dur": 7.21
   }
 }

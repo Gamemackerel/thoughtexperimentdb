@@ -127,7 +127,7 @@ export default function tenCoins(ctx) {
       if (S.concluded) {
         await voice.say('yours', { urgent: true }); card.tick(1); await ctx.wait(0.4);
         // back out to Jones, to settle up
-        await ctx.flash(true); S.where = 'room'; player.place(TABLE.x - 0.5, TABLE.z + 1.3, Math.PI); for (const c of shown) c.visible = true; await ctx.flash(false);
+        await ctx.flash(true); S.where = 'room'; player.place(TABLE.x + 2.3, TABLE.z + 0.7, -1.9); for (const c of shown) c.visible = true; await ctx.flash(false);
         ctx.speak(jones, 'Ten coins? In the new man\'s pocket?', { offset: [0, 2.3, 0] }); await ctx.wait(2.6);
         ctx.speak(jones, 'Well. A bet\'s a bet.', { offset: [0, 2.3, 0] }); S.pay = 0.001; await ctx.wait(1.6);
         await voice.say('won', { urgent: true }); await ctx.wait(0.4); card.ask(); await voice.say('end');

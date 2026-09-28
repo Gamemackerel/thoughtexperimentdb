@@ -57,9 +57,16 @@ await run('paperclip', async (t) => {
   await sleep(3); await t.shot('arrive'); await t.use('Check the off switch'); await sleep(3);
   await t.until(async () => (await t.S('phase')) === 'ask', 40); await t.shot('ask');
   if (alt === 'off') { await t.use('go home'); return; }
-  await t.use(alt === 'hundred' ? 'exactly one hundred' : 'as many'); await sleep(6); await t.shot('making');
+  // the maximiser, which rewinds to the workshop with a new button (alt 'many': choose it again, to its end card)
+  await t.use('as many'); await sleep(6); await t.shot('making');
   await t.until(async () => (await t.S('stage')) >= 1, 30); await sleep(1); await t.use('Switch it off$'); await sleep(8); await t.shot('taking');
   await t.until(async () => (await t.S('stage')) >= 3, 40); await sleep(4); await t.shot('silver');
+  await t.until(async () => (await t.S('stage')) >= 4, 40); await sleep(3); await t.shot('flying'); await sleep(4); await t.shot('islands');
+  await t.until(async () => (await t.S('phase')) === 'rewind', 40); await sleep(1); await t.shot('rewind'); await sleep(2); await t.shot('rewind2');
+  await t.until(async () => (await t.S('phase')) === 'ask', 20); await sleep(1.5); await t.shot('again');
+  await t.use(alt === 'many' ? 'as many' : 'exactly one hundred'); await sleep(8); await t.shot('hundred');
+  await t.until(async () => (await t.S('stage')) >= 2, 40); await sleep(4); await t.shot('checking');
+  await t.until(async () => (await t.S('stage')) >= 4, 60); await sleep(8); await t.shot('far');
 });
 await run('turtles', async (t) => {
   await sleep(3); await t.shot('world'); await t.use('Look over the edge'); await sleep(4);
@@ -96,11 +103,14 @@ await run('puddle', async (t) => {
   await sleep(20); await t.shot('shrinking');
 });
 await run('swampman', async (t) => {
-  await sleep(3); await t.shot('swamp'); await t.walkTo(0, 1.4); await t.until(async () => (await t.S('phase')) === 'strike', 10); await sleep(0.55); await t.shot('strike'); await sleep(1.2); await t.shot('pieces');
-  await t.until(async () => (await t.S('phase')) === 'after', 30); await sleep(1); await t.shot('you');
-  await t.walkTo(0, -4.2); await sleep(3); await t.walkTo(7.8, -4.2); await sleep(4); await t.shot('path');
-  if (alt === 'back') { await t.use('Look for yourself', 15); return; }
-  await t.walkTo(8.4, -4.8); await sleep(2); await t.shot('door');
-  await t.use(alt === 'tell' ? 'Tell them' : 'Go inside');
+  await sleep(3); await t.shot('swamp'); await t.walkTo(0, 1.4); await t.until(async () => (await t.S('phase')) === 'strike', 10); await sleep(0.6); await t.shot('strike'); await sleep(1.2); await t.shot('pieces');
+  await t.until(async () => (await t.S('fMode')) === 'rise', 30); await sleep(1); await t.shot('rise');
+  await t.until(async () => (await t.S('phase')) === 'after', 30); await sleep(1); await t.shot('copy');
+  if (alt === 'idle') { await sleep(75); return; }
+  await t.walkTo(0, -4.2); await sleep(4); await t.shot('walking'); await t.walkTo(3.6, -4.2); await sleep(4);
+  await t.until(async () => await t.S('again'), 20); await sleep(1); await t.shot('tree2');
+  if (alt === 'step') { await t.use('Stand by the tree'); await sleep(1.8); await t.shot('step'); await sleep(0.9); await t.shot('bolt'); return; }
+  await t.walkTo(7.8, -4.2); await sleep(4); await t.walkTo(8.6, -4.9); await sleep(2); await t.shot('door');
+  await t.use('Go inside');
 });
 await b.close();

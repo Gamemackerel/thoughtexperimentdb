@@ -41,24 +41,39 @@ async function run(id, script) {
 await run('barn', async (t) => { await sleep(2); await t.shot('arrive'); await t.walkTo(-8, -3); await sleep(4); await t.shot('west'); await t.walkTo(8, -3); await sleep(5); await t.shot('east'); });
 await run('stopped-clock', async (t) => {
   await sleep(3); await t.shot('square'); await t.use('Read the notice board'); await sleep(4);
-  await t.use(alt === 'postman' ? 'Ask the postman' : 'Look up at the clock'); await sleep(5); await t.shot('believed'); await sleep(8); await t.shot('lapse');
+  await t.use('Look up at the clock'); await sleep(5); await t.shot('believed');
+  await t.until(async () => (await t.S('phase')) === 'go', 30);
+  if (alt !== 'idle') await t.use('Hurry to the station');   // (alt idle: stand there until you set off anyway)
+  await t.until(async () => (await t.S('where')) === 'station', 45); await sleep(2.5); await t.shot('station'); await sleep(4); await t.shot('train');
+  await t.until(async () => (await t.S('lapse')) > 0, 30); for (const s of [1.2, 3.5, 4, 5]) { await sleep(s); await t.shot('night'); }
 });
 await run('ten-coins', async (t) => {
   await sleep(7.5); await t.shot('president'); await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.shot('coins');
-  await t.use(alt === 'wait' ? 'wait your turn' : 'two and two'); await t.until(async () => (await t.S('phase')) === 'pockets', 30); await sleep(1); await t.shot('office');
-  await t.use('Empty your pockets'); await sleep(5); await t.shot('pockets');
+  await t.use(alt === 'wait' ? 'wait your turn' : 'two and two');
+  if (alt !== 'wait') { await t.until(async () => (await t.S('phase')) === 'bet', 30); if (alt !== 'idle') await t.use('Bet Jones'); await sleep(3); await t.shot('bet'); }   // (alt idle: sit on it until Jones notices)
+  await t.until(async () => (await t.S('phase')) === 'pockets', 60); await sleep(1); await t.shot('office');
+  await t.use('Empty your pockets'); await sleep(5); await t.shot('pockets'); await sleep(6); await t.shot('settle');
 });
 await run('sheep-field', async (t) => {
-  await sleep(3); await t.shot('lane'); await t.use('Lean on the gate'); await t.until(async () => (await t.S('phase')) === 'choose', 30); await t.shot('believed');
+  await sleep(3); await t.shot('lane'); await t.use('Look in through the gate'); await t.until(async () => (await t.S('phase')) === 'shut', 30); await t.shot('believed');
+  if (alt !== 'idle') { await t.use('Shut the gate'); await sleep(3.2); await t.shot('shutting'); }   // (alt idle: leave it open until the farmer asks, then you shut it anyway)
+  await t.until(async () => (await t.S('phase')) === 'choose', 60); await t.shot('shut');
   await t.use(alt === 'lane' ? 'Walk on' : 'Climb over'); await sleep(6); await t.shot('dog'); await sleep(8); await t.shot('real');
 });
 await run('fake-barns', async (t) => {
   await sleep(4); await t.shot('road'); await t.use('Look at the tyre'); await sleep(3);
-  await t.use(alt === 'round' ? 'Walk all the way round' : 'Look at the barn'); await sleep(alt === 'round' ? 16 : 6); await t.shot('barn'); await sleep(7.5); await t.shot('behind');
+  await t.use(alt === 'round' ? 'Walk all the way round' : 'Look at the barn'); await sleep(alt === 'round' ? 16 : 4); await t.shot('barn');
+  await t.until(async () => (await t.S('phase')) === 'storm', 40); await sleep(1); await t.shot('storm');
+  if (alt !== 'idle') await t.use('Run into the barn');   // (alt idle: stand in the rain until you run for it anyway)
+  await t.until(async () => (await t.S('cam')) === 'inside', 45); await sleep(1.5); await t.shot('inside');
+  await t.until(async () => (await t.S('cam')) === 'behind', 20); await sleep(3); await t.shot('behind');
 });
 await run('mirage', async (t) => {
   await sleep(3); await t.shot('desert'); await t.walkTo(0, 7); await sleep(4); await t.shot('shimmer');
-  await t.walkTo(-0.4, -9.4); await t.until(async () => (await t.S('phase')) === 'choose', 30); await sleep(1); await t.shot('gone');
+  await t.until(async () => (await t.S('phase')) === 'lead', 20); await t.walkTo(0, 2); await sleep(2);   // (you can't go on without the camel)
+  if (alt !== 'idle') await t.use('Lead the camel');   // (alt idle: wait until the camel nudges you on)
+  await sleep(3); await t.shot('leading');
+  await t.until(async () => (await t.S('phase')) === 'choose', 60); await sleep(1); await t.shot('gone');
   await t.use(alt === 'back' ? 'turn back' : 'Lift the rock'); await sleep(5); await t.shot('water');
 });
 await b.close();

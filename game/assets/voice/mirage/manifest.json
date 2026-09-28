@@ -1,8 +1,8 @@
 {
   "arrive": {
-    "file": "arrive-b94cd3c5.mp3",
-    "text": "The desert. You've been walking since dawn, and your water ran out hours ago.",
-    "dur": 4.83
+    "file": "arrive-ea6fcc24.mp3",
+    "text": "The desert. You and your camel have been walking since dawn, and the water ran out hours ago.",
+    "dur": 5.72
   },
   "skin": {
     "file": "skin-3baa0ca6.mp3",
@@ -13,6 +13,11 @@
     "file": "see-0b4ea008.mp3",
     "text": "Up ahead, shimmering blue: water.",
     "dur": 3.08
+  },
+  "camel": {
+    "file": "camel-edc7989e.mp3",
+    "text": "Your camel is thirsty too.",
+    "dur": 2.64
   },
   "mirage": {
     "file": "mirage-6d4ec9a4.mp3",
@@ -25,9 +30,9 @@
     "dur": 2.56
   },
   "water": {
-    "file": "water-d4e11813.mp3",
-    "text": "And under the rock: water. There was water here all along.",
-    "dur": 4.05
+    "file": "water-668c3747.mp3",
+    "text": "And under the rock: water. Your camel drinks. There was water here all along.",
+    "dur": 5.15
   },
   "end": {
     "file": "end-5d59e39e.mp3",
@@ -35,14 +40,14 @@
     "dur": 7.18
   },
   "back_1": {
-    "file": "back_1-b876dc64.mp3",
-    "text": "You give up on it, and turn back.",
-    "dur": 2.61
+    "file": "back_1-da28f4f2.mp3",
+    "text": "You give up on it, and lead your camel back.",
+    "dur": 3.08
   },
   "back_idle": {
-    "file": "back_idle-79fdd14a.mp3",
-    "text": "You rest a while, then turn back.",
-    "dur": 2.82
+    "file": "back_idle-c5494a84.mp3",
+    "text": "You rest a while, then lead your camel back.",
+    "dur": 3.27
   },
   "back_2": {
     "file": "back_2-a39d01ad.mp3",

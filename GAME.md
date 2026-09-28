@@ -209,16 +209,17 @@ Up the lane from the field, a red barn after Grant Wood: plank walls, hay, a lan
 doors, round green hills combed into rows with lollipop trees (`game/core/grantwood.js`). Under a pointed Gothic window
 stand a farmer with a pitchfork and a woman in an apron (American Gothic). The pitchfork's three prongs are labelled
 BELIEF, TRUTH and REASON, and the farmer will explain. Each Gettier case ends with the same card (`game/core/gettier.js`):
-what you believed, the three prongs ticked off, and "Did you know it?". Each also has a path where you do know, for
-contrast.
+what you believed, the three prongs ticked off, and "Did you know it?". In each, you act on the belief (a bet, a train,
+a gate, shelter from a storm, a thirsty camel), and luck carries you. Each but the clock also has a path where you do
+know, for contrast.
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; conclude, or wait; then the job is yours, and so are ten coins | Right about the wrong man · you didn't jump to conclusions |
-| A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock, or ask the postman; the bell strikes two; the afternoon passes and the clock doesn't | Right by accident · you asked someone who knew |
-| A five-bar gate | **The Sheep in the Field** (Chisholm) | Look over the gate; go and see (a dog in a sheepskin, and a sheep behind the hill) or walk on | There was a sheep · you walked on, sure of it |
-| A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn; look at it, or walk all the way round it; then the road from behind: fronts on sticks | The only real barn · you went round the back |
-| A painting of the desert | **Dharmottara's Mirage** | Water shimmering ahead; it's a mirage; lift the rock beside it, or turn back | There was water after all · you turned back |
+| A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; conclude and bet Jones a shilling on it, or wait; the job is yours, and so are ten coins; you win the bet on your own coins | Right about the wrong man · you didn't jump to conclusions |
+| A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock (two o'clock); hurry for the quarter-past-two train and make it; then an evening, a night and a morning pass over the square, and the clock's hands never move | Right by accident |
+| A five-bar gate | **The Sheep in the Field** (Chisholm) | Look in through the open gate; shut it to keep the sheep in; go and see (a dog in a sheepskin, and a sheep behind the hill, kept in by your gate) or walk on | There was a sheep · you walked on, sure of it |
+| A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn, a storm coming; look at it, or walk all the way round it; the rain comes and you run inside, dry; then the road from behind: fronts on sticks, rain pouring through | The only real barn · you went round the back |
+| A painting of the desert | **Dharmottara's Mirage** | Water shimmering ahead; lead your thirsty camel to it; it's a mirage; lift the rock beside it (the camel drinks), or turn back | There was water after all · you turned back |
 
 Rooms are hubs: "Back to the house" on the game-over card (and Esc) returns you to the room you came from (`HOME_ROOM` and
 `ctx.hub` in `game/main.js`).

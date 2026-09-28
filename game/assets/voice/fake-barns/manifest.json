@@ -1,13 +1,13 @@
 {
   "arrive": {
-    "file": "arrive-23b5aedc.mp3",
-    "text": "Driving through the country, on a fine afternoon.",
-    "dur": 3.55
+    "file": "arrive-119cb09d.mp3",
+    "text": "Driving through the country. There's a storm coming.",
+    "dur": 3.5
   },
   "flat": {
-    "file": "flat-3a3b2cde.mp3",
-    "text": "A flat tyre. Right beside a barn.",
-    "dur": 2.98
+    "file": "flat-4fc8060f.mp3",
+    "text": "And a flat tyre. Right beside a barn.",
+    "dur": 3.08
   },
   "tyre": {
     "file": "tyre-f94b4801.mp3",
@@ -19,25 +19,30 @@
     "text": "A barn. Red, with white trim. You can see it as plainly as anything.",
     "dur": 4.78
   },
-  "true": {
-    "file": "true-23fc8803.mp3",
-    "text": "And it is a barn. A real one.",
-    "dur": 2.77
-  },
   "round": {
     "file": "round-f669d306.mp3",
     "text": "You walk all the way round it. Walls, a back, a roof, a silo. It's a barn.",
     "dur": 5.3
   },
+  "storm": {
+    "file": "storm-70a27938.mp3",
+    "text": "Here comes the rain.",
+    "dur": 2.14
+  },
+  "dry": {
+    "file": "dry-02f93f96.mp3",
+    "text": "Inside, it's dry. It really is a barn.",
+    "dur": 3.55
+  },
   "facades": {
-    "file": "facades-6ed75802.mp3",
-    "text": "But every other barn along this road is a front, propped up on sticks. From the road, you couldn't have told them apart. You just happened to look at the only real one.",
-    "dur": 9.25
+    "file": "facades-89067765.mp3",
+    "text": "But every other barn along this road is a front, propped up on sticks. From the road, you couldn't have told them apart. You just happened to run into the only real one.",
+    "dur": 9.38
   },
   "end": {
-    "file": "end-c7ceceed.mp3",
-    "text": "You believed it was a barn. It was. You had good reason. Did you know?",
-    "dur": 4.65
+    "file": "end-609059a2.mp3",
+    "text": "You believed it was a barn. It was. You had good reason, and it kept you dry. Did you know?",
+    "dur": 5.72
   },
   "facades_2": {
     "file": "facades_2-42164c3f.mp3",
