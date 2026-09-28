@@ -9,8 +9,8 @@
     "arrive": "A sunny afternoon. The sun is warm on your face, and everything feels real.",
     "wonder": "Have you ever wondered how any of this came to exist? What reality actually is, underneath everything you can touch.",
     "solid": "The grass, the trees, the warmth. All of it feels solid.",
-    "edge": "The world ends here. By some incredible glitch, or magic, you've glimpsed the true nature of reality.",
-    "ask": "Something flickers at the edge of your vision. Will you go after it, and try to see what's beneath?",
+    "edge": "The world ends here. By some glitch, or magic, you've glimpsed what might be a clue about the true nature of reality.",
+    "ask": "Something shimmers at the edge of your vision, calling you to find out what's happening underneath the world. Perhaps it's God, pulling the strings. Will you go after it?",
     "fall": "You step off, and go looking for what's beneath.",
     "lab_1": "A brain, in a jar of fluid. Wires. A humming machine. And above it, the world you just left.",
     "lab_2": "So this is what's real. Isn't it?",
@@ -25,7 +25,6 @@
     "machine_2": "Up there, you called it a tree. Did you mean a real tree, or this machine's picture of one? The picture is all you've ever touched.",
     "sit_rest": "You sit. The sun is warm, the grass smells of summer. You could sit here all afternoon, just feeling it.",
     "lab_edge_2": "Here too. Of course.",
-    "machine_3": "Another machine. It's labelled in words you know. Your words.",
-    "stool_end": "You sit down by the machine. You've decided this one is real."
+    "machine_3": "Another machine. It's labelled in words you know. Your words."
   }
 }

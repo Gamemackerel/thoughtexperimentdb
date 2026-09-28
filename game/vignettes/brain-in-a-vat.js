@@ -1,6 +1,7 @@
 // Vignette: Brain in a Vat.
 // A sunny little world. Its edges flicker. Step off and you land in a lab where your world floats above a brain in a
-// vat; the lab's edges flicker too. Sit on the bench to stay (ending), or keep stepping out: after the third, it ends.
+// vat; the lab's edges flicker too. Sit on the bench to stay (ending), or step off; once you've started down, you keep
+// looking for what's beneath: after the third world, it ends.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
   makeIsland, makeTree, makePerson, animatePerson, makeBench, makeHouse, makeTable, makeFrog,
@@ -130,17 +131,6 @@ export default function brainInAVat(ctx) {
       await voice.say('sit'); await ctx.wait(1.2); await voice.say('stay_end'); await ctx.wait(1);
       save.complete('brain-in-a-vat');
       ctx.gameOver({ title: 'You stayed', text: 'You never found out whether the sun was real. You felt it anyway.' });
-    },
-  });
-  // V4: in each lab, a stool by the machine: decide this one is the bottom
-  interact.add({
-    pos: () => center().clone().add(V(-3.8, 0, 1.2)), radius: 1.3, height: 1.6, prompt: 'Sit on the stool', terminal: true,
-    enabled: () => S.phase === 'explore' && S.layer > 0 && voice.said.has(S.layer === 1 ? 'lab_2' : 'layer_2'),
-    onUse: async () => {
-      S.phase = 'over'; player.sit(true);
-      await voice.say('stool_end'); await ctx.wait(1);
-      save.complete('brain-in-a-vat');
-      ctx.gameOver({ title: 'You stopped here', text: 'You decided this one was the bottom, the real one. You can\'t check that either.' });
     },
   });
   interact.add({

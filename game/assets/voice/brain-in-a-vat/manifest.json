@@ -15,14 +15,14 @@
     "dur": 4.1
   },
   "edge": {
-    "file": "edge-2994cac6.mp3",
-    "text": "The world ends here. By some incredible glitch, or magic, you've glimpsed the true nature of reality.",
-    "dur": 6.53
+    "file": "edge-6049b56c.mp3",
+    "text": "The world ends here. By some glitch, or magic, you've glimpsed what might be a clue about the true nature of reality.",
+    "dur": 7.18
   },
   "ask": {
-    "file": "ask-c7e9f956.mp3",
-    "text": "Something flickers at the edge of your vision. Will you go after it, and try to see what's beneath?",
-    "dur": 5.38
+    "file": "ask-ce6bd093.mp3",
+    "text": "Something shimmers at the edge of your vision, calling you to find out what's happening underneath the world. Perhaps it's God, pulling the strings. Will you go after it?",
+    "dur": 9.14
   },
   "fall": {
     "file": "fall-804a235f.mp3",
@@ -98,10 +98,5 @@
     "file": "machine_3-d1a738af.mp3",
     "text": "Another machine. It's labelled in words you know. Your words.",
     "dur": 4.26
-  },
-  "stool_end": {
-    "file": "stool_end-1ab5d2e9.mp3",
-    "text": "You sit down by the machine. You've decided this one is real.",
-    "dur": 4.47
   }
 }
