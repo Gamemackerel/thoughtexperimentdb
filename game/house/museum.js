@@ -110,7 +110,6 @@ export default function museum(ctx) {
     spawn: { x: -7.6, z: 1.2, rotY: Math.PI / 2 },
     walkable: (x, z) => Math.abs(x) < HALF_X - 0.5 && Math.abs(z) < HALF_Z - 0.4,
     blockers: () => blockers,
-    start() { ctx.toast(count() ? 'The museum. Things you have brought home.' : 'The museum. Nothing in it yet.', 4); },
     camera(pl) {
       const look = pl.pos.clone().lerp(V(0, 0, -1.2), 0.6).add(V(0, 1.6, 0));
       return { pos: look.clone().add(V(pl.pos.x * 0.1, 8, 17)), look };

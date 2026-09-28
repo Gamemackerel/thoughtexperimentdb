@@ -283,7 +283,6 @@ export default function hall(ctx) {
     spawn: spawnAt ? { x: spawnAt[0], z: spawnAt[1], rotY: 0 } : { x: -12, z: 1.2, rotY: Math.PI / 2 },   // clear of the hatch
     walkable: (x, z) => Math.abs(x) < HALF - 2.3 && z > -4.1 && z < DEPTH,   // not behind the curtains
     blockers: () => blockers,
-    start() { if (ctx.from === 'house') ctx.toast('A long hall. More doors, of a sort.', 4); },
     camera(pl) {
       const look = V(clamp(pl.pos.x, -HALF + 5, HALF - 7), 2.4, -1.6);
       return { pos: look.clone().add(V(0, 5.5, 15)), look, stiffness: 2.4 };

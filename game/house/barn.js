@@ -172,7 +172,6 @@ export default function barn(ctx) {
     spawn: from ? { x: from.pos.x, z: from.pos.z + 0.6, rotY: 0 } : { x: 0, z: BACK + 2.4, rotY: 0 },
     walkable: (x, z) => Math.abs(x) < HALF - 0.6 && z > BACK + 0.7 && z < FRONT,
     blockers: () => blockers,
-    start() { if (ctx.from === 'field') ctx.toast('It smells of hay, and certainty.', 4); },
     camera(pl) {
       const look = V(clamp(pl.pos.x, -HALF + 8.5, HALF - 8.5), 2.4, -1.4);
       return { pos: look.clone().add(V(0, 4.6, 14.5)), look, stiffness: 2.4 };

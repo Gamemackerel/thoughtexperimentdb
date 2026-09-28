@@ -227,7 +227,6 @@ export default function gallery(ctx) {
     spawn: from ? (from.id === 'field' ? { x: from.pos.x - 0.8, z: from.pos.z, rotY: -Math.PI / 2 } : { x: from.pos.x, z: from.pos.z + 0.6, rotY: 0 }) : { x: -HALF + 5.4, z: 2, rotY: Math.PI / 2 },
     walkable: (x, z) => Math.abs(x) < HALF - 0.6 && z > BACK + 1 && z < FRONT,
     blockers: () => blockers,
-    start() { if (ctx.from === 'hall') ctx.toast('The stairs come out somewhere else entirely.', 4); },
     camera(pl) {
       const look = V(clamp(pl.pos.x, -HALF + 7, HALF - 7), 2.6, -1.4);
       return { pos: look.clone().add(V(0, 5.2, 15)), look, stiffness: 2.4 };

@@ -123,7 +123,6 @@ export default function trolleyRoom(ctx) {
     spawn: from ? { x: from.x, z: BACK + 2.2, rotY: 0 } : { x: 1.5, z: BACK + 2.4, rotY: 0 },
     walkable: (x, z) => Math.abs(x) < HALF - 0.5 && z > BACK + 0.6 && z < FRONT,
     blockers: () => blockers,
-    start() { if (ctx.from === 'house') ctx.toast('The painting opens onto a room of trolley paintings.', 4.5); },
     camera(pl) {
       if (entering?.p.painting) {       // push into the painting
         const k = easeInOut(entering.t / 1.3), x = entering.p.painting.x;

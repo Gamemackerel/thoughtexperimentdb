@@ -244,7 +244,6 @@ export default function field(ctx) {
     spawn: from && !from.home ? { x: from.pos.x, z: from.pos.z + 0.9, rotY: 0 } : { x: 0, z: 13.4, rotY: Math.PI },
     walkable: (x, z) => Math.hypot(x, z) < R - 1.2,
     blockers: () => blockers,
-    start() { if (ctx.from === 'gallery') ctx.toast('Outside, the paint is still wet.', 4); },
     camera(pl) {
       const look = V(clamp(pl.pos.x, -14, 14) * 0.85, 1.8, clamp(pl.pos.z, -16, 12) - 1.6);
       return { pos: look.clone().add(V(0, 6.2, 16)), look: look.clone().add(V(0, 2.4, 0)), stiffness: 2.2 };
