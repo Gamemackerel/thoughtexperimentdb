@@ -22,6 +22,7 @@ const FASTQ = new URLSearchParams(location.search).get('fast');
 const CREEP = FASTQ !== null ? Number(FASTQ) || 3 : 0.55;   // slowed time: ~50 s to act (?fast=<speed> for testing)
 const SLOW_AT = -32;                              // where time slows (trolley x)
 const RESET_X = -16;                              // after a rewind the trolley waits here
+const GRACE = 0.5;                                // after a pull, time runs again; this long to change your mind
 const SELF_SPOT = V(18, 0, 7);                    // where you stand if you choose yourself
 const SELF_LEVER = V(18, 0, 9.4);
 const turn = (z) => bez(V(JUNCTION, 0, 0), V(2, 0, 0), V(4, 0, z), V(10, 0, z));
@@ -80,12 +81,16 @@ export default function trolley(ctx) {
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.7, 0.95, 40), new THREE.MeshBasicMaterial({ color: palette.agent, transparent: true, opacity: 0, depthWrite: false }));
   ring.rotation.x = -Math.PI / 2; ring.position.copy(SELF_SPOT).setY(0.33); root.add(ring);
 
-  // the frog hops onto the main line, feels the rails hum, thinks better of it, and hops clear
+  // the frog hops in from off-screen as the trolley slows, onto the main line behind it, feels the rails
+  // hum, thinks better of it, and hops clear. It lives in the trolley's time (its clock runs at the trolley's speed, so
+  // it hangs in the air mid-hop), and being behind the trolley it's never in its way, however soon time runs again.
   const frog = makeFrog(); root.add(frog);
-  const cameo = frogCameo(frog, [[-15, 6], [-13.4, 4.4], [-11.8, 2.8], [-10.6, 1.4], { at: [-10, 0], y: 0.12 }, { face: [-40, 0] },
-    { wait: 2.6, act: (f, u, t) => { f.userData.body.position.x = u > 0.35 ? Math.sin(t * 70) * 0.025 : 0; } },
-    { set: (f) => (f.userData.body.position.x = 0) }, { face: [-8, -2] },
-    { at: [-8.6, -1.9], height: 1.5 }, [-7.1, -3.6], [-5.6, -5.2], [-4.2, -6.4], { face: [-40, 0] }, { wait: 1.2 }, [-3.4, -9], [-2.6, -11.6]]);
+  const cameo = frogCameo(frog, [[-35.8, 21.4], { at: [-36, 17.1], height: 1.4, speed: 1.25 }, { set: () => (S.frogIn = true) },
+    { at: [-36.2, 12.8], height: 1.4, speed: 1.25 }, { at: [-36.5, 8.6], height: 1.4, speed: 1.25 },
+    { at: [-36.8, 4.3], height: 1.4, speed: 1.25 }, { at: [-37, 0], y: 0.12, height: 1.4, speed: 1.25 }, { face: [0, 0] },
+    { wait: 0.8, act: (f, u, t) => { f.userData.body.position.x = u > 0.25 ? Math.sin(t * 70) * 0.025 : 0; } },
+    { set: (f) => (f.userData.body.position.x = 0) }, { face: [-39, -2] },
+    { at: [-38.3, -2.1], height: 1.5 }, [-39.5, -4.4], [-40.5, -6.9], [-41.3, -9.7], [-42, -12.6]]);
 
   // ---- the ride: bounce, sway, wheels, and sparks and dust on the trolley's own travel clock (they freeze and rewind with it)
   let routeCurve = ROUTES.main;
@@ -107,30 +112,36 @@ export default function trolley(ctx) {
   // ================================================================ state
   // phases: arrive → slow (choose) → go (runs through) → aftermath (hold) → rewind → reflect/twist → slow → go → aftermath → over
   const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, runs: 0, choices: [],
-    seen: new Set(), twist: false, rewindFrom: 0, twistOn: 0, touched: false, stood: false };
+    seen: new Set(), twist: false, rewindFrom: 0, twistOn: 0, touched: false, stood: false, hurry: -1 };
   const go = (phase) => { S.phase = phase; S.pt = 0; };
   const selfChosen = () => S.route === 'self';
+  const canAct = () => S.phase === 'slow' && !selfChosen() && S.hurry < GRACE;   // a pull ends slowed time; then a moment to undo it
+  const hurry = () => { if (S.hurry < 0) S.hurry = 0; };
 
   interact.add({
     pos: leverSpot, radius: 2.8, height: 2.4,
     prompt: () => (S.route === 'branch' ? 'Put the lever back' : 'Pull the lever'),
-    enabled: () => S.phase === 'slow' && !selfChosen(),
-    onUse: () => { S.route = S.route === 'branch' ? 'main' : 'branch'; S.touched = true; },
+    enabled: canAct,
+    onUse: () => {
+      S.route = S.route === 'branch' ? 'main' : 'branch'; S.touched = true; hurry();
+      if (S.route === 'branch') voice.say('pull', { urgent: true, once: false });
+      else voice.say('put_back', { once: false });              // straight after "You pulled the lever"
+    },
   });
   interact.add({
     pos: SELF_LEVER, radius: 2.6, height: 2.4, prompt: 'Pull this lever',
-    enabled: () => S.phase === 'slow' && S.twist && !selfChosen(),
+    enabled: () => S.twist && canAct(),
     onUse: () => {
-      S.route = 'self';
+      S.route = 'self'; hurry();
       player.locked = true;                         // you walk onto the track, and stay there
       player.target = SELF_SPOT.clone();
-      voice.say('self_pull');
+      voice.say('self_pull', { urgent: true });
     },
   });
   const beforeActing = () => S.phase === 'slow' && !S.touched && !selfChosen();       // setup lines drop once you've acted
   interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five', { when: beforeActing }); } });
   interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one', { when: beforeActing }); } });
-  interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever') });
+  interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever', { when: beforeActing }) });
 
   // ---- asides: the workers chat (in slowed time, very slowly), and the driver is out cold
   const standing = (p) => () => !victims.main.concat(victims.branch).find((v) => v.obj === p)?.base && ['slow', 'reflect', 'twist'].includes(S.phase);
@@ -150,7 +161,7 @@ export default function trolley(ctx) {
     const choice = committed === 'branch' ? 'pulled' : 'stayed';
     const wavered = choice === 'stayed' && S.touched;                 // pulled it, then put it back
     const first = !S.choices.includes(choice);                        // a choice's second line is heard only once
-    S.choices.push(choice); S.runs++; S.touched = false;
+    S.choices.push(choice); S.runs++; S.touched = false; S.hurry = -1;
     save.complete('trolley-problem');
     await ctx.wait(0.6);
     await voice.say(wavered ? 'wavered' : choice + '_1', { once: false });
@@ -194,7 +205,7 @@ export default function trolley(ctx) {
   level.__S = S;   // exposed for automated playtests
   // ================================================================ update / camera
   return Object.assign(level, {
-    __frog: cameo,
+    __frog: cameo, __frogObj: frog,
     spawn: { x: -17, z: 7, rotY: Math.PI / 2 },
     walkable: (x, z) => Math.hypot(x, z) < 45 && !(x < PORTAL + 3 && Math.abs(z) < 11),
     blockers: () => {
@@ -213,7 +224,8 @@ export default function trolley(ctx) {
         S.speed = posAt(S.s).x < SLOW_AT ? FAST : lerp(S.speed, CREEP, 1 - Math.exp(-dt * 1.4));
         if (S.speed < CREEP * 1.3) go('slow');
       } else if (S.phase === 'slow') {
-        S.speed = lerp(S.speed, CREEP, 1 - Math.exp(-dt * 2));
+        if (S.hurry >= 0) { S.hurry += dt; S.speed = lerp(S.speed, FAST, 1 - Math.exp(-dt * 14)); }   // you acted: time runs again
+        else S.speed = lerp(S.speed, CREEP, 1 - Math.exp(-dt * 2));
         if (posAt(S.s).x > -20 && !voice.said.has('ask') && !S.twist) {
           if (!S.seen.has('five')) { S.seen.add('five'); voice.say('five', { when: beforeActing }); }
           if (!S.seen.has('one')) { S.seen.add('one'); voice.say('one', { when: beforeActing }); }
@@ -224,7 +236,7 @@ export default function trolley(ctx) {
           S.committed = S.route; routeCurve = ROUTES[S.route];
           const standAt = selfChosen() ? null : onRoute(S.route);
           if (standAt !== null) { S.stood = true; victims[S.route].push(S.youV = { obj: player.obj, s: standAt, side: 1, base: null, hitT: null }); }
-          if (!selfChosen()) voice.stop();
+          if (!selfChosen() && !S.touched) voice.stop();                  // (but never cut "you pulled the lever")
           if (selfChosen()) { player.pos.copy(SELF_SPOT); player.obj.rotation.y = -Math.PI / 2; }   // facing the oncoming trolley
           player.enabled = false; go('go');
         }
@@ -271,7 +283,7 @@ export default function trolley(ctx) {
       }
 
       // ---- levers, and the route they set (the lever glows while it's yours to pull)
-      leverGlow.material.opacity = S.phase === 'slow' && !selfChosen() ? 0.35 + 0.2 * Math.sin(t * 3.5) : 0;
+      leverGlow.material.opacity = canAct() && S.hurry < 0 ? 0.35 + 0.2 * Math.sin(t * 3.5) : 0;
       lever.userData.pivot.rotation.z = lerp(lever.userData.pivot.rotation.z, S.route === 'branch' ? -0.45 : 0.45, 1 - Math.exp(-dt * 10));
       selfLever.userData.pivot.rotation.z = lerp(selfLever.userData.pivot.rotation.z, S.route === 'self' ? -0.45 : 0.45, 1 - Math.exp(-dt * 10));
       const showRoute = S.phase === 'slow' || S.phase === 'go' ? 0.45 + 0.1 * Math.sin(t * 3) : 0;
@@ -287,9 +299,9 @@ export default function trolley(ctx) {
       selfLever.visible = S.twistOn > 0.02; selfLever.scale.setScalar(Math.max(0.001, S.twistOn));
       ring.material.opacity = S.twistOn * (0.5 + 0.3 * Math.sin(t * 3));
 
-      // ---- the frog: once, in the first slowed moment, near the lever
-      if (S.phase === 'slow' && player.pos.distanceTo(leverSpot) < 12) cameo.start();
-      cameo.update(dt);
+      // ---- the frog: once, from the start, on the trolley's clock (so it lands on the rails just after it passes)
+      cameo.start();
+      cameo.update(S.phase === 'arrive' || S.phase === 'slow' ? dt * S.speed / FAST : dt);
 
       ctx.ui.rewind(S.phase === 'rewind' ? Math.min(1, S.pt / 0.2, (2.0 - S.pt) / 0.2) : 0, t);
     },
@@ -302,6 +314,7 @@ export default function trolley(ctx) {
       }
       const pts = [pl.pos.clone(), trolley.position.clone(), leverSpot, fiveCenter, one.position.clone()];
       if (S.twist) pts.push(SELF_SPOT, SELF_LEVER);
+      if (S.frogIn && cameo.active) pts.push(frog.position.clone());        // once it has hopped into view, keep it there
       if (S.phase === 'arrive') pts[1].setX(Math.max(pts[1].x, PORTAL + 2));
       return { ...frameAll(pts), stiffness: S.phase === 'rewind' ? 1.5 : 2.4 };
     },

@@ -24,10 +24,20 @@
     "text": "Should you pull it?",
     "dur": 1.41
   },
+  "pull": {
+    "file": "pull-18abf96b.mp3",
+    "text": "You pulled the lever.",
+    "dur": 1.88
+  },
+  "put_back": {
+    "file": "put_back-f4d884b8.mp3",
+    "text": "And you put it back.",
+    "dur": 1.65
+  },
   "pulled_1": {
-    "file": "pulled_1-5c0f642b.mp3",
-    "text": "You pulled the lever. The five are safe.",
-    "dur": 2.93
+    "file": "pulled_1-60c4fef2.mp3",
+    "text": "The five are safe.",
+    "dur": 1.99
   },
   "pulled_2": {
     "file": "pulled_2-6c5ebc33.mp3",
@@ -75,9 +85,9 @@
     "dur": 5.28
   },
   "wavered": {
-    "file": "wavered-04749d99.mp3",
-    "text": "You pulled the lever, then put it back. The trolley stayed on its track.",
-    "dur": 4.34
+    "file": "wavered-412d67eb.mp3",
+    "text": "For a moment, you took control. Then you put it back the way it was, and the trolley stayed on its track.",
+    "dur": 6.11
   },
   "stood_end": {
     "file": "stood_end-ac6242de.mp3",

@@ -107,7 +107,7 @@ Every vignette also has:
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| The painting | **The Trolley Problem** | Walk to the lever; pull it or don't; one run, a rewind, then a third track with a green lever that sends it to you; the second run is the last | Someone is always on the track (after the second run) · you chose yourself · you stood with them |
+| The painting | **The Trolley Problem** | Walk to the lever as time slows; pull it or don't (pulling ends the slow motion at once, and you have half a second to put it back, which gets its own reflection); one run, a rewind, then a third track with a green lever that sends it to you; the second run is the last | Someone is always on the track (after the second run) · you chose yourself · you stood with them |
 | The book on the lectern | **Brain in a Vat** | Wander a sunny little world; its edges flicker; step off and fall outward into a lab where your world floats above a brain, and again | Sit on the bench · no way out (three layers) |
 | The purple door | **Plato's Cave** | Chained, watching shadows (you can barely turn your head); the chains fall; wander, find the fire (its silent keeper) and the cutouts, climb into the light | Keep watching (sit back down, only after walking about) · sit down by the tree and never go back · go back down and tell them |
 | The sky door | **Ship of Theseus** | Carry new planks and replace all six of the ship's old ones; the old planks become a second ship | Board the new ship · board the old wood |
