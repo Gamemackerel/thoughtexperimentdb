@@ -171,6 +171,7 @@ export default function field(ctx) {
   const hand = mesh(new THREE.BoxGeometry(0.02, 0.01, 0.18), clay(0x2b2a33)); hand.position.set(0, 0.055, -0.06); watch.add(hand);
   const chain = mesh(new THREE.TorusGeometry(0.3, 0.015, 6, 20, 3), clay(0xe2b53b, { metalness: 0.7 })); chain.rotation.x = Math.PI / 2; chain.position.set(0.3, 0.02, 0.2); watch.add(chain);
   watch.position.copy(P.watchmaker).add(V(0, 0.14, -0.9)); root.add(watch);
+  for (const g of [heath, watch]) g.traverse((m) => { if (m.isMesh) { m.material = m.material.clone(); m.material.color.lerp(new THREE.Color(0x9a9a9a), 0.7); m.material.transparent = true; m.material.opacity = 0.55; } });   // greyed out: closed for now
   // Omelas: a white arch hung with pennants, towers beyond
   const arch = new THREE.Group(); const stone = clay(0xf6f1e7);
   for (const s of [-1, 1]) { const col = mesh(new THREE.BoxGeometry(0.6, 3.6, 0.6), stone); col.position.set(s * 1.4, 1.8, 0); arch.add(col); }
@@ -216,14 +217,15 @@ export default function field(ctx) {
     { id: 'experience-machine', name: 'The Experience Machine', pos: P['experience-machine'], labelAt: V(11.9, 2.6, 1.4), prompt: 'Sit in the chair' },
     { id: 'veil-of-ignorance', name: 'The Veil of Ignorance', pos: P['veil-of-ignorance'], labelAt: V(-12, 3.4, -0.7), prompt: 'Step behind the veil' },
     { id: 'turtles', name: 'Turtles All the Way Down', pos: P.turtles, labelAt: V(-7.5, 2.4, -6.5), prompt: 'Climb onto the tortoise' },
-    { id: 'watchmaker', name: 'The Watchmaker', pos: P.watchmaker, labelAt: V(3.4, 1.4, -3.3), prompt: 'Pick up the watch' },
+    { id: 'watchmaker', name: 'The Watchmaker', pos: P.watchmaker, labelAt: V(3.4, 1.4, -3.3), prompt: 'Pick up the watch', closed: true },   // closed for now: it needs work
     { id: 'omelas', name: 'Omelas', pos: P.omelas, labelAt: V(-2, 4.8, -12.9), prompt: 'Go through the arch' },
     { id: 'swampman', name: 'Swampman', pos: P.swampman, labelAt: V(10.5, 3.6, -9.9), prompt: 'Wade into the swamp' },
     { id: 'barn', name: 'The barn', pos: P.barn, labelAt: V(17, 6.4, -19), prompt: 'Go into the barn', room: true },
     { id: 'gallery', name: 'Back to the gallery', pos: P.gallery, labelAt: V(0, 3.8, 16.7), prompt: 'Go back inside', home: true },
   ];
   let entering = null;
-  for (const p of portals) interact.add({ pos: p.pos, radius: 1.9, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
+  for (const p of portals) interact.add({ pos: p.pos, radius: 1.9, prompt: p.prompt, enabled: () => !entering,
+    onUse: () => { if (p.closed) return ctx.toast(`<b>${p.name}</b>: not yet, it's still being made.`, 3); entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
   const from = portals.find((p) => p.id === ctx.from);
   const blockers = [
@@ -269,7 +271,7 @@ export default function field(ctx) {
       for (const p of portals) {
         const d = Math.hypot(px - p.pos.x, pz - p.pos.z);
         const done = save.done.has(p.id) ? ' ✓' : '';
-        ctx.ui.label('portal-' + p.id, entering ? 0 : clamp((5.5 - d) / 2.2), `<span class="dot" style="background:${css(p.home || p.room ? palette.rail : palette.agent)}"></span>${p.name}${done}`, p.labelAt);
+        ctx.ui.label('portal-' + p.id, entering ? 0 : clamp((5.5 - d) / 2.2) * (p.closed ? 0.5 : 1), `<span class="dot" style="background:${css(p.home || p.room || p.closed ? palette.rail : palette.agent)}"></span>${p.name}${p.closed ? ' (closed)' : done}`, p.labelAt);
       }
     },
   };
