@@ -1,8 +1,9 @@
 // Vignette: Ten Coins (Gettier's first case).
 // A panelled waiting room. You (Smith) and Jones have applied for the same job. The president leans out of his door:
 // between you and me, Jones is getting it. Jones empties his pockets onto the table and counts his coins for the bus:
-// ten. Put two and two together (the man who gets the job has ten coins in his pocket) or just wait your turn. Then
-// you're called in, and the job is yours. Empty your pockets: ten coins you never counted.
+// ten. Put two and two together (the man who gets the job has ten coins in his pocket) and bet Jones a shilling on it,
+// or just wait your turn. Then you're called in, and the job is yours. Empty your pockets: ten coins you never counted.
+// You win the bet, on your own coins.
 import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeFrog, makeTable } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
@@ -70,6 +71,8 @@ export default function tenCoins(ctx) {
   const oback = mesh(new THREE.BoxGeometry(10, 4.4, 0.3), wallM); oback.position.set(0, 2.2, -3.4); office.add(oback);
   const desk = makeTable({ w: 2.6, d: 1.2, h: 1, color: 0x5a3d29 }); desk.position.set(0, 0, -1.4); office.add(desk);
   const flag = mesh(new THREE.BoxGeometry(0.8, 0.5, 0.02), clay(0x5b7fa6)); flag.position.set(3.4, 2.4, -3.2); office.add(flag);
+  const stake = [0.1, 0.3].map((z) => { const c = mesh(coinGeo, coinMat); c.position.copy(TABLE).add(V(0.68, 0.68, z)); c.visible = false; root.add(c); return c; });   // the bet: a shilling each
+  const shown = [...Array(10)].map((_, i) => { const c = mesh(coinGeo, coinMat); c.position.copy(TABLE).add(V(-0.66 + i * 0.13, 0.68 + (i % 2) * 0.01, -0.26)); c.visible = false; root.add(c); return c; });   // your ten, back in the waiting room
   const myCoins = [...Array(10)].map((_, i) => { const c = mesh(coinGeo, coinMat); c.position.set(-0.6 + (i % 5) * 0.28, 1.13, -1 + Math.floor(i / 5) * 0.26); c.visible = false; office.add(c); return c; });
 
   // ---- the frog peers at Jones's coins, one by one, then hops off
@@ -100,22 +103,39 @@ export default function tenCoins(ctx) {
     if (yes) {
       card = beliefCard('The man who gets the job has ten coins in his pocket.', { reason: 'You had good reason to (the president said so; you watched Jones count)' });
       await voice.say('concluded', { urgent: true }); card.show(); await ctx.wait(0.6); card.tick(0); await ctx.wait(0.5); card.tick(2);
-    } else await voice.say('waited', { urgent: true });
+      await ctx.wait(0.6); await voice.say('dare'); S.phase = 'bet'; S.idle = 0; player.enabled = true; return;
+    }
+    await voice.say('waited', { urgent: true });
     await ctx.wait(1.2); calledIn();
+  }
+  // acting on it: a shilling says the man who gets the job has ten coins in his pocket
+  async function bet() {
+    if (S.phase !== 'bet') return;
+    S.phase = 'betting'; S.bet = true; player.enabled = false;
+    ctx.speak(player.obj, 'A shilling says the man who gets the job has ten coins in his pocket.', { offset: [0, 2.3, 0], secs: 4 }); await ctx.wait(3.8);
+    ctx.speak(jones, 'Ha! Whoever he is? All right. You\'re on.', { offset: [0, 2.3, 0] }); await ctx.wait(1); stake[0].visible = true; await ctx.wait(0.4); stake[1].visible = true; await ctx.wait(1.8);
+    calledIn();
   }
   interact.add({ pos: TABLE.clone().add(V(-0.9, 0, 1)), radius: 1.1, height: 1.6, prompt: 'Put two and two together', terminal: true, enabled: () => S.phase === 'choose', onUse: () => conclude(true) });
   interact.add({ pos: myChair.position.clone().add(V(0.1, 0, 0.9)), radius: 0.9, height: 1.8, prompt: 'Just wait your turn', terminal: true, enabled: () => S.phase === 'choose', onUse: () => conclude(false) });
+  interact.add({ pos: jones.position.clone().add(V(-0.3, 0, 1.3)), radius: 1.3, height: 1.8, prompt: 'Bet Jones a shilling on it', terminal: true, enabled: () => S.phase === 'bet', onUse: bet });
   interact.add({ pos: OFFICE.clone().add(V(0, 0, 0.4)), radius: 1.6, height: 2.2, prompt: 'Empty your pockets', enabled: () => S.phase === 'pockets',
     onUse: async () => {
       S.phase = 'over'; player.enabled = false;
       for (let i = 0; i < 10; i++) { myCoins[i].visible = true; await ctx.wait(0.18); }
       ctx.speak(president, 'Ten coins. Bus fare, is it?', { offset: [0, 2.4, 0] }); await ctx.wait(1.4);
-      if (S.concluded) { await voice.say('yours', { urgent: true }); card.tick(1); await ctx.wait(0.6); card.ask(); await voice.say('end'); }
-      else { await voice.say('yours_2', { urgent: true }); await voice.say('end_2'); }
+      if (S.concluded) {
+        await voice.say('yours', { urgent: true }); card.tick(1); await ctx.wait(0.4);
+        // back out to Jones, to settle up
+        await ctx.flash(true); S.where = 'room'; player.place(TABLE.x - 0.5, TABLE.z + 1.3, Math.PI); for (const c of shown) c.visible = true; await ctx.flash(false);
+        ctx.speak(jones, 'Ten coins? In the new man\'s pocket?', { offset: [0, 2.3, 0] }); await ctx.wait(2.6);
+        ctx.speak(jones, 'Well. A bet\'s a bet.', { offset: [0, 2.3, 0] }); S.pay = 0.001; await ctx.wait(1.6);
+        await voice.say('won', { urgent: true }); await ctx.wait(0.4); card.ask(); await voice.say('end');
+      } else { await voice.say('yours_2', { urgent: true }); await voice.say('end_2'); }
       await ctx.wait(1.8);
       save.complete('ten-coins');
       ctx.gameOver(S.concluded
-        ? { title: 'Right about the wrong man', text: 'You believed the man who gets the job has ten coins in his pocket. You had good reason, and it was true. But it was true of you, not of Jones. You were right, by luck.' }
+        ? { title: 'Right about the wrong man', text: 'You believed the man who gets the job has ten coins in his pocket, and you bet on it. You had good reason, it was true, and you won. But it was true of you, not of Jones: the coins that won it were ones you never counted.' }
         : { title: 'You didn\'t jump to conclusions', text: 'You got the job, and ten coins you didn\'t know you had. You never believed anything about the coins, so you were never right by luck. Is being careful always this simple?' });
     } });
 
@@ -145,6 +165,12 @@ export default function tenCoins(ctx) {
         S.idle = player.vel.lengthSq() > 0.01 ? 0 : S.idle + dt;
         if (S.idle > IDLE_LIMIT) conclude(false);
       }
+      if (S.phase === 'bet') {   // (sitting on it: Jones notices the look on your face, and you can't resist)
+        const was = S.idle; S.idle = player.vel.lengthSq() > 0.01 ? 0 : S.idle + dt;
+        if (was < 20 && S.idle >= 20) ctx.speak(jones, 'What are you grinning about?', { offset: [0, 2.3, 0] });
+        if (S.idle > 34) bet();
+      }
+      if (S.pay > 0) { S.pay = Math.min(1, S.pay + dt * 0.8); const k = easeInOut(S.pay); stake.forEach((c, i) => c.position.copy(TABLE).add(V(lerp(0.68, 0.64 + i * 0.13, k), 0.68 + Math.sin(Math.PI * k) * 0.08, lerp(0.1 + i * 0.2, -0.26, k)))); }   // Jones slides the stake over
       cameo.update(dt);
     },
     camera(pl) {

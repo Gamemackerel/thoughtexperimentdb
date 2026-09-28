@@ -24,6 +24,11 @@
     "text": "So. The man who gets the job has ten coins in his pocket.",
     "dur": 4.1
   },
+  "dare": {
+    "file": "dare-d4827382.mp3",
+    "text": "You'd put money on it.",
+    "dur": 1.78
+  },
   "waited": {
     "file": "waited-8656f753.mp3",
     "text": "You don't draw any conclusions. You just wait your turn.",
@@ -38,6 +43,11 @@
     "file": "yours-47efecdb.mp3",
     "text": "And in your own pocket: ten coins. You never counted them.",
     "dur": 4.18
+  },
+  "won": {
+    "file": "won-4751e9af.mp3",
+    "text": "You won the bet. You were thinking of Jones's coins. You won on your own.",
+    "dur": 4.6
   },
   "end": {
     "file": "end-56179e96.mp3",

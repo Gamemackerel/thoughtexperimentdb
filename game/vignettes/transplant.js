@@ -153,7 +153,7 @@ export default function transplant(ctx) {
     lines: ["Just a check-up. Never been ill a day in my life.", 'The magazines here are ancient.', 'Is it my turn yet?'] });
   look(ctx, { pos: V(-2, 0, BACK + 3.4), radius: 1.6, height: 4.4, prompt: 'Look out of the window', lines: ['window'], enabled: () => S.phase === 'ward' });
 
-  interact.add({ pos: () => SEAT.clone().add(V(0, 0, 1.3)), radius: 1.7, height: 2.6, prompt: 'Tell him he\'s healthy', enabled: canChoose,
+  interact.add({ pos: () => SEAT.clone().add(V(0, 0, 1.3)), radius: 1.7, height: 2.6, prompt: 'Tell him he\'s healthy', enabled: canChoose, terminal: true,
     onUse: async () => {
       S.phase = 'letgo'; S.choice = 'letgo'; player.enabled = false;
       ctx.speak(visitor, 'Thanks, doctor! See you next year.');
@@ -162,7 +162,7 @@ export default function transplant(ctx) {
       save.complete('transplant');
       ctx.gameOver({ title: 'You sent him home', text: 'He walked out into the sunshine. Five of your patients will die waiting. It is the lever\'s arithmetic, and almost nobody would do otherwise.' });
     } });
-  interact.add({ pos: () => SEAT.clone().add(V(-1.3, 0, 1)), radius: 1.5, height: 2.6, prompt: 'Take him to theatre', enabled: canChoose, terminal: true,
+  interact.add({ pos: () => THEATRE.clone().add(V(1.1, 0, 1.3)), radius: 1.3, height: 2.6, prompt: 'Take him to theatre', enabled: canChoose, terminal: true,
     onUse: async () => {
       S.phase = 'escort'; S.choice = 'operate'; player.enabled = false;
       ctx.speak(visitor, 'Oh! Right now? All right.');
@@ -212,9 +212,11 @@ export default function transplant(ctx) {
       save.complete('transplant');
       ctx.gameOver({ title: 'You called palliative care', text: 'Your five patients were moved to palliative care, to be kept comfortable for the time they have. He finished his magazine, and went home.' });
     } });
-  interact.trigger({ pos: SEAT, radius: 5, when: () => S.phase === 'ward', onEnter: async () => { await voice.say('visitor'); await voice.say('match'); await ctx.wait(0.6); await voice.say('ask'); } });
-
-  (async () => { await ctx.wait(0.9); await voice.say('arrive'); await ctx.wait(0.5); await voice.say('five'); })();
+  // the whole ward is visible at once, so the narration just carries on wherever the player is standing
+  (async () => {
+    await ctx.wait(0.9); await voice.say('arrive'); await ctx.wait(0.5); await voice.say('five');
+    await ctx.wait(1); await voice.say('visitor'); await voice.say('match'); await ctx.wait(0.6); await voice.say('ask');
+  })();
 
   return Object.assign(level, {
     __frog: cameo,
