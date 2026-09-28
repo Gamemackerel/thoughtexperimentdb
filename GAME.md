@@ -224,6 +224,10 @@ where you do know, for contrast.
 | A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn in a row of barns that all look exactly alike, a storm coming; look at it (or stand there and you will); the rain comes and you run inside, dry; then the road from behind: fronts on sticks, rain pouring through, and only yours whole | The only real barn |
 | A painting of the desert | **Dharmottara's Mirage** | Water shimmering ahead; lead your thirsty camel to it; it's a mirage; lift the rock beside it (the camel drinks), or turn back | There was water after all · you turned back |
 
+The first time you enter each room (not the first room, which has its own opening from the title), the camera starts
+high and wide above it and settles into the usual view over a few seconds (`ROOM_INTRO` in `game/main.js`; the rooms you've
+seen are remembered as `ted.rooms`).
+
 Rooms are hubs: "Back to the house" on the game-over card (and Esc) returns you to the room you came from (`HOME_ROOM` and
 `ctx.hub` in `game/main.js`).
 

@@ -1,5 +1,5 @@
 // Thought Experiments — the game shell: levels (the House + vignettes), player, camera, prompts, voice, notebook, saves.
-import { THREE, createStage, createUI } from '/game/engine/core.js';
+import { THREE, createStage, createUI, clamp, easeInOut } from '/game/engine/core.js';
 import { Player } from './core/player.js';
 import { Interact } from './core/interact.js';
 import { Voice } from './core/voice.js';
@@ -96,7 +96,21 @@ const save = {
   // things you've brought home (they go on the plinths in the museum), e.g. 'chest-of-gold'
   items: new Set(JSON.parse((() => { try { return localStorage.getItem('ted.items') || '[]'; } catch { return '[]'; } })())),
   keep(id) { this.items.add(id); try { localStorage.setItem('ted.items', JSON.stringify([...this.items])); } catch {} },
+  // rooms of the house you've been into (the first visit opens with a slow sweep down into the room)
+  rooms: new Set(JSON.parse((() => { try { return localStorage.getItem('ted.rooms') || '[]'; } catch { return '[]'; } })())),
+  visit(id) { this.rooms.add(id); try { localStorage.setItem('ted.rooms', JSON.stringify([...this.rooms])); } catch {} },
 };
+// The first time you come into a room of the house, the camera starts high and wide above it and eases down to its usual
+// view (the first room has its own opening, from the title). ROOM_INTRO seconds; you can walk while it settles.
+const ROOM_INTRO = 4.5;
+let intro = null;
+function introShot(c, t) {
+  if (!intro) return c;
+  const u = easeInOut(clamp((t - 0.3) / ROOM_INTRO));
+  if (u >= 1) { intro = null; return c; }
+  const back = c.pos.clone().sub(c.look), wide = c.look.clone().addScaledVector(back, 2.4).add(new THREE.Vector3(0, 9, 0));
+  return { ...c, pos: wide.lerp(c.pos, u), look: c.look.clone().add(new THREE.Vector3(0, -2 * (1 - u), 0)), cut: true };
+}
 const ctx = {
   stage, get ui() { return ui; }, player, interact, voice, save, wait,
   goto: (name) => goto(name),
@@ -224,8 +238,15 @@ async function goto(name) {
   if (!player.obj.parent) stage.scene.add(player.obj);
   player.place(level.spawn.x, level.spawn.z, level.spawn.rotY ?? 0);
   player.enabled = true;
-  const c = level.camera(player, 0, 0);
+  if (HUBS.has(name) && name !== 'house' && !save.rooms.has(name)) intro = true; else intro = null;
+  if (HUBS.has(name)) save.visit(name);
+  // put the camera (and the lens) on the new scene's first shot now, before the fade in: otherwise the new room shows,
+  // for as long as the fade lasts, through the last scene's camera, and then jumps into place
+  const c0 = level.camera(player, 0, 0);
+  stage.camera.fov = c0.fov ? (innerHeight > innerWidth ? c0.fov * 1.35 : c0.fov) : baseFov; stage.camera.updateProjectionMatrix();
+  const c = introShot(level.camera(player, 0, 0), 0);
   cam.pos.copy(c.pos); cam.look.copy(c.look);
+  stage.setCamera(cam.pos, cam.look);
   time = 0;
   homeBtn.hidden = HUBS.has(name);
   homeBtn.textContent = `← ${ROOM_NAME[ctx.hub] ?? 'the house'}`;
@@ -291,7 +312,7 @@ function frame(now) {
     document.body.classList.toggle('overlaid', !pageEl.hidden || !nb.hidden || !over.hidden || !journalEl.hidden || !leaveEl.hidden);
     document.body.classList.toggle('carded', !over.hidden);
     document.body.classList.toggle('fp', player.firstPerson);            // first person: captions go to the top                // no captions over the game-over card
-    const c = level.camera(player, time, dt);
+    const c = introShot(level.camera(player, time, dt), time);
     const k = c.cut ? 1 : 1 - Math.exp(-dt * (c.stiffness ?? 3));
     cam.pos.lerp(c.pos, k); cam.look.lerp(c.look, k);
     stage.setCamera(cam.pos, cam.look);
