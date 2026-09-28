@@ -51,8 +51,8 @@ await run('stopped-clock', async (t) => {
 });
 await run('ten-coins', async (t) => {
   await sleep(7.5); await t.shot('president'); await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.shot('coins');
-  await t.use(alt === 'wait' ? 'wait your turn' : 'two and two');
-  if (alt !== 'wait') { await t.until(async () => (await t.S('phase')) === 'bet', 30); if (alt !== 'idle') await t.use('Bet Jones'); await sleep(3); await t.shot('bet'); }   // (alt idle: sit on it until Jones notices)
+  if (alt !== 'idle') await t.use('two and two');   // (alt idle: stand there and the narrator draws the conclusion for you)
+  await t.until(async () => (await t.S('phase')) === 'bet', 65); if (alt !== 'idle') await t.use('Bet Jones'); await sleep(3); await t.shot('bet');   // (alt idle: sit on it until Jones notices)
   await t.until(async () => (await t.S('phase')) === 'pockets', 60); await sleep(1); await t.shot('office');
   await t.use('Empty your pockets'); await sleep(5); await t.shot('pockets'); await sleep(6); await t.shot('settle');
 });

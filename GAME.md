@@ -213,12 +213,12 @@ doors, round green hills combed into rows with lollipop trees (`game/core/grantw
 stand a farmer with a pitchfork and a woman in an apron (American Gothic). The pitchfork's three prongs are labelled
 BELIEF, TRUTH and REASON, and the farmer will explain. Each Gettier case ends with the same card (`game/core/gettier.js`):
 what you believed, the three prongs ticked off, and "Did you know it?". In each, you act on the belief (a bet, a train,
-a gate, shelter from a storm, a thirsty camel), and luck carries you. Ten Coins, the sheep and the mirage also have a path
-where you do know, for contrast.
+a gate, shelter from a storm, a thirsty camel), and luck carries you. The sheep and the mirage also have a path where you do
+know, for contrast.
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; conclude and bet Jones a shilling on it, or wait; the job is yours, and so are ten coins; you win the bet on your own coins | Right about the wrong man · you didn't jump to conclusions |
+| A HELP WANTED notice | **Ten Coins** (Gettier's Case I) | The president says Jones gets the job; Jones counts ten coins; put two and two together (or wait long enough) and bet Jones a shilling on it; the job is yours, and so are ten coins; you win the bet on your own coins | Right about the wrong man |
 | A clock stuck at two | **The Stopped Clock** (Russell) | Look up at the town clock (two o'clock); hurry out of the square for the quarter-past-two train; about fifteen minutes later, the clock over the station arch says a quarter past, on the dot; board it; then an evening, a night and a morning pass over the square, and the town clock's hands never move | Right by accident |
 | A five-bar gate | **The Sheep in the Field** (Chisholm) | Look in through the open gate; shut it to keep the sheep in; go and see (a dog in a sheepskin, and a sheep behind the hill, kept in by your gate) or walk on | There was a sheep · you walked on, sure of it |
 | A barn that's only a front | **Barn Façade County** (Ginet, Goldman) | A flat tyre beside a barn in a row of barns that all look exactly alike, a storm coming; look at it (or stand there and you will); the rain comes and you run inside, dry; then the road from behind: fronts on sticks, rain pouring through, and only yours whole | The only real barn |

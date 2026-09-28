@@ -48,7 +48,8 @@ await run('marys-room', async (t) => {
 await run('omelas', async (t) => {
   await sleep(4); await t.shot('festival'); await t.use('Listen to the flute'); await sleep(3); await t.use('Open the cellar door', 15); await sleep(3); await t.shot('cellar');
   await t.until(async () => await t.S('seen'), 40); await sleep(1); await t.shot('child');
-  if (alt === 'free') { await t.use('Take the child'); await sleep(6); await t.shot('drained'); return; }
+  await sleep(9); await t.shot('child-cry');
+  if (alt === 'free') { await t.use('Take the child'); await sleep(1); await t.shot('unlock'); await sleep(6); await t.shot('drained'); return; }
   await t.use('Go back up'); await sleep(4); await t.shot('after');
   if (alt === 'dance') { await t.use('Join the dancing'); return; }
   await t.walkTo(0, -12); await sleep(6); await t.walkTo(0, -19); await sleep(5); await t.shot('gate');
