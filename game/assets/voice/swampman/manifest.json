@@ -15,9 +15,19 @@
     "dur": 4.34
   },
   "strike_2": {
-    "file": "strike_2-2b4b00dc.mp3",
-    "text": "And by sheer chance, at the same moment, it turns the dead tree into an exact copy of your friend. Every atom in place. Every memory.",
-    "dur": 8.33
+    "file": "strike_2-c2666a83.mp3",
+    "text": "A second bolt strikes the dead tree.",
+    "dur": 2.98
+  },
+  "strike_3": {
+    "file": "strike_3-a05d73de.mp3",
+    "text": "By an extraordinarily unlikely, though not theoretically impossible, coincidence, it rearranges the tree's atoms to match your friend exactly.",
+    "dur": 8.83
+  },
+  "strike_4": {
+    "file": "strike_4-e137f9b8.mp3",
+    "text": "Every atom, right down to the ones in their brain.",
+    "dur": 3.58
   },
   "ask": {
     "file": "ask-9b380881.mp3",

@@ -97,7 +97,7 @@ export default function swampman(ctx) {
   const frog2 = makeFrog({ scale: 0.7 }); frog2.position.copy(PAD).add(V(0.55, -0.1, -0.2)); frog2.visible = false; root.add(frog2);
 
   // ---- state. fMode: how your friend moves (follow: beside you along the path; rise: getting up; door: going in; stay)
-  const S = { phase: 'walk', idle: 0, struck: false, bitsT: -1, flash: 0, treeK: 1, fMode: 'follow', rise: 0, said: 0, again: false, cover: null, storm: 9, dogWary: false, side: 1 };
+  const S = { phase: 'walk', idle: 0, struck: false, bitsT: -1, flash: 0, treeK: 1, fMode: 'follow', rise: 0, said: 0, again: false, cover: null, storm: 9, dogWary: false, side: 1, strikeStage: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/swampman.json', 'Swampman');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
@@ -117,13 +117,17 @@ export default function swampman(ctx) {
   interact.trigger({ test: (p) => p.z < TREE.z + 1.0, onEnter: async () => {
     S.phase = 'strike'; player.enabled = false; player.target = null; S.fMode = 'stay';
     await ctx.wait(0.5);
-    S.flash = 1; bolt.position.copy(friend.position).setY(0); bolt.visible = true;
+    S.flash = 1; S.strikeStage = 1; bolt.position.copy(friend.position).setY(0); bolt.visible = true;
     bits.forEach((k) => { k.b.visible = true; k.b.position.copy(friend.position).add(V((rnd() - 0.5) * 0.5, 0.4 + rnd() * 1.4, (rnd() - 0.5) * 0.5)); k.v.set((rnd() - 0.5) * 6, 3 + rnd() * 4, (rnd() - 0.5) * 6); });
     friend.visible = false; S.bitsT = 0; scorch.visible = true;
     await ctx.wait(0.35); bolt.visible = false;
     await voice.say('strike_1', { urgent: true });
+    await ctx.wait(0.7);                                              // a beat, before the second bolt
+    // the second, separate bolt: it hits the dead tree, not your friend
+    S.flash = 1; S.strikeStage = 2; bolt.position.copy(TREE).setY(0); bolt.visible = true;
+    await ctx.wait(0.5); bolt.visible = false;
     S.treeK = 0.999; frog2.visible = true;                            // the tree goes; and there's a second frog
-    await ctx.wait(0.4); await voice.say('strike_2');
+    await voice.say('strike_2'); await voice.say('strike_3'); await voice.say('strike_4');
     // and up it gets, where the tree was
     friend.position.copy(TREE).add(V(0.3, -0.08, 0)); friend.rotation.set(-Math.PI / 2, 0, 0); friend.visible = true; S.fMode = 'rise'; S.rise = 0; S.struck = true;
     await ctx.wait(2);
