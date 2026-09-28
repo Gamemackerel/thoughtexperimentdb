@@ -1,14 +1,13 @@
-// The house, seen from the sea (the voyage's last island): a teetering art palace crouched on four chicken legs, every
-// wing after a different artist of the house's rooms, piled up and leaning, smoke from its chimneys. Its front door is
-// the first room's sky door; a drawbridge runs down to it. When you go in, the door shuts, the bridge comes up and the
-// whole thing stands up on its legs.
-//   the middle: a cream classical block with a pediment and columns round the sky door, on a riveted iron belly
+// The house, seen from the sea (the voyage's last island): a teetering art palace on a stone ground floor, every wing
+// after a different artist of the house's rooms, piled up and leaning, smoke from its chimneys. Its front door is the
+// first room's sky door, at the top of a flight of stone steps. When you go in, the door shuts and the chimneys puff.
+//   the middle: a cream classical block with a pediment and columns round the sky door, on a rusticated stone storey
 //   left: Grant Wood's red barn with a gambrel roof and the gothic window · right: a cubist wing of tilted ochre planes
 //     with an eye front-on and an eye in profile
 //   above: a wing painted as sky (a bowler hat, a floating green apple) · a copper onion dome · a ribbed terracotta
 //     dome · a balcony with a clock melting off its edge · a turret painted in swirling night-sky strokes · a crooked
 //     half-timbered cottage · a spiral stair with a flight hanging upside down and a flight up the wall, walked on both
-// makePalace(wind) → { g, update(dt, t), door / ramp / lift / burst (set 0..1), rampY(local z), rampFoot }; +z is the
+// makePalace(wind) → { g, update(dt, t), door / burst (set 0..1), rampY(local z), rampFoot }; +z is the
 // front. Static parts are merged into one mesh per material per tier (the tiers sway separately).
 import { THREE, seeded, clay, mesh, makePerson } from '/game/engine/core.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -17,7 +16,7 @@ import { canvasTexture, strokes } from '../core/brush.js';
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const TAU = Math.PI * 2;
 const UP = V(0, 1, 0);
-const SILL = 3.3, RAMP = 7.4;                                   // the door sill's height; the drawbridge's length
+const SILL = 3.3, RAMP = 7.4;                                   // the door sill's height; the length of the flight of steps
 const RAMP_DOWN = Math.asin(SILL / RAMP);
 
 // one mesh, placed: put(parent, geometry, colour or material, [x, y, z], [rx, ry, rz], [sx, sy, sz])
@@ -96,31 +95,9 @@ function meltingClock() {
   return m;
 }
 
-// a chicken leg: a feathered thigh, a scaly shin and a three-toed foot; posed each frame from the hip to the foot
-function makeLeg(parent, foot, hip, side) {
-  const thigh = put(parent, cyl(0.55, 0.32, 1, 10), 0x8a6d58), shin = put(parent, cyl(0.16, 0.2, 1, 8), 0xe3a83e);
-  const knee = put(parent, new THREE.SphereGeometry(0.3, 12, 8), 0xe3a83e);
-  const ruff = put(parent, new THREE.ConeGeometry(0.7, 0.9, 10), 0x9b7a62);
-  const f = new THREE.Group(); f.position.copy(foot); f.rotation.y = side * 0.35; parent.add(f);
-  for (const a of [-0.55, 0, 0.55]) { const toe = put(f, new THREE.ConeGeometry(0.1, 1.0, 6), 0xe3a83e, [Math.sin(a) * 0.45, 0.08, Math.cos(a) * 0.45]); toe.rotation.order = 'YXZ'; toe.rotation.set(Math.PI / 2, a, 0); toe.scale.set(1, 1, 0.7); }
-  put(f, new THREE.ConeGeometry(0.08, 0.6, 6), 0xe3a83e, [0, 0.07, -0.3], [-Math.PI / 2, 0, 0]);
-  put(f, new THREE.SphereGeometry(0.2, 10, 6), 0xe3a83e, [0, 0.12, 0]);
-  const L1 = 2.5, L2 = 2.6, bendPref = V(side * 0.45, 0.25, -1).normalize();
-  const q = new THREE.Quaternion(), K = V(), d = V(), b = V();
-  const bone = (m, a, c) => { m.position.addVectors(a, c).multiplyScalar(0.5); d.subVectors(a, c); m.scale.set(1, d.length(), 1); m.quaternion.copy(q.setFromUnitVectors(UP, d.normalize())); };
-  return (H) => {
-    d.subVectors(foot, H); const dist = Math.min(d.length(), L1 + L2 - 0.02); d.normalize();
-    const a = (L1 * L1 - L2 * L2 + dist * dist) / (2 * dist), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
-    b.copy(bendPref).addScaledVector(d, -bendPref.dot(d)).normalize();
-    K.copy(H).addScaledVector(d, a).addScaledVector(b, h);
-    bone(thigh, H, K); bone(shin, K, foot); knee.position.copy(K);
-    ruff.position.copy(H).add(V(0, -0.25, 0));
-  };
-}
-
 export function makePalace(wind) {
   const g = new THREE.Group();
-  const body = new THREE.Group(); g.add(body);                   // everything the legs carry
+  const body = new THREE.Group(); g.add(body);                   // everything above the ground floor
   const tier1 = new THREE.Group(); tier1.position.y = SILL + 4; body.add(tier1);
   const tier2 = new THREE.Group(); tier2.position.y = 2.8; tier1.add(tier2);
   const smokeAt = [];
@@ -130,9 +107,12 @@ export function makePalace(wind) {
   const win = (p, w = 0.55, h = 0.85, rot = [0, 0, 0], parent = body) => { put(parent, box(w + 0.16, h + 0.16, 0.06), WHITE, p, rot); put(parent, box(w, h, 0.08), DARK, [p[0], p[1], p[2] + 0.02], rot); };
 
   // ---- the belly and the middle block (with the sky door)
-  put(body, new THREE.SphereGeometry(1, 28, 12, 0, TAU, Math.PI / 2, Math.PI / 2), IRON, [0, SILL + 0.05, 0], [0, 0, 0], [5.4, 1.5, 3.4]);
-  for (let i = 0; i < 18; i++) { const a = (i / 18) * TAU; put(body, new THREE.SphereGeometry(0.1, 6, 4), BRASS, [Math.cos(a) * 5.1, SILL - 0.3, Math.sin(a) * 3.2]); }
-  for (const [x, z, l, ry] of [[-3.2, 2.6, 2.2, 0.4], [2.6, -2.9, 2.8, -0.9], [4.6, 1.2, 1.6, 0.2]]) { put(body, cyl(0.16, 0.16, l, 10), BRASS, [x, SILL - 0.8, z], [0, ry, Math.PI / 2]); }
+  // the ground floor: rusticated stone, arched windows, sitting square on the ground
+  const STONE = 0xbdb2a0, STONE2 = 0xa89c88;
+  put(body, box(12.4, SILL, 5.6), STONE, [0, SILL / 2, -0.1]);
+  for (let row = 0; row < 4; row++) put(body, box(12.5, 0.06, 5.7), STONE2, [0, 0.4 + row * 0.8, -0.1]);
+  put(body, box(12.8, 0.25, 6), STONE2, [0, SILL - 0.05, -0.1]);
+  for (const x of [-4.8, -3.2, 3.2, 4.8]) { put(body, box(0.9, 1.3, 0.08), DARK, [x, 1.5, 2.72]); put(body, cyl(0.45, 0.45, 0.08, 16, 1, false, 0, Math.PI), DARK, [x, 2.15, 2.72], [Math.PI / 2, 0, 0]); }
   put(body, box(7, 4, 5), CREAM, [0, SILL + 2, 0]);
   put(body, box(7.3, 0.3, 5.3), WHITE, [0, SILL + 4.1, 0]);
   for (const x of [-0.98, 0.98]) put(body, cyl(0.14, 0.17, 2.7, 12), WHITE, [x, SILL + 1.35, 2.78]);
@@ -234,22 +214,16 @@ export function makePalace(wind) {
   // the people on the stairs: part of the building (they're clay too)
   bake(body); bake(tier1); bake(tier2);
 
-  // ---- moving parts: the door, the drawbridge, the legs, the smoke
+  // ---- moving parts: the door, the smoke
   const hinge = new THREE.Group(); hinge.position.set(-0.68, SILL, 2.6); body.add(hinge);
   const doorMat = new THREE.MeshStandardMaterial({ map: skyTexture(128, 256, 5), roughness: 0.8 });
   put(hinge, box(1.36, 2.52, 0.1), doorMat, [0.68, 1.26, 0]);
   put(hinge, new THREE.SphereGeometry(0.08, 12, 8), clay(0xc9a54c, { metalness: 0.5 }), [1.2, 1.25, 0.08]);
   const light = new THREE.PointLight(0xffd79a, 0, 7, 1.5); light.position.set(0, SILL + 1.4, 2.1); body.add(light);
-  const rampPivot = new THREE.Group(); rampPivot.position.set(0, SILL, 2.6); body.add(rampPivot);
-  put(rampPivot, box(1.5, 0.14, RAMP), 0x8a6443, [0, -0.07, RAMP / 2]);
-  for (let k = 0; k < 13; k++) put(rampPivot, box(1.6, 0.06, 0.12), 0x6b4a33, [0, 0.02, 0.3 + k * 0.55]);
-  const legs = new THREE.Group(); g.add(legs);
-  const hips = [], feet = [];
-  for (const [x, z] of [[-1, 1.3], [1, 1.3], [-1, -1.7], [1, -1.7]]) {
-    const hip = new THREE.Object3D(); hip.position.set(x * 2.9, SILL - 0.2, z); body.add(hip);
-    const foot = V(x * 4.4, 0, z + (z > 0 ? 0.8 : -0.6)); feet.push(foot);
-    hips.push({ hip, pose: makeLeg(legs, foot, hip.position.clone(), x) });
-  }
+  // a flight of stone steps up to the door, with a low wall either side
+  const run = Math.cos(RAMP_DOWN) * RAMP, NSTEP = 11;
+  for (let k = 0; k < NSTEP; k++) { const h = SILL * (1 - k / NSTEP), z = 2.6 + (k + 0.5) * (run / NSTEP); put(body, box(2.2, h, run / NSTEP + 0.02), k % 2 ? STONE : STONE2, [0, h / 2, z]); }
+  for (const x of [-1.25, 1.25]) put(body, box(0.3, 0.5, run), STONE2, [x, SILL / 2, 2.6 + run / 2], [Math.atan2(SILL, run), 0, 0]);
   const PUFFS = 40, smoke = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.34, 1), new THREE.MeshStandardMaterial({ color: 0xf2eee6, roughness: 1, transparent: true, opacity: 0.85, depthWrite: false }), PUFFS);
   smoke.castShadow = false; smoke.frustumCulled = false; g.add(smoke);
   const puffs = Array.from({ length: PUFFS }, (_, i) => ({ at: i % smokeAt.length, age: (i / PUFFS) * 5, life: 5, from: V() }));
@@ -257,19 +231,15 @@ export function makePalace(wind) {
   const windLocal = () => wind.clone().applyAxisAngle(UP, -g.rotation.y);
 
   const P = {
-    g, door: 0, ramp: 1, lift: 0, burst: 0, feet,
-    // the height of the drawbridge's walking surface at a point z along the palace's front axis
+    g, door: 0, burst: 0,
+    // the height of the steps' walking surface at a point z along the palace's front axis
     rampY(z) { const foot = 2.6 + Math.cos(RAMP_DOWN) * RAMP; return z < 2.6 ? SILL : z > foot ? 0 : SILL * (foot - z) / (foot - 2.6); },
     rampFoot: 2.6 + Math.cos(RAMP_DOWN) * RAMP,
     update(dt, t) {
-      body.position.y = 0.06 * Math.sin(t * 1.3) + 1.1 * P.lift + 0.1 * Math.sin(t * 7) * P.burst;
-      body.rotation.z = 0.012 * Math.sin(t * 0.7); body.rotation.x = 0.008 * Math.sin(t * 0.9 + 1);
       tier1.rotation.z = 0.018 * Math.sin(t * 0.8 + 0.6); tier1.rotation.x = 0.01 * Math.sin(t * 0.6);
       tier2.rotation.z = 0.03 * Math.sin(t * 0.8 - 0.2); tier2.rotation.x = 0.015 * Math.sin(t * 0.7 + 2);
       hinge.rotation.y = -1.7 * P.door; light.intensity = 8 * P.door;
-      rampPivot.rotation.x = THREE.MathUtils.lerp(-1.45, RAMP_DOWN, P.ramp);
       g.updateMatrixWorld(true);
-      for (const { hip, pose } of hips) pose(g.worldToLocal(hip.getWorldPosition(H)));
       const w = windLocal(), rate = 1 + 2 * P.burst;
       for (let i = 0; i < PUFFS; i++) {
         const p = puffs[i]; p.age += dt * rate;

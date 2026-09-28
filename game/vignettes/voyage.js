@@ -5,7 +5,7 @@
 //     cellar opens on a chest of gold you can carry back to the ship;
 //   North Sentinel Island: people in the treeline warn you off; you may leave a bag of sweets at the waterline, then go;
 //   an island of frogs; two nearly empty islands (a palm, a rock, a bottle);
-//   the house's island, upwind: the house itself, a teetering art palace on chicken legs (voyage-palace.js). Go in at
+//   the house's island, upwind: the house itself, a teetering art palace (voyage-palace.js). Go in at
 //     its front door (the first room's sky door) and you're home: the end card (the chest, if it's on board, goes to
 //     the museum first).
 // You can also tie up again at the harbour you set out from, and walk about the dock. An island's name only shows once
@@ -260,7 +260,7 @@ export function startVoyage(ctx, { root, ship, sea, ground, harbour }) {
   const E2 = addIsle({ id: 'rock', name: 'A small island', at: [-26, 58], r: 4.2, seed: 17, color: 0xe4d8bb });
   { const rr = seeded(6); const rk = makeRock(2.2, rr); rk.position.copy(at(E2, -0.8, 0)); W.add(rk); const p = makePalm(1, 0.35); p.position.copy(at(E2, 0.6, 1.6)); p.rotation.y = 2; W.add(p); }
 
-  // the house's island (upwind: you'll have to tack to get home), and the house: a palace on chicken legs, facing the pier
+  // the house's island (upwind: you'll have to tack to get home), and the house: an art palace, facing the pier
   const HO = addIsle({ id: 'house', name: 'The house', at: [58, 104], r: 12, seed: 9, color: 0xe4d6b4, top: 19, cam: [20, -6, 12, -4, 5] });
   const PAL_AT = -4, palace = makePalace(WIND); palace.g.position.copy(at(HO, PAL_AT, 0)); palace.g.rotation.y = Math.atan2(HO.out.x, HO.out.z); W.add(palace.g);
   const PAL = palace.g.position, palYaw = palace.g.rotation.y;
@@ -420,7 +420,7 @@ export function startVoyage(ctx, { root, ship, sea, ground, harbour }) {
       await ctx.wait(2); player.locked = false; S.leaving = false; board();
     } });
 
-  // ---- home: in at the palace's front door; it shuts, the drawbridge comes up, the house stands up on its legs; the card
+  // ---- home: up the steps and in at the palace's front door; it shuts, the chimneys puff; the card
   interact.add({ pos: () => palWorld(0, palace.rampFoot + 0.8), radius: 1.8, height: 2.6, prompt: 'Go in at the front door', terminal: true,
     enabled: () => S.mode === 'land' && S.at === 'house',
     onUse: () => {
@@ -432,17 +432,14 @@ export function startVoyage(ctx, { root, ship, sea, ground, harbour }) {
     if (S.inside < 0) {
       palace.door = easeInOut(T / 1.1);
       if (T > 0.5 && !player.enabled) { player.enabled = true; player.locked = true; player.target = palWorld(0, 1.9); }
-      const q = palLocal(player.pos), ry = palace.rampY(q.z); player.pos.y = ry > 0 ? ry + palace.g.children[0].position.y : 0;   // (up the drawbridge)
+      const q = palLocal(player.pos), ry = palace.rampY(q.z); player.pos.y = ry > 0 ? ry + palace.g.children[0].position.y : 0;   // (up the steps)
       if (T > 0.5 && (q.z < 2.3 || T > 9)) { S.inside = T; player.obj.visible = false; player.enabled = false; player.locked = false; player.target = null; }
       return;
     }
     const k = T - S.inside;
     palace.door = 1 - easeInOut(k / 0.9);
-    palace.ramp = 1 - easeInOut((k - 0.8) / 1.4);
-    palace.lift = easeInOut((k - 1.8) / 2);
-    palace.burst = clamp((k - 1.8) / 0.5) * clamp(1 - (k - 3.8) / 2);
-    if (k > 1.8 && !S.stood) { S.stood = true; const a = audio(); if (a) { creak(a, 0.12); setTimeout(() => creak(a, 0.09), 700); } }
-    if (k > 5 && !S.over) {
+    palace.burst = clamp((k - 0.9) / 0.5) * clamp(1 - (k - 2.9) / 1.5);
+    if (k > 3.4 && !S.over) {
       S.over = true;
       ctx.gameOver({ title: 'You sailed home', text: 'You sailed it out and back again, and the sea wore at it all the way. Is it still the same ship you set out in?' });
     }

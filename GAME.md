@@ -129,7 +129,7 @@ board). An island's label reads "?" until you've landed there.
 | North Sentinel Island | People in the treeline raise their bows and warn you off; you can't leave the beach. Leave a bag of sweets at the waterline; a short note says why they're left alone (they have always refused contact, and outsiders' illnesses are dangerous to them); you go |
 | Frogs | A pond and a crowd of hopping, croaking frogs |
 | Two small islands | A palm, a rock, a message in a bottle |
-| The house | Upwind. The house itself, after Howl's moving castle (`voyage-palace.js`): a teetering art palace crouched on chicken legs, every wing a different artist of the house's rooms (a Grant Wood barn, a cubist wing, a sky-painted Magritte wing with a bowler hat and an apple, a Dalí clock melting off a balcony, a Van Gogh swirl turret, an Escher stair walked upside down and up the wall), smoke from its chimneys, creaking. Go in at the front door (the sky door, up its drawbridge): it stands up on its legs, and the end card, **You sailed home**. If the chest is on board, it goes to the museum first |
+| The house | Upwind. The house itself (`voyage-palace.js`): a teetering art palace on a stone ground floor, every wing a different artist of the house's rooms (a Grant Wood barn, a cubist wing, a sky-painted Magritte wing with a bowler hat and an apple, a Dalí clock melting off a balcony, a Van Gogh swirl turret, an Escher stair walked upside down and up the wall), smoke from its chimneys, creaking. Go up the steps and in at the front door (the sky door): it shuts, the chimneys puff, and the end card, **You sailed home**. If the chest is on board, it goes to the museum first |
 
 ### The museum (built)
 
