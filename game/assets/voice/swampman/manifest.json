@@ -1,8 +1,8 @@
 {
   "arrive": {
-    "file": "arrive-a0f4b049.mp3",
-    "text": "The long way home, along the boardwalk through the swamp.",
-    "dur": 3.74
+    "file": "arrive-2741f451.mp3",
+    "text": "The long way home with your friend, along the boardwalk through the swamp.",
+    "dur": 4.52
   },
   "storm": {
     "file": "storm-bf69175d.mp3",
@@ -10,24 +10,34 @@
     "dur": 2.32
   },
   "strike_1": {
-    "file": "strike_1-052d36de.mp3",
-    "text": "Lightning. It takes you apart, all of you, in an instant.",
-    "dur": 3.89
+    "file": "strike_1-033747c4.mp3",
+    "text": "Lightning. It takes your friend apart, all of them, in an instant.",
+    "dur": 4.34
   },
   "strike_2": {
-    "file": "strike_2-33c539ec.mp3",
-    "text": "And by sheer chance, at the same moment, it turns the dead tree into an exact copy of you. Every atom in place. Every memory.",
-    "dur": 7.99
+    "file": "strike_2-2b4b00dc.mp3",
+    "text": "And by sheer chance, at the same moment, it turns the dead tree into an exact copy of your friend. Every atom in place. Every memory.",
+    "dur": 8.33
   },
   "ask": {
-    "file": "ask-962a34a1.mp3",
-    "text": "Is this you?",
-    "dur": 1.31
+    "file": "ask-9b380881.mp3",
+    "text": "Is that your friend?",
+    "dur": 2.22
+  },
+  "seems": {
+    "file": "seems-49e4d419.mp3",
+    "text": "It seems to know you. It seems to remember. But a minute ago, it was a tree.",
+    "dur": 4.96
+  },
+  "again": {
+    "file": "again-0d900f48.mp3",
+    "text": "The storm's coming round again. There's another dead tree, just off the path.",
+    "dur": 5.04
   },
   "dog": {
-    "file": "dog-ad5aa0fb.mp3",
-    "text": "The dog sniffs you for a long time. Then, slowly, it wags its tail.",
-    "dur": 4.78
+    "file": "dog-c5b53206.mp3",
+    "text": "The dog wags its tail at you. It won't go near your friend.",
+    "dur": 4.21
   },
   "frogs": {
     "file": "frogs-e0e8687e.mp3",
@@ -35,38 +45,18 @@
     "dur": 4.86
   },
   "home_idle": {
-    "file": "home_idle-966b55d6.mp3",
-    "text": "Your friend comes down to the path, to fetch you in.",
-    "dur": 3.53
+    "file": "home_idle-6d4a8f76.mp3",
+    "text": "Your friend takes your arm, and walks you home.",
+    "dur": 3.24
   },
   "home_1": {
-    "file": "home_1-d93c9559.mp3",
-    "text": "You go in. You know where the mugs are. You know your friend takes two sugars.",
-    "dur": 4.49
+    "file": "home_1-a59bfc1a.mp3",
+    "text": "You go in together. Your friend knows where the mugs are, and that you take two sugars.",
+    "dur": 5.12
   },
   "home_2": {
-    "file": "home_2-5dcd98fb.mp3",
-    "text": "Nobody will ever know the difference. Did you recognise your friend? Or did you only seem to?",
-    "dur": 5.96
-  },
-  "tell_1": {
-    "file": "tell_1-8630c555.mp3",
-    "text": "Your friend doesn't believe a word of it.",
-    "dur": 2.77
-  },
-  "tell_2": {
-    "file": "tell_2-3e3b50a6.mp3",
-    "text": "Same face, same voice, same memories. Some people say that makes you the same person. Others say the one who walked into the swamp never came out.",
-    "dur": 8.91
-  },
-  "back_1": {
-    "file": "back_1-894ce486.mp3",
-    "text": "You go back to the swamp, to look for yourself. There's only a scorch mark, and the black water.",
-    "dur": 5.75
-  },
-  "back_2": {
-    "file": "back_2-937f89eb.mp3",
-    "text": "Nobody else is coming home tonight. Only you. If it is you.",
-    "dur": 4.41
+    "file": "home_2-b8ea9f53.mp3",
+    "text": "Nobody will ever know the difference. Did your friend remember you? Or only seem to?",
+    "dur": 5.41
   }
 }

@@ -179,7 +179,7 @@ thick strokes (`game/core/brush.js`). A free-standing door leads back into the g
 | A chair with a helmet | **The Experience Machine** | Try the demonstration; plug in for life or go home into the rain. The second time, you're told you've been plugged in all along | You plugged in · you went home · you unplugged · you stayed plugged in |
 | A veil between poles | **The Veil of Ignorance** | Five faceless people, three model towns (equal, the gamble, best for the worst-off); the veil lifts and the lamps pick your house at random | One per town, and one if the others choose for you |
 | A puddle | **The Puddle** | You are the puddle (teal). The sun rises and you shrink; flow along the cracks, and every hole fits you | The hole was made for you · you took the shape of the hole |
-| A dead tree and a thundercloud | **Swampman** | Lightning takes you apart and turns the tree into you; walk home to your friend (and a doubtful dog) | You went home · you told them · you went back to look |
+| A dead tree and a thundercloud | **Swampman** | Lightning takes your friend apart and turns the tree into an exact copy, who walks home with you remembering everything (the dog isn't sure); the storm comes round again, to another dead tree | You went home together (also if you wait) · you stood by the tree (the story simply stops) |
 
 ### The barn (built)
 
