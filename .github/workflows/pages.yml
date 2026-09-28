@@ -40,7 +40,7 @@ jobs:
           find _site/game -type f \( -name '*.js' -o -name '*.html' -o -name '*.css' \) -print0 \
             | xargs -0 sed -i -E "s#(['\"\`(])/(game|node_modules)/#\1${BASE}/\2/#g"
           # the site's front page goes straight to the game
-          printf '<!doctype html><meta charset="utf-8"><title>Thought Experiments</title><meta http-equiv="refresh" content="0; url=game/"><a href="game/">Thought Experiments</a>\n' > _site/index.html
+          printf '<!doctype html><meta charset="utf-8"><title>Thought Experiments</title><link rel="icon" href="data:,"><meta http-equiv="refresh" content="0; url=game/"><a href="game/">Thought Experiments</a>\n' > _site/index.html
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
