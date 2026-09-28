@@ -118,7 +118,19 @@ export default function gallery(ctx) {
   painter.position.set(9.8, 0, 1.4); painter.rotation.y = -0.6; root.add(painter);
   const easel = new THREE.Group(); for (const [x, rz] of [[-0.4, -0.08], [0.4, 0.08]]) { const l = mesh(new THREE.CylinderGeometry(0.03, 0.04, 2.8, 6), clay(palette.wood)); l.position.set(x, 1.4, 0); l.rotation.z = rz; easel.add(l); }
   const canvas = mesh(new THREE.BoxGeometry(1.1, 1.3, 0.05), clay(0xfbf6ea)); canvas.position.set(0, 1.9, 0.05); easel.add(canvas);
-  const daub = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.1), new THREE.MeshBasicMaterial({ map: weeping })); daub.position.set(0, 1.9, 0.09); easel.add(daub);
+  // on the easel, something new: a still life of a guitar and a bowl of fruit, broken into planes (not the woman on the wall)
+  const stillLife = canvasTexture(320, 400, (g, w, h) => {
+    const r = seeded(12);
+    for (let i = 0; i < 14; i++) { g.fillStyle = ['#c9a26b', '#8b8f94', '#e6d3ad', '#6d7684', '#b88a52'][i % 5]; g.beginPath(); g.moveTo(r() * w, r() * h); for (let k = 0; k < 3; k++) g.lineTo(r() * w, r() * h); g.closePath(); g.fill(); }
+    g.strokeStyle = '#1f1f22'; g.lineWidth = 4;
+    g.fillStyle = '#8b6a3c'; g.beginPath(); g.ellipse(150, 250, 70, 90, -0.2, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#5a3d29'; g.fillRect(140, 60, 26, 150); g.strokeRect(140, 60, 26, 150);
+    g.fillStyle = '#1f1f22'; g.beginPath(); g.arc(148, 240, 22, 0, 7); g.fill();
+    g.fillStyle = '#f6efe0'; g.fillRect(200, 280, 90, 50); g.strokeRect(200, 280, 90, 50);
+    for (const [x, y, c] of [[225, 270, '#e0674f'], [255, 262, '#f2c14e'], [240, 250, '#7cc04e']]) { g.fillStyle = c; g.beginPath(); g.arc(x, y, 16, 0, 7); g.fill(); g.stroke(); }
+    g.strokeStyle = '#f6f0e2'; g.lineWidth = 2; for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(146 + i * 5, 70); g.lineTo(146 + i * 5, 320); g.stroke(); }
+  });
+  const daub = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.1), new THREE.MeshBasicMaterial({ map: stillLife })); daub.position.set(0, 1.9, 0.09); easel.add(daub);
   easel.position.set(11, 0, 0.8); easel.rotation.y = -0.9; root.add(easel);
   talk(ctx, { who: painter, lines: [
     'Why paint a face from one side, when you can paint it from every side at once?',
@@ -152,6 +164,7 @@ export default function gallery(ctx) {
   const cdoor = mesh(new THREE.BoxGeometry(1.4, 2.8, 0.34), clay(0x3a3a42)); cdoor.position.y = 1.45; cell.add(cdoor);
   for (let i = 0; i < 4; i++) { const bar = mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.8, 8), clay(0xb8bcc2, { metalness: 0.6 })); bar.position.set(-0.3 + i * 0.2, 2.25, 0.2); cell.add(bar); }
   cell.position.set(P.pd, 0, BACK + 0.2); root.add(cell);
+  cell.traverse((m) => { if (m.isMesh) { m.material = m.material.clone(); m.material.color.lerp(new THREE.Color(0x9a9a9a), 0.7); m.material.transparent = true; m.material.opacity = 0.55; } });   // greyed out: closed for now
   // two boxes on a table: one glass (with money), one closed
   const ntable = makeTable({ w: 2.2, d: 1.1, h: 1.1, color: 0x6b4a33 }); ntable.position.set(P.newcomb, 0, Z); root.add(ntable);
   const boxA = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.6), new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.25, roughness: 0.05 })); boxA.position.set(P.newcomb - 0.5, 1.51, Z); root.add(boxA);
@@ -192,7 +205,7 @@ export default function gallery(ctx) {
 
   const portals = [
     { id: 'ring-of-gyges', name: 'Ring of Gyges', pos: V(P.gyges, 0, BACK + 2.2), labelAt: V(P.gyges, 2.6, Z), prompt: 'Lift the glass' },
-    { id: 'prisoners-dilemma', name: "Prisoner's Dilemma", pos: V(P.pd, 0, BACK + 2), labelAt: V(P.pd, 3.8, BACK + 0.4), prompt: 'Open the cell' },
+    { id: 'prisoners-dilemma', name: "Prisoner's Dilemma", pos: V(P.pd, 0, BACK + 2), labelAt: V(P.pd, 3.8, BACK + 0.4), prompt: 'Try the cell door', closed: true },   // closed for now
     { id: 'newcombs-paradox', name: "Newcomb's Paradox", pos: V(P.newcomb, 0, BACK + 2.3), labelAt: V(P.newcomb, 2.6, Z), prompt: 'Look at the boxes' },
     { id: 'utility-monster', name: 'The Utility Monster', pos: V(P.monster, 0, BACK + 2.2), labelAt: V(P.monster, 2.7, Z), prompt: 'Cut the cake' },
     { id: 'chinese-room', name: 'The Chinese Room', pos: V(P.chinese, 0, BACK + 2), labelAt: V(P.chinese, 3.6, BACK + 0.4), prompt: 'Knock on the door' },
@@ -201,7 +214,8 @@ export default function gallery(ctx) {
     { id: 'hall', name: 'Down to the hall', pos: V(-HALF + 3.2, 0, 2), labelAt: V(-HALF + 3.2, 1.8, 2), prompt: 'Go down the stairs', home: true },
   ];
   let entering = null;
-  for (const p of portals) interact.add({ pos: p.pos, radius: 1.9, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
+  for (const p of portals) interact.add({ pos: p.pos, radius: 1.9, prompt: p.prompt, enabled: () => !entering,
+    onUse: () => { if (p.closed) return ctx.toast(`<b>${p.name}</b>: locked, for now.`, 3); entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
   const from = portals.find((p) => p.id === ctx.from && (!p.home || p.id === 'field'));
   const blockers = [{ x: -10, z: 1.2, r: 0.8 }, { x: painter.position.x, z: painter.position.z, r: 0.45 }, { x: 11, z: 0.8, r: 0.5 }, { x: oldMan.position.x, z: oldMan.position.z, r: 0.9 },
@@ -225,7 +239,7 @@ export default function gallery(ctx) {
       for (const p of portals) {
         const d = Math.hypot(ctx.player.pos.x - p.pos.x, ctx.player.pos.z - p.pos.z);
         const done = save.done.has(p.id) ? ' ✓' : '';
-        ctx.ui.label('portal-' + p.id, entering ? 0 : clamp((5 - d) / 2.2), `<span class="dot" style="background:${css(p.home ? palette.rail : palette.agent)}"></span>${p.name}${done}`, p.labelAt);
+        ctx.ui.label('portal-' + p.id, entering ? 0 : clamp((5 - d) / 2.2) * (p.closed ? 0.5 : 1), `<span class="dot" style="background:${css(p.home || p.closed ? palette.rail : palette.agent)}"></span>${p.name}${p.closed ? ' (closed)' : done}`, p.labelAt);
       }
     },
   };
