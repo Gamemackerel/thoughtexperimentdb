@@ -1,7 +1,6 @@
 // The House: a surreal hub (Escher + Dalí in clay). Paintings, books and doors lead into the vignettes.
 import { THREE, palette, css, clamp, lerp, easeInOut, clay, mesh, makePerson, animatePerson, makeTree, makeTable, seeded } from '/game/engine/core.js';
 import { makePenrose } from '../core/penrose.js';
-import { look } from '../core/extras.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const ROOM = 7.3;                               // walkable half-size
@@ -138,10 +137,8 @@ export default function house(ctx) {
   const penrose = makePenrose(stage.renderer, { size: 5.2 });
   penrose.board.position.copy(STAIRS).setY(2.5); root.add(penrose.board);
   const stairBlock = [{ x: STAIRS.x, z: STAIRS.z, r: 1.6 }];
-  // asides: the floor window, the endless climber, the clock on the tall table
-  look(ctx, { pos: V(FLOOR_WINDOW.x + 0.4, 0, FLOOR_WINDOW.z - 1.9), radius: 1.6, height: 1.2, prompt: 'Look down through the window', lines: ['window'] });
-  look(ctx, { pos: STAIRS.clone().add(V(2.3, 0, 1.6)), radius: 1.8, height: 3, prompt: 'Watch the climber', lines: ['climber'] });
-  look(ctx, { pos: V(4.6, 0, -3.3), radius: 1.6, height: 4.6, prompt: 'Look at the clock', lines: ['clock'] });
+  // the room's curiosities do something rather than say something: the climber can be startled off his stairs
+  interact.add({ pos: STAIRS.clone().add(V(2.3, 0, 1.6)), radius: 1.8, height: 3, prompt: 'Startle the climber', aside: true, enabled: () => !penrose.falling, onUse: () => penrose.stumble() });
 
   // ---- Dalí: a spindly-legged table with a melting clock; a bare tree with another
   const tall = new THREE.Group();
@@ -154,6 +151,33 @@ export default function house(ctx) {
   clock1.position.set(0.7, 4.52, 0); tall.add(clock1);
   tall.position.set(4.6, 0, -4.8); tall.rotation.y = -0.4;
   root.add(tall);
+  // touch it, and it melts further, drips all the way down into a puddle on the floor, and then gathers itself up again
+  const dripMat = clay(0xf6efe0), goldMat = clay(0xc9a54c, { metalness: 0.3 });
+  const tip = V(1.25, 3.9, 0).applyEuler(tall.rotation).add(tall.position);               // the lowest point of the drooping face
+  const drops = [...Array(10)].map((_, i) => { const d = mesh(new THREE.SphereGeometry(0.07 + (i % 3) * 0.02, 10, 8), i % 4 ? dripMat : goldMat); d.scale.y = 1.6; d.visible = false; root.add(d); return d; });
+  const puddle = mesh(new THREE.CylinderGeometry(1, 1, 0.03, 32), [goldMat, clay(0xf6efe0), goldMat]); puddle.position.copy(tip).setY(0.02); puddle.scale.set(0.001, 1, 0.001); puddle.castShadow = false; root.add(puddle);
+  let melt = -1;                                                                           // seconds into a melt, or -1
+  interact.add({ pos: V(4.6, 0, -3.3), radius: 1.6, height: 4.6, prompt: 'Touch the clock', aside: true, enabled: () => melt < 0, onUse: () => (melt = 0) });
+  const MELT = { droop: 2, drip: 4.2, pool: 6.4, rise: 8.6 };                              // the phases' end times
+  function updateMelt(dt) {
+    if (melt < 0) return;
+    melt += dt;
+    const sag = melt < MELT.droop ? easeInOut(melt / MELT.droop) : melt < MELT.pool ? 1 : melt < MELT.rise ? 1 - easeInOut((melt - MELT.pool) / (MELT.rise - MELT.pool)) : 0;
+    const drain = melt < MELT.droop ? 0 : melt < MELT.pool ? clamp((melt - MELT.droop) / (MELT.drip - MELT.droop)) : melt < MELT.rise ? 1 - easeInOut((melt - MELT.pool) / (MELT.rise - MELT.pool)) : 0;
+    clock1.scale.set(1 - 0.85 * drain, 1 + sag * 1.4 * (1 - drain), 1 - 0.85 * drain);      // it sags, then runs away to nothing
+    clock1.position.y = 4.52 - sag * 0.3;
+    // drops fall one after another while it drains, and climb back up while it reforms
+    drops.forEach((d, i) => {
+      const lag = i * 0.2, a = melt - MELT.droop - lag, r = melt - MELT.pool - lag;
+      let y = null;
+      if (a > 0 && melt < MELT.pool) { const k = Math.min(1, a / 0.7); y = lerp(tip.y, 0.05, k * k); }
+      else if (r > 0 && melt < MELT.rise) { const k = Math.min(1, r / 0.7); y = lerp(0.05, tip.y, Math.sqrt(k)); }
+      d.visible = y !== null && y > 0.06 && y < tip.y - 0.02; if (d.visible) d.position.set(tip.x + Math.sin(i * 2.3) * 0.05, y, tip.z + Math.cos(i * 1.7) * 0.05);
+    });
+    const pool = melt < MELT.droop ? 0 : melt < MELT.pool ? easeInOut(clamp((melt - MELT.droop - 0.5) / 2)) : melt < MELT.rise ? 1 - easeInOut((melt - MELT.pool) / (MELT.rise - MELT.pool - 0.6)) : 0;
+    puddle.scale.set(Math.max(0.001, pool * 0.9), 1, Math.max(0.001, pool * 0.75));
+    if (melt >= MELT.rise + 0.3) { melt = -1; clock1.scale.set(1, 1, 1); clock1.position.y = 4.52; puddle.scale.set(0.001, 1, 0.001); drops.forEach((d) => (d.visible = false)); }
+  }
   const tree = new THREE.Group();
   const trunk = mesh(new THREE.CylinderGeometry(0.14, 0.22, 3.2, 10), clay(palette.trunk)); trunk.position.y = 1.6;
   const branch = mesh(new THREE.CylinderGeometry(0.06, 0.1, 2, 8), clay(palette.trunk)); branch.position.set(0.8, 2.9, 0); branch.rotation.z = -1.25;
@@ -162,16 +186,25 @@ export default function house(ctx) {
   tree.position.set(6.2, 0, 5.6); tree.rotation.y = -0.3;              // the clock hangs off towards the wall, clear of the sky door
   root.add(tree);
 
-  // ---- a window in the floor, looking down into sky
-  const skyTex = canvasTexture(256, 256, (g, w, h) => {
-    const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128); gr.addColorStop(0, '#dfe9f2'); gr.addColorStop(1, '#8fb3d9');
-    g.fillStyle = gr; g.fillRect(0, 0, w, h);
-    g.fillStyle = 'rgba(255,255,255,0.9)'; for (const [x, y, s] of [[80, 90, 26], [110, 80, 32], [140, 96, 22], [160, 170, 20], [185, 164, 26]]) { g.beginPath(); g.arc(x, y, s, 0, 7); g.fill(); }
+  // ---- a window in the floor: a round hole, and through it, open sky far below, clouds drifting past at different
+  // depths. The disc marks the hole in the stencil buffer; the sky under the floor is drawn only there, over the floor.
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(FLOOR_WINDOW.r, 48), new THREE.MeshBasicMaterial({
+    colorWrite: false, depthWrite: false, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp }));
+  hole.rotation.x = -Math.PI / 2; hole.position.set(FLOOR_WINDOW.x, 0.012, FLOOR_WINDOW.z); hole.renderOrder = 1;
+  const through = (m) => Object.assign(m, { depthTest: false, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.EqualStencilFunc, stencilFail: THREE.KeepStencilOp, stencilZFail: THREE.KeepStencilOp, stencilZPass: THREE.KeepStencilOp });
+  const below = new THREE.Group(); below.position.set(FLOOR_WINDOW.x, 0, FLOOR_WINDOW.z); root.add(below);
+  const skyGrad = canvasTexture(16, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#c9dcec'); gr.addColorStop(1, '#6f98c8'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+  const well = new THREE.Mesh(new THREE.CylinderGeometry(9, 5, 30, 32, 1, true), through(new THREE.MeshBasicMaterial({ map: skyGrad, side: THREE.BackSide, fog: false })));
+  well.position.y = -15.2; well.renderOrder = 2; below.add(well);
+  const bottom = new THREE.Mesh(new THREE.CircleGeometry(5, 32), through(new THREE.MeshBasicMaterial({ color: 0x6f98c8, fog: false }))); bottom.rotation.x = -Math.PI / 2; bottom.position.y = -30; bottom.renderOrder = 2; below.add(bottom);
+  const lip = new THREE.Mesh(new THREE.CylinderGeometry(FLOOR_WINDOW.r, FLOOR_WINDOW.r, 0.5, 48, 1, true), through(new THREE.MeshBasicMaterial({ color: 0xb9a880, side: THREE.BackSide }))); lip.position.y = -0.25; lip.renderOrder = 5; below.add(lip);
+  const deepClouds = [...Array(7)].map((_, i) => {
+    const c = new THREE.Group(), depth = 3 + i * 3.6, m = through(new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false }));
+    for (let k = 0; k < 4; k++) { const b = new THREE.Mesh(new THREE.SphereGeometry(0.7 + (k % 2) * 0.3, 14, 10), m); b.position.set(k * 0.8 - 1.2, (k % 2) * 0.2, (k % 3) * 0.3); b.renderOrder = 4 - i * 0.1; c.add(b); }
+    c.position.set(0, -depth, 0); c.userData = { depth, x0: (i * 2.9) % 8 - 4, z: ((i * 1.7) % 3) - 1.5, speed: 0.25 + (i % 3) * 0.1 };
+    below.add(c); return c;
   });
-  skyTex.wrapS = skyTex.wrapT = THREE.RepeatWrapping;
-  const hole = new THREE.Mesh(new THREE.CircleGeometry(FLOOR_WINDOW.r, 48), new THREE.MeshBasicMaterial({ map: skyTex }));
-  hole.rotation.x = -Math.PI / 2; hole.position.set(FLOOR_WINDOW.x, 0.012, FLOOR_WINDOW.z);
-  const rim = mesh(new THREE.TorusGeometry(FLOOR_WINDOW.r, 0.09, 10, 48), clay(0xf2e6d4)); rim.rotation.x = Math.PI / 2; rim.position.copy(hole.position);
+  const rim = mesh(new THREE.TorusGeometry(FLOOR_WINDOW.r, 0.09, 10, 48), clay(0xf2e6d4)); rim.rotation.x = Math.PI / 2; rim.position.copy(hole.position); rim.renderOrder = 6;
   root.add(hole, rim);
 
   // ---- an upside-down armchair floating overhead; clouds drifting through the room
@@ -228,7 +261,7 @@ export default function house(ctx) {
   const glows = [
     [new THREE.Mesh(new THREE.CircleGeometry(1.1, 32), glowMat()), 'brain-in-a-vat', BOOK.clone().add(V(0, 1.6, 0)), [-Math.PI / 2 + 0.35, 0, 0]],
     [new THREE.Mesh(new THREE.PlaneGeometry(2, 3.6), glowMat()), 'platos-cave', V(-7.7, 1.55, 3.4), [0, Math.PI / 2, 0]],
-    [new THREE.Mesh(new THREE.PlaneGeometry(2, 3.6), glowMat()), 'ship-of-theseus', V(5.35, 1.55, 2.35), [0, -0.5, 0]],
+    [new THREE.Mesh(new THREE.PlaneGeometry(2.3, 3.8), glowMat()), 'ship-of-theseus', V(5.2 + 0.3 * Math.sin(-0.5), 1.55, 2.2 - 0.3 * Math.cos(-0.5)), [0, -0.5, 0]],   // behind the door, not on its face (flush planes flicker)
   ].map(([m, id, pos, rot]) => { m.position.copy(pos); m.rotation.set(...rot); root.add(m); return [m, id]; });
   let entering = null;
   for (const p of portals) {
@@ -284,7 +317,8 @@ export default function house(ctx) {
 
       chair.position.y = 7.2 + Math.sin(time * 0.6) * 0.25; chair.rotation.y = time * 0.08;
       clouds.forEach((c, k) => { c.position.set(((time * 0.4 + k * 7) % 22) - 11, 7.4 + k * 0.7, -6.4 + k * 0.4); });   // high, along the back wall
-      skyTex.offset.x = time * 0.01;
+      deepClouds.forEach((c) => { const u = c.userData, w = 9 + u.depth * 0.3; c.position.x = ((u.x0 + time * u.speed + w) % (2 * w)) - w; c.position.z = u.z; });
+      updateMelt(dt);
       halo.material.opacity = save.done.has('trolley-problem') ? 0.22 + 0.08 * Math.sin(time * 2) : 0.1 + 0.08 * Math.sin(time * 2);
       glows.forEach(([m, id]) => (m.material.opacity = save.done.has(id) ? 0.3 + 0.1 * Math.sin(time * 2) : 0.08 + 0.06 * Math.sin(time * 2 + 1)));
       bookGlow.material.opacity = save.done.size ? 0.22 + 0.08 * Math.sin(time * 2.4) : 0;

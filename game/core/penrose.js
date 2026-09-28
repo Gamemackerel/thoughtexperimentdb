@@ -40,15 +40,32 @@ export function makePenrose(renderer, { size = 4.6, foot = 0.8 } = {}) {
   const board = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: rt.texture, transparent: true, depthWrite: false }));
   board.renderOrder = 1;
   const clear = new THREE.Color();
-  let frame = 0;
+  let frame = 0, last = null, prog = 0, fall = null;
   return {
     board,
+    // he loses his footing and tumbles down a whole flight, lies there a moment, and gets up and carries on
+    stumble() { if (!fall) fall = { t: 0, from: prog, to: prog - LONG }; },
+    get falling() { return !!fall; },
     update(t, camera) {
+      const dt = last === null ? 0 : Math.min(0.1, t - last); last = t;
       // the climber goes round and round, always going up
-      const u = (t * 0.45) % steps, i = Math.floor(u), f = u - i, a = at(i), b = at(i + 1);
-      climber.position.set(lerp(a.x, b.x, f), lerp(a.y, b.y, f) + Math.sin(Math.PI * f) * 0.12, lerp(a.z, b.z, f));
+      climber.rotation.set(0, climber.rotation.y, 0); climber.userData.body.rotation.set(0, 0, 0);
+      if (fall) {
+        fall.t += dt;
+        const k = Math.min(1, fall.t / 1.1);
+        prog = lerp(fall.from, fall.to, k * k);
+        if (fall.t > 2.3) fall = null;
+      } else prog += dt * 0.45;
+      const u = ((prog % steps) + steps) % steps, i = Math.floor(u), f = u - i, a = at(i), b = at(i + 1);
+      const bounce = fall && fall.t < 1.1 ? Math.abs(Math.sin(Math.PI * (prog - Math.floor(prog)))) * 0.25 : Math.sin(Math.PI * f) * 0.12;
+      climber.position.set(lerp(a.x, b.x, f), lerp(a.y, b.y, f) + bounce, lerp(a.z, b.z, f));
       climber.rotation.y = Math.atan2(b.x - a.x, b.z - a.z);
-      animatePerson(climber, t * 2, { energy: 0.6 });
+      if (fall) {
+        const b0 = climber.userData.body;
+        if (fall.t < 1.1) { b0.rotation.x = fall.t * 14; b0.position.y = 0.2; }                  // head over heels, down the steps
+        else if (fall.t < 1.9) { b0.rotation.x = -Math.PI / 2; b0.position.y = 0.1; }              // flat on his back
+        else { b0.rotation.x = lerp(-Math.PI / 2, 0, (fall.t - 1.9) / 0.4); }                      // and up again
+      } else animatePerson(climber, t * 2, { energy: 0.6 });
       // the picture turns to face you (upright)
       board.rotation.y = Math.atan2(camera.position.x - board.position.x, camera.position.z - board.position.z);
       if (frame++ % 2) return;                                           // 30 fps is plenty for a picture

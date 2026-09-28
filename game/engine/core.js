@@ -45,7 +45,7 @@ export function seeded(seed = 1) {
 
 // ---------------------------------------------------------------- stage
 export function createStage(canvas, { width = 1920, height = 1080 } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, stencil: true });   // (stencil: the window in the first room's floor)
   renderer.setPixelRatio(1);
   renderer.setSize(width, height, false);
   renderer.shadowMap.enabled = true;
