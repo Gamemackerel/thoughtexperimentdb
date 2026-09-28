@@ -9,7 +9,7 @@
     "arrive": "Three doors. Behind one, a car. Behind the other two, goats.",
     "pick": "Pick a door.",
     "host_opens": "The host knows where the car is. He opens one of the other doors. A goat.",
-    "ask": "Stay with your door, or switch to the other one?",
+    "ask": { "text": "Will you stay with your door, or switch to the other one? Is staying or switching the better bet, or does it not matter?", "speed": 0.85 },
     "car": "The car!",
     "goat": "A goat.",
     "think": "It feels like fifty-fifty. Two doors left, one car.",

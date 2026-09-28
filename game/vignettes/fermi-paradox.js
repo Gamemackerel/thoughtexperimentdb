@@ -91,7 +91,7 @@ export default function fermiParadox(ctx) {
   const mug = mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.2, 12), clay(0xf2e6d4)); mug.position.copy(CRATE).add(V(0.3, 0.9, 0.1)); root.add(mug);
   const chair = new THREE.Group(); const cmat = clay(0x3f8f86);
   const seat = mesh(new THREE.BoxGeometry(0.8, 0.08, 0.7), cmat); seat.position.y = 0.5; chair.add(seat);
-  const cback = mesh(new THREE.BoxGeometry(0.8, 0.9, 0.08), cmat); cback.position.set(0, 0.95, 0.38); cback.rotation.x = -0.35; chair.add(cback);
+  const cback = mesh(new THREE.BoxGeometry(0.8, 0.9, 0.08), cmat); cback.position.set(0, 0.99, 0.38); chair.add(cback);   // upright, its foot flush with the back edge of the seat
   for (const [x, z] of [[-0.35, -0.3], [0.35, -0.3], [-0.35, 0.3], [0.35, 0.3]]) { const l = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 6), clay(0xdcd6cb)); l.position.set(x, 0.25, z); chair.add(l); }
   const CHAIR_ROT = Math.atan2(MOON.x - CHAIR.x, MOON.z - CHAIR.z);           // it faces the moon
   chair.position.copy(CHAIR); chair.rotation.y = CHAIR_ROT + Math.PI; root.add(chair);

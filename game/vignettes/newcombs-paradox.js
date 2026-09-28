@@ -142,7 +142,7 @@ export default function newcomb(ctx) {
       ? { title: 'You took both boxes', text: `You left with ${money(S.total)}. The closed box was empty, as it has been for everyone who took both. The money was put there yesterday, and nothing you did could change it. ${tail}` }
       : S.picks[1] === 'one'
         ? { title: 'You took one box, twice', text: `You left with ${money(S.total)}, and two thousand on the table: the second time in plain sight, where nothing could have stopped you taking it. ${tail}` }
-        : { title: 'You took both, with the million in plain sight', text: `You left with ${money(S.total)}, and the first exception in the ledger. It saw you take one box yesterday. Seeing the money, you took both. ${tail}` };
+        : { title: 'You took both, with the million in plain sight', text: `You left with ${money(S.total)}, and the first exception in the ledger. This is a loose version of the puzzle: a Predictor that's never wrong would only have shown you the million if you still wouldn't take both. So this shouldn't really have been possible. ${tail}` };
     ctx.gameOver(card);
   }
   interact.add({ pos: V(BOX_B.x + 0.4, 0, -0.1), radius: 1, height: 2.2, terminal: true, enabled: () => S.phase === 'choose', prompt: () => (S.day === 1 ? 'Take only the closed box' : 'Take only the million'), onUse: () => take('one') });
