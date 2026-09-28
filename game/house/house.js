@@ -9,6 +9,7 @@ const BOOK = V(-4.2, 0, 1.2);
 const FLOOR_WINDOW = { x: -1.4, z: 4.4, r: 1.35 };
 const LADDER = V(6.4, 0, -1.2);                  // out of the painting's way
 const DESK = V(-2, 0, -6.9);                    // the journal
+const MUSEUM = V(-7.88, 0, -1.3);               // an arch in the left wall, through to the museum
 
 const tex = (url) => { const t = new THREE.TextureLoader().load(url); t.colorSpace = THREE.SRGBColorSpace; return t; };
 
@@ -124,6 +125,22 @@ export default function house(ctx) {
   const upDoor = makeDoor({ panel: 0x3f8f86 }); upDoor.position.set(-4.6, 7.9, -7.88); upDoor.rotation.z = Math.PI;
   const ceilDoor = makeDoor({ panel: 0xe0674f }); ceilDoor.position.set(LADDER.x, 9.6, LADDER.z - 0.9); ceilDoor.rotation.x = Math.PI / 2;
   root.add(wallDoor, skyDoor, upDoor, ceilDoor);
+  // an arch in the left wall into the museum: a stone surround, and a glimpse of the gallery (a plinth under a skylight)
+  {
+    const a = new THREE.Group(); a.position.copy(MUSEUM); a.rotation.y = Math.PI / 2; root.add(a);
+    const stone = clay(0xf4eee2);
+    for (const x of [-0.95, 0.95]) { const p = mesh(new THREE.BoxGeometry(0.34, 3, 0.36), stone); p.position.set(x, 1.5, 0.02); a.add(p); }
+    const ring = mesh(new THREE.TorusGeometry(0.95, 0.17, 10, 28, Math.PI), stone); ring.position.set(0, 3, 0.02); a.add(ring);
+    const view = canvasTexture(128, 224, (g, w, h) => {
+      g.fillStyle = '#ece2d0'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#cfe0ee'; g.beginPath(); g.arc(64, 44, 30, Math.PI, 0); g.fill();
+      g.fillStyle = 'rgba(255,241,201,0.55)'; g.beginPath(); g.moveTo(52, 50); g.lineTo(76, 50); g.lineTo(92, 150); g.lineTo(36, 150); g.fill();
+      g.fillStyle = '#b8895a'; g.fillRect(0, 176, w, 48);
+      g.fillStyle = '#f7f3ea'; g.fillRect(44, 132, 40, 46); g.fillStyle = '#c9a54c'; g.fillRect(52, 118, 24, 14);
+    });
+    const through = new THREE.Mesh(new THREE.PlaneGeometry(1.56, 3), new THREE.MeshBasicMaterial({ map: view })); through.position.set(0, 1.5, 0.04); a.add(through);
+    const top = new THREE.Mesh(new THREE.CircleGeometry(0.78, 24, 0, Math.PI), new THREE.MeshBasicMaterial({ color: 0xece2d0 })); top.position.set(0, 3, 0.04); a.add(top);
+  }
   // a rope ladder hangs from the ceiling door: the way up to the hall
   const ladder = new THREE.Group();
   for (const x of [-0.45, 0.45]) { const rail = mesh(new THREE.CylinderGeometry(0.05, 0.05, 9.4, 8), clay(0xc9a878)); rail.position.set(x, 4.7, 0); ladder.add(rail); }
@@ -255,6 +272,7 @@ export default function house(ctx) {
     { id: 'platos-cave', name: "Plato's Cave", pos: V(-7, 0, 3.4), labelAt: V(-7.7, 3.7, 3.4), prompt: 'Open the purple door', open: true },
     { id: 'hall', name: 'Up to the hall', pos: LADDER.clone().add(V(0, 0, 0.7)), labelAt: LADDER.clone().add(V(0, 5.2, 0)), prompt: 'Climb up to the hall', open: true },
     { id: 'ship-of-theseus', name: 'Ship of Theseus', pos: V(5.2, 0, 3.1), labelAt: V(5.2, 3.7, 2.2), prompt: 'Open the sky door', open: true },
+    { id: 'museum', name: 'The museum', pos: MUSEUM.clone().add(V(1, 0, 0)), labelAt: MUSEUM.clone().add(V(0.3, 4.2, 0)), prompt: 'Go into the museum', open: true },
   ];
   // soft glows behind the book and the doors (brighter once you've been through)
   const glowMat = () => new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
@@ -290,7 +308,7 @@ export default function house(ctx) {
     ground: [ground],
     // come back out next to the portal you went through
     spawn: ({ 'trolley-problem': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'trolley-room': { x: PAINTING.x, z: -5.2, rotY: 0 }, 'brain-in-a-vat': { x: -2.6, z: 2.8, rotY: 0.6 },
-      'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, hall: { x: LADDER.x - 0.4, z: LADDER.z + 1.8, rotY: Math.PI }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
+      'platos-cave': { x: -5.6, z: 3.4, rotY: Math.PI / 2 }, hall: { x: LADDER.x - 0.4, z: LADDER.z + 1.8, rotY: Math.PI }, 'ship-of-theseus': { x: 4.2, z: 4.6, rotY: -0.4 }, museum: { x: -6.2, z: -1.3, rotY: Math.PI / 2 } })[ctx.from] ?? { x: 0, z: 5.5, rotY: Math.PI },
     walkable: (x, z) => Math.abs(x) < ROOM && Math.abs(z) < ROOM && Math.hypot(x - FLOOR_WINDOW.x, z - FLOOR_WINDOW.z) > FLOOR_WINDOW.r + 0.2,
     blockers: () => [...blockers, ...stairBlock],
     start() { if (!save.done.size) ctx.toast('Look around. Some things here lead elsewhere.', 6); },

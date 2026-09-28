@@ -1,7 +1,8 @@
 // Vignette: The Ship of Theseus.
 // Replace the old ship's parts one by one (six planks, the deck, the mast, the sail) with new ones. When none of the
 // original is left, the old parts are rebuilt into a second ship. Board one of them and sail off: that's your answer,
-// and the ending. The voyage goes on past islands and a lighthouse, gulls overhead, behind the game-over card.
+// and the ending. The voyage goes on past islands and a lighthouse, gulls overhead, behind the game-over card. Just
+// before the card, for a moment, "Press S to sail forth": do, and there's no card; you sail the ship yourself (voyage.js).
 import {
   THREE, palette, clamp, lerp, easeInOut, easeOut, seeded, clay, mesh,
   makeIsland, makeTree, makeRock, makePerson, animatePerson, makeFrog,
@@ -10,6 +11,7 @@ import { loadNotebook } from '../core/notebook.js';
 import { frogCameo, frogExtras, frogCroak } from '../core/frog.js';
 import { talk } from '../core/extras.js';
 import { makeFramer } from '../core/camera.js';
+import { startVoyage } from './voyage.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const SHORE = V(-10, 0, 0);
@@ -143,6 +145,7 @@ export default function shipOfTheseus(ctx) {
     const clouds = [0, 1, 2, 3].map((i) => { const c = new THREE.Group(); for (let k = 0; k < 4; k++) { const s = mesh(new THREE.SphereGeometry(1.4 + (k % 2) * 0.6, 12, 10), clay(0xffffff, { roughness: 1 })); s.position.set(k * 1.6, (k % 2) * 0.5, 0); s.castShadow = false; c.add(s); } c.position.set(20 + i * 30, 16 + i * 2, -30 - i * 8); g.add(c); return c; });
     const m4 = new THREE.Matrix4();
     return {
+      isles,
       update(at, dt, t, away) {
         if (!g.visible) isles.forEach((isle) => (isle.position.z = -away * Math.abs(isle.position.z)));   // islands on the far side, never between you and the camera
         g.visible = true;
@@ -230,12 +233,42 @@ export default function shipOfTheseus(ctx) {
       player.obj.parent.remove(player.obj); ship.add(player.obj);
       player.pos.set(-1.5, 1.2, 0); player.obj.rotation.y = Math.PI / 2;
       await ctx.wait(1.5); await voice.say(which + '_end');
-      while (S.sailT < 16) await ctx.wait(0.25);             // sail on a while: islands, the lighthouse, the gulls
+      while (S.sailT < 11) await ctx.wait(0.25);             // sail on a while: islands, the lighthouse, the gulls
+      const forth = await offerVoyage();
       save.complete('ship-of-theseus');
+      if (forth) return beginVoyage(ship);
+      while (S.sailT < 16) await ctx.wait(0.25);
       ctx.gameOver(which === 'new'
         ? { title: 'You sailed the repaired ship', text: 'It never stopped sailing, and not one part of it was there at the start. Is that enough to make it the same ship?' }
         : { title: 'You sailed the old wood', text: 'Every original part, back together. But it spent a while as a pile on the dock. Is that enough to make it the same ship?' });
     } });
+  // a moment's chance (about a second and a half) to keep sailing instead of ending here: S, or tap the toast
+  let offerCleanup = null, vy = null;
+  function offerVoyage() {
+    return new Promise((resolve) => {
+      const el = document.getElementById('toast');
+      ctx.toast(matchMedia('(pointer: coarse)').matches ? 'Tap here to <b>sail forth</b>' : 'Press <b>S</b> to sail forth', 1.6);
+      el.style.pointerEvents = 'auto'; el.style.cursor = 'pointer';
+      let done = false;
+      const onKey = (e) => { if (e.code === 'KeyS') finish(true); };
+      const onTap = (e) => { e.stopPropagation(); finish(true); };
+      function finish(v) {
+        if (done) return; done = true; offerCleanup = null;
+        removeEventListener('keydown', onKey); el.removeEventListener('pointerdown', onTap); el.style.pointerEvents = ''; el.style.cursor = '';
+        if (v) el.classList.remove('on');
+        resolve(v);
+      }
+      addEventListener('keydown', onKey); el.addEventListener('pointerdown', onTap);
+      offerCleanup = () => finish(false);
+      ctx.wait(1.6).then(() => finish(false));
+    });
+  }
+  function beginVoyage(ship) {
+    S.phase = 'voyage';
+    voyage.isles.forEach((isle) => (isle.visible = false));     // the real islands take over
+    vy = startVoyage(ctx, { root, ship, sea, ground: level.ground });
+    level.__V = vy;
+  }
   interact.add(board(ship1, 'new'));
   interact.add(board(ship2, 'old'));
   interact.trigger({ pos: STACK, radius: 5, onEnter: () => voice.say('planks') });
@@ -243,7 +276,7 @@ export default function shipOfTheseus(ctx) {
   // asides: the fisherman, and the shipwright once he turns up
   talk(ctx, { who: fisher, offset: [0, 2.7, 0], radius: 2.2, enabled: () => !S.sailing, lines: [
     'Forty years I have fished off this dock.', 'Mind you, they have replaced every board of it since.', "This was my grandad's rod. New line, new reel, new handle.", 'Still his rod, though.', 'No bites. There never are.'] });
-  talk(ctx, { who: shipwright, enabled: () => shipwright.visible && !S.sailing, lines: ['I kept every one. Seemed a shame to burn them.', 'Good wood, this. Just old.', 'Which one would you sail?'] });
+  talk(ctx, { who: shipwright, enabled: () => shipwright.visible && !S.sailing, lines: ['Seemed a shame to burn them. So I used every one.', 'Good wood, this. Just old.', 'Which one would you sail?'] });
 
   async function twist() {
     S.phase = 'rebuild';
@@ -272,10 +305,11 @@ export default function shipOfTheseus(ctx) {
     __frog: cameo,
     spawn: { x: -4, z: 2, rotY: Math.PI / 2 },
     start() { setTimeout(() => voice.say('arrive'), 900); },
-    walkable: (x, z) => Math.hypot(x - SHORE.x, z - SHORE.z) < 12.5 || (x > 2 && x < 25.4 && Math.abs(z) < 1.45),
-    blockers: () => [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }, { x: BOLLARD.x, z: BOLLARD.z, r: 0.3 }, { x: 24.4, z: 1.2, r: 0.45 }],
+    walkable: (x, z) => vy ? vy.walkable(x, z) : Math.hypot(x - SHORE.x, z - SHORE.z) < 12.5 || (x > 2 && x < 25.4 && Math.abs(z) < 1.45),
+    blockers: () => vy ? vy.blockers() : [{ x: STACK.x, z: STACK.z + 0.2, r: 0.35 }, { x: SCRAP.x, z: SCRAP.z - 0.2, r: 0.35 }, { x: BOLLARD.x, z: BOLLARD.z, r: 0.3 }, { x: 24.4, z: 1.2, r: 0.45 }],
 
     update(dt, t) {
+      if (vy) { vy.update(dt, t); voyage.update(S.sailing.position, dt, t, 1); cameo.update(dt); lineMesh.position.y = 1.1 + Math.sin(t * 1.3) * 0.04; return; }
       // planks in flight (with a little arc and spin)
       for (let i = flights.length - 1; i >= 0; i--) {
         const f = flights[i]; f.t += dt;
@@ -308,6 +342,7 @@ export default function shipOfTheseus(ctx) {
     },
 
     camera(pl) {
+      if (vy) return vy.camera(pl);
       if (S.sailing) {
         const c = S.sailing.position.clone().add(V(0, 2, 0));
         const away = S.sailing === ship1 ? -1 : 1;   // film from the open-water side, never through the other ship
@@ -321,7 +356,7 @@ export default function shipOfTheseus(ctx) {
     },
 
     dispose() {
-      voice.stop();
+      voice.stop(); offerCleanup?.(); vy?.dispose();
       if (player.obj.parent !== stage.scene) { player.obj.parent?.remove(player.obj); stage.scene.add(player.obj); }
       Object.values(carriedShapes).forEach((m) => player.obj.remove(m));
     },

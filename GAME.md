@@ -114,6 +114,28 @@ Every vignette also has:
 The first room's Penrose staircase is a real spiral, re-shaped every frame so that from wherever the camera is, its top
 step sits exactly in front of its bottom step: it always reads as a closed loop, and the little figure climbs forever.
 
+### The voyage (Ship of Theseus, optional)
+
+As your chosen ship sails off, just before the end card, a toast offers "Press S to sail forth" for about a second and a
+half (tap it on touch). Take it and there's no card (the vignette still counts as finished): you sail the ship yourself
+(`game/vignettes/voyage.js`). One steady wind; ←/→ steer, ↑ trims the sail, ↓ eases it. Nothing sails within 40° of the
+wind, so to go upwind you tack; the sail swings across. Every island has a landing (E to go ashore, E at the pier to board).
+
+| Island | What's there |
+|---|---|
+| The lighthouse | Its watcher (the Utility Monster's model, `game/core/monster.js`) talks, then fights: three hearts each; step aside when he crouches, strike (E) while he's dizzy. Lose, and you wake on your ship at the pier. Win, and the cellar opens on a chest of gold to carry to the ship |
+| North Sentinel Island | People in the treeline raise their bows and warn you off; you can't leave the beach. Leave a bag of sweets at the waterline; a short note says why they're left alone (they have always refused contact, and outsiders' illnesses are dangerous to them); you go |
+| Frogs | A pond and a crowd of hopping, croaking frogs |
+| Two small islands | A palm, a rock, a message in a bottle |
+| The house | The first room's sky door on a checkered floor, upwind. Go through it to go home; if the chest is on board, it goes to the museum |
+
+### The museum (built)
+
+Through the stone arch in the first room's left wall: a long gallery after the Louvre's Grande Galerie (paired columns,
+arched bays with skylights, parquet, a red velvet bench, an attendant). Things you bring home stand on plinths under soft
+light with brass plaques (`save.items`, `save.keep(id)`, stored as `ted.items`). So far only the chest of gold from the
+voyage can go there; the other plinths wait.
+
 ### The hall (built)
 
 Up the rope ladder, through the door on the first room's ceiling: a long corridor built after Magritte. Its walls are
