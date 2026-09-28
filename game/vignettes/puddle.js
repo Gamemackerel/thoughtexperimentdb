@@ -1,22 +1,21 @@
 // Vignette: The Puddle.
 // Morning, after the rain. You're a puddle (teal, of course), lying in a hole that fits you staggeringly well: surely it
-// was made to have you in it. The sun comes up, and you begin to shrink. There are other holes, joined to yours by
-// cracks in the ground; flow into one, and it fits you perfectly too. Either way the sun takes you in the end: sure to
-// the last that the world was made for you, or knowing you took the shape of the hole, and not the other way round.
+// was made to have you in it. The sun comes up, and you begin to shrink. Two other holes are joined to yours by cracks
+// in the ground; flow into one, and it fits you perfectly too. Either way the sun takes you in the end: sure to the
+// last that the world was made for you, or knowing you took the shape of the hole, and not the other way round.
 import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makeFrog, makeRock } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
-import { look } from '../core/extras.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
-const SUN_TIME = 70;                     // seconds from the question until the sun has taken you
+const SUN_TIME = 40;                     // seconds from the question until the sun has taken you
 
 // the holes: irregular shapes (outlines in x, z around a centre), and the cracks that join them
 const blob = (cx, cz, r, wob, seed, n = 28) => { const s = seeded(seed), k1 = 2 + Math.floor(s() * 3), k2 = 3 + Math.floor(s() * 3), p1 = s() * 6, p2 = s() * 6, sx = 0.8 + s() * 0.5; return { c: V(cx, 0, cz), pts: [...Array(n)].map((_, i) => { const a = (i / n) * Math.PI * 2, rr = r * (1 + wob * Math.sin(a * k1 + p1) * 0.6 + wob * Math.cos(a * k2 + p2) * 0.4); return [Math.cos(a) * rr * sx, Math.sin(a) * rr]; }) }; };
 const star = (cx, cz, r, n = 5) => ({ c: V(cx, 0, cz), pts: [...Array(n * 2)].map((_, i) => { const a = (i / (n * 2)) * Math.PI * 2, rr = i % 2 ? r * 0.5 : r; return [Math.cos(a) * rr, Math.sin(a) * rr]; }) });
 const crescent = (cx, cz, r) => ({ c: V(cx, 0, cz), a: V(cx - 0.8 * r, 0, cz - 0.12 * r), pts: [...[...Array(16)].map((_, i) => { const a = -0.3 + (i / 15) * (Math.PI + 0.6); return [Math.cos(a) * r, -Math.sin(a) * r]; }), ...[...Array(16)].map((_, i) => { const a = Math.PI + 0.3 - (i / 15) * (Math.PI + 0.6); return [Math.cos(a) * r * 0.55, -Math.sin(a) * r * 0.55 - r * 0.2]; })] });
-const HOLES = [blob(0, 0, 1.9, 0.35, 7), crescent(6.4, -0.4, 2), star(-6.2, 0.6, 2.1), blob(0.4, -6, 1.3, 0.5, 21), blob(5.6, -6.6, 1.1, 0.2, 33, 20)];
-const CRACKS = [[0, 1], [0, 2], [0, 3], [3, 4]];
+const HOLES = [blob(0, 0, 1.9, 0.35, 7), crescent(6.4, -0.4, 2), star(-6.2, 0.6, 2.1)];
+const CRACKS = [[0, 1], [0, 2]];
 
 const inPoly = (x, z, h, shrink = 0.9) => { const px = (x - h.c.x) / shrink, pz = (z - h.c.z) / shrink; let inside = false; const p = h.pts; for (let i = 0, j = p.length - 1; i < p.length; j = i++) { const [xi, zi] = p[i], [xj, zj] = p[j]; if ((zi > pz) !== (zj > pz) && px < ((xj - xi) * (pz - zi)) / (zj - zi) + xi) inside = !inside; } return inside; };
 const inCrack = (x, z) => CRACKS.some(([a, b]) => { const A = HOLES[a].a ?? HOLES[a].c, B = HOLES[b].a ?? HOLES[b].c, dx = B.x - A.x, dz = B.z - A.z, L2 = dx * dx + dz * dz, u = clamp(((x - A.x) * dx + (z - A.z) * dz) / L2); return Math.hypot(x - (A.x + dx * u), z - (A.z + dz * u)) < 0.38; });
@@ -53,11 +52,6 @@ export default function puddle(ctx) {
   const steam = [...Array(10)].map(() => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })); root.add(s); s.userData.t = rnd() * 3; return s; });
   // the sun, coming up
   const sun = new THREE.Mesh(new THREE.SphereGeometry(5, 24, 16), new THREE.MeshBasicMaterial({ color: 0xffd98a, fog: false })); root.add(sun);
-  // a sparrow that drops in for a drink
-  const bird = new THREE.Group(); const bb = mesh(new THREE.SphereGeometry(0.22, 10, 8), clay(0x8a6a4a)); bb.scale.z = 1.4; bb.position.y = 0.25; bird.add(bb);
-  const bh = mesh(new THREE.SphereGeometry(0.13, 10, 8), clay(0x8a6a4a)); bh.position.set(0, 0.42, 0.26); bird.add(bh);
-  const beak = mesh(new THREE.ConeGeometry(0.04, 0.12, 6), clay(0xe2a93b)); beak.rotation.x = Math.PI / 2; beak.position.set(0, 0.42, 0.42); bird.add(beak);
-  bird.visible = false; root.add(bird);
 
   // ---- the frog hops into you, sits a while (you're its pond), and hops out again
   const frog = makeFrog({ scale: 0.55 }); root.add(frog);
@@ -81,13 +75,11 @@ export default function puddle(ctx) {
     ctx.gameOver(flowed ? { title: 'You took the shape of the hole', text: 'Every hole you tried fitted you perfectly, because you took its shape. The sun took you all the same, but you knew, at the end, that the world wasn\'t made to fit you. You fitted it.' }
       : { title: 'The hole was made for you', text: 'It fitted you staggeringly well, so it must have been made to have you in it. You held on to that as the sun rose and you shrank, so the moment you disappeared came as rather a surprise.' });
   }
-  interact.add({ pos: () => HOLES[S.hole].c, radius: 3, height: 0.8, prompt: 'Lie still, and let the sun take you', terminal: true, enabled: () => S.phase === 'sun' && !S.over && S.sunT > 20, onUse: () => { S.sunT = Math.max(S.sunT, SUN_TIME * 0.9); } });
-  look(ctx, { pos: () => HOLES[S.hole].c, radius: 3, height: 1, prompt: 'Think how well it fits', lines: ['made'], enabled: () => S.phase !== 'wake' && !S.over && S.hole === 0 });
+  interact.add({ pos: () => HOLES[S.hole].c, radius: 3, height: 0.8, prompt: 'Lie still, and let the sun take you', terminal: true, enabled: () => S.phase === 'sun' && !S.over && S.sunT > SUN_TIME * 0.5, onUse: () => { S.sunT = Math.max(S.sunT, SUN_TIME * 0.9); } });
 
   (async () => {
     await ctx.wait(1); await voice.say('arrive'); await ctx.wait(0.6); await voice.say('fits');
-    S.phase = 'look'; await ctx.wait(7); await voice.say('sun'); S.sunT = 0; S.phase = 'sun'; await ctx.wait(1); await voice.say('ask'); cameo.start();
-    await ctx.wait(6); voice.say('cracks', { when: () => S.seen.size < 2 });
+    S.phase = 'look'; await ctx.wait(5); await voice.say('sun'); S.sunT = 0; S.phase = 'sun'; await ctx.wait(1); await voice.say('ask'); cameo.start();
   })();
 
   const holeAt = (x, z) => HOLES.findIndex((h) => inPoly(x, z, h, 0.95));
@@ -109,7 +101,7 @@ export default function puddle(ctx) {
       const h = holeAt(player.pos.x, player.pos.z);
       if (h >= 0 && h !== S.hole) {
         S.hole = h;
-        if (!S.seen.has(h)) { S.seen.add(h); voice.say(S.seen.size === 2 ? 'other_1' : S.seen.size === 3 ? 'other_2' : 'other_3', { urgent: true }); }
+        if (!S.seen.has(h)) { S.seen.add(h); voice.say('other', { urgent: true }); }
       }
       const inHole = h >= 0;
       S.fill.forEach((f, i) => (S.fill[i] = lerp(f, inHole && i === S.hole ? 1 : 0, 1 - Math.exp(-dt * 3))));
@@ -118,9 +110,6 @@ export default function puddle(ctx) {
       shine.position.copy(inHole ? (HOLES[S.hole].a ?? HOLES[S.hole].c) : player.pos).add(V(-0.4, 0.05, -0.3)); shine.scale.setScalar(Math.max(0.01, S.e)); shine.material.opacity = 0.35 + Math.sin(t * 2) * 0.1;
       // steam, once the sun is up
       steam.forEach((s, i) => { s.userData.t += dt; const k = (s.userData.t % 3) / 3, c = HOLES[S.hole].c; s.position.set(c.x + Math.sin(i * 2.3) * 1.2, k * 2.2, c.z + Math.cos(i * 1.7) * 1); s.material.opacity = u > 0.2 && inHole ? 0.3 * Math.sin(Math.PI * k) * S.e : 0; });
-      // a sparrow drops in for a drink, now and then
-      const bt = t % 22; bird.visible = bt > 12 && bt < 18 && inHole && !S.over;
-      if (bird.visible) { const c = HOLES[S.hole].c; bird.position.set(c.x + 1.8, 0, c.z + 1.4); bird.rotation.y = Math.atan2(c.x - bird.position.x, c.z - bird.position.z); bh.position.y = 0.42 - Math.max(0, Math.sin(t * 6)) * 0.2; }
       cameo.update(dt);
     },
     camera(pl) {

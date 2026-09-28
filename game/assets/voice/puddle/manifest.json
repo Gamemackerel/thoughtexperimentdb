@@ -5,14 +5,9 @@
     "dur": 3.71
   },
   "fits": {
-    "file": "fits-7934cdff.mp3",
-    "text": "What an interesting hole you find yourself in. It fits you rather neatly.",
-    "dur": 4.62
-  },
-  "made": {
-    "file": "made-1f4535dc.mp3",
-    "text": "In fact, it fits you so perfectly, it must have been made to have you in it.",
-    "dur": 4.75
+    "file": "fits-0e0293ae.mp3",
+    "text": "It fits you so well, it must have been made for you.",
+    "dur": 3.37
   },
   "sun": {
     "file": "sun-6d2df010.mp3",
@@ -24,25 +19,10 @@
     "text": "Was the hole made to fit you?",
     "dur": 2.38
   },
-  "cracks": {
-    "file": "cracks-3e69e15d.mp3",
-    "text": "There are cracks in the ground, running off to other holes.",
-    "dur": 3.74
-  },
-  "other_1": {
-    "file": "other_1-225f5f84.mp3",
+  "other": {
+    "file": "other-225f5f84.mp3",
     "text": "This one fits you perfectly, too.",
     "dur": 2.82
-  },
-  "other_2": {
-    "file": "other_2-2ccba14a.mp3",
-    "text": "And so does this one.",
-    "dur": 2.06
-  },
-  "other_3": {
-    "file": "other_3-28c23c65.mp3",
-    "text": "Every hole fits its puddle.",
-    "dur": 2.61
   },
   "end_home_1": {
     "file": "end_home_1-b83aec66.mp3",
