@@ -20,9 +20,9 @@
     "dur": 4.78
   },
   "gate_fail": {
-    "file": "gate_fail-6dae2028.mp3",
-    "text": "A gust of wind. The gate swings open again.",
-    "dur": 3.68
+    "file": "gate_fail-970abcb6.mp3",
+    "text": "Locked. But the old fence along from it is rotten, and it gives way.",
+    "dur": 4.44
   },
   "sign_fail": {
     "file": "sign_fail-13774579.mp3",
@@ -30,9 +30,9 @@
     "dur": 3.42
   },
   "block_fail": {
-    "file": "block_fail-a6c73207.mp3",
-    "text": "He steps around you, and apologises.",
-    "dur": 3.29
+    "file": "block_fail-58e326b5.mp3",
+    "text": "He steps all the way round you, and begs your pardon.",
+    "dur": 3.6
   },
   "tell_fail": {
     "file": "tell_fail-3f23fc91.mp3",
@@ -50,9 +50,9 @@
     "dur": 4.83
   },
   "tried_2": {
-    "file": "tried_2-7c454362.mp3",
-    "text": "It had already happened. Unless, somewhere else, it didn't.",
-    "dur": 3.92
+    "file": "tried_2-85025af7.mp3",
+    "text": "It had already happened.",
+    "dur": 2.01
   },
   "watched_1": {
     "file": "watched_1-71c64e11.mp3",
@@ -83,15 +83,5 @@
     "file": "in_a_sense-7ba7e52c.mp3",
     "text": "You could have stopped him, in a sense. You just didn't.",
     "dur": 3.37
-  },
-  "again": {
-    "file": "again-2772f5be.mp3",
-    "text": "The clock turns back. He's at his door again.",
-    "dur": 3.27
-  },
-  "again_2": {
-    "file": "again_2-0a1029b8.mp3",
-    "text": "Once more.",
-    "dur": 1.23
   }
 }

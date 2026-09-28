@@ -147,7 +147,7 @@ a hovering apple (you can talk to him). Escher's stairs climb into the ceiling. 
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| A grandfather clock | **Grandfather Paradox** | Step out of a time machine into the sepia-toned past. Your young grandfather walks to meet your grandmother; close the gate, turn the signpost, stand in his way or tell him who you are | Something always got in the way · you let it be (or left early) |
+| A grandfather clock | **Grandfather Paradox** | Step out of a time machine into the sepia-toned past. Your young grandfather walks from his house to meet your grandmother at the station, once. Lock his garden gate (a rotten stretch of fence gives way), turn the signpost, stand in his way (he walks right round you), tell him who you are, or fire the pistol (it jams) | Something always got in the way · you let it be (or left early) |
 | A typewriter | **Infinite Monkey Theorem** | Read the monkeys' pages; pull the lever to wait a million years; read again | Find "To be, or not to be" · walk out |
 | A glowing monitor | **Simulation Argument** | Look into the world on your desk (and the one inside it); run more worlds; the camera pulls back to reveal your study under a dome on a giant's desk | Switch them off · leave them running |
 | A telescope | **Fermi Paradox** | Listen to the static under the stars | Send a message · keep listening |

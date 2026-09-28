@@ -29,14 +29,19 @@ async function run(id, script) {
 
 await run('hall', async (t) => { await sleep(2); await t.shot('hall'); await t.walkTo(0, 0); await sleep(3); await t.shot('middle'); await t.walkTo(10, 0); await sleep(4); await t.shot('east'); });
 await run('grandfather-paradox', async (t) => {
-  await t.shot('arrive'); await t.at(-14.1, 7.3, 4); await t.shot('pistol');   // take the pistol from the crate
-  await t.at(-5, -2, 5); await t.shot('gate');                                     // close the gate before he gets there
-  for (let i = 0; i < 80; i++) { if (await t.p.evaluate(() => window.__ted.level.__S.seg >= 2)) break; await sleep(0.5); }
-  await t.key('KeyE'); await sleep(2); await t.shot('fired');                      // fire (it jams)
-  await t.at(3, 0.4, 5); await t.shot('sign');                                     // turn the signpost
-  for (let i = 0; i < 200; i++) { if (await t.p.evaluate(() => window.__ted.level.__S.walk >= 2)) break; await sleep(0.5); }
-  await t.shot('again'); await t.at(-14.8, 9.2, 6);                                // then go home
-  await t.waitOver(40); await t.shot('end');
+  const S = (k) => t.p.evaluate((k) => window.__ted.level.__S[k], k);
+  await t.shot('arrive'); await t.at(-14.1, 7.3, 4); await t.shot('pistol');         // take the pistol from the crate
+  await t.at(-5, -2, 5); await sleep(1); await t.shot('locked');                          // close and lock the gate before he gets there
+  for (let i = 0; i < 80; i++) { if (await S('seg') >= 2) break; await sleep(0.5); }
+  await t.key('KeyE'); await sleep(2); await t.shot('fired');                              // fire (it jams)
+  for (let i = 0; i < 60; i++) { if (await S('fall') > 0.3) break; await sleep(0.5); }
+  await sleep(1); await t.shot('fence-down');                                              // the rotten fence gives way
+  await t.at(3, 0.4, 5); await t.shot('sign');                                            // turn the signpost
+  // stand in his way, further on, and keep still
+  for (let i = 0; i < 80; i++) { if (await S('seg') >= 5) break; await sleep(0.5); }
+  await t.walkTo(9, 1.1); for (let i = 0; i < 40; i++) { if (await S('detour')) break; await sleep(0.25); }
+  await sleep(1.2); await t.shot('around');
+  await t.waitOver(60); await t.shot('end');
 });
 await run('infinite-monkey', async (t) => {
   await sleep(6); await t.shot('arrive'); await t.at(0, 7.4); await sleep(1); await t.shot('page0'); await t.key('KeyE');
