@@ -15,9 +15,9 @@
     "dur": 3.34
   },
   "add_1": {
-    "file": "add_1-77f43782.mp3",
-    "text": "One more sheep. A little more wool for you. The grass belongs to everyone.",
-    "dur": 4.68
+    "file": "add_1-cb58f08a.mp3",
+    "text": "You let one more sheep out onto the common. A little more wool for you. The grass belongs to everyone.",
+    "dur": 6.01
   },
   "follow": {
     "file": "follow-351b0991.mp3",
@@ -34,15 +34,15 @@
     "text": "The grass is getting thin.",
     "dur": 2.25
   },
-  "take_back": {
-    "file": "take_back-ec43e5be.mp3",
-    "text": "You take one of yours back to the pen. Nobody follows.",
-    "dur": 3.94
+  "bell_hint": {
+    "file": "bell_hint-bf80c228.mp3",
+    "text": "If nothing changes, it will all be eaten. You could ring the village bell, call the neighbours together, and agree on some limits.",
+    "dur": 7.34
   },
-  "bell_early": {
-    "file": "bell_early-e7997049.mp3",
-    "text": "You ring the bell. The neighbours come, look at the thick grass, and wander home again.",
-    "dur": 5.15
+  "take_back": {
+    "file": "take_back-422087ad.mp3",
+    "text": "You bring one of yours back in to the pen. Nobody follows.",
+    "dur": 4.08
   },
   "bell": {
     "file": "bell-d2f144fc.mp3",
@@ -50,14 +50,14 @@
     "dur": 2.85
   },
   "agree_1": {
-    "file": "agree_1-1e16a0e5.mp3",
-    "text": "You go first. Your own sheep go back to the pen.",
-    "dur": 3.53
+    "file": "agree_1-9b27129a.mp3",
+    "text": "Together, you agree on limits: each household keeps the same number of sheep on the common, and the total is no more than the grass can feed.",
+    "dur": 8.44
   },
   "agree": {
-    "file": "agree-9f5bd00b.mp3",
-    "text": "Then the others. Nobody owns the grass, but together you agree to look after it.",
-    "dur": 5.17
+    "file": "agree-ce4247ce.mp3",
+    "text": "So the extra sheep go home, yours along with everyone else's. Nobody owns the grass, but now you all look after it.",
+    "dur": 7.44
   },
   "collapse": {
     "file": "collapse-d902c6d5.mp3",

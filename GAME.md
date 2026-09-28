@@ -154,7 +154,7 @@ a hovering apple (you can talk to him). Escher's stairs climb into the ceiling. 
 | A typewriter | **Infinite Monkey Theorem** | Read the monkeys' pages; pull the lever to wait a million years; read again | Find "To be, or not to be" · walk out |
 | A glowing monitor | **Simulation Argument** | Look into the world on your desk (and the one inside it); run more worlds; the camera pulls back to reveal your study under a dome on a giant's desk | Switch them off · leave them running |
 | A telescope | **Fermi Paradox** | Listen to the static under the stars | Send a message · keep listening |
-| A garden gate | **Tragedy of the Commons** | Add sheep to the shared pasture; the neighbours copy you; the grass thins | The grass is gone · ring the bell and agree on limits |
+| A garden gate | **Tragedy of the Commons** | Let sheep out of your pen onto the shared pasture (or bring them back in at the common's gate); the neighbours copy you, not your restraint; the grass thins and the narrator suggests the bell | The grass is gone · you held back (it went anyway) · ring the bell and agree on limits (the same number each, no more than the grass can feed) |
 
 ### The trolley room (built)
 
