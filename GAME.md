@@ -155,8 +155,8 @@ a weeping woman hangs with both eyes on one side of her face; a painter in a str
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
 | A ring under glass | **The Ring of Gyges** | Find the ring in the bronze horse; turn it (R) to vanish; take apples, coins or the king's gold; walk past the guards | Throw it back into the dark · keep it and walk into the hills |
-| A cell door | **The Prisoner's Dilemma** | Sign the statement or say nothing, three times; your partner plays tit for tat | You kept quiet · you talked every time · it depended on last time |
-| Two boxes | **Newcomb's Paradox** | Take the closed box or both; the Predictor is never wrong; come back tomorrow | You took one box · you took both boxes |
+| A cell door (closed for now) | **The Prisoner's Dilemma** | Sign the statement or say nothing, three times; your partner plays tit for tat | You kept quiet · you talked every time · it depended on last time |
+| Two boxes | **Newcomb's Paradox** | The boxes were filled yesterday and the ledger has no exceptions; take the closed box or both. Take only the closed box and you come back tomorrow to two glass boxes, the million in plain sight | You took both boxes · you took one box, twice · you took both, with the million in plain sight |
 | A cake | **The Utility Monster** | Carry eight slices to six villagers or the monster; a meter adds up happiness | You fed the monster · you shared the cake · your own way |
 | A door with a slot | **The Chinese Room** | Take each card, find its rule in the book, post back the matching card; then see who you've been talking to | You answered perfectly · you stopped answering |
 | Three doors | **The Monty Hall Problem** | Pick, watch the host show a goat, stay or switch; then play a hundred times each way | Switching wins two times in three |

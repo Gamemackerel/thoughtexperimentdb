@@ -19,15 +19,30 @@
     "text": "The closed box holds a million, but only if it predicted you'd take the closed box alone. If it predicted you'd take both, it's empty.",
     "dur": 8.23
   },
-  "ask": {
-    "file": "ask-a27de4b4.mp3",
-    "text": "The money is already in there, or it isn't. One box, or both?",
-    "dur": 4.55
+  "filled": {
+    "file": "filled-d8c9e77d.mp3",
+    "text": "The boxes were filled yesterday. The money is already in the room, or it isn't.",
+    "dur": 5.12
+  },
+  "causal": {
+    "file": "causal-58d46ab1.mp3",
+    "text": "Nothing you do now can put the million in, or take it out.",
+    "dur": 3.97
   },
   "ledger": {
-    "file": "ledger-b0a35151.mp3",
-    "text": "Everyone who took one box left with a million. Everyone who took both left with a thousand.",
-    "dur": 5.88
+    "file": "ledger-5fece78c.mp3",
+    "text": "Every visitor who took both boxes found the closed box empty. Every visitor who took only the closed box got the million.",
+    "dur": 7.81
+  },
+  "ask": {
+    "file": "ask-2fbc0f5e.mp3",
+    "text": "One box, or both?",
+    "dur": 2.46
+  },
+  "ledger_look": {
+    "file": "ledger_look-e09785f8.mp3",
+    "text": "Name after name. Both boxes, a thousand. One box, a million. Not a single exception.",
+    "dur": 6.22
   },
   "one_1": {
     "file": "one_1-51797654.mp3",
@@ -50,19 +65,39 @@
     "dur": 7.24
   },
   "again": {
-    "file": "again-cad2ee77.mp3",
-    "text": "The next day. The same room, the same boxes.",
-    "dur": 3.55
+    "file": "again-09d564ab.mp3",
+    "text": "The next day. The same room. But this time, both boxes are glass.",
+    "dur": 4.7
   },
-  "again_same": {
-    "file": "again_same-5fdae232.mp3",
-    "text": "The same choice again. It knew.",
-    "dur": 2.72
+  "glass": {
+    "file": "glass-73ba6104.mp3",
+    "text": "You can see the million. It predicted you would still take only that box.",
+    "dur": 4.7
   },
-  "again_diff": {
-    "file": "again_diff-2f4c760e.mp3",
-    "text": "You chose the other way this time. It knew that too.",
-    "dur": 3.68
+  "ask2": {
+    "file": "ask2-c9811588.mp3",
+    "text": "The money is right in front of you. One box, or both?",
+    "dur": 4.68
+  },
+  "one2_1": {
+    "file": "one2_1-efbf9f21.mp3",
+    "text": "You leave the thousand where it is, in plain sight, and take the million.",
+    "dur": 4.7
+  },
+  "one2_2": {
+    "file": "one2_2-a9a8150d.mp3",
+    "text": "Nothing was hidden this time, and nothing stopped you. You stayed the person it said you were.",
+    "dur": 5.64
+  },
+  "both2_1": {
+    "file": "both2_1-de626fbf.mp3",
+    "text": "A million, and a thousand.",
+    "dur": 2.4
+  },
+  "both2_2": {
+    "file": "both2_2-38730681.mp3",
+    "text": "It has never been wrong before. Was it wrong about you? Or did seeing the money make you someone else?",
+    "dur": 6.09
   },
   "end": {
     "file": "end-bac7625b.mp3",

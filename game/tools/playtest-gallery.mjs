@@ -50,9 +50,12 @@ await run('prisoners-dilemma', async (t) => {
   for (const c of alt ? ['Say nothing', 'Say nothing', 'Say nothing'] : ['Sign', 'Say nothing', 'Say nothing']) { await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.use(c); await sleep(3); await t.shot('round'); }
 });
 await run('newcombs-paradox', async (t) => {
-  await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.shot('choose');
-  await t.use(alt ? 'both' : 'only the closed'); await sleep(3); await t.shot('opened');
-  await t.until(async () => (await t.S('phase')) === 'choose', 40); await t.use(alt ? 'only the closed' : 'both');
+  // no alt: one box, then one glass box · alt 'both': both on day one (ends) · any other alt: one box, then both glass boxes
+  await t.until(async () => (await t.S('phase')) === 'choose', 80); await t.shot('choose');
+  await t.use(alt === 'both' ? 'both' : 'only the'); await sleep(3); await t.shot('opened');
+  if (alt === 'both') return;
+  await t.until(async () => (await t.S('day')) === 2 && (await t.S('phase')) === 'choose', 80); await t.shot('glass');
+  await t.use(alt ? 'both' : 'only the'); await sleep(4); await t.shot('opened2');
 });
 await run('utility-monster', async (t) => {
   await t.until(async () => (await t.S('phase')) === 'serve', 40); await t.shot('serve');
