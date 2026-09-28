@@ -1,10 +1,11 @@
 // Vignette: The Ones Who Walk Away from Omelas.
 // The Festival of Summer in Omelas: white walls and gold roofs, bells, pennants, a fountain, dancers, a boy playing the
 // flute, horses with ribbons in their manes waiting for the race. Everyone is happy. Under one of the public buildings,
-// a cellar door; down there, in the dark, one child, alone. Their happiness depends on the child staying there: those
-// are the terms. Go back up, and (if you do nothing more) you stay; join the dancing; walk out of the north gate towards
-// the mountains, alone; or carry the child up into the sun, and watch the city lose everything it had.
-import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makeIsland, makePerson, animatePerson, makeHouse, makeFrog } from '/game/engine/core.js';
+// a cellar door; down there, in the dark, one child, chained to a ring in the wall, alone and miserable. Their happiness
+// depends on the child staying there: those are the terms. Go back up, and (if you do nothing more) you stay; join the
+// dancing; walk out of the north gate towards the mountains, alone; or unlock the shackle and carry the child up into
+// the sun, and watch the city lose everything it had.
+import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, setOpacity, makeIsland, makePerson, animatePerson, makeHouse, makeFrog } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
@@ -113,6 +114,16 @@ export default function omelas(ctx) {
   for (const x of [1.6, 1.8]) { const mop = mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 6), clay(0x8a7a5a)); mop.position.set(x, 0.9, -1.85); mop.rotation.z = 0.15; cellar.add(mop); const head = mesh(new THREE.SphereGeometry(0.16, 8, 6), clay(0x9a9080)); head.position.set(x - 0.13, 0.12, -1.85); cellar.add(head); }
   const steps = mesh(new THREE.BoxGeometry(1.2, 0.6, 1.2), clay(0x7a7066)); steps.position.set(1.8, 0.3, 1.4); cellar.add(steps);
   const child = makePerson({ color: 0x9a9488, scale: 0.55 }); child.userData.body.position.y = -0.42 * 0.55; child.position.set(-1.9, 0, -1.4); child.rotation.y = 2.4; cellar.add(child);
+  // a shackle at the child's ankle, chained to a ring set in the side wall (lateral to the camera, so it reads clearly)
+  const chainMat = clay(0x59565a, { metalness: 0.55, roughness: 0.35 });
+  const wallRing = mesh(new THREE.TorusGeometry(0.11, 0.03, 6, 12), chainMat); wallRing.position.set(-2.46, 0.18, -1.4); wallRing.rotation.y = Math.PI / 2; cellar.add(wallRing);
+  const chain = new THREE.Group(); cellar.add(chain);
+  const WALL_LINK = V(-2.44, 0.16, -1.4), ANKLE = V(-1.85, 0.09, -1.45);
+  for (let i = 0; i < 5; i++) {
+    const u = (i + 0.5) / 5, p = WALL_LINK.clone().lerp(ANKLE, u); p.y += Math.sin(Math.PI * u) * 0.05;
+    const link = mesh(new THREE.TorusGeometry(0.095, 0.026, 6, 10), chainMat); link.position.copy(p); link.rotation.set(0, i % 2 ? Math.PI / 2 : 0, 0.3); chain.add(link);
+  }
+  const cuff = mesh(new THREE.TorusGeometry(0.12, 0.032, 6, 12), chainMat); cuff.position.copy(ANKLE); cuff.rotation.x = Math.PI / 2; chain.add(cuff);
 
   // ---- the frog: after you've been down there, it sits by the cellar door looking down the steps, then hops away
   const frog = makeFrog({ scale: 0.8 }); root.add(frog);
@@ -120,7 +131,7 @@ export default function omelas(ctx) {
     { face: [3, 2] }, [6.6, -2.8], [5, -1.6], [3.4, -0.4], [1.8, 0.6], [0.4, 1.6]]);
 
   // ---- state
-  const S = { phase: 'festival', seen: false, idle: 0, drain: -1, carry: false, dance: 0, spin: 0 };
+  const S = { phase: 'festival', seen: false, idle: 0, drain: -1, carry: false, dance: 0, spin: 0, chainOff: false, chainT: 0 };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/omelas.json', 'The Ones Who Walk Away from Omelas');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(200, 60), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; gp.position.x = 40; root.add(gp); level.ground.push(gp);
@@ -131,9 +142,11 @@ export default function omelas(ctx) {
     player.place(CELLAR.x + 1.2, CELLAR.z + 0.3, -2.4); S.phase = 'cellar'; S.inCellar = true; S.idle = 0;
     await ctx.flash(false); player.enabled = true;
     await voice.say('cellar', { urgent: true }); await ctx.wait(0.8);
-    ctx.speak(child, 'Please let me out. I will be good.', { offset: [0, 1.6, 0] });
+    ctx.speak(child, "Please let me out. I'll be good.", { offset: [0, 1.6, 0] });
     await ctx.wait(2.6); await voice.say('terms'); await ctx.wait(0.6); await voice.say('terms_2'); await ctx.wait(1.2); await voice.say('ask');
     S.seen = true; S.idle = 0;
+    await ctx.wait(9);
+    if (S.phase === 'cellar') ctx.speak(child, 'Why me? What did I do?', { offset: [0, 1.6, 0] });
   };
   const upAgain = async (carrying) => {
     S.phase = 'up'; player.enabled = false;
@@ -150,6 +163,8 @@ export default function omelas(ctx) {
   interact.add({ pos: V(CELLAR.x + 1.8, 0, CELLAR.z + 0.6), radius: 1.2, height: 1.8, prompt: 'Go back up the steps', enabled: () => S.phase === 'cellar' && S.seen, onUse: () => upAgain(false) });
   interact.add({ pos: V(CELLAR.x - 1.3, 0, CELLAR.z - 0.8), radius: 1.1, height: 1.4, prompt: 'Take the child up into the sun', terminal: true, enabled: () => S.phase === 'cellar' && S.seen,
     onUse: async () => {
+      S.unlocking = true; await ctx.wait(0.9);                     // a moment working the shackle loose
+      S.unlocking = false; S.chainOff = true; await ctx.wait(0.5);
       await upAgain(true);
       S.drain = 0; await ctx.wait(0.6);
       await voice.say('free_1', { urgent: true }); await ctx.wait(1.5); await voice.say('free_2'); await ctx.wait(1.2); await voice.say('free_3'); await ctx.wait(1.6);
@@ -222,6 +237,15 @@ export default function omelas(ctx) {
       jet.scale.setScalar(Math.max(0.01, joy)); jet.rotation.y = t;
       bell.rotation.z = joy * Math.sin(t * 3) * 0.25 * ((t % 12) < 4 ? 1 : 0);
       hatchPivot.rotation.x = lerp(hatchPivot.rotation.x, S.hatch ? -1.6 : 0, 1 - Math.exp(-dt * 4));
+      // chained and miserable: huddled, head down, gently rocking and trembling, until the shackle comes off
+      if (S.carry) animatePerson(child, t, { energy: 0.6 }); else {
+        const b = child.userData.body;
+        b.rotation.x = 0.58 + Math.sin(t * 0.85) * 0.06;
+        b.rotation.z = Math.sin(t * 3.1) * 0.025 + Math.sin(t * 11) * 0.012;
+      }
+      if (S.unlocking) cuff.rotation.z = Math.sin(t * 22) * 0.1;
+      S.chainT = clamp(S.chainT + (S.chainOff ? dt * 2.2 : 0), 0, 1);
+      setOpacity(chain, 1 - easeInOut(S.chainT));
       // carried up into the sun, the child sits beside you
       if (S.carry) { child.position.copy(player.pos).add(V(0.7, 0, 0.5)); child.rotation.y = 0.3; }
       // after you've seen it, doing nothing is staying

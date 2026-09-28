@@ -14,10 +14,10 @@
     "not_yet": "The festival has only just begun.",
     "flute": "A boy plays the flute, alone, for anyone who stops to listen.",
     "horses": "The horses have ribbons braided into their manes. They know it's a race day.",
-    "cellar": "Under one of the beautiful buildings, in the dark, a child sits alone.",
-    "terms": "The city's happiness, all of it, depends on this child staying here, in the dark.",
+    "cellar": "Under one of the beautiful buildings, in the dark, a child is kept alone.",
+    "terms": "Omelas's boundless happiness turns out to have secret terms: a bargain struck long ago with something greater than the city.",
     "terms_2": {
-      "text": "If it were brought up into the sunlight, and comforted, all of it would be lost. Those are the terms.",
+      "text": "One child must stay down here, in the dark, in misery, so that Omelas keeps its happiness, and everyone else can flourish as they do.",
       "speed": 0.8
     },
     "ask": "Now you know too. What will you do?",
