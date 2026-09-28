@@ -44,16 +44,6 @@
     "text": "You didn't make this happen. But you could have changed it.",
     "dur": 3.6
   },
-  "again_same": {
-    "file": "again_same-2a44b3b8.mp3",
-    "text": "The same choice again. It seems clear to you.",
-    "dur": 3.34
-  },
-  "again_diff": {
-    "file": "again_diff-37a412c9.mp3",
-    "text": "This time you chose the other way. Most people feel the pull of both.",
-    "dur": 4.57
-  },
   "twist_1": {
     "file": "twist_1-669381cf.mp3",
     "text": "A third track. At the end of it, another lever.",
@@ -63,11 +53,6 @@
     "file": "twist_2-e0b73331.mp3",
     "text": "Pull that one, and the trolley comes for you instead. Would you? If not, is it fair to send it to someone else?",
     "dur": 6.64
-  },
-  "leave": {
-    "file": "leave-f9750b70.mp3",
-    "text": "Go again, or step back through the frame.",
-    "dur": 3.11
   },
   "self_pull": {
     "file": "self_pull-2ee09112.mp3",
@@ -93,11 +78,6 @@
     "file": "wavered-04749d99.mp3",
     "text": "You pulled the lever, then put it back. The trolley stayed on its track.",
     "dur": 4.34
-  },
-  "again_diff_2": {
-    "file": "again_diff_2-ade1cb24.mp3",
-    "text": "You've changed your mind again.",
-    "dur": 2.53
   },
   "stood_end": {
     "file": "stood_end-ac6242de.mp3",

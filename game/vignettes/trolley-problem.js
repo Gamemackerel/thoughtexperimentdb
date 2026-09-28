@@ -1,15 +1,15 @@
 // Vignette: The Trolley Problem.
 // You arrive by the tracks; time slows; the lever is yours to pull, or not. The trolley runs through, shows what your
-// choice did, then rewinds. After the first run a third track appears, with its own lever: send the trolley to yourself
-// and it's over. Otherwise, after three runs, it ends anyway.
+// choice did, then rewinds, and a third track appears, with its own lever: send the trolley to yourself and it's over.
+// That second run is the last, whatever you choose: no rewind after it, just the ending.
 import {
-  THREE, palette, clamp, lerp, easeOut, easeInOut, seeded, clay, mesh, setOpacity,
-  makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makePathGlow, makeLever, makeTunnel,
-  makeEmitter, makeFrog,
+  THREE, palette, clamp, lerp, easeInOut, seeded, clay, setOpacity,
+  makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makePathGlow, makeLever, makeTunnel, makeFrog,
 } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
+import { makeRide, makeFrameAll, knockPose, restore, slowly } from '../core/trolley-kit.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const line = (a, b) => new THREE.LineCurve3(a, b);
@@ -22,7 +22,6 @@ const FASTQ = new URLSearchParams(location.search).get('fast');
 const CREEP = FASTQ !== null ? Number(FASTQ) || 3 : 0.55;   // slowed time: ~50 s to act (?fast=<speed> for testing)
 const SLOW_AT = -32;                              // where time slows (trolley x)
 const RESET_X = -16;                              // after a rewind the trolley waits here
-const RUNS_TO_END = 3;                            // completed runs before the vignette ends
 const SELF_SPOT = V(18, 0, 7);                    // where you stand if you choose yourself
 const SELF_LEVER = V(18, 0, 9.4);
 const turn = (z) => bez(V(JUNCTION, 0, 0), V(2, 0, 0), V(4, 0, z), V(10, 0, z));
@@ -81,14 +80,6 @@ export default function trolley(ctx) {
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.7, 0.95, 40), new THREE.MeshBasicMaterial({ color: palette.agent, transparent: true, opacity: 0, depthWrite: false }));
   ring.rotation.x = -Math.PI / 2; ring.position.copy(SELF_SPOT).setY(0.33); root.add(ring);
 
-  // the way home: a gilded frame that appears once you've seen a run through
-  const gold = clay(0xc9a54c, { metalness: 0.45, roughness: 0.4 });
-  const frame = new THREE.Group();
-  for (const [x, y, w, h] of [[0, 3.1, 2.4, 0.22], [0, 0.1, 2.4, 0.22], [-1.1, 1.6, 0.22, 3.2], [1.1, 1.6, 0.22, 3.2]]) { const b = mesh(new THREE.BoxGeometry(w, h, 0.2), gold); b.position.set(x, y, 0); frame.add(b); }
-  const portalGlow = new THREE.Mesh(new THREE.PlaneGeometry(2, 2.8), new THREE.MeshBasicMaterial({ color: 0xfff3d6, transparent: true, opacity: 0.85 }));
-  portalGlow.position.y = 1.6; frame.add(portalGlow);
-  frame.position.set(-19, 0, 10); frame.rotation.y = 0.5; root.add(frame);
-
   // the frog hops onto the main line, feels the rails hum, thinks better of it, and hops clear
   const frog = makeFrog(); root.add(frog);
   const cameo = frogCameo(frog, [[-15, 6], [-13.4, 4.4], [-11.8, 2.8], [-10.6, 1.4], { at: [-10, 0], y: 0.12 }, { face: [-40, 0] },
@@ -96,28 +87,10 @@ export default function trolley(ctx) {
     { set: (f) => (f.userData.body.position.x = 0) }, { face: [-8, -2] },
     { at: [-8.6, -1.9], height: 1.5 }, [-7.1, -3.6], [-5.6, -5.2], [-4.2, -6.4], { face: [-40, 0] }, { wait: 1.2 }, [-3.4, -9], [-2.6, -11.6]]);
 
-  // ---- sparks and dust ride the trolley's own travel clock (so they freeze and rewind with it)
+  // ---- the ride: bounce, sway, wheels, and sparks and dust on the trolley's own travel clock (they freeze and rewind with it)
   let routeCurve = ROUTES.main;
+  const ride = makeRide(root, trolley, { fast: FAST, portal: PORTAL });
   const posAt = (s) => routeCurve.getPointAt(clamp(s / routeCurve.getLength(), 0, 1));
-  const sparks = makeEmitter({
-    rate: 60, life: 0.4, max: 48, seed: 1, geometry: new THREE.BoxGeometry(1, 1, 1),
-    material: new THREE.MeshStandardMaterial({ color: 0xffd07a, emissive: 0xff9a3d, emissiveIntensity: 3 }),
-    spawn: (n, b, age, r) => {
-      const T = posAt(b * FAST); if (T.x < PORTAL + 1) return null;
-      const wz = r() < 0.5 ? -0.7 : 0.7, vx = -1.5 - r() * 4, vy = 1.5 + r() * 3, vz = wz * (1 + r() * 3);
-      const y = 0.15 + vy * age - 4.9 * age * age; if (y < 0) return null;
-      return { x: T.x + (r() < 0.5 ? -1.4 : 1.4) + vx * age, y, z: T.z + wz + vz * age, s: 0.06, sx: 4, ry: Math.atan2(-vz, vx) };
-    },
-  });
-  const dust = makeEmitter({
-    rate: 26, life: 1.4, max: 40, seed: 2, geometry: new THREE.SphereGeometry(1, 12, 8), material: clay(0xf4ecdf, { roughness: 1 }),
-    spawn: (n, b, age, r) => {
-      const T = posAt(b * FAST); if (T.x < PORTAL + 1) return null;
-      const d = (1 - Math.exp(-2.2 * age)) / 2.2, k = age / 1.4;
-      return { x: T.x - 1.6 - (1.5 + r() * 2) * d, y: 0.25 + (0.8 + r()) * d, z: T.z + (r() - 0.5) * 2.2, s: (0.13 + k * 0.45) * (1 - k * k) };
-    },
-  });
-  root.add(sparks, dust);
 
   // ---- who is on each route, where along it, and which way they'd be knocked (away from the other tracks)
   const arcOf = (curve, p) => { const pts = curve.getSpacedPoints(900); let b = 0; pts.forEach((q, j) => { if (q.distanceToSquared(p) < pts[b].distanceToSquared(p)) b = j; }); return (b / 900) * curve.getLength(); };
@@ -130,18 +103,11 @@ export default function trolley(ctx) {
   const endOf = { main: arcOf(ROUTES.main, V(30, 0, 0)), branch: arcOf(ROUTES.branch, V(30, 0, -7)), self: arcOf(ROUTES.self, V(24, 0, 7)) };
   const sJunction = JUNCTION - START;
 
-  function knockPose(v, h) {
-    if (!v.base) v.base = { p: v.obj.position.clone(), r: v.obj.rotation.clone() };
-    const k = easeOut(h / 0.5), m = easeOut(h / 0.9);
-    v.obj.position.set(v.base.p.x + 4.5 * m, 1.9 * Math.sin(Math.PI * clamp(h / 0.7)) + 0.34 * k, v.base.p.z + v.side * 3.4 * m);
-    v.obj.rotation.set(v.side * (Math.PI / 2) * k, v.base.r.y + 1.4 * k * v.side, 0);
-  }
-  function restore(v) { if (v.base) { v.obj.position.copy(v.base.p); v.obj.rotation.copy(v.base.r); } v.base = null; v.hitT = null; }
 
   // ================================================================ state
-  // phases: arrive → slow (choose) → go (runs through) → aftermath (hold) → rewind → reflect/twist → slow … → over
+  // phases: arrive → slow (choose) → go (runs through) → aftermath (hold) → rewind → reflect/twist → slow → go → aftermath → over
   const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, runs: 0, choices: [],
-    seen: new Set(), twist: false, rewindFrom: 0, frameOn: 0, twistOn: 0, touched: false, stood: false };
+    seen: new Set(), twist: false, rewindFrom: 0, twistOn: 0, touched: false, stood: false };
   const go = (phase) => { S.phase = phase; S.pt = 0; };
   const selfChosen = () => S.route === 'self';
 
@@ -161,18 +127,12 @@ export default function trolley(ctx) {
       voice.say('self_pull');
     },
   });
-  interact.add({
-    pos: () => frame.position, radius: 2.4, height: 3.6, prompt: 'Step back through the frame',
-    enabled: () => S.frameOn > 0.9 && S.phase === 'slow' && !selfChosen(),
-    onUse: () => ctx.goto(ctx.hub), terminal: true,
-  });
   const beforeActing = () => S.phase === 'slow' && !S.touched && !selfChosen();       // setup lines drop once you've acted
   interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('five'); voice.say('five', { when: beforeActing }); } });
   interact.trigger({ pos: one.position, radius: 8, when: () => S.phase === 'slow' || S.phase === 'arrive', onEnter: () => { S.seen.add('one'); voice.say('one', { when: beforeActing }); } });
   interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever') });
 
   // ---- asides: the workers chat (in slowed time, very slowly), and the driver is out cold
-  const slowly = (t) => t.replace(/([aeiouy])/gi, '$1$1$1').replace(/\.$/, '…');
   const standing = (p) => () => !victims.main.concat(victims.branch).find((v) => v.obj === p)?.base && ['slow', 'reflect', 'twist'].includes(S.phase);
   const FIVE_LINES = [['Lovely day for it.', 'Tea at four.'], ['Nearly done with this stretch.'], ['Did you hear a bell just now?'], ['Mind the rails, love.'], ['Hello! You lost?']];
   five.forEach((p, k) => talk(ctx, { who: p, enabled: standing(p), lines: (i) => { const l = FIVE_LINES[k][i % FIVE_LINES[k].length]; return S.phase === 'slow' ? slowly(l) : l; } }));
@@ -185,16 +145,14 @@ export default function trolley(ctx) {
   const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({ visible: false }));
   groundPlane.rotation.x = -Math.PI / 2; root.add(groundPlane); level.ground.push(groundPlane);
 
-  // ---- after a run: what you did, the third track (first time), and the ending (third time)
+  // ---- after a run: what you did. After the first, the third track appears; after the second, it ends.
   async function afterRun(committed) {
     const choice = committed === 'branch' ? 'pulled' : 'stayed';
     const wavered = choice === 'stayed' && S.touched;                 // pulled it, then put it back
+    const first = !S.choices.includes(choice);                        // a choice's second line is heard only once
     S.choices.push(choice); S.runs++; S.touched = false;
     save.complete('trolley-problem');
     await ctx.wait(0.6);
-    // the first time you make a choice, you hear both of its lines (the second is the heart of it); after that, one
-    // line and whether you chose the same again
-    const first = S.choices.indexOf(choice) === S.runs - 1;
     await voice.say(wavered ? 'wavered' : choice + '_1', { once: false });
     if (first) await voice.say(choice + '_2');
     if (S.runs === 1) {
@@ -202,17 +160,12 @@ export default function trolley(ctx) {
       await ctx.wait(1.4);
       await voice.say('twist_1'); await ctx.wait(0.5); await voice.say('twist_2');
       await ctx.wait(1.2);
-    } else if (!first) {
-      const same = S.choices[S.runs - 1] === S.choices[S.runs - 2];
-      await voice.say(same ? 'again_same' : S.runs >= 3 && S.choices[S.runs - 2] !== S.choices[S.runs - 3] ? 'again_diff_2' : 'again_diff', { once: false });
+      go('slow');
+      return;
     }
-    if (S.runs >= RUNS_TO_END) {
-      await ctx.wait(0.6); await voice.say('end');
-      go('over'); await ctx.wait(1.2);
-      return ctx.gameOver({ title: 'Someone is always on the track', text: `You ran it ${S.runs} times. Nobody could stop the trolley. You only decided where it went.` });
-    }
-    await voice.say('leave', { once: S.runs > 1 });
-    go('slow');
+    await ctx.wait(0.6); await voice.say('end');
+    await ctx.wait(1.2);
+    ctx.gameOver({ title: 'Someone is always on the track', text: 'You ran it twice. Nobody could stop the trolley. You only decided where it went.' });
   }
   // T1: you stood on the track (not by pulling your lever: you just stood there, with them)
   async function afterStood() {
@@ -236,25 +189,7 @@ export default function trolley(ctx) {
   }
 
   // ---- camera: keep you, the trolley, the lever and everyone at risk in frame, from one steady angle
-  // Fit the camera exactly: every point must sit inside the frame horizontally and vertically (with margin).
-  // The view is mostly front-on, so the tracks run across the (wide) screen.
-  const VIEW = V(-0.16, 0.62, 0.77).normalize();
-  const RIGHT = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), VIEW).normalize();
-  const UPV = new THREE.Vector3().crossVectors(VIEW, RIGHT).normalize();
-  const box = new THREE.Box3();
-  function frameAll(points, { margin = 1.1, min = 16, max = 80, pad = 2.2 } = {}) {
-    box.makeEmpty(); points.forEach((p) => box.expandByPoint(p));
-    const c = box.getCenter(V()).setY(1);
-    const cam = stage.camera, tv = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) / margin, th = tv * cam.aspect;
-    let d = min;
-    for (const p of points) {
-      const q = p.clone().sub(c);
-      const x = Math.abs(q.dot(RIGHT)) + pad, y = Math.abs(q.dot(UPV)) + pad, z = q.dot(VIEW);   // z > 0: nearer the camera
-      d = Math.max(d, z + x / th, z + y / tv);
-    }
-    d = Math.min(d, max);
-    return { pos: c.clone().addScaledVector(VIEW, d), look: c };
-  }
+  const frameAll = makeFrameAll(stage);
 
   level.__S = S;   // exposed for automated playtests
   // ================================================================ update / camera
@@ -267,7 +202,6 @@ export default function trolley(ctx) {
       if (S.twist) b.push({ x: selfLever.position.x, z: selfLever.position.z, r: 0.5 });
       const tp = trolley.position, dir = V(Math.cos(trolley.rotation.y), 0, -Math.sin(trolley.rotation.y));
       if (!player.locked) for (const k of [-1.4, 0, 1.4]) b.push({ x: tp.x + dir.x * k, z: tp.z + dir.z * k, r: 1.3 });
-      if (S.frameOn > 0.5) b.push({ x: frame.position.x, z: frame.position.z, r: 0.4 });
       return b;
     },
     start() { setTimeout(() => voice.say('arrive'), 900); },
@@ -304,6 +238,7 @@ export default function trolley(ctx) {
         if (S.pt > (S.stood ? 3.5 : 3.2)) {
           if (S.committed === 'self') afterSelf();
           else if (S.stood) afterStood();
+          else if (S.twist) { go('over'); afterRun(S.committed); }   // the second run is the last: no rewind
           else { go('rewind'); S.rewindFrom = S.s; }
         }
       } else if (S.phase === 'rewind') {
@@ -321,16 +256,7 @@ export default function trolley(ctx) {
       if (S.phase !== 'rewind') S.s += S.speed * dt;
 
       // ---- trolley placement
-      const L = routeCurve.getLength(), u = clamp(S.s / L, 0, 1);
-      const p = routeCurve.getPointAt(u), tan = routeCurve.getTangentAt(u);
-      const spd = S.speed / FAST;
-      trolley.position.set(p.x, 0.05 * Math.abs(Math.sin(S.s * 2.6)) * spd, p.z);
-      trolley.rotation.set(Math.sin(S.s * 2.1) * 0.018 * spd, Math.atan2(-tan.z, tan.x), 0.012 * spd);
-      trolley.visible = p.x > PORTAL - 12;
-      trolley.userData.wheels.forEach((w) => (w.rotation.z = -S.s / 0.34));
-      const clock = Math.max(0, S.s / FAST);
-      sparks.userData.update(clock, 1);
-      dust.userData.update(clock, 1);
+      ride(routeCurve, S.s, S.speed);
 
       // ---- hits: whoever is on the committed route is knocked away as the trolley reaches them; rewinding undoes it
       const lastRoute = S.committed ?? S.lastRoute;
@@ -361,11 +287,6 @@ export default function trolley(ctx) {
       selfLever.visible = S.twistOn > 0.02; selfLever.scale.setScalar(Math.max(0.001, S.twistOn));
       ring.material.opacity = S.twistOn * (0.5 + 0.3 * Math.sin(t * 3));
 
-      // ---- the frame home
-      S.frameOn = lerp(S.frameOn, S.runs > 0 ? 1 : 0, 1 - Math.exp(-dt * 1.5));
-      frame.visible = S.frameOn > 0.01; frame.scale.setScalar(Math.max(0.001, S.frameOn));
-      portalGlow.material.opacity = 0.6 + 0.25 * Math.sin(t * 2.2);
-
       // ---- the frog: once, in the first slowed moment, near the lever
       if (S.phase === 'slow' && player.pos.distanceTo(leverSpot) < 12) cameo.start();
       cameo.update(dt);
@@ -374,7 +295,7 @@ export default function trolley(ctx) {
     },
 
     camera(pl) {
-      if (S.phase === 'go' || S.phase === 'aftermath' || (S.phase === 'over' && (S.lastRoute === 'self' || S.stood))) {
+      if (S.phase === 'go' || S.phase === 'aftermath' || S.phase === 'over') {
         // the run: frame the trolley, whoever is on its route, and you (the one who chose), and hold on it afterwards
         const targets = victims[S.lastRoute ?? 'main'].map((v) => (v.base ? v.base.p : v.obj.position).clone());
         return { ...frameAll([trolley.position.clone(), ...targets, pl.pos.clone()], { margin: 1.3, min: 16 }), stiffness: S.phase === 'go' ? 2.2 : 1.4 };

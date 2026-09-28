@@ -1,5 +1,6 @@
 // Automated playtest of the trolley vignette (needs `npm run play` running). Usage: node game/tools/playtest-trolley.mjs [self|stay]
-// Automated playthrough: run 1 pull, run 2 stay, run 3 either self (arg "self") or stay → game over. Screenshots along the way.
+// Automated playthrough: run 1 pull (then the rewind and the third track), run 2 either self (arg "self") or stay → game
+// over, with no rewind and no third run. Screenshots along the way.
 import puppeteer from 'puppeteer';
 const b = await puppeteer.launch({ headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage(); await p.setViewport({ width: 1280, height: 720 });
@@ -22,10 +23,11 @@ if (process.argv[2] === 'self') {
   await walkTo(18, 10.6); await sleep(6); await shot('09-selflever');
   await p.keyboard.press('KeyE'); await sleep(2); await shot('10-onTrack');
   await waitPhase('go'); await sleep(1.8); await shot('11-go-self');
-  await sleep(9); await shot('12-over');
+  await p.waitForFunction(() => !document.getElementById('over').hidden, { timeout: 60000 }).catch(() => {}); await sleep(1); await shot('12-over');
 } else {
-  await waitPhase('go'); await waitPhase('slow'); await sleep(0.5); await shot('09-slow3');
-  await waitPhase('go'); await waitPhase('over', 90); await sleep(3); await shot('10-end');
+  await waitPhase('go'); await sleep(1.6); await shot('09-go2');
+  await waitPhase('over', 60); await sleep(1); await shot('10-held');
+  await p.waitForFunction(() => !document.getElementById('over').hidden, { timeout: 60000 }); await sleep(1); await shot('11-end');
 }
-console.log(errs.slice(0, 10).join('\n') || 'no errors', '| final phase:', await phase());
+console.log(errs.slice(0, 10).join('\n') || 'no errors', '| final phase:', await phase(), '| runs:', await p.evaluate(() => window.__ted.level.__S.runs), '|', await p.evaluate(() => document.getElementById('over').hidden ? 'no ending' : 'ENDED ' + document.querySelector('#over h1').textContent));
 await b.close();

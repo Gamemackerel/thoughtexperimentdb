@@ -44,16 +44,6 @@
     "text": "Most people would pull the lever, but won't push. The numbers didn't change. So what did?",
     "dur": 5.67
   },
-  "again_same": {
-    "file": "again_same-653d2825.mp3",
-    "text": "The same choice again.",
-    "dur": 2.3
-  },
-  "again_diff": {
-    "file": "again_diff-6ca19354.mp3",
-    "text": "This time, you chose the other way.",
-    "dur": 2.87
-  },
   "end": {
     "file": "end-84fb78a6.mp3",
     "text": "Steering the trolley past someone feels different from using them to stop it. Even when the numbers are the same.",

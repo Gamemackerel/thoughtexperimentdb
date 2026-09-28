@@ -31,21 +31,28 @@ async function run(id, script, query = '') {
 await run('trolley-room', async (t) => { await sleep(2); await t.shot('room'); await t.walkTo(-2.3, -4.2); await sleep(3); await t.shot('at-footbridge'); await t.press(); await sleep(4); await t.shot('entered'); });
 await run('footbridge', async (t) => {
   await t.until(async () => (await t.phase()) === 'slow', 30); await sleep(1); await t.shot('slow');
-  if (!alt) { await t.walkTo(2.25, 0.2); await sleep(2.5); await t.shot('by-him'); await t.press(); }
-  await t.until(async () => (await t.phase()) === 'go', 60); await sleep(2.5); await t.shot('run');
-  await t.until(async () => (await t.phase()) === 'rewind', 30); await sleep(0.8); await t.shot('rewind');
+  // default: push him (the struggle, the fall over the rail, the trolley stopping against him) | alt: don't push
+  if (!alt) {
+    await t.walkTo(2.3, -0.4); await sleep(1.5); await t.shot('behind-him'); await t.press();
+    for (const k of ['shove1', 'resist', 'shove2', 'shove3', 'tip', 'falling', 'landed']) { await sleep(k === 'falling' ? 0.3 : 0.45); await t.shot(k); }
+  }
+  await t.until(async () => (await t.phase()) === 'go', 60); await sleep(1.2); await t.shot('run'); await sleep(1.2); await t.shot('run2');
+  await t.until(async () => (await t.phase()) === 'over', 30); await sleep(0.5); await t.shot('stopped');
 }, '&fast=3');
 await run('loop-track', async (t) => {
+  // default: pull the lever (into him) | alt: leave it (into the five). First, a ghost down each track.
+  await t.until(() => t.p.evaluate(() => window.__ted.level.__S.ghostRoute === 'main'), 40); await sleep(1.2); await t.shot('ghost-main');
+  await t.until(() => t.p.evaluate(() => window.__ted.level.__S.ghostRoute === 'loop'), 30); await sleep(1.5); await t.shot('ghost-loop');
   await t.until(async () => (await t.phase()) === 'slow', 30); await sleep(1); await t.shot('slow');
-  if (!alt) { await t.walkTo(-7.2, 3.9); await sleep(4); await t.press(); await sleep(1); await t.shot('pulled'); }
-  await t.until(async () => (await t.phase()) === 'go', 60); await sleep(3); await t.shot('run');
-  if (!alt) { await t.until(async () => (await t.phase()) === 'ghost', 40); await sleep(4); await t.shot('ghost'); }
+  if (!alt) { await t.walkTo(-7.2, 3.9); await sleep(1.8); await t.press(); await sleep(0.5); await t.shot('pulled'); }
+  await t.until(async () => (await t.phase()) === 'go', 60); await sleep(1.5); await t.shot('run'); await sleep(1.2); await t.shot('run2');
+  await t.until(async () => (await t.phase()) === 'over', 30); await sleep(0.5); await t.shot('stopped');
 }, '&fast=3');
 await run('transplant', async (t) => {
   // alt: home (send him home) | pall (palliative care) | wake (into theatre, then stand there) | default: into theatre and begin
   await sleep(3); await t.shot('ward'); await t.walkTo(9, -1.2); await sleep(12); await t.shot('visitor'); await t.until(() => t.p.evaluate(() => window.__ted.ctx.voice.said.has('ask')), 30); await sleep(3);
   if (alt === 'pall') { await t.walkTo(6.3, -4); await sleep(4); await t.press(); await sleep(9); await t.shot('wheeled'); return; }
-  await t.walkTo(alt === 'home' ? 10.4 : 9.1, alt === 'home' ? -2.6 : -2.9); await sleep(2.5); await t.press(); await sleep(6); await t.shot('choice');
+  await t.walkTo(alt === 'home' ? 10.4 : -11.3, alt === 'home' ? -2.6 : 0.1); await sleep(alt === 'home' ? 2.5 : 6); await t.press(); await sleep(6); await t.shot('choice');
   if (alt === 'home') return;
   await t.until(() => t.p.evaluate(() => window.__ted.level.__S.ready), 40); await sleep(1); await t.shot('theatre');
   if (alt === 'wake') { await sleep(34); await t.shot('asks'); return; }

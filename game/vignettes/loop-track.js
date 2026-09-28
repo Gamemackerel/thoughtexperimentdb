@@ -1,8 +1,7 @@
 // Vignette: The Loop.
-// Like the lever, except the side track loops round and rejoins the main line beyond the five, so a diverted trolley
-// would come back and hit them from the other side. A very large man stands on the loop: only his weight would stop it.
-// Pull the lever and the five are saved because the trolley hits him. After the first pull, a ghost trolley shows what
-// the loop does without him. Twice, then it ends.
+// Left alone, the trolley hits the five, and they stop it. The lever sends it round a loop into one very large man
+// instead: his weight stops it, but he'd have been fine if you'd left it. A ghost trolley shows each way once, then the
+// real one runs, once, and it ends.
 import {
   THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, ghostify,
   makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makeTunnel, makeLever, makePathGlow, makeTree, makeFrog,
@@ -10,15 +9,16 @@ import {
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
-import { makeFrameAll, knockPose, restore, slowly } from '../core/trolley-kit.js';
+import { makeRide, placeTrolley, makeFrameAll, knockPose, slowly } from '../core/trolley-kit.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
-const JUNCTION = -4, PORTAL = -50, START = -62, SLOW_AT = -32, RESET_X = -16;
+const JUNCTION = -4, PORTAL = -50, START = -62, SLOW_AT = -32;
 const FAST = 9;
 const FASTQ = new URLSearchParams(location.search).get('fast');
 const CREEP = FASTQ !== null ? Number(FASTQ) || 3 : 0.55;
-const RUNS_TO_END = 2;
 const LOOP_Z = -8, FAR = 27;
+const NOSE = 2.45;                                  // from the trolley's middle to its bumper
+const GHOST_RUN = 2.6, GHOST_HOLD = 0.9;            // a ghost's run, and how long it rests against them before fading
 const bez = (a, b, c, d) => new THREE.CubicBezierCurve3(a, b, c, d);
 const path = (...parts) => { const p = new THREE.CurvePath(); parts.forEach((c) => p.add(c)); return p; };
 
@@ -48,7 +48,9 @@ export default function loopTrack(ctx) {
   const trolley = makeTrolley();
   const drv = trolley.userData.driver; drv.userData.body.rotation.x = 0.55; drv.userData.body.rotation.z = 0.25;
   root.add(trolley);
-  const ghost = ghostify(trolley, palette.one, 0.35); ghost.visible = false; root.add(ghost);
+  const ride = makeRide(root, trolley, { fast: FAST, portal: PORTAL });
+  const ghost = ghostify(trolley, palette.many, 0.55); ghost.visible = false; root.add(ghost);
+  ghost.userData.wheels = trolley.userData.wheels.map((w) => ghost.children[trolley.children.indexOf(w)]);   // so they turn
   const five = [];
   for (let i = 0; i < 5; i++) { const p = makePerson({ color: palette.many, hat: true }); p.position.set(11.5 + i * 1.5, 0, (rnd() - 0.5) * 0.6); p.rotation.y = -0.5 + rnd() * 0.5; five.push(p); root.add(p); }
   const fiveCenter = V(14.5, 0, 0);
@@ -67,48 +69,48 @@ export default function loopTrack(ctx) {
     [12.6, -4.4], { face: [11, -9.4] }, { wait: 0.8 }, { at: [11.4, -9.6], height: 1.3 }, [10.4, -12], [9.4, -14.6]]);
 
   // ---- state
-  const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, runs: 0, choices: [], rewindFrom: 0, ghostT: -1, lastRoute: null };
+  // phases: arrive → show (a ghost down each track) → slow (choose) → go (runs) → aftermath (hold) → over
+  const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, route: 'main', committed: null, ghostRoute: null, ghostT: -1 };
   const go = (ph) => { S.phase = ph; S.pt = 0; };
-  let routeCurve = ROUTES.main;
   const posAt = (curve, s) => curve.getPointAt(clamp(s / curve.getLength(), 0, 1));
   const arcOf = (curve, p) => { const pts = curve.getSpacedPoints(1200); let b = 0; pts.forEach((q, j) => { if (q.distanceToSquared(p) < pts[b].distanceToSquared(p)) b = j; }); return (b / 1200) * curve.getLength(); };
-  const victims = five.map((p, i) => ({ obj: p, side: i % 2 ? 1 : -1, sMain: arcOf(ROUTES.main, p.position), sLoop: arcOf(ROUTES.loop, p.position), base: null, hitT: null }));
+  const victims = five.map((p, i) => ({ obj: p, side: i % 2 ? 1 : -1, s: arcOf(ROUTES.main, p.position), base: null, hitT: null }));
   const bigV = { obj: big, side: -1, s: arcOf(ROUTES.loop, big.position), base: null, hitT: null };
+  // where the trolley comes to rest on each route: the five bring it up short among them; he stops it on his own
+  const STOP = { main: victims[4].s - NOSE + 0.3, loop: bigV.s - NOSE + 0.8 };
+  const BRAKE = { main: victims[0].s - NOSE, loop: bigV.s - NOSE };   // first contact: it brakes from here
   const sJunction = JUNCTION - START;
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/loop-track.json', 'The Loop');
   const gp = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshBasicMaterial({ visible: false })); gp.rotation.x = -Math.PI / 2; root.add(gp); level.ground.push(gp);
 
-  interact.add({ pos: leverSpot, radius: 2.8, height: 2.4, prompt: () => (S.route === 'loop' ? 'Put the lever back' : 'Pull the lever'), enabled: () => S.phase === 'slow',
-    onUse: () => { S.route = S.route === 'loop' ? 'main' : 'loop'; } });
-  interact.trigger({ pos: fiveCenter, radius: 9, when: () => S.phase === 'slow', onEnter: () => voice.say('five') });
-  interact.trigger({ pos: big.position, radius: 8, when: () => S.phase === 'slow', onEnter: () => voice.say('one') });
-  interact.trigger({ pos: leverSpot, radius: 4.5, when: () => S.phase === 'slow', onEnter: () => voice.say('lever') });
-  const standing = (v) => () => !v.base && (S.phase === 'slow' || S.phase === 'reflect');
-  const speak = (lines) => (i) => { const l = lines[i % lines.length]; return S.phase === 'slow' ? slowly(l) : l; };
+  interact.add({ pos: leverSpot, radius: 2.8, height: 2.4, prompt: () => (S.phase !== 'slow' ? 'Not yet' : S.route === 'loop' ? 'Put the lever back' : 'Pull the lever'),
+    enabled: () => ['arrive', 'show', 'slow'].includes(S.phase),
+    onUse: () => { if (S.phase === 'slow') S.route = S.route === 'loop' ? 'main' : 'loop'; } });
+  const standing = (v) => () => !v.base && ['arrive', 'show', 'slow'].includes(S.phase);
+  const speak = (lines) => (i) => slowly(lines[i % lines.length]);
   talk(ctx, { who: big, enabled: standing(bigV), lines: speak(['Nobody ever uses this bit of line.', "I'm on my break. It's quiet on the loop.", 'I go round it every day. It always comes back.']) });
   five.forEach((p, k) => talk(ctx, { who: p, enabled: standing(victims[k]), lines: speak([['Nearly done.'], ['Tea at four.'], ['Is that a bell?'], ['Lovely day.'], ['Mind the rails.']][k]) }));
-  look(ctx, { pos: sign.position, radius: 2, height: 2.8, prompt: 'Read the sign', lines: ['sign'], enabled: () => S.phase === 'slow' });
+  look(ctx, { pos: sign.position, radius: 2, height: 2.8, prompt: 'Read the sign', lines: ['sign'], enabled: () => S.phase !== 'go' && S.phase !== 'aftermath' && S.phase !== 'over' });
 
+  // the opening: one line, then a ghost down each track (it rests against whoever stops it), then the question
+  async function show() {
+    while (voice.busy) await ctx.wait(0.1);
+    const ghostRun = async (route) => { ghost.userData.ghostMat.color.set(palette[route === 'loop' ? 'one' : 'many']); ghost.userData.ghostMat.emissive.set(palette[route === 'loop' ? 'one' : 'many']); S.ghostRoute = route; S.ghostT = 0; await ctx.wait(GHOST_RUN + GHOST_HOLD + 0.4); S.ghostT = -1; S.ghostRoute = null; };
+    await ghostRun('main');
+    const told = voice.say('loop');
+    await ctx.wait(1.6); await ghostRun('loop'); await told;
+    go('slow');
+    await voice.say('ask');
+  }
   async function afterRun(c) {
-    const choice = c === 'loop' ? 'pulled' : 'stayed';
-    S.choices.push(choice); S.runs++;
     save.complete('loop-track');
-    await ctx.wait(0.6);
-    if (S.runs === 1 || !voice.said.has(choice + '_2')) {
-      await voice.say(choice + '_1', { once: false }); await voice.say(choice + '_2');
-      if (choice === 'pulled') { go('ghost'); S.ghostT = 0; await ctx.wait(7.5); await voice.say('ghost'); S.ghostT = -1; go('reflect'); }
-    } else {
-      await voice.say(choice + '_1', { once: false });
-      await voice.say(S.choices[S.runs - 1] === S.choices[S.runs - 2] ? 'again_same' : 'again_diff', { once: false });
-    }
-    if (S.runs >= RUNS_TO_END) {
-      await ctx.wait(0.6); await voice.say('end'); go('over'); await ctx.wait(1.2);
-      return ctx.gameOver(choice === 'pulled'
-        ? { title: 'You needed him there', text: 'The loop only saves the five because the trolley hits him. On the plain side track, the one was just in the way. Here, he is the plan.' }
-        : { title: 'You left the lever', text: 'Five were hit. Pulling would have saved them, but only by using him to stop the trolley.' });
-    }
-    await ctx.wait(0.6); go('slow');
+    await ctx.wait(0.8);
+    await voice.say(c === 'loop' ? 'pulled' : 'stayed');
+    await ctx.wait(1.0);
+    ctx.gameOver(c === 'loop'
+      ? { title: 'You needed him there', text: 'He stopped the trolley, and the five are safe. But he was only in its way because you sent it to him.' }
+      : { title: 'You left the lever', text: 'The five stopped the trolley. He was never in its way, and you left it that way.' });
   }
 
   (async () => { await ctx.wait(0.9); await voice.say('arrive'); })();
@@ -125,84 +127,63 @@ export default function loopTrack(ctx) {
     },
     update(dt, t) {
       S.pt += dt;
+      const routeCurve = ROUTES[S.committed ?? 'main'];
       if (S.phase === 'arrive') {
         S.speed = posAt(routeCurve, S.s).x < SLOW_AT ? FAST : lerp(S.speed, CREEP, 1 - Math.exp(-dt * 1.4));
-        if (S.speed < CREEP * 1.3) go('slow');
+        if (S.speed < CREEP * 1.3) { go('show'); show(); }
+      } else if (S.phase === 'show') {
+        S.speed = lerp(S.speed, Math.min(CREEP, 0.55), 1 - Math.exp(-dt * 2));   // it waits for the ghosts
       } else if (S.phase === 'slow') {
         S.speed = lerp(S.speed, CREEP, 1 - Math.exp(-dt * 2));
-        if (posAt(routeCurve, S.s).x > -20 && !voice.said.has('ask')) { voice.say('five'); voice.say('one'); voice.say('ask'); }
-        if (S.s + 2.2 >= sJunction) { S.committed = S.route; S.lastRoute = S.route; routeCurve = ROUTES[S.route]; voice.stop(); player.enabled = false; go('go'); }
+        if (S.s + 2.2 >= sJunction) { S.committed = S.route; voice.stop(); player.enabled = false; go('go'); }
       } else if (S.phase === 'go') {
-        S.speed = lerp(S.speed, FAST, 1 - Math.exp(-dt * 2.5));
-        const end = S.committed === 'loop' ? bigV.s - 2 : arcOf(ROUTES.main, V(24, 0, 0));
-        if (S.s > end - (S.committed === 'loop' ? 1.5 : 8)) S.speed = Math.max(0.4, S.speed * Math.exp(-dt * (S.committed === 'loop' ? 7 : 2.2)));
-        if (S.s >= end) { S.speed = 0; go('aftermath'); }
+        const c = S.committed, rem = STOP[c] - S.s;
+        S.speed = S.s < BRAKE[c] ? lerp(S.speed, FAST, 1 - Math.exp(-dt * 2.5))
+          : Math.min(S.speed, FAST * Math.sqrt(Math.max(0, rem) / (STOP[c] - BRAKE[c])) + 0.25);   // brought up short
+        if (rem <= 0) { S.speed = 0; go('aftermath'); }
       } else if (S.phase === 'aftermath') {
         S.speed = 0;
-        if (S.pt > 1.6) { go('rewind'); S.rewindFrom = S.s; }
-      } else if (S.phase === 'rewind') {
-        const k = easeInOut(S.pt / 2);
-        S.s = lerp(S.rewindFrom, RESET_X - START, k);
-        if (k >= 1) {
-          const c = S.committed; routeCurve = ROUTES.main; S.route = 'main'; S.committed = null;
-          victims.forEach(restore); restore(bigV);
-          player.enabled = true; go('reflect'); afterRun(c);
-        }
+        if (S.pt > 1.4) { go('over'); afterRun(S.committed); }
       } else S.speed = 0;
-      if (S.phase !== 'rewind') S.s += S.speed * dt;
+      S.s += S.speed * dt;
+      ride(ROUTES[S.committed ?? 'main'], S.s, S.speed);
 
-      // trolley on its route
-      const L = routeCurve.getLength(), u = clamp(S.s / L, 0, 1);
-      const p = routeCurve.getPointAt(u), tan = routeCurve.getTangentAt(u), spd = S.speed / FAST;
-      trolley.position.set(p.x, 0.05 * Math.abs(Math.sin(S.s * 2.6)) * spd, p.z);
-      trolley.rotation.set(Math.sin(S.s * 2.1) * 0.018 * spd, Math.atan2(-tan.z, tan.x), 0.012 * spd);
-      trolley.visible = p.x > PORTAL - 12;
-      trolley.userData.wheels.forEach((w) => (w.rotation.z = -S.s / 0.34));
-
-      // hits (and their undoing)
-      const hitting = S.phase === 'go' || S.phase === 'aftermath';
-      if (hitting && S.committed === 'loop') {
-        if (bigV.hitT === null && S.s + 2.3 >= bigV.s) bigV.hitT = 0;
+      // hits
+      if (S.committed === 'loop') {
+        if (bigV.hitT === null && S.s + NOSE >= bigV.s) bigV.hitT = 0;
         if (bigV.hitT !== null) { bigV.hitT += dt; knockPose(bigV, Math.min(bigV.hitT, 0.4), { along: 1.2, side: 1.2 }); }
-      } else if (hitting) for (const v of victims) {
-        if (v.hitT === null && S.s + 2.3 >= v.sMain) v.hitT = 0;
-        if (v.hitT !== null) { v.hitT += dt; knockPose(v, v.hitT); }
-      } else if (S.phase === 'rewind') {
-        const k = 1 - easeInOut(S.pt / 2);
-        victims.forEach((v) => v.hitT !== null && knockPose(v, v.hitT * k));
-        if (bigV.hitT !== null) knockPose(bigV, Math.min(bigV.hitT, 0.4) * k, { along: 1.2, side: 1.2 });
+      } else if (S.committed === 'main') for (const v of victims) {
+        if (v.hitT === null && S.s + NOSE >= v.s) v.hitT = 0;
+        if (v.hitT !== null) { v.hitT += dt; knockPose(v, Math.min(v.hitT, 0.6), { along: 1.6, side: 2.2 }); }
       }
 
-      // the ghost: what the loop does if nobody is on it (round, back, and into the five from behind)
-      ghost.visible = S.ghostT >= 0;
-      big.visible = S.ghostT < 0;                         // the ghost shows the loop with nobody on it
+      // the ghost: runs down one track and stops against whoever is on it, then fades
       if (S.ghostT >= 0) {
         S.ghostT += dt;
-        const gL = ROUTES.loop.getLength(), gs = lerp(sJunction - 10, victims[4].sLoop - 2.2, easeInOut(S.ghostT / 6.5));
-        const gp2 = ROUTES.loop.getPointAt(clamp(gs / gL)), gt = ROUTES.loop.getTangentAt(clamp(gs / gL));
-        ghost.position.copy(gp2); ghost.rotation.set(0, Math.atan2(-gt.z, gt.x), 0);
-        ghost.userData.setOpacity(Math.min(1, S.ghostT / 0.4, (7.4 - S.ghostT) / 0.4));
-      }
+        const r = ROUTES[S.ghostRoute], s0 = sJunction - 10, u = clamp(S.ghostT / GHOST_RUN);
+        const gs = lerp(s0, STOP[S.ghostRoute], 1 - Math.pow(1 - u, 2));
+        placeTrolley(ghost, r, gs, (1 - u) * 0.8, PORTAL);
+        ghost.userData.setOpacity(Math.min(1, S.ghostT / 0.3, (GHOST_RUN + GHOST_HOLD + 0.3 - S.ghostT) / 0.3));
+      } else ghost.visible = false;
 
       lever.userData.pivot.rotation.z = lerp(lever.userData.pivot.rotation.z, S.route === 'loop' ? -0.45 : 0.45, 1 - Math.exp(-dt * 10));
-      const showRoute = S.phase === 'slow' || S.phase === 'go' ? 0.45 + 0.1 * Math.sin(t * 3) : 0;
-      for (const [k, g] of Object.entries(glows)) g.userData.set(1, S.route === k ? showRoute : 0);
+      const pulse = 0.45 + 0.1 * Math.sin(t * 3);
+      const lit = S.phase === 'show' ? S.ghostRoute : S.phase === 'slow' || S.phase === 'go' ? S.route : null;
+      for (const [k, g] of Object.entries(glows)) g.userData.set(1, lit === k ? pulse : 0);
       five.forEach((q, i) => { if (!victims[i].base) animatePerson(q, t, { phase: i * 1.3 }); });
       if (!bigV.base) animatePerson(big, t * 0.7, { phase: 2, energy: 0.5 });
 
       if (S.phase === 'slow' && player.pos.distanceTo(leverSpot) < 12) cameo.start();
       cameo.update(dt);
-      ctx.ui.rewind(S.phase === 'rewind' ? Math.min(1, S.pt / 0.2, (2 - S.pt) / 0.2) : 0, t);
     },
     camera(pl) {
-      if (S.phase === 'go' || S.phase === 'aftermath') {
-        const pts = [trolley.position.clone(), ...(S.lastRoute === 'loop' ? [big.position.clone(), V(FAR + 2, 0, LOOP_Z / 2)] : [fiveCenter.clone(), V(20, 0, 0)])];
+      if (S.phase === 'go' || S.phase === 'aftermath' || S.phase === 'over') {
+        const pts = [trolley.position.clone(), ...(S.committed === 'loop' ? [big.position.clone(), V(FAR + 2, 0, LOOP_Z / 2)] : [fiveCenter.clone(), V(20, 0, 0)])];
         return { ...frameAll(pts, { margin: 1.25, min: 18 }), stiffness: 2.2 };
       }
-      if (S.phase === 'ghost') return { ...frameAll([V(-4, 0, 0), V(FAR + 2, 0, LOOP_Z), fiveCenter.clone(), ghost.position.clone()], { min: 22 }), stiffness: 1.8 };
       const pts = [pl.pos.clone(), trolley.position.clone().setX(Math.max(trolley.position.x, PORTAL + 2)), leverSpot, fiveCenter, big.position.clone(), V(FAR + 1, 0, LOOP_Z / 2)];
-      return { ...frameAll(pts), stiffness: S.phase === 'rewind' ? 1.5 : 2.4 };
+      return { ...frameAll(pts), stiffness: 2.4 };
     },
-    dispose() { voice.stop(); ctx.ui.rewind(0); },
+    dispose() { voice.stop(); },
   });
 }

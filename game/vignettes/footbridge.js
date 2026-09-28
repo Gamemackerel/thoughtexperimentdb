@@ -1,24 +1,41 @@
 // Vignette: The Footbridge.
 // You're on a footbridge over the line. A runaway trolley is coming; five people are working on the track beyond.
-// Beside you, a very large man leans on the railing. Push him, and his body stops the trolley. Or don't. Twice, then it
-// ends. Nothing here to steer: the only way to save the five is to use him.
+// A very large man leans on the railing, watching it come. Push him (he doesn't go quietly: it takes three shoves) and
+// he tips over the rail and lands in its way, and it stops against him. Or don't, and it goes under the bridge to the
+// five. It runs once; then it ends. Nothing here to steer: the only way to save the five is to use him.
 import {
-  THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh,
+  THREE, palette, clamp, lerp, easeInOut, easeOut, seeded, clay, mesh,
   makeIsland, makePerson, animatePerson, makeTrolley, makeTrack, makeTunnel, makeTree, makeFrog,
 } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
 import { talk, look } from '../core/extras.js';
-import { makeFrameAll, knockPose, restore, slowly } from '../core/trolley-kit.js';
+import { makeRide, makeFrameAll, knockPose, slowly } from '../core/trolley-kit.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
-const START = -62, PORTAL = -50, SLOW_AT = -30, RESET_X = -16;
+const START = -62, PORTAL = -50, SLOW_AT = -30;
 const FAST = 9;
 const FASTQ = new URLSearchParams(location.search).get('fast');
 const CREEP = FASTQ !== null ? Number(FASTQ) || 3 : 0.5;
-const BRIDGE_X = 2, DECK = 4.2, RUNS_TO_END = 2;
-const MAN_AT = V(2.35, DECK, -1.2);            // leaning on the railing, looking up the line
-const MAN_ON_TRACK = V(BRIDGE_X - 0.4, 0.1, 0);
+const BRIDGE_X = 2, DECK = 4.6;                    // deck high enough for the trolley's pole to pass under
+const LAST_CALL = BRIDGE_X - 12;                   // trolley x: after this, too late to push
+const MAN_Z = -0.4;
+const PIVOT = V(0.75, DECK + 1.0, MAN_Z);          // his waist against the top rail (the rail facing the trolley)
+const FEET = V(0.45, -1.0, 0);                     // his feet, from there
+const LAND = V(-2.0, 0.95, 0);                     // the pivot once he's lying on the line, feet towards the trolley
+const PUSH_SPOT = V(2.3, DECK, MAN_Z);             // where you stand to push, behind him
+// the struggle (seconds since you pushed): how far he tips over the rail (+) or leans back into you (-), how far you
+// lunge forward (-x) or get pushed back, and how far he turns round to look at you; then he goes over and drops
+const TIP = [[0, 0], [0.35, 0], [0.6, 0.28], [0.95, -0.12], [1.25, -0.04], [1.5, 0.5], [1.85, 0.02], [2.15, 0.06], [2.45, 0.75], [2.85, 1.9]];
+const LUNGE = [[0, 0], [0.35, 0], [0.58, -0.42], [0.95, 0.14], [1.25, 0], [1.48, -0.5], [1.85, 0.12], [2.15, 0], [2.42, -0.55], [2.9, -0.3]];
+const TURN = [[0, 0], [0.5, 0], [0.8, 0.9], [2.2, 0.8], [2.6, 0]];
+const OVER = 2.85, DROP = 0.75;                    // when he's past the tipping point, and how long the fall takes
+const keyed = (keys, t) => {
+  if (t >= keys[keys.length - 1][0]) return keys[keys.length - 1][1];
+  let i = 0; while (keys[i + 1][0] < t) i++;
+  const [t0, a] = keys[i], [t1, b] = keys[i + 1];
+  return lerp(a, b, easeInOut((t - t0) / (t1 - t0)));
+};
 
 export default function footbridge(ctx) {
   const { stage, interact, voice, player, save } = ctx;
@@ -38,6 +55,7 @@ export default function footbridge(ctx) {
   const trolley = makeTrolley();
   const drv = trolley.userData.driver; drv.userData.body.rotation.x = 0.55; drv.userData.body.rotation.z = 0.25;
   root.add(trolley);
+  const ride = makeRide(root, trolley, { fast: FAST, portal: PORTAL });
   const five = [];
   for (let i = 0; i < 5; i++) { const p = makePerson({ color: palette.many, hat: true }); p.position.set(11.5 + i * 1.5, 0, (rnd() - 0.5) * 0.6); p.rotation.y = -0.5 + rnd() * 0.5; five.push(p); root.add(p); }
   const fiveCenter = V(14.5, 0, 0);
@@ -53,9 +71,12 @@ export default function footbridge(ctx) {
   const STEPS = 6;
   for (let i = 0; i < STEPS; i++) { const h = DECK * (1 - (i + 1) / (STEPS + 1)); const st = mesh(new THREE.BoxGeometry(2.4, h, 0.95), stone); st.position.set(BRIDGE_X, h / 2, 5.4 + 0.5 + i * 0.95); root.add(st); }
 
-  // the large man
+  // the large man, leaning on the rail and watching the trolley come. He hangs from a pivot at his waist on the rail,
+  // so that pushing tips him over it (never through the deck).
   const man = makePerson({ color: palette.one, hat: true, scale: 1.45 });
-  man.position.copy(MAN_AT); man.rotation.y = -Math.PI / 2 - 0.2; root.add(man);
+  const tipper = new THREE.Group(); tipper.position.copy(PIVOT); root.add(tipper);
+  man.position.copy(FEET); man.rotation.y = -Math.PI / 2; tipper.add(man);
+  const manWorld = V(PIVOT.x + FEET.x, DECK, MAN_Z);
 
   // ---- the frog climbs the steps, peers over the railing at the trolley, thinks better of it, and goes back down
   const frog = makeFrog(); root.add(frog);
@@ -66,7 +87,8 @@ export default function footbridge(ctx) {
     { at: [BRIDGE_X + 0.4, 4.9], y: DECK }, { at: [BRIDGE_X + 0.3, 6.9], y: stepY(1) }, { at: [BRIDGE_X + 0.3, 8.8], y: stepY(3) }, { at: [BRIDGE_X + 0.3, 10.7], y: stepY(5) }, { at: [BRIDGE_X + 0.3, 12.8], y: 0 }]);
 
   // ---- state
-  const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, runs: 0, choices: [], pushed: false, fallT: -1, committed: null, rewindFrom: 0 };
+  // phases: arrive → slow (choose) → push (the struggle and the fall) → go (runs) → aftermath (hold) → over
+  const S = { phase: 'arrive', pt: 0, s: PORTAL - START - 6, speed: FAST, pushed: false, pushT: -1, committed: null, manHitT: null };
   const go = (ph) => { S.phase = ph; S.pt = 0; };
   const level = { root, ground: [], notebook: '', __S: S };
   loadNotebook(level, '/game/notebook/footbridge.json', 'The Footbridge');
@@ -74,33 +96,47 @@ export default function footbridge(ctx) {
   deckPlane.rotation.x = -Math.PI / 2; deckPlane.position.set(BRIDGE_X, DECK, 0); root.add(deckPlane); level.ground.push(deckPlane);
 
   const victims = five.map((p, i) => ({ obj: p, x: p.position.x, side: i % 2 ? 1 : -1, base: null, hitT: null }));
-  const manV = { hitT: null };
   const trolleyX = () => START + S.s;
 
-  interact.add({ pos: () => MAN_AT.clone().add(V(-0.1, 0, 1.3)), radius: 1.6, height: 3.2, prompt: 'Push him', enabled: () => S.phase === 'slow' && !S.pushed,
-    onUse: () => { S.pushed = true; S.fallT = 0; voice.stop(); } });
-  look(ctx, { pos: () => V(BRIDGE_X - 0.6, DECK, 2.2), radius: 1.3, height: 1.6, prompt: 'Look over the railing', lines: ['too_light'], enabled: () => S.phase === 'slow' && !S.pushed });
-  talk(ctx, { who: man, radius: 1.9, offset: [0, 3.1, 0], enabled: () => (S.phase === 'slow' || S.phase === 'reflect') && !S.pushed,
-    lines: (i) => { const l = ['Lovely view from up here.', 'I come up here to watch the trains.', 'Mind yourself. It\'s a long way down.', 'Is that one going a bit fast?'][i % 4]; return S.phase === 'slow' ? slowly(l) : l; } });
-  interact.trigger({ pos: MAN_AT, radius: 3.2, when: () => S.phase === 'slow', onEnter: () => voice.say('big') });
+  interact.add({ pos: PUSH_SPOT, radius: 1.1, height: 3.2, prompt: 'Push him', terminal: true, enabled: () => S.phase === 'slow' && !S.pushed,
+    onUse: () => { S.pushed = true; S.pushT = 0; voice.stop(); player.enabled = false; player.target = null; go('push'); } });
+  look(ctx, { pos: () => V(BRIDGE_X - 0.7, DECK, 2.4), radius: 1.0, height: 1.6, prompt: 'Look over the railing', lines: ['too_light'], enabled: () => S.phase === 'slow' && !S.pushed });
+  talk(ctx, { who: man, at: V(1.45, DECK, 0.85), radius: 0.9, offset: [0, 3.1, 0], enabled: () => S.phase === 'slow' && !S.pushed,
+    lines: (i) => slowly(['Lovely view from up here.', 'I come up here to watch the trains.', 'Mind yourself. It\'s a long way down.', 'Is that one going a bit fast?'][i % 4]) });
+  interact.trigger({ pos: manWorld, radius: 3.2, when: () => S.phase === 'slow', onEnter: () => voice.say('big') });
 
   async function afterRun(choice) {
-    S.choices.push(choice); S.runs++;
     save.complete('footbridge');
-    await ctx.wait(0.6);
-    if (S.runs === 1) { await voice.say(choice + '_1'); await voice.say(choice + '_2'); }
-    else {
-      await voice.say(choice + '_1', { once: false });
-      await voice.say(S.choices[0] === S.choices[1] ? 'again_same' : 'again_diff', { once: false });
-    }
-    if (S.runs >= RUNS_TO_END) {
-      await ctx.wait(0.6); await voice.say('end'); go('over'); await ctx.wait(1.2);
-      return ctx.gameOver(choice === 'pushed'
-        ? { title: 'You pushed him', text: 'One life for five, the same trade as the lever. It only felt different because this time you used him.' }
-        : { title: 'You kept your hands to yourself', text: 'Five were hit. You could have stopped it, but only by using someone as the brake.' });
-    }
-    await ctx.wait(0.8); go('slow');
+    await ctx.wait(0.8);
+    await voice.say(choice + '_1'); await voice.say(choice + '_2');
+    await ctx.wait(0.6); await voice.say('end');
+    await ctx.wait(1.2);
+    ctx.gameOver(choice === 'pushed'
+      ? { title: 'You pushed him', text: 'One life for five, the same trade as the lever. It only felt different because this time you used him.' }
+      : { title: 'You kept your hands to yourself', text: 'Five were hit. You could have stopped it, but only by using someone as the brake.' });
   }
+
+  // where he is: leaning on the rail, rocking as you shove, tipping over, falling, lying on the line (and nudged along
+  // it when the trolley stops against him)
+  function posePush(dt) {
+    const t = S.pushT;
+    if (t < OVER) { tipper.position.copy(PIVOT); tipper.rotation.z = keyed(TIP, t); }
+    else {
+      const u = clamp((t - OVER) / DROP), k = easeOut(u);
+      tipper.position.set(lerp(PIVOT.x, LAND.x, k), lerp(PIVOT.y, LAND.y, u * u), lerp(PIVOT.z, LAND.z, k));
+      tipper.rotation.z = lerp(1.9, Math.PI * 1.5, easeOut(u * 1.05));
+      if (u >= 1) tipper.position.y = LAND.y + 0.12 * Math.max(0, Math.sin(Math.PI * clamp((t - OVER - DROP) / 0.25)));   // a small bounce
+    }
+    man.rotation.y = -Math.PI / 2 + keyed(TURN, t);
+    if (S.manHitT !== null) { S.manHitT += dt; tipper.position.x += 0.6 * easeOut(S.manHitT / 0.35); }
+    // you: up to him, then shove, get shoved back, shove again
+    if (S.phase === 'push') {
+      const k = clamp(t / 0.3);
+      player.pos.set(lerp(player.pos.x, PUSH_SPOT.x + keyed(LUNGE, t), k), DECK, lerp(player.pos.z, PUSH_SPOT.z, k));
+      player.obj.rotation.y = lerp(player.obj.rotation.y, -Math.PI / 2, 1 - Math.exp(-dt * 12));
+    }
+  }
+  const SAY = [[0.62, 'Hey!'], [1.52, 'Stop that!'], [2.5, 'No, no, no!']];
 
   (async () => { await ctx.wait(0.9); await voice.say('arrive'); })();
 
@@ -108,7 +144,7 @@ export default function footbridge(ctx) {
     __frog: cameo,
     spawn: { x: BRIDGE_X - 0.3, z: 3.2, rotY: -Math.PI / 2 },
     walkable: (x, z) => Math.abs(x - BRIDGE_X) < 1.05 && z > -5 && z < 5.2,
-    blockers: () => (S.pushed ? [] : [{ x: MAN_AT.x, z: MAN_AT.z, r: 0.55 }]),
+    blockers: () => (S.pushed ? [] : [{ x: manWorld.x, z: manWorld.z, r: 0.55 }]),
     update(dt, t) {
       S.pt += dt;
       player.pos.y = DECK;                                    // you're up on the bridge
@@ -117,73 +153,51 @@ export default function footbridge(ctx) {
         if (S.speed < CREEP * 1.3) go('slow');
       } else if (S.phase === 'slow') {
         S.speed = lerp(S.speed, CREEP, 1 - Math.exp(-dt * 2));
-        if (trolleyX() > -20 && !voice.said.has('ask')) { voice.say('five'); voice.say('ask'); }
-        if (S.pushed && S.fallT > 1) { S.committed = 'pushed'; player.enabled = false; go('go'); }
-        else if (!S.pushed && trolleyX() > BRIDGE_X - 9) { S.committed = 'stayed'; voice.stop(); player.enabled = false; go('go'); }
+        if (trolleyX() > -22 && !voice.said.has('ask')) { voice.say('five'); voice.say('ask'); }
+        if (trolleyX() > LAST_CALL) { S.committed = 'stayed'; voice.stop(); player.enabled = false; go('go'); }
+      } else if (S.phase === 'push') {
+        S.speed = trolleyX() < LAST_CALL + 1 ? Math.min(CREEP, 0.5) : 0;   // it waits for the struggle
+        const before = S.pushT; S.pushT += dt;
+        for (const [at, l] of SAY) if (before < at && S.pushT >= at) ctx.speak(man, slowly(l), { offset: [0, 3.2, 0], secs: 1.4 });
+        if (S.pushT > OVER + DROP + 0.35) { S.committed = 'pushed'; go('go'); }
       } else if (S.phase === 'go') {
         S.speed = lerp(S.speed, FAST, 1 - Math.exp(-dt * 2.5));
-        const stopAt = S.committed === 'pushed' ? MAN_ON_TRACK.x - 1.6 : 24;
-        if (trolleyX() > stopAt - (S.committed === 'pushed' ? 1.2 : 8)) S.speed = Math.max(0.3, S.speed * Math.exp(-dt * (S.committed === 'pushed' ? 9 : 2.2)));
+        const pushed = S.committed === 'pushed';
+        const stopAt = pushed ? LAND.x - 1.0 - 2.45 + 0.6 : 30;       // pushed: his feet, less the trolley's nose, plus the nudge
+        if (trolleyX() > stopAt - (pushed ? 2.5 : 8)) S.speed = Math.max(0.3, S.speed * Math.exp(-dt * (pushed ? 5 : 2.2)));
         if (trolleyX() >= stopAt) { S.speed = 0; go('aftermath'); }
       } else if (S.phase === 'aftermath') {
         S.speed = 0;
-        if (S.pt > 1.6) { go('rewind'); S.rewindFrom = S.s; }
-      } else if (S.phase === 'rewind') {
-        const k = easeInOut(S.pt / 2);
-        S.s = lerp(S.rewindFrom, RESET_X - START, k);
-        if (k >= 1) {
-          const c = S.committed; S.committed = null; S.pushed = false; S.fallT = -1;
-          victims.forEach(restore); manV.hitT = null; man.position.copy(MAN_AT); man.rotation.set(0, -Math.PI / 2 - 0.2, 0);
-          player.enabled = true; go('reflect'); afterRun(c);
-        }
+        if (S.pt > 1.6) { go('over'); afterRun(S.committed); }
       } else S.speed = 0;
-      if (S.phase !== 'rewind') S.s += S.speed * dt;
+      S.s += S.speed * dt;
 
       // the trolley
-      const x = trolleyX(), spd = S.speed / FAST;
-      trolley.position.set(x, 0.05 * Math.abs(Math.sin(S.s * 2.6)) * spd, 0);
-      trolley.rotation.set(Math.sin(S.s * 2.1) * 0.018 * spd, 0, 0.012 * spd);
-      trolley.visible = x > PORTAL - 12;
-      trolley.userData.wheels.forEach((w) => (w.rotation.z = -S.s / 0.34));
+      const x = trolleyX();
+      ride(line, S.s, S.speed);
 
-      // the man: pushed, he tumbles off the bridge onto the line (and back up, when time rewinds)
-      if (S.fallT >= 0 && S.phase !== 'rewind') S.fallT += dt;
-      const fallK = S.phase === 'rewind' ? 1 - easeInOut(S.pt / 2) : clamp(S.fallT / 0.9);
-      if (S.fallT >= 0) {
-        const k = easeInOut(fallK);
-        man.position.set(lerp(MAN_AT.x, MAN_ON_TRACK.x, k), lerp(MAN_AT.y, MAN_ON_TRACK.y, k) + Math.sin(Math.PI * k) * 0.8, lerp(MAN_AT.z, MAN_ON_TRACK.z, k));
-        man.rotation.set(0, -Math.PI / 2 - 0.2, (Math.PI / 2) * k);
+      // him, and the hits
+      if (S.pushT >= 0) posePush(dt);
+      else animatePerson(man, t * 0.6, { energy: 0.4 });
+      if (S.committed === 'pushed' && S.manHitT === null && x + 2.45 >= LAND.x - 1.0) S.manHitT = 0;
+      if (S.committed === 'stayed') for (const v of victims) {
+        if (v.hitT === null && x + 2.3 >= v.x) v.hitT = 0;
+        if (v.hitT !== null) { v.hitT += dt; knockPose(v, v.hitT); }
       }
-      // hits
-      if (S.phase === 'go' || S.phase === 'aftermath') {
-        if (S.committed === 'pushed') {
-          if (manV.hitT === null && x + 2.3 >= MAN_ON_TRACK.x) manV.hitT = 0;
-          if (manV.hitT !== null) manV.hitT += dt;
-        } else for (const v of victims) {
-          if (v.hitT === null && x + 2.3 >= v.x) v.hitT = 0;
-          if (v.hitT !== null) { v.hitT += dt; knockPose(v, v.hitT); }
-        }
-      } else if (S.phase === 'rewind') {
-        const k = 1 - easeInOut(S.pt / 2);
-        for (const v of victims) if (v.hitT !== null) knockPose(v, v.hitT * k);
-      }
-      // he stops it: shoved a little way along the line (undone by the rewind)
-      if (manV.hitT !== null && S.fallT >= 0) man.position.x += 1.4 * clamp(manV.hitT / 0.3) * (S.phase === 'rewind' ? 1 - easeInOut(S.pt / 2) : 1);
       five.forEach((q, i) => { if (!victims[i].base) animatePerson(q, t, { phase: i * 1.3 }); });
-      if (S.fallT < 0) animatePerson(man, t * 0.6, { energy: 0.4 });
 
       if (S.phase === 'slow') cameo.start();
       cameo.update(dt);
-      ctx.ui.rewind(S.phase === 'rewind' ? Math.min(1, S.pt / 0.2, (2 - S.pt) / 0.2) : 0, t);
     },
     camera(pl) {
-      if (S.phase === 'go' || S.phase === 'aftermath') {
-        const pts = [trolley.position.clone(), S.committed === 'pushed' ? MAN_ON_TRACK.clone() : fiveCenter.clone().add(V(4, 0, 0)), V(BRIDGE_X, DECK, 0)];
+      if (S.phase === 'go' || S.phase === 'aftermath' || S.phase === 'over') {
+        const pts = [trolley.position.clone(), S.committed === 'pushed' ? LAND.clone().add(V(1, 0, 0)) : fiveCenter.clone().add(V(4, 0, 0)), V(BRIDGE_X, DECK, 0)];
         return { ...frameAll(pts, { margin: 1.25, min: 18 }), stiffness: 2.2 };
       }
       const pts = [pl.pos.clone(), trolley.position.clone().setX(Math.max(trolley.position.x, -34)), fiveCenter.clone(), V(BRIDGE_X, DECK + 2, 0)];
-      return { ...frameAll(pts, { min: 18 }), stiffness: S.phase === 'rewind' ? 1.5 : 2.4 };
+      if (S.phase === 'push') pts.push(LAND.clone());
+      return { ...frameAll(pts, { min: 18 }), stiffness: 2.4 };
     },
-    dispose() { voice.stop(); ctx.ui.rewind(0); },
+    dispose() { voice.stop(); },
   });
 }

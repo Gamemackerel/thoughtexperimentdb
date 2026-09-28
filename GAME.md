@@ -52,7 +52,7 @@ Each vignette is a short (3–8 minute) playable scene in five beats:
 
 **Endings.** A vignette ends with a quiet *The end* card (`ctx.gameOver`) with *Play again* and *Back to the <room>* (the room
 of the house you came from: the first room, the hall, the trolley room or the gallery):
-- after a small number of completed runs (the trolley: three), whatever you chose; the narrator names what never changed;
+- after a small number of completed runs (the trolley: two), whatever you chose; the narrator names what never changed;
 - or when the player takes the most drastic option the experiment offers (the trolley: sending it onto yourself).
 After the first run, a twist opens a new, playable option (the trolley: a third track with its own lever).
 
@@ -106,7 +106,7 @@ Every vignette also has:
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| The painting | **The Trolley Problem** | Walk to the lever; pull it or don't; after the first run, a third track and lever lead to you | Choose yourself · three runs |
+| The painting | **The Trolley Problem** | Walk to the lever; pull it or don't; one run, a rewind, then a third track with a green lever that sends it to you; the second run is the last | Someone is always on the track (after the second run) · you chose yourself · you stood with them |
 | The book on the lectern | **Brain in a Vat** | Wander a sunny little world; its edges flicker; step off and fall outward into a lab where your world floats above a brain, and again | Sit on the bench · no way out (three layers) |
 | The purple door | **Plato's Cave** | Chained, watching shadows; the chains fall; turn to the fire, climb into the light | Keep watching · stay in the light · go back and tell them |
 | The sky door | **Ship of Theseus** | Carry new planks and replace all six of the ship's old ones; the old planks become a second ship | Board the new ship · board the old wood |
@@ -141,8 +141,8 @@ clay scenes (`game/core/paint.js`) so they match the original.
 | Painting | Vignette | What you can do | Endings |
 |---|---|---|---|
 | The lever | **The Trolley Problem** | (as in the first room) | |
-| The footbridge | **The Footbridge** | On a bridge over the line, beside a very large man. Push him, and he stops the trolley; look over the railing (you're too light) | You pushed him · you kept your hands to yourself (after two runs) |
-| The loop | **The Loop** | The side track loops back to the five; one big man on the loop. Pull the lever; a ghost trolley then shows the loop with nobody on it | You needed him there · you left the lever (after two runs) |
+| The footbridge | **The Footbridge** | On a bridge over the line, beside a very large man leaning on the rail. Push him (he resists: three shoves) and he goes over the rail and stops the trolley; look over the railing (you're too light). One run | You pushed him · you kept your hands to yourself |
+| The loop | **The Loop** | The five would stop the trolley; the lever sends it round a loop into one big man instead. A ghost trolley shows each way, then one real run | You needed him there · you left the lever |
 | The surgeon | **The Transplant Surgeon** | Five patients, five organs, no donors; a healthy visitor in the waiting room. Send him home, or take him to theatre (the doors close; nothing is shown) | You sent him home · you operated |
 
 ### The gallery (built)
@@ -173,7 +173,7 @@ thick strokes (`game/core/brush.js`). A free-standing door leads back into the g
 |---|---|---|---|
 | A hut with no colour | **Mary's Room** | The whole picture is black and white. Read about colour, watch the tomato on the monitor; the door unlocks; step out and the colour floods in (a gardener offers a blue banana) | You saw red · you stayed inside |
 | A white arch with pennants | **Omelas** | The Festival of Summer; the child in the cellar; go back up, walk out of the north gate towards the mountains, or carry the child into the sun | You stayed · you walked away · you brought the child out |
-| A giant paperclip | **The Paperclip Maximiser** | Give your very clever robot a goal; it copies itself, guards its off switch, and takes the island piece by piece | Everything became paperclips · it had to be sure (exactly a hundred) · you left it off |
+| A giant paperclip | **The Paperclip Maximiser** | Your little paperclip business and a very clever new robot: tell it to make as many as it can, and it copies itself, guards its off switch, takes the island and then flies off to take the other islands too; time rewinds and a new button appears, "exactly one hundred", and it gets stuck on "exactly" (what counts as a paperclip? 99.9999% sure isn't enough) and never stops checking | It had to be sure (exactly a hundred) · everything became paperclips (the maximiser again, after the rewind) · you left it off |
 | A tortoise with a world on its back | **Turtles All the Way Down** | A lecture, an old lady; climb down a stack of ever larger turtles | Keep going forever · the last turtle · they hold each other up (a ring) · you stopped asking |
 | A watch in the heather | **The Watchmaker** | Stub your toe on a stone; open the watch (up close); the hare's eye | Go to the maker · watch a million years at the pond (a patch, a cup, a pinhole, a lens) · put the watch back |
 | A chair with a helmet | **The Experience Machine** | Try the demonstration; plug in for life or go home into the rain. The second time, you're told you've been plugged in all along | You plugged in · you went home · you unplugged · you stayed plugged in |
