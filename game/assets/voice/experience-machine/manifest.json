@@ -63,50 +63,5 @@
     "file": "home_2-ecc8dfd5.mp3",
     "text": "Nothing out here was made for you. But it's real, and you're really in it. Is that worth more than feeling good?",
     "dur": 6.5
-  },
-  "twist": {
-    "file": "twist-d2b4251d.mp3",
-    "text": "Actually, there's something we should have told you. You've been in one of our machines all along. This is it. All of it.",
-    "dur": 6.37
-  },
-  "twist_ask": {
-    "file": "twist_ask-8813156f.mp3",
-    "text": "Would you like to unplug?",
-    "dur": 2.12
-  },
-  "air": {
-    "file": "air-2c8ac9fe.mp3",
-    "text": "The door opens onto a street you know very well. Is it really there?",
-    "dur": 4.6
-  },
-  "unplug_0": {
-    "file": "unplug_0-7bdbfc23.mp3",
-    "text": "You pull the plug.",
-    "dur": 1.75
-  },
-  "unplug_1": {
-    "file": "unplug_1-e708c285.mp3",
-    "text": "You wake up, cold, in a tank, in a grey room full of tanks.",
-    "dur": 4.21
-  },
-  "unplug_2": {
-    "file": "unplug_2-309c6530.mp3",
-    "text": "Everything you knew was made for you. This isn't. It's real. Was it worth it?",
-    "dur": 5.07
-  },
-  "stay_1": {
-    "file": "stay_1-ded716af.mp3",
-    "text": "You sit back down. Nothing changes. Nothing at all.",
-    "dur": 4.02
-  },
-  "stay_idle": {
-    "file": "stay_idle-48b008b4.mp3",
-    "text": "You don't pull the plug. Nothing changes.",
-    "dur": 3.24
-  },
-  "stay_2": {
-    "file": "stay_2-99904667.mp3",
-    "text": "When people are told their life was a machine all along, most of them choose to keep it.",
-    "dur": 5.25
   }
 }

@@ -1,8 +1,7 @@
 // Vignette: The Experience Machine.
 // A calm, expensive clinic. A technician will plug you into a machine that gives you any life you like, and you'll
 // never know it isn't real. Try the demonstration (a minute on a stage, the crowd cheering). Then climb into your tank
-// for the rest of your life, or go home, out into the rain. The second time you come, the technician has something to
-// tell you: you've been in one of their machines all along. Would you like to unplug?
+// for the rest of your life, or go home, out into the rain.
 import { THREE, palette, clamp, lerp, easeInOut, seeded, clay, mesh, makePerson, animatePerson, makeFrog, makeTable, makeIsland, makeTree } from '/game/engine/core.js';
 import { loadNotebook } from '../core/notebook.js';
 import { frogCameo } from '../core/frog.js';
@@ -13,8 +12,7 @@ const HALF = 10, BACK = -4.4, FRONT = 3;
 const TANK = V(8.2, 0, -3);                 // yours
 const DEMO = V(-1.8, 0, -3);
 const EXIT = V(-HALF, 0, 0.6);
-const PLUG = V(-4.4, 0, BACK);
-const DREAM = V(90, 0, 0), REAL = V(-90, 0, 0), STREET = V(-17, 0, 0.6);
+const DREAM = V(90, 0, 0), STREET = V(-17, 0, 0.6);
 const IDLE_LIMIT = 60;
 
 function makeTankM(occupied) {
@@ -38,7 +36,6 @@ export default function experienceMachine(ctx) {
   stage.scene.fog = new THREE.Fog(0xeef2f0, 50, 180);
   voice.load('experience-machine');
   const rnd = seeded(1974);
-  const replay = save.done.has('experience-machine');
 
   // ---- the clinic: pale floor, pale walls, a reception desk, soft chairs, a row of tanks
   const floor = mesh(new THREE.BoxGeometry(HALF * 2, 0.4, 8), clay(0xe6ece8)); floor.position.set(0, -0.2, -0.7); floor.receiveShadow = true; root.add(floor);
@@ -66,12 +63,6 @@ export default function experienceMachine(ctx) {
   const helmet = mesh(new THREE.SphereGeometry(0.38, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), clay(0xc9ccd1, { metalness: 0.5 })); helmet.position.set(0, 1.55, -0.55); demo.add(helmet);
   const hpost = mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.8, 6), clay(0x8b909a)); hpost.position.set(0, 0.9, -0.85); demo.add(hpost);
   demo.position.copy(DEMO); root.add(demo);
-  // the plug in the wall (it only matters the second time)
-  const plugBox = mesh(new THREE.BoxGeometry(0.6, 0.8, 0.2), clay(0x5d6470)); plugBox.position.copy(PLUG).add(V(0, 1.3, 0.1)); root.add(plugBox);
-  const cable = mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.3, 8), clay(0x2b2a33)); cable.position.copy(PLUG).add(V(0, 0.65, 0.12)); root.add(cable);
-  const plugHead = mesh(new THREE.BoxGeometry(0.3, 0.2, 0.25), clay(0xe0674f)); plugHead.position.copy(PLUG).add(V(0, 1.3, 0.3)); root.add(plugHead);
-  plugBox.visible = cable.visible = plugHead.visible = replay;
-
   // ---- outside: a grey street in the rain, a bus stop, your friend
   const street = new THREE.Group(); street.position.copy(STREET); root.add(street);
   const pave = mesh(new THREE.BoxGeometry(14, 0.4, 9), clay(0xb8bcc2)); pave.position.set(0, -0.2, 0); street.add(pave);
@@ -95,13 +86,6 @@ export default function experienceMachine(ctx) {
   for (let i = 0; i < 4; i++) { const t = makeTree(1.2, rnd); t.position.set(-9 + i * 5.5, 0, -8); dream.add(t); }
   const dreamer = makePerson({ color: palette.agent }); dreamer.position.set(0, 0.8, -1); dream.add(dreamer);
 
-  // ---- the real thing (the second time): a grey room of tanks, one of them yours
-  const real = new THREE.Group(); real.position.copy(REAL); root.add(real);
-  const rfloor = mesh(new THREE.BoxGeometry(18, 0.4, 10), clay(0x6d7078)); rfloor.position.y = -0.2; real.add(rfloor);
-  const rwall = mesh(new THREE.BoxGeometry(18, 6, 0.3), clay(0x55585f)); rwall.position.set(0, 3, -4.6); real.add(rwall);
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 8; i++) { const t = makeTankM(!(r === 1 && i === 3)); t.position.set(-7 + i * 2, 0, -3 + r * 3.4); t.userData.fluid.material.color.set(0x7a8f88); real.add(t); }
-  const rlight = new THREE.PointLight(0xc8d0d8, 6, 14, 1.6); rlight.position.set(0, 4.5, 1); real.add(rlight);
-
   // ---- the frog: it hops up onto the rim of your empty tank, looks in, and decides against it
   const frog = makeFrog({ scale: 0.55 }); root.add(frog);
   const cameo = frogCameo(frog, [[HALF - 0.6, 1.8], [HALF - 1.2, 0.4], [TANK.x + 0.2, TANK.z + 1.3], { at: [TANK.x, TANK.z + 0.55], y: 3.35, height: 1.6 }, { face: [TANK.x, TANK.z - 2] },
@@ -123,8 +107,8 @@ export default function experienceMachine(ctx) {
       await go('clinic', DEMO.x + 0.6, DEMO.z + 1.4, Math.PI); player.pos.y = 0; S.dreamT = -1;
       player.enabled = true; S.idle = 0; S.demoDone = true; voice.say('demo_2');
     } });
-  // the first time: plug in, or go home
-  interact.add({ pos: TANK.clone().add(V(-0.3, 0, 1.6)), radius: 1.3, height: 3.6, prompt: 'Climb into the tank', terminal: true, enabled: () => S.phase === 'choose' && !replay,
+  // plug in, or go home
+  interact.add({ pos: TANK.clone().add(V(-0.3, 0, 1.6)), radius: 1.3, height: 3.6, prompt: 'Climb into the tank', terminal: true, enabled: () => S.phase === 'choose',
     onUse: async () => {
       S.phase = 'over'; player.enabled = false;
       await go('dream', DREAM.x, DREAM.z - 1); player.pos.y = 0.8; S.dreamT = 0;
@@ -143,38 +127,15 @@ export default function experienceMachine(ctx) {
     save.complete('experience-machine');
     ctx.gameOver({ title: 'You went home', text: 'Nothing out there was made for you. But it is real, and you are really in it. Nozick thought most of us would choose this. Would you still, if it rained every day?' });
   }
-  interact.add({ pos: EXIT.clone().add(V(1.2, 0, 0)), radius: 1.3, height: 2.4, prompt: () => (replay ? 'Go out for some air' : 'Go home'), terminal: !replay, enabled: () => S.phase === 'choose',
-    onUse: () => (replay ? voice.say('air', { urgent: true, once: false }) : goHome(false)) });
-  // the second time: unplug, or stay
-  interact.add({ pos: PLUG.clone().add(V(0, 0, 1.3)), radius: 1.3, height: 2.2, prompt: 'Pull the plug', terminal: true, enabled: () => S.phase === 'choose' && replay,
-    onUse: async () => {
-      S.phase = 'over'; player.enabled = false;
-      await voice.say('unplug_0', { urgent: true });
-      await go('real', REAL.x + (-7 + 3 * 2), REAL.z + 1.6, Math.PI);
-      await voice.say('unplug_1'); await ctx.wait(1.2); await voice.say('unplug_2'); await ctx.wait(1.8);
-      save.complete('experience-machine');
-      ctx.gameOver({ title: 'You unplugged', text: 'Everything you had known was made for you, and you gave it up for a cold grey room that wasn\'t. When people are told they are already plugged in, most of them choose to stay.' });
-    } });
-  async function stayIn(idle) {
-    if (S.phase !== 'choose') return;
-    S.phase = 'over'; player.enabled = false;
-    await voice.say(idle ? 'stay_idle' : 'stay_1', { urgent: true }); await ctx.wait(1); await voice.say('stay_2'); await ctx.wait(1.6);
-    save.complete('experience-machine');
-    ctx.gameOver({ title: 'You stayed plugged in', text: 'Told that your life was a machine all along, you kept it. Most people do. Is that because it is better, or only because it is yours?' });
-  }
-  interact.add({ pos: V(-6.6, 0, 2.6), radius: 1.3, height: 2, prompt: 'Sit back down, and stay', terminal: true, enabled: () => S.phase === 'choose' && replay, onUse: () => stayIn(false) });
-
+  interact.add({ pos: EXIT.clone().add(V(1.2, 0, 0)), radius: 1.3, height: 2.4, prompt: 'Go home', terminal: true, enabled: () => S.phase === 'choose', onUse: () => goHome(false) });
   // asides
-  talk(ctx, { who: tech, enabled: () => S.phase === 'choose' || S.phase === 'intro', lines: replay
-    ? ['I know. It is a lot to take in.', 'Nothing will change if you stay. Nothing at all.', 'Some people pull the plug. Very few.']
-    : ['Any life you like. Just tell us.', 'Most clients choose to be loved. Some choose to be right.', "Take all the time you need. We close at five."] });
+  talk(ctx, { who: tech, enabled: () => S.phase === 'choose' || S.phase === 'intro', lines: ['Any life you like. Just tell us.', 'Most clients choose to be loved. Some choose to be right.', "Take all the time you need. We close at five."] });
   look(ctx, { pos: tanks[1].position.clone().add(V(0.8, 0, 1.4)), radius: 1.3, height: 3.4, prompt: 'Look into the tanks', lines: ['tanks'], enabled: () => S.phase === 'choose' || S.phase === 'intro' });
   look(ctx, { pos: V(-8.6, 0, -2.6), radius: 1.3, height: 2, prompt: 'Read the brochure', lines: ['brochure'], enabled: () => S.phase === 'choose' || S.phase === 'intro' });
 
   (async () => {
     await ctx.wait(1); await voice.say('arrive'); await ctx.wait(0.4); await voice.say('pitch'); await ctx.wait(0.4); await voice.say('forever');
-    if (replay) { await ctx.wait(1); await voice.say('twist'); await ctx.wait(0.6); await voice.say('twist_ask'); }
-    else { await ctx.wait(0.8); await voice.say('ask'); }
+    await ctx.wait(0.8); await voice.say('ask');
     S.phase = 'choose'; S.idle = 0; cameo.start();
   })();
 
@@ -184,7 +145,6 @@ export default function experienceMachine(ctx) {
     walkable: (x, z) => {
       if (S.where === 'dream') return Math.hypot(x - DREAM.x, z - DREAM.z) < 3;
       if (S.where === 'street') return Math.abs(x - STREET.x) < 6.5 && Math.abs(z - STREET.z) < 1.4;
-      if (S.where === 'real') return Math.abs(x - REAL.x) < 8 && z > REAL.z - 1 && z < REAL.z + 4;
       return Math.abs(x) < HALF - 0.4 && z > BACK + 0.5 && z < FRONT;
     },
     blockers: () => (S.where !== 'clinic' ? [{ x: STREET.x - 3.2, z: STREET.z + 0.6, r: 0.4 }] : [
@@ -209,7 +169,7 @@ export default function experienceMachine(ctx) {
       if (S.where === 'tank') { player.pos.set(TANK.x, 0.5 + Math.sin(t * 0.6) * 0.06, TANK.z); mine.userData.light.material.color.setHSL(0.45, 0.8, 0.5 + Math.sin(t * 2) * 0.15); }
       if (S.phase === 'choose' && S.where === 'clinic') {
         S.idle = player.vel.lengthSq() > 0.01 ? 0 : S.idle + dt;
-        if (S.idle > IDLE_LIMIT) { if (replay) stayIn(true); else goHome(true); }
+        if (S.idle > IDLE_LIMIT) goHome(true);
       }
       cameo.update(dt);
     },
@@ -221,7 +181,6 @@ export default function experienceMachine(ctx) {
       }
       if (S.where === 'tank') { const u = easeInOut(clamp((S.pullT - 2.4) / 4)); return { pos: TANK.clone().add(V(-1.5 - u * 3, 2.6 + u * 1.5, 4 + u * 6)), look: TANK.clone().add(V(-1 - u * 2, 1.7, 0)), stiffness: 2 }; }
       if (S.where === 'street') return { pos: STREET.clone().add(V(0, 4.5, 11)), look: STREET.clone().add(V(-0.5, 1.2, 0)), stiffness: 3 };
-      if (S.where === 'real') return { pos: REAL.clone().add(V(0, 4.4, 10.5)), look: REAL.clone().add(V(-1, 1.4, -1)), stiffness: 3 };
       const look = V(clamp(pl.pos.x, -3.5, 3.5), 1.8, -1.2);
       return { pos: look.clone().add(V(0, 5, 13)), look, stiffness: 2.2 };
     },

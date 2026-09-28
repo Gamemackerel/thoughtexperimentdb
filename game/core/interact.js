@@ -5,7 +5,8 @@
 //   terminal  it ends the vignette (or can't be undone): it loses ties to anything else in range
 //   aside     a small curiosity (talk, look): it wins ties against bigger actions
 // When several are in range, the one you're facing wins, then the nearest; terminal ones only win when they're the
-// clear choice. Presses are ignored for a moment after a level loads (grace), and held keys don't repeat.
+// clear choice. Presses are ignored for a moment after a level loads (grace), and held keys don't repeat. After you use
+// an aside, its prompt steps out of the way for a few seconds, so it doesn't sit on top of the bubble it just opened.
 import { THREE } from '/game/engine/core.js';
 
 export class Interact {
@@ -34,7 +35,8 @@ export class Interact {
 
   use() {
     if (performance.now() < this.graceUntil) return;
-    if (this.current && this.current.enabled()) { this.onUse?.(); this.current.onUse(); }
+    const it = this.current;
+    if (it && it.enabled()) { this.onUse?.(); if (it.aside) it.hideUntil = performance.now() + 3800; it.onUse(); }
   }
 
   update(player) {
@@ -42,7 +44,7 @@ export class Interact {
     const face = player.firstPerson ? player.viewDir().setY(0).normalize() : new THREE.Vector3(Math.sin(player.obj.rotation.y), 0, Math.cos(player.obj.rotation.y));
     let best = null, bestScore = Infinity;
     for (const it of this.items) {
-      if (!it.enabled()) continue;
+      if (!it.enabled() || (it.hideUntil ?? 0) > performance.now()) continue;
       const q = typeof it.pos === 'function' ? it.pos() : it.pos;
       const dx = q.x - p.x, dz = q.z - p.z, d = Math.hypot(dx, dz);
       if (d >= it.radius) continue;

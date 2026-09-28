@@ -109,26 +109,19 @@ const ctx = {
   page(html) { pageEl.innerHTML = html + '<div class="hint">E · put it down</div>'; pageEl.hidden = false; },
   get pageOpen() { return !pageEl.hidden; },
   // ends a vignette: a quiet card with "play again" / "back to <the room>". It also asks the journal question and takes a
-  // note for the builder. If you've been here before, the narrator notices whether it ended the same way.
+  // note for the builder. It's the same card the first time and every time after (nothing depends on having played).
   async gameOver({ kicker = 'The end', title, text = '' }) {
     if (busy || !level || HUBS.has(level.name)) return;
-    const g = gen, id = level.name;
+    const id = level.name;
     player.enabled = false; player.target = null;
-    const before = journal.endings(id);
     journal.reach(id, title);
-    if (before.length) {
-      await voice.say(before[before.length - 1] === title ? 'again_same' : 'again_diff', { common: true, once: false });
-      if (g !== gen) return;
-    }
     clearBubbles();
     over.querySelector('.kicker').textContent = kicker;
     over.querySelector('h1').textContent = title;
     over.querySelector('p').textContent = text;
-    const q = journal.question(id, title), prev = journal.lastAnswer(id);
+    const q = journal.question(id, title);
     over.querySelector('.ask').hidden = !q;
     over.querySelector('.ask .q').textContent = q;
-    const prevEl = over.querySelector('.prev');
-    prevEl.hidden = !prev; prevEl.textContent = prev ? `Last time you wrote: “${prev.text}”` : '';
     answerEl.value = ''; feedbackEl.value = '';
     over.querySelector('[data-act="home"]').textContent = `Back to ${ROOM_NAME[ctx.hub] ?? 'the house'}`;
     over.hidden = false;

@@ -28,7 +28,6 @@ export default function fermiParadox(ctx) {
   stage.scene.fog = new THREE.Fog(NIGHT, 70, 400);
   stage.hemi.intensity = 0.55; stage.hemi.color.set(0x9fb2e0); stage.sun.intensity = 0.9; stage.sun.color.set(0xc8d4ff);
   voice.load('fermi-paradox');
-  const replay = save.done.has('fermi-paradox');
 
   root.add(makeIsland({ radius: 22, seed: 19, color: 0x7d8b7a, rim: 0x5c6a5e }));
   // the radio dish, its concave face turned up and towards you, aimed at the sky over the moon
@@ -161,7 +160,7 @@ export default function fermiParadox(ctx) {
     } });
 
   // asides: the logbook, the cold tea, and the moon through the telescope
-  look(ctx, { pos: CRATE.clone().add(V(0.5, 0, 1)), radius: 1.7, height: 1.6, prompt: 'Read the logbook', lines: [replay ? 'logbook_again' : 'logbook'], enabled: () => S.phase === 'explore' });
+  look(ctx, { pos: CRATE.clone().add(V(0.5, 0, 1)), radius: 1.7, height: 1.6, prompt: 'Read the logbook', lines: ['logbook'], enabled: () => S.phase === 'explore' });
   look(ctx, { pos: CRATE.clone().add(V(1.3, 0, 0.1)), radius: 1.2, height: 1.6, prompt: 'Drink the tea', lines: ['tea'], enabled: () => S.phase === 'explore' });
   look(ctx, { pos: SCOPE.clone().add(V(0.3, 0, 0.8)), radius: 1.8, height: 2, prompt: 'Look through the telescope', lines: ['moon'], enabled: () => S.phase === 'explore' });
 
