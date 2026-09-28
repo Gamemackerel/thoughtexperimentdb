@@ -198,7 +198,7 @@ export default function brainInAVat(ctx) {
 
       // nearing the edge: the first time, the question; in the labs, the same flicker
       if (S.phase === 'explore' && distFromCenter() > radius() - 4) {
-        if (S.layer === 0 && !S.edgeSeen) { S.edgeSeen = true; voice.say('edge'); voice.say('ask').then(() => (S.asked = true)); }
+        if (S.layer === 0 && !S.edgeSeen) { S.edgeSeen = true; voice.say('edge', { urgent: true }); voice.say('ask').then(() => (S.asked = true)); }
         if (S.layer > 0 && !S['edge' + S.layer]) { S['edge' + S.layer] = true; voice.say(S.layer === 1 ? 'lab_edge' : 'lab_edge_2'); }
       }
       // the edge flickers: glitch grows as you approach it

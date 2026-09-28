@@ -7,7 +7,7 @@ await p.goto('http://localhost:5173/game/?level=brain-in-a-vat'); await new Prom
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
 const shot = (n) => { console.log('step', n); return p.screenshot({ path: `build/playtest-biv-${n}.png` }); };
 const walkTo = (x, z) => p.evaluate((x, z) => { const P = window.__ted.player; P.target = P.pos.clone().set(x, 0, z); }, x, z);
-const pressWhenReady = async () => { for (let i = 0; i < 40; i++) { if (await p.evaluate(() => document.getElementById('prompt').classList.contains('on'))) break; await sleep(0.25); } await p.keyboard.press('KeyE'); };
+const pressWhenReady = async () => { for (let i = 0; i < 70; i++) { if (await p.evaluate(() => document.getElementById('prompt').classList.contains('on'))) break; await sleep(0.25); } await p.keyboard.press('KeyE'); };
 const S = () => p.evaluate(() => ({ ...window.__ted.level.__S }));
 await sleep(3); await shot('01-arrive');
 await walkTo(-3, -1); await sleep(3); await shot('02-house');

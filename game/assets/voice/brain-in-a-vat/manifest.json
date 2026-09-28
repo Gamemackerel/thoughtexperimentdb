@@ -4,25 +4,30 @@
     "text": "A sunny afternoon. The sun is warm on your face, and everything feels real.",
     "dur": 5.22
   },
+  "wonder": {
+    "file": "wonder-881a1541.mp3",
+    "text": "Have you ever wondered how any of this came to exist? What reality actually is, underneath everything you can touch.",
+    "dur": 7.11
+  },
   "solid": {
     "file": "solid-9fee242f.mp3",
     "text": "The grass, the trees, the warmth. All of it feels solid.",
     "dur": 4.1
   },
   "edge": {
-    "file": "edge-1a55e6d4.mp3",
-    "text": "The world ends here. Just past the edge, it flickers.",
-    "dur": 3.81
+    "file": "edge-2994cac6.mp3",
+    "text": "The world ends here. By some incredible glitch, or magic, you've glimpsed the true nature of reality.",
+    "dur": 6.53
   },
   "ask": {
-    "file": "ask-5ec6ce9c.mp3",
-    "text": "If none of this were real, how would you ever know?",
-    "dur": 3.42
+    "file": "ask-c7e9f956.mp3",
+    "text": "Something flickers at the edge of your vision. Will you go after it, and try to see what's beneath?",
+    "dur": 5.38
   },
   "fall": {
-    "file": "fall-6d5798f0.mp3",
-    "text": "You step off the edge. In the real version, there would be no edge to find.",
-    "dur": 4.78
+    "file": "fall-804a235f.mp3",
+    "text": "You step off, and go looking for what's beneath.",
+    "dur": 3.32
   },
   "lab_1": {
     "file": "lab_1-bb045bbc.mp3",
