@@ -72,7 +72,8 @@ encyclopedia entry (SEP where one exists), with links. Questions and to-dos live
 saved in the browser (`localStorage`).
 
 Every vignette also has:
-- **A notebook:** an optional page (`N`), never forced, for the curious: where the thought experiment comes from,
+- **A notebook:** an optional page (`N`, or "Read the notebook" on the end card), never forced, and locked until you've
+  reached an ending in that vignette, so it never gives the experiment away beforehand. For the curious: where the thought experiment comes from,
   sources, recommended reading and the video essay, from `game/notebook/<id>.json`. The notebook and the
   journal are the only places philosophers and citations appear.
 - **Replay:** after the reflection, the choice comes round again. The narrator acknowledges whether you chose the same

@@ -22,7 +22,7 @@ body.game #ui { position: fixed; inset: 0; }
   opacity: 0; transition: opacity 0.4s; }
 #toast.on { opacity: 1; }
 
-#notebook { position: absolute; inset: 6vh 50% auto auto; transform: translateX(50%); width: min(760px, 88vw); max-height: 84vh; overflow: auto;
+#notebook { z-index: 3; position: absolute; inset: 6vh 50% auto auto; transform: translateX(50%); width: min(760px, 88vw); max-height: 84vh; overflow: auto;
   padding: 34px 40px; background: #fffcf5; border-radius: 16px; box-shadow: 0 30px 80px rgba(40, 25, 10, 0.25); pointer-events: auto;
   font: 400 19px/1.55 var(--serif); }
 #notebook h2 { font: 500 34px/1.1 var(--serif); margin: 0 0 6px; }

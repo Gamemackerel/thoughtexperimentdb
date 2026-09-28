@@ -44,9 +44,10 @@ const LEVELS = {
   'sheep-field': () => import('./vignettes/sheep-field.js'),
   'fake-barns': () => import('./vignettes/fake-barns.js'),
   mirage: () => import('./vignettes/mirage.js'),
+  museum: () => import('./house/museum.js'),
 };
 // rooms of the house (hubs), and which room each vignette belongs to (where "back" goes)
-const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery', 'field', 'barn']);
+const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery', 'field', 'barn', 'museum']);
 const HOME_ROOM = {
   'grandfather-paradox': 'hall', 'infinite-monkey': 'hall', 'simulation-argument': 'hall', 'fermi-paradox': 'hall', 'tragedy-of-the-commons': 'hall',
   footbridge: 'trolley-room', 'loop-track': 'trolley-room', transplant: 'trolley-room',
@@ -86,12 +87,15 @@ const journal = new Journal();
 // scripts stop where they are instead of running on into the next level (ending it, or opening its card over the house).
 let gen = 0;
 const wait = (s) => { const g = gen; return new Promise((r) => setTimeout(() => { if (g === gen) r(); }, s * 1000)); };
-const ROOM_NAME = { house: 'the first room', hall: 'the hall', 'trolley-room': 'the trolley room', gallery: 'the gallery', field: 'the field', barn: 'the barn' };
+const ROOM_NAME = { house: 'the first room', hall: 'the hall', 'trolley-room': 'the trolley room', gallery: 'the gallery', field: 'the field', barn: 'the barn', museum: 'the museum' };
 const flash = document.getElementById('flash'), toastEl = document.getElementById('toast'), nb = document.getElementById('notebook');
 let toastTimer;
 const save = {
   done: new Set(JSON.parse((() => { try { return localStorage.getItem('ted.done') || '[]'; } catch { return '[]'; } })())),
   complete(id) { this.done.add(id); try { localStorage.setItem('ted.done', JSON.stringify([...this.done])); } catch {} },
+  // things you've brought home (they go on the plinths in the museum), e.g. 'chest-of-gold'
+  items: new Set(JSON.parse((() => { try { return localStorage.getItem('ted.items') || '[]'; } catch { return '[]'; } })())),
+  keep(id) { this.items.add(id); try { localStorage.setItem('ted.items', JSON.stringify([...this.items])); } catch {} },
 };
 const ctx = {
   stage, get ui() { return ui; }, player, interact, voice, save, wait,
@@ -165,7 +169,11 @@ function sendFeedback() {
   }) }).catch(() => {});
 }
 function leaveCard(act) { keepAnswer(); sendFeedback(); over.hidden = true; goto(act === 'again' ? level.name : ctx.hub); }
-over.addEventListener('click', (e) => { const act = e.target.dataset?.act; if (act) leaveCard(act); });
+over.addEventListener('click', (e) => {
+  const act = e.target.dataset?.act; if (!act) return;
+  if (act === 'notes') { if (level?.notebook) { nb.innerHTML = `<div class="close">Esc · close</div>${level.notebook}`; nb.hidden = false; } return; }   // over the card; closing it returns there
+  leaveCard(act);
+});
 
 // the way home, always in view in a vignette (and Esc): a small pill, then a quiet "are you sure"
 const homeBtn = document.getElementById('home'), leaveEl = document.getElementById('leave');
@@ -241,7 +249,9 @@ canvas.addEventListener('pointerup', (e) => {
   if (spot) player.target = new THREE.Vector3(spot.x, 0, spot.z);
 });
 addEventListener('keydown', (e) => {
+  // the notebook (sources, reading) opens only once you've played this vignette to an ending, so it never gives it away
   if (e.code === 'KeyN' && level?.notebook) {
+    if (!save.done.has(level.name)) { if (nb.hidden) ctx.toast('The notebook opens once you\'ve reached an ending here.', 2.5); return; }
     nb.innerHTML = `<div class="close">N · close</div>${level.notebook}`;
     nb.hidden = !nb.hidden;
   }

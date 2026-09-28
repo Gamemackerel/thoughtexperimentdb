@@ -177,7 +177,12 @@ export default function brainInAVat(ctx) {
       if (S.layer === 0) return [{ x: -6, z: -5, w: 3.4, d: 3, rot: 0.5 }, { x: 2, z: 1.6, w: 2.6, d: 0.8, rot: -0.3 }, ...world.userData.trees.map((t) => ({ x: t.x, z: t.z, r: 0.45 }))];
       return [{ x: c.x, z: c.z, r: 2.6 }, { x: c.x - 5.6, z: c.z - 1.4, r: 1.8 }];
     },
-    start() { setTimeout(() => voice.say('arrive'), 900); },
+    start() {
+      (async () => {
+        await ctx.wait(0.9); await voice.say('arrive');
+        await ctx.wait(1.4); voice.say('wonder', { when: () => !S.edgeSeen });
+      })();
+    },
 
     update(dt, t) {
       S.pt += dt;

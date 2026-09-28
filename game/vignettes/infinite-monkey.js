@@ -108,8 +108,8 @@ export default function infiniteMonkey(ctx) {
     onUse: async () => {
       ctx.page(page(S.waits, 11 + S.waits * 7 + Math.floor(S.years)));
       S.readAt = S.waits;
-      if (S.waits >= 3) { S.phase = 'over'; await ctx.wait(0.6); await voice.say('found'); await voice.say('found_2'); await ctx.wait(1); save.complete('infinite-monkey');
-        return ctx.gameOver({ title: 'Given forever', text: 'Three million years of noise, and then a line of Hamlet. Nobody meant it. It was simply bound to happen.' }); }
+      if (S.waits >= 3) { S.phase = 'over'; await ctx.wait(0.6); await voice.say('found'); await voice.say('found_2'); await ctx.wait(0.8); await voice.say('meaning'); await ctx.wait(1); save.complete('infinite-monkey');
+        return ctx.gameOver({ title: 'Given forever', text: 'Three million years of noise, and then a line of Hamlet, word for word. Nobody meant it. Does it mean anything anyway?' }); }
       if (S.waits === 0) voice.say('best');
       voice.say(['page_0', 'page_1', 'page_2'][S.waits], { once: false });
     } });
