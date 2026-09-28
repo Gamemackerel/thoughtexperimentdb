@@ -7,7 +7,9 @@ const b = await puppeteer.launch({ headless: true, args: ['--use-angle=metal', '
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
 const p = await b.newPage(); await p.setViewport({ width: 1280, height: 800 });
 const errs = []; p.on('pageerror', (e) => errs.push(e.message));
-const before = fs.existsSync('feedback.txt') ? fs.readFileSync('feedback.txt', 'utf8').length : 0;
+// the note is saved as a download: catch it in build/downloads
+const DL = new URL('../../build/downloads/', import.meta.url).pathname; fs.rmSync(DL, { recursive: true, force: true }); fs.mkdirSync(DL, { recursive: true });
+(await p.createCDPSession()).send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: DL });
 await p.goto('http://localhost:5173/game/?level=fermi-paradox'); await sleep(1.5); await p.click('#begin'); await sleep(3);
 // the quickest ending: listen, then send
 const walk = (x, z) => p.evaluate((x, z) => { const P = window.__ted.player; P.target = P.pos.clone().set(x, 0, z); }, x, z);
@@ -26,7 +28,7 @@ await p.evaluate(() => window.__ted.ctx.goto('house')); await sleep(4);     // t
 await walk(-2, -5.8); await sleep(5); await press(); await sleep(1);
 await p.screenshot({ path: 'build/playtest-journal-2-journal.png' });
 const text = await p.evaluate(() => { const j = document.getElementById('journal'); return j.innerText + [...j.querySelectorAll('textarea')].map((t) => t.value).join(' '); });
-const after = fs.existsSync('feedback.txt') ? fs.readFileSync('feedback.txt', 'utf8') : '';
+await sleep(1); const files = fs.readdirSync(DL).filter((f) => f.startsWith('thoughtexperimentfeedback-fermi-paradox-'));
 console.log('journal open:', text.includes('Fermi'), '| answer kept:', text.includes('saying we were here'), '| todo shown:', text.includes('Kurzgesagt'));
-console.log('feedback written:', after.length > before, '| keys leaked to notebook:', leaked, '| errors:', errs.join(' | ') || 'none');
+console.log('feedback file saved:', files.length === 1 && fs.readFileSync(DL + files[0], 'utf8').includes('[automated test]'), '| keys leaked to notebook:', leaked, '| errors:', errs.join(' | ') || 'none');
 await b.close();

@@ -23,7 +23,8 @@ npm run play       # then open http://localhost:5173/game/   (?level=<id> jumps 
 Requires Node 20+. Voicing new lines also needs Python 3.10+ and ffmpeg.
 
 How it's designed and made, and how to add a vignette: [GAME.md](GAME.md). Notes left in the game-over card's
-"tell the builder" box land in `feedback.txt` (not committed); reports from AI playtesters are in `game/playtest/`.
+"tell the builder" box are saved as `thoughtexperimentfeedback-*.txt` files in the player's Downloads, to be sent to the
+builder; reports from AI playtesters are in `game/playtest/`.
 
 ## Repository layout
 

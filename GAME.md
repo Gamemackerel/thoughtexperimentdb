@@ -60,9 +60,10 @@ The game-over card also asks two things, both optional:
 - **The journal question:** one guided question about what the player just did, in the form "what do you think, and
   why?" (e.g. Ship of Theseus: *Which one was the real ship: the repaired one, or the one rebuilt from the old planks?
   What made you decide?*). The answer goes into the player's **journal**.
-- **A note for the builder:** anything confusing, broken or missing. It's sent to the dev server and appended to
-  `feedback.txt` at the repo root (gitignored), with the level, ending, player position, the level's `__S` state and the
-  screen size, so it can be picked up on the next iteration. Read it before starting work on a vignette.
+- **A note for the builder:** anything confusing, broken or missing. Each note is saved as its own small text file in
+  the player's Downloads (`thoughtexperimentfeedback-<vignette>-<date>-<time>.txt`), with the level, ending, player
+  position, the level's `__S` state and the screen size; players send those files to the builder. (The same locally and on
+  the hosted site. Older notes, from before this, are in `feedback.txt` at the repo root, gitignored.)
 
 **The journal** lies open on a writing desk in the first room (it glows once you've finished something). It keeps, per
 vignette: every ending you've reached (with the date), and every answer you've written, each with the ending it followed,
@@ -290,7 +291,7 @@ game/
   assets/paintings/     the trolley painting
   playtest/             AI playtest briefs, raw reports and consolidated feedback
   tools/voice.mjs       renders lines with Kokoro → assets/voice
-  tools/serve.mjs       local dev server → http://localhost:5173/game/ (also appends POST /feedback to feedback.txt)
+  tools/serve.mjs       local dev server → http://localhost:5173/game/
   tools/playtest-*.mjs  automated playthroughs (headless Chrome drives window.__ted; screenshots to build/)
   tools/playtest-asides.mjs   watches every frog cameo and tries every aside
   tools/shot.mjs        quick screenshots of any level after walking to given points

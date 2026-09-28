@@ -157,16 +157,23 @@ for (const el of [over, journalEl]) for (const t of ['keydown', 'keyup']) el.add
 });
 // the answer is kept with the ending it was written after (every answer, not just the latest)
 function keepAnswer() { const t = answerEl.value.trim(); if (t && level) journal.answer(level.name, over.querySelector('h1').textContent, t); }
-// playtest feedback goes to feedback.txt at the repo root (via the dev server), with enough context to reproduce
+// playtest feedback: each note saves a small text file to the player's Downloads (the same on the hosted site and locally),
+// named after the room and the time, with enough context to reproduce; players send those files to the builder
 function sendFeedback() {
   const text = feedbackEl.value.trim(); if (!text) return;
   const state = {};
   for (const [k, v] of Object.entries(level.__S ?? {})) if (v === null || ['string', 'number', 'boolean'].includes(typeof v)) state[k] = v;
-  fetch('/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-    level: level.name, ending: over.querySelector('h1').textContent, text, answer: answerEl.value.trim(), state,
-    time: Math.round(time), player: { x: +player.pos.x.toFixed(2), z: +player.pos.z.toFixed(2) },
-    screen: `${innerWidth}x${innerHeight}`, ua: navigator.userAgent,
-  }) }).catch(() => {});
+  const now = new Date(), answer = answerEl.value.trim();
+  const body = [`## ${now.toISOString()}  ${level.name}  (ending: ${over.querySelector('h1').textContent})`, '', text, '',
+    answer ? `journal answer: ${answer}` : null,
+    `context: t=${Math.round(time)}s player=(${player.pos.x.toFixed(2)}, ${player.pos.z.toFixed(2)}) screen=${innerWidth}x${innerHeight}`,
+    `state: ${JSON.stringify(state)}`, `browser: ${navigator.userAgent}`, ''].filter((l) => l !== null).join('\n');
+  const stamp = now.toISOString().slice(0, 16).replace('T', '-').replace(':', '');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([body], { type: 'text/plain' }));
+  a.download = `thoughtexperimentfeedback-${level.name}-${stamp}.txt`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 function leaveCard(act) { keepAnswer(); sendFeedback(); over.hidden = true; goto(act === 'again' ? level.name : ctx.hub); }
 over.addEventListener('click', (e) => {

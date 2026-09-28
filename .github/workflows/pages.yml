@@ -1,0 +1,57 @@
+# Publishes the game to GitHub Pages on every push to main: https://<owner>.github.io/<repo>/
+# The game loads its files from absolute paths (/game/…, /node_modules/three/…), as the local dev server serves them;
+# Pages serves a project site under /<repo>/, so those paths are rewritten here, in the copy that's published.
+name: Publish the game
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install three.js
+        run: npm ci --ignore-scripts --omit=optional
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+      - name: Assemble the site
+        run: |
+          BASE="/${{ github.event.repository.name }}"
+          mkdir -p _site/node_modules/three
+          cp -r game _site/game
+          rm -rf _site/game/tools _site/game/playtest
+          cp -r node_modules/three/build node_modules/three/examples _site/node_modules/three/
+          # absolute paths → under the project site's folder
+          find _site/game -type f \( -name '*.js' -o -name '*.html' -o -name '*.css' \) -print0 \
+            | xargs -0 sed -i -E "s#(['\"\`(])/(game|node_modules)/#\1${BASE}/\2/#g"
+          # the site's front page goes straight to the game
+          printf '<!doctype html><meta charset="utf-8"><title>Thought Experiments</title><meta http-equiv="refresh" content="0; url=game/"><a href="game/">Thought Experiments</a>\n' > _site/index.html
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}game/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
