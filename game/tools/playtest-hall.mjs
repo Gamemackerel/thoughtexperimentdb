@@ -51,7 +51,7 @@ await run('infinite-monkey', async (t) => {
 await run('simulation-argument', async (t) => {
   await t.shot('arrive'); await t.at(0.6, -1.6); await sleep(6); await t.shot('zoom');
   await sleep(4); await t.at(-1.4, -1.8); await sleep(5); await t.shot('shelves'); await sleep(4); await t.shot('reveal');
-  await sleep(6); await t.at(1.4, -1.8); await sleep(9); await t.shot('off'); await sleep(8); await t.shot('giant'); await t.waitOver(40); await t.shot('end');
+  await sleep(6); await t.at(1.4, -1.8); await sleep(9); await t.shot('off'); await sleep(8); await t.shot('giant'); await t.waitOver(40); await t.shot('end'); console.log('  ended:', await t.p.evaluate(() => document.getElementById('over').innerText.slice(0, 160)));
 });
 await run('fermi-paradox', async (t) => {
   const open = async () => { for (let i = 0; i < 120; i++) { if (await t.p.evaluate(() => window.__ted.level.__S.open)) return; await sleep(0.5); } };
@@ -59,11 +59,11 @@ await run('fermi-paradox', async (t) => {
   await t.at(-3.5, 1.7); await open(); await sleep(2); await t.shot('listened');
   if (process.env.FERMI === 'listen') { await t.at(0.8, 4.3); await sleep(6); await t.shot('lapse'); await sleep(8); await t.shot('years'); }
   else { await t.at(6.6, 1.3); await sleep(2); await t.shot('send'); await sleep(3); await t.shot('beam'); await sleep(6); await t.shot('lapse'); }
-  await t.waitOver(40); await t.shot('end');
+  await t.waitOver(40); await t.shot('end'); console.log('  ended:', await t.p.evaluate(() => document.getElementById('over').innerText.slice(0, 160)));
 });
 await run('tragedy-of-the-commons', async (t) => {
   // COMMONS= (agree: let sheep out, try the bell early, ring it after the hint) | idle (held back) | back (bring one in,
-  // then nothing: took back) | greedy (let three out, then nothing: the grass is gone)
+  // then nothing: took back) | greedy (let three out, then nothing: the grass is gone) | onemore (agree, then let one more out)
   const S = () => t.p.evaluate(() => { const s = window.__ted.level.__S; return { grass: s.grass, phase: s.phase, bellOpen: s.bellOpen, adds: s.adds, tookBack: s.tookBack }; });
   const prompt = () => t.p.evaluate(() => document.getElementById('prompt').textContent);
   const mode = process.env.COMMONS ?? 'agree';
@@ -78,6 +78,12 @@ await run('tragedy-of-the-commons', async (t) => {
   await t.walkTo(-3.6, 14.8); await sleep(3); console.log('  bell before hint:', await prompt()); await t.press(); await sleep(2); console.log('  ', await S());
   for (let i = 0; i < 300; i++) { if ((await S()).bellOpen) break; await sleep(0.5); }
   console.log('  bell after hint:', await prompt(), await S());
-  await t.shot('thin'); await t.press(); await sleep(7); await t.shot('meeting'); await sleep(7); await t.shot('agreed'); await t.waitOver(40); await t.shot('end');
+  await t.shot('thin'); await t.press(); await sleep(7); await t.shot('meeting'); await sleep(7); await t.shot('agreed');
+  // the temptation after the agreement: COMMONS=onemore lets one more out; agree keeps to it (says no at the meeting spot)
+  for (let i = 0; i < 120; i++) { if ((await S()).phase === 'tempt') break; await sleep(0.5); }
+  await sleep(3); console.log('  tempt:', await prompt(), await S());
+  if (mode === 'onemore') { for (const [x, z] of [[2.6, 8.5], [2.8, 11.5], [2.2, 14.4]]) { await t.walkTo(x, z); await sleep(2.5); } console.log('  at pen gate:', await prompt()); await t.press(); await sleep(4); await t.shot('one-more'); }
+  else await t.press();
+  await t.waitOver(40); await t.shot('end'); console.log('  ended:', await t.p.evaluate(() => document.getElementById('over').innerText.slice(0, 160)));
 });
 await b.close();

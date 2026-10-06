@@ -118,19 +118,22 @@ export default function field(ctx) {
 
   // ---- the portals
   const P = {
-    'marys-room': V(-9, 0, 8.5), puddle: V(-4.2, 0, 5.4), paperclip: V(7.6, 0, 9), 'experience-machine': V(11.5, 0, 2.6),
+    'tragedy-of-the-commons': V(-9, 0, 8.5), puddle: V(-4.2, 0, 5.4), paperclip: V(7.6, 0, 9), 'experience-machine': V(11.5, 0, 2.6),
     'veil-of-ignorance': V(-12, 0, 0.5), turtles: V(-7.5, 0, -5.2), watchmaker: V(3.4, 0, -2.4), omelas: V(-2, 0, -11.5), swampman: V(10.5, 0, -8.5),
     barn: V(16.5, 0, -15.5), gallery: V(0, 0, 15.5),
   };
   for (const [k, p] of Object.entries(P)) clearings.push([p.x, p.z, k === 'barn' ? 5 : k === 'omelas' ? 3.6 : 3]);
 
-  // Mary's Room: a little hut with no colour at all
-  const hut = new THREE.Group();
-  const hutBody = mesh(new THREE.BoxGeometry(2.4, 2.2, 2.2), clay(0xb8b8b8)); hutBody.position.y = 1.1; hut.add(hutBody);
-  const hutRoof = mesh(new THREE.ConeGeometry(2, 1.2, 4), clay(0x4a4a4a)); hutRoof.position.y = 2.8; hutRoof.rotation.y = Math.PI / 4; hut.add(hutRoof);
-  const hutDoor = mesh(new THREE.BoxGeometry(0.8, 1.5, 0.08), clay(0x2b2b2b)); hutDoor.position.set(0, 0.75, 1.13); hut.add(hutDoor);
-  const hutWin = mesh(new THREE.BoxGeometry(0.6, 0.5, 0.06), clay(0xeeeeee)); hutWin.position.set(0.75, 1.5, 1.12); hut.add(hutWin);
-  hut.position.copy(P['marys-room']).add(V(0, 0, -1.4)); hut.rotation.y = 0.35; root.add(hut);
+  // the Tragedy of the Commons: a green garden gate in a stretch of fence, with nothing behind it but more field
+  const hut = new THREE.Group(); const gmat = clay(0x4f8a55), fmat = clay(palette.wood);
+  for (const x of [-0.8, 0.8]) { const post = mesh(new THREE.BoxGeometry(0.16, 2.2, 0.16), gmat); post.position.set(x, 1.1, 0); hut.add(post); }
+  for (let i = 0; i < 6; i++) { const bar = mesh(new THREE.BoxGeometry(0.08, 1.6, 0.08), gmat); bar.position.set(-0.55 + i * 0.22, 0.95, 0); hut.add(bar); }
+  const gateRail = mesh(new THREE.BoxGeometry(1.7, 0.1, 0.1), gmat); gateRail.position.y = 1.7; hut.add(gateRail);
+  for (const sx of [-1, 1]) {
+    for (const x of [1.8, 2.8]) { const fp = mesh(new THREE.BoxGeometry(0.12, 1.2, 0.12), fmat); fp.position.set(sx * x, 0.6, 0); hut.add(fp); }
+    for (const y of [0.45, 0.95]) { const fr = mesh(new THREE.BoxGeometry(2.1, 0.08, 0.06), fmat); fr.position.set(sx * 1.85, y, 0); hut.add(fr); }
+  }
+  hut.position.copy(P['tragedy-of-the-commons']).add(V(0, 0, -1.2)); hut.rotation.y = 0.35; root.add(hut);
   // a puddle in the path, holding a piece of the sky
   const puddleTex = canvasTexture(256, 256, (g, w, h) => { strokes(g, w, h, { base: '#2c5aa0', colors: ['#3f73b8', '#8fb5d9', '#1d3a78', '#b9d2ea'], count: 600, len: [8, 16], width: [3, 5], dir: (x, y) => Math.atan2(y - 128, x - 128) + 1.57 }); g.fillStyle = '#fff6b0'; g.beginPath(); g.arc(160, 100, 10, 0, 7); g.fill(); });
   const puddleShape = new THREE.Shape(); for (let i = 0; i <= 24; i++) { const a = (i / 24) * 6.28, rr = 1.1 + Math.sin(a * 3) * 0.2 + Math.cos(a * 2) * 0.15; i ? puddleShape.lineTo(Math.cos(a) * rr * 1.3, Math.sin(a) * rr) : puddleShape.moveTo(Math.cos(a) * rr * 1.3, Math.sin(a) * rr); }
@@ -218,7 +221,7 @@ export default function field(ctx) {
   wheat.count = wheatAt.length;
 
   const portals = [
-    { id: 'marys-room', name: "Mary's Room", pos: P['marys-room'], labelAt: V(-9, 3.8, 7.1), prompt: 'Open the grey door' },
+    { id: 'tragedy-of-the-commons', name: 'Tragedy of the Commons', pos: P['tragedy-of-the-commons'], labelAt: V(-9, 3, 7.3), prompt: 'Open the gate' },
     { id: 'puddle', name: "The Puddle", pos: P.puddle, labelAt: V(-4.2, 1.4, 4.6), prompt: 'Look into the puddle' },
     { id: 'paperclip', name: 'The Paperclip Maximiser', pos: P.paperclip, labelAt: V(7.6, 3.4, 8), prompt: 'Touch the paperclip' },
     { id: 'experience-machine', name: 'The Experience Machine', pos: P['experience-machine'], labelAt: V(11.9, 2.6, 1.4), prompt: 'Sit in the chair' },
@@ -236,7 +239,7 @@ export default function field(ctx) {
 
   const from = portals.find((p) => p.id === ctx.from);
   const blockers = [
-    { x: hut.position.x, z: hut.position.z, w: 2.6, d: 2.4, rot: 0.35 }, { x: clip.position.x, z: clip.position.z, r: 0.5 }, { x: em.position.x, z: em.position.z, r: 1 },
+    { x: hut.position.x, z: hut.position.z, w: 6, d: 0.3, rot: 0.35 }, { x: clip.position.x, z: clip.position.z, r: 0.5 }, { x: em.position.x, z: em.position.z, r: 1 },
     { x: tort.position.x, z: tort.position.z, r: 1.3 }, { x: arch.position.x - 1.4, z: arch.position.z, r: 0.5 }, { x: arch.position.x + 1.4, z: arch.position.z, r: 0.5 },
     { x: dead.position.x, z: dead.position.z, r: 0.4 }, { x: barn.position.x, z: barn.position.z, w: 6.2, d: 7.2, rot: -0.5 }, { x: painter.position.x, z: painter.position.z, r: 0.45 },
     { x: easel.position.x, z: easel.position.z, r: 0.5 }, { x: chair.position.x, z: chair.position.z, r: 0.5 }, { x: cafe.position.x, z: cafe.position.z, w: 6, d: 4.2, rot: 0.7 },

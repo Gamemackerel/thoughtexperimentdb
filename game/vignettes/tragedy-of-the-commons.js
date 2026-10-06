@@ -141,9 +141,10 @@ export default function commons(ctx) {
 
   // let one of your sheep out, at the pen's gate; bring one back in, at the common's gate (the two are well apart)
   interact.add({ pos: PEN_GATE, radius: 1.4, height: 1.8,
-    prompt: () => (count(0) >= MY_CAP ? 'Your pen is empty' : S.clock - S.lastAdd < ADD_COOLDOWN ? '…' : 'Let a sheep out onto the common'),
-    enabled: () => S.phase === 'graze',
+    prompt: () => (S.phase === 'tempt' ? 'Let just one more out' : count(0) >= MY_CAP ? 'Your pen is empty' : S.clock - S.lastAdd < ADD_COOLDOWN ? '…' : 'Let a sheep out onto the common'),
+    enabled: () => S.phase === 'graze' || (S.phase === 'tempt' && S.tempting),
     onUse: async () => {
+      if (S.phase === 'tempt') return oneMore();
       if (count(0) >= MY_CAP || S.clock - S.lastAdd < ADD_COOLDOWN) return;
       S.lastAdd = S.clock; addSheep(0, true); const first = ++S.adds === 1;
       if (first) voice.say('add_1', { urgent: true });
@@ -178,10 +179,32 @@ export default function commons(ctx) {
       if (count(0) < 2) addSheep(0, true);
       for (let o = 0; o < 5; o++) sheep.filter((s) => s.owner === o && !s.leaving).slice(2).forEach(sendHome);
       await voice.say('agree'); await ctx.wait(1.5);
-      S.phase = 'recover'; S.recT = 0;
-      await ctx.wait(4.5); save.complete('tragedy-of-the-commons');
-      ctx.gameOver({ title: 'You agreed on limits', text: `Nobody owned the pasture, and nobody had to. You talked, agreed limits that were the same for everyone, and kept to them. ${S.recoverFrom > 0.4 ? 'The grass came back.' : 'It took a long time, but the grass came back.'}` });
+      // the grass starts to come back, and everyone goes home: then, one more time, the question
+      S.phase = 'tempt'; S.recT = 0; player.locked = false;
+      await ctx.wait(1); if (S.phase !== 'tempt') return;
+      S.tempting = true; voice.say('tempt');
+      const t0 = S.clock; while (S.phase === 'tempt' && !S.kept && S.clock - t0 < 22) await ctx.wait(0.2);
+      if (S.phase !== 'tempt') return;
+      S.tempting = false; await voice.say('kept', { urgent: true }); await ctx.wait(0.5);
+      save.complete('tragedy-of-the-commons');
+      ctx.gameOver({ title: 'You agreed on limits', text: `Nobody owned the pasture, and nobody had to. You agreed limits that were the same for everyone, and kept to them, even when one more sheep would have paid. ${S.recoverFrom > 0.4 ? 'The grass came back.' : 'It took a long time, but the grass came back.'}` });
     } });
+  // say no: where the meeting was
+  interact.add({ pos: gatePt(0, 2.4), radius: 2.6, height: 1.8, terminal: true, prompt: 'Keep to the agreement', enabled: () => S.phase === 'tempt' && S.tempting, onUse: () => (S.kept = true) });
+
+  // after the agreement, just one more of yours: the sum still works for you, and it works the same for everyone
+  async function oneMore() {
+    S.phase = 'fray'; S.frayAt = S.clock; S.tempting = false; addSheep(0, true); S.adds++;
+    // the whole tragedy, at once: everyone does the same sum, and the grass goes
+    const said = voice.say('tempt_took', { urgent: true }); await ctx.wait(1.2);
+    const say = ['If they can, why can’t I?', 'Just the one, then.', 'So much for the limit.', 'Everyone else is.'];
+    for (let o = 1; o <= 4; o++) { neighbourAdds(o); ctx.speak(herders[o].p, say[o - 1]); await ctx.wait(0.4); }
+    await said; await voice.say('fray');
+    while (S.grass > 0.01) await ctx.wait(0.2);
+    await ctx.wait(1.5);
+    save.complete('tragedy-of-the-commons');
+    ctx.gameOver({ title: 'Just one more', text: 'One extra sheep, just yours, was unfair, but the grass could take it. One extra each, it couldn’t. And everyone could do the same sum. An agreement on the commons only lasts while people keep to it, and can see each other keeping to it.' });
+  }
 
   // asides: the neighbours (they get less chatty as the grass goes), one of your sheep, and your wool
   const CHAT = [
@@ -242,7 +265,8 @@ export default function commons(ctx) {
         }
         S.wool += dt * Math.max(0, count(0) - 2) * 0.18;
       }
-      if (S.phase === 'recover' || S.phase === 'rewind') { S.recT += dt; S.grass = lerp(S.recoverFrom, 1, easeInOut(clamp(S.recT / 4))); }
+      if (S.phase === 'recover' || S.phase === 'rewind' || S.phase === 'tempt') { S.recT += dt; S.grass = lerp(S.recoverFrom, 1, easeInOut(clamp(S.recT / 4))); }
+      if (S.phase === 'fray' && S.clock - S.frayAt > 2.5) S.grass = clamp(S.grass - dt * 0.12);
       woolBalls.forEach((b, i) => (b.visible = i < Math.floor(S.wool)));
       // the spare sheep in the pen (the ones not out on the common), and its gate, open while one of yours goes through
       const out = sheep.filter((sh) => sh.owner === 0 && sh.s.visible).length;

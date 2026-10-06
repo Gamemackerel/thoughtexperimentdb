@@ -49,10 +49,10 @@ const LEVELS = {
 // rooms of the house (hubs), and which room each vignette belongs to (where "back" goes)
 const HUBS = new Set(['house', 'hall', 'trolley-room', 'gallery', 'field', 'barn', 'museum']);
 const HOME_ROOM = {
-  'grandfather-paradox': 'hall', 'infinite-monkey': 'hall', 'simulation-argument': 'hall', 'fermi-paradox': 'hall', 'tragedy-of-the-commons': 'hall',
+  'grandfather-paradox': 'hall', 'infinite-monkey': 'hall', 'simulation-argument': 'hall', 'fermi-paradox': 'hall', 'marys-room': 'hall',
   footbridge: 'trolley-room', 'loop-track': 'trolley-room', transplant: 'trolley-room',
   'ring-of-gyges': 'gallery', 'prisoners-dilemma': 'gallery', 'newcombs-paradox': 'gallery', 'utility-monster': 'gallery', 'chinese-room': 'gallery', 'monty-hall': 'gallery',
-  'marys-room': 'field', omelas: 'field', paperclip: 'field', turtles: 'field', watchmaker: 'field', 'experience-machine': 'field', 'veil-of-ignorance': 'field', puddle: 'field', swampman: 'field',
+  'tragedy-of-the-commons': 'field', omelas: 'field', paperclip: 'field', turtles: 'field', watchmaker: 'field', 'experience-machine': 'field', 'veil-of-ignorance': 'field', puddle: 'field', swampman: 'field',
   'ten-coins': 'barn', 'stopped-clock': 'barn', 'sheep-field': 'barn', 'fake-barns': 'barn', mirage: 'barn',
 };
 

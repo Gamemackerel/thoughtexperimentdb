@@ -247,14 +247,13 @@ export default function hall(ctx) {
   const scope = new THREE.Group(); const tube = mesh(new THREE.CylinderGeometry(0.12, 0.18, 1.8, 16), clay(0xc9a54c, { metalness: 0.5, roughness: 0.35 })); tube.rotation.x = -1.0; tube.position.y = 1.7; scope.add(tube);
   for (const a of [0, 2.1, 4.2]) { const leg = mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.6, 6), clay(palette.wood)); leg.position.set(Math.cos(a) * 0.35, 0.75, Math.sin(a) * 0.35); leg.rotation.set(Math.sin(a) * 0.25, 0, -Math.cos(a) * 0.25); scope.add(leg); }
   scope.position.set(6.2, 0, -2.8); root.add(sframe, swin, scope);
-  // a green garden gate, grass pushing through the floor around it
-  const gate = new THREE.Group(); const gmat = clay(0x4f8a55);
-  for (const x of [-0.8, 0.8]) { const post = mesh(new THREE.BoxGeometry(0.16, 2.2, 0.16), gmat); post.position.set(x, 1.1, 0); gate.add(post); }
-  for (let i = 0; i < 6; i++) { const bar = mesh(new THREE.BoxGeometry(0.08, 1.6, 0.08), gmat); bar.position.set(-0.55 + i * 0.22, 0.95, 0); gate.add(bar); }
-  const rail = mesh(new THREE.BoxGeometry(1.7, 0.1, 0.1), gmat); rail.position.y = 1.7; gate.add(rail);
-  const tufts = new THREE.InstancedMesh(new THREE.ConeGeometry(0.06, 0.4, 5), clay(0x7fb069), 60);
-  for (let i = 0; i < 60; i++) { m.makeTranslation((Math.random() - 0.5) * 3, 0.15, (Math.random() - 0.5) * 1.6); tufts.setMatrixAt(i, m); }
-  gate.add(tufts); gate.position.set(11.5, 0, -3.6); root.add(gate);
+  // Mary's Room: a plain grey door in the back wall, with a grey patch of floor in front of it (no colour at all)
+  const grey = new THREE.Group();
+  const gframe = mesh(new THREE.BoxGeometry(1.5, 2.6, 0.14), clay(0x8a8a8a)); gframe.position.y = 1.3; grey.add(gframe);
+  const gdoor = mesh(new THREE.BoxGeometry(1.1, 2.3, 0.1), clay(0x3a3a3a)); gdoor.position.set(0, 1.15, 0.06); grey.add(gdoor);
+  const gknob = mesh(new THREE.SphereGeometry(0.06, 10, 8), clay(0xdddddd)); gknob.position.set(0.38, 1.1, 0.14); grey.add(gknob);
+  const gmat = mesh(new THREE.BoxGeometry(1.8, 0.02, 1.2), clay(0xb8b8b8)); gmat.position.set(0, 0.01, 0.7); grey.add(gmat);
+  grey.position.set(11.5, 0, -4.4); root.add(grey);
 
   // the way back down: a round hatch in the floor
   const hatch = mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.06, 32), clay(palette.wood)); hatch.position.set(-15, 0.02, 1.4); root.add(hatch);
@@ -265,7 +264,7 @@ export default function hall(ctx) {
     { id: 'infinite-monkey', name: 'Infinite Monkey Theorem', pos: V(-5, 0, -2.2), labelAt: V(-5, 2.6, -3.5), prompt: 'Sit at the typewriter' },
     { id: 'simulation-argument', name: 'Simulation Argument', pos: V(0, 0, -2.2), labelAt: V(0, 3, -3.6), prompt: 'Look into the screen' },
     { id: 'fermi-paradox', name: 'Fermi Paradox', pos: V(6.2, 0, -1.8), labelAt: V(6.2, 3, -2.8), prompt: 'Look through the telescope' },
-    { id: 'tragedy-of-the-commons', name: 'Tragedy of the Commons', pos: V(11.5, 0, -2.2), labelAt: V(11.5, 2.6, -3.6), prompt: 'Open the gate' },
+    { id: 'marys-room', name: "Mary's Room", pos: V(11.5, 0, -3.1), labelAt: V(11.5, 3, -4.2), prompt: 'Open the grey door' },
     { id: 'gallery', name: 'Up the stairs', pos: V(-12.2, 0, -2.6), labelAt: V(-12, 2.4, -3.9), prompt: 'Climb the stairs' },
     { id: 'house', name: 'Down to the first room', pos: V(-15, 0, 1.4), labelAt: V(-15, 1.6, 1.4), prompt: 'Climb down', home: true },
   ];
@@ -274,8 +273,8 @@ export default function hall(ctx) {
   let entering = null;
   for (const p of portals) interact.add({ pos: p.pos, radius: 2.2, prompt: p.prompt, enabled: () => !entering, onUse: () => { entering = p; ctx.player.enabled = false; ctx.goto(p.id); } });
 
-  const spawnAt = { 'grandfather-paradox': [-13.4, -1.2], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'tragedy-of-the-commons': [11.5, -1.2], gallery: [-12.2, -1.6] }[ctx.from];
-  const blockers = [{ x: LR.x, z: LR.z, w: 2.4, d: 2.1 }, { x: -15.6, z: -3.4, r: 0.6 }, { x: FIRE.x, z: FIRE.z + 0.5, r: 1.1 }, { x: 12.4, z: 1.3, r: 0.5 }, { x: -13.8, z: -3.9, r: 0.8 }, { x: -5, z: -3.5, r: 1 }, { x: 0, z: -3.5, r: 1 }, { x: 6.2, z: -2.8, r: 0.6 }, { x: 11.5, z: -3.6, r: 0.6 }];
+  const spawnAt = { 'grandfather-paradox': [-13.4, -1.2], 'infinite-monkey': [-5, -1.2], 'simulation-argument': [0, -1.2], 'fermi-paradox': [6.2, -0.6], 'marys-room': [11.5, -2.2], gallery: [-12.2, -1.6] }[ctx.from];
+  const blockers = [{ x: LR.x, z: LR.z, w: 2.4, d: 2.1 }, { x: -15.6, z: -3.4, r: 0.6 }, { x: FIRE.x, z: FIRE.z + 0.5, r: 1.1 }, { x: 12.4, z: 1.3, r: 0.5 }, { x: -13.8, z: -3.9, r: 0.8 }, { x: -5, z: -3.5, r: 1 }, { x: 0, z: -3.5, r: 1 }, { x: 6.2, z: -2.8, r: 0.6 }, { x: 11.5, z: -4.3, w: 1.6, d: 0.3 }];
 
   return {
     root,

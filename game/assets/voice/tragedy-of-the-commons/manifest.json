@@ -59,6 +59,26 @@
     "text": "So the extra sheep go home, yours along with everyone else's. Nobody owns the grass, but now you all look after it.",
     "dur": 7.44
   },
+  "tempt": {
+    "file": "tempt-05732494.mp3",
+    "text": "Everyone is keeping to the limit. If just you let one more sheep out, it would be unfair, but the grass could take it, and the wool would be all yours. If everyone did, it couldn't. Will you let one more out?",
+    "dur": 11.21
+  },
+  "kept": {
+    "file": "kept-eff37084.mp3",
+    "text": "You leave it in the pen. The limit holds.",
+    "dur": 3.16
+  },
+  "tempt_took": {
+    "file": "tempt_took-4a32c353.mp3",
+    "text": "Just one. But your neighbours can count, and they can do the same sum.",
+    "dur": 4.41
+  },
+  "fray": {
+    "file": "fray-e0e2a8f6.mp3",
+    "text": "One more each. Five extra sheep is more than the grass can feed, and it goes, for everyone.",
+    "dur": 6.03
+  },
   "collapse": {
     "file": "collapse-d902c6d5.mp3",
     "text": "The grass is gone. For everyone.",

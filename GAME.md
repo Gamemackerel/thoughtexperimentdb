@@ -154,7 +154,7 @@ a hovering apple (you can talk to him). Escher's stairs climb into the ceiling. 
 | A typewriter | **Infinite Monkey Theorem** | Read the monkeys' pages; pull the lever to wait a million years; read again | Find "To be, or not to be" · walk out |
 | A glowing monitor | **Simulation Argument** | Look into the world on your desk (and the one inside it); run more worlds; the camera pulls back to reveal your study under a dome on a giant's desk | Switch them off · leave them running |
 | A telescope | **Fermi Paradox** | Listen to the static under the stars | Send a message · keep listening |
-| A garden gate | **Tragedy of the Commons** | Let sheep out of your pen onto the shared pasture (or bring them back in at the common's gate); the neighbours copy you, not your restraint; the grass thins and the narrator suggests the bell | The grass is gone · you held back (it went anyway) · ring the bell and agree on limits (the same number each, no more than the grass can feed) |
+| A plain grey door | **Mary's Room** | The whole picture is black and white. Read about colour, watch the tomato on the monitor; the door unlocks; step out and the colour floods in (a gardener offers a blue banana) | You saw red · you stayed inside |
 
 ### The trolley room (built)
 
@@ -196,7 +196,7 @@ thick strokes (`game/core/brush.js`). A free-standing door leads back into the g
 
 | Portal | Vignette | What you can do | Endings |
 |---|---|---|---|
-| A hut with no colour | **Mary's Room** | The whole picture is black and white. Read about colour, watch the tomato on the monitor; the door unlocks; step out and the colour floods in (a gardener offers a blue banana) | You saw red · you stayed inside |
+| A garden gate in a stretch of fence | **Tragedy of the Commons** | Let sheep out of your pen onto the shared pasture (or bring them back in at the common's gate); the neighbours copy you, not your restraint; the grass thins and the narrator suggests the bell | The grass is gone · you held back (it went anyway) · ring the bell and agree on limits (the same number each, no more than the grass can feed), then the narrator asks once more if you'll let just one more out: keep to it (you agreed on limits) or take it (just one more: the neighbours do the same sum and the agreement frays) |
 | A white arch with pennants | **Omelas** | The Festival of Summer; the child in the cellar; go back up, walk out of the north gate towards the mountains, or carry the child into the sun | You stayed · you walked away · you brought the child out |
 | A giant paperclip | **The Paperclip Maximiser** | Your little paperclip business and a very clever new robot: tell it to make as many as it can, and it copies itself, guards its off switch, takes the island and then flies off to take the other islands too; time rewinds and a new button appears, "exactly one hundred", and it gets stuck on "exactly" (what counts as a paperclip? 99.9999% sure isn't enough) and never stops checking | It had to be sure (exactly a hundred) · everything became paperclips (the maximiser again, after the rewind) · you left it off |
 | A tortoise with a world on its back | **Turtles All the Way Down** | A lecture, an old lady; climb down a stack of ever larger turtles | Keep going forever · the last turtle · they hold each other up (a ring) · you stopped asking |

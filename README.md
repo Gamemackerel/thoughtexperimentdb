@@ -3,10 +3,10 @@
 **An art game about thought experiments.** You walk through a surreal house and step through paintings, books, doors
 and clocks into short playable vignettes. There are six rooms. The first is after Escher and Dalí: the Trolley Problem,
 Brain in a Vat, Plato's Cave and the Ship of Theseus. The hall is after Magritte: the Grandfather Paradox, the Infinite
-Monkey Theorem, the Simulation Argument, the Fermi Paradox and the Tragedy of the Commons. The trolley room holds the
+Monkey Theorem, the Simulation Argument, the Fermi Paradox and Mary's Room. The trolley room holds the
 Footbridge, the Loop and the Transplant Surgeon. The gallery is after Picasso: the Ring of Gyges, the Prisoner's Dilemma,
 Newcomb's Paradox, the Utility Monster, the Chinese Room and the Monty Hall Problem. Out through the gallery's far door,
-a wheat field after Van Gogh: Mary's Room, Omelas, the Paperclip Maximiser, Turtles All the Way Down, the Watchmaker, the
+a wheat field after Van Gogh: the Tragedy of the Commons, Omelas, the Paperclip Maximiser, Turtles All the Way Down, the Watchmaker, the
 Experience Machine, the Veil of Ignorance, the Puddle and Swampman. And up the lane, a barn after Grant Wood, full of
 Gettier cases: Ten Coins, the Stopped Clock, the Sheep in the Field, Barn Façade County and Dharmottara's Mirage. You act,
 the world responds, and a
